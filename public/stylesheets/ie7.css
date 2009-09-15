@@ -1,0 +1,6 @@
+#navbar #livelook a {
+  background:transparent url(/images/live_look.gif) no-repeat 24px center;
+}
+#navbar #livelook.selected a {
+  background:transparent url(/images/live_look_selected.gif) no-repeat 24px center;
+}

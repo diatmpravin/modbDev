@@ -1,0 +1,8 @@
+quentin:
+  created_at: <%= 5.days.ago.to_s :db %>
+  setup_status: 0
+  number: 10001
+aaron:
+  created_at: <%= 1.days.ago.to_s :db %>
+  setup_status: 0
+  number: 60001

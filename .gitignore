@@ -1,0 +1,7 @@
+*.swp
+*.swo
+config/database.yml
+config/payments_server.yml
+log
+tmp
+.~*#

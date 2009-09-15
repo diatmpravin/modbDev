@@ -1,0 +1,26 @@
+.required {
+  color: red;
+  font-weight: bold;
+  text-align: right;
+  margin-right: 16px;
+}
+
+.form dl {
+
+}
+
+.form dt {
+  font-size: 0.9em;
+  float: left;
+  width: 20%;
+  padding-bottom: 1em;
+  padding-right: 1em;
+  text-align: right;
+  clear: both;
+}
+
+.form dd {
+  font-size: 0.9em;
+  padding-bottom: 1em;
+  margin-left: 11em;
+}

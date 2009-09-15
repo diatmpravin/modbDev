@@ -1,0 +1,17 @@
+# List the IP/port combinations the phone server will listen on
+development:
+  localhost:
+    host: 0.0.0.0
+    port: 5241
+staging:
+  bunny:
+    host: 67.23.6.13
+    port: 5241
+test:
+  automated:
+    host: testing
+    port: 3000
+production:
+  walter:
+    host: 192.168.51.74
+    port: 5241

@@ -1,0 +1,16 @@
+<% content_for(:javascript) do -%>
+  <%= javascript_include_tag 'schlage/phones' -%>
+  <script type="text/javascript">
+    $(function() {
+      setTimeout(popupPhoneFinder, 1500);
+    });
+  </script>
+<% end -%>
+
+<div id="external-wrapper">
+  <div id="external-content">
+    <div>The Phone Finder is designed to help you determine if the Schlage LiNK mobile phone software will run on your phone.</div>
+    <br/>
+    <div>Please wait while the Phone Finder opens in a new window...</div>
+  </div>
+</div>

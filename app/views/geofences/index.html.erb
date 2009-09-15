@@ -1,0 +1,42 @@
+<div id="sidebarContainer">
+  <div id="sidebar">
+    <div id="sidebarContent">
+      
+      <div class="geofences">
+        <div class="buttons">
+          <%= link_to '', '#', :class => 'addGeofence button' %>
+        </div>
+        <div class="clear spacer"></div>
+        
+        <div class="geofence" id="new">
+          <%= render :partial => 'form', :locals => {:geofence => current_account.geofences.new, :devices => @devices} %>
+        </div>
+        
+        <% @geofences.each do |geofence| -%>
+          <div class="geofence">
+            <div class="view">
+              <%= render :partial => 'geofence', :locals => {:geofence => geofence} %>
+            </div>
+            <div class="edit">
+              <%= render :partial => 'form', :locals => {:geofence => geofence, :devices => @devices} %>
+            </div>
+          </div>
+        <% end -%>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div id="newAlertRecipient" class="dialog">
+  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
+</div>
+
+<div>
+  <div id="mapContainer">
+    <div style="text-align:center;font-style:italic;padding-top:50px">
+      Please wait, loading...
+    </div>
+  </div>
+</div>
+<div class="clear"></div>

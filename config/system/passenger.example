@@ -1,0 +1,12 @@
+# /etc/apache2/sites-available/mobd.gomoshi.com
+
+<VirtualHost *:8080>
+  ServerName mobd.gomoshi.com
+  DocumentRoot /home/sites/mobd.gomoshi.com/current/public
+  RailsEnv staging
+  RailsAllowModRewrite off
+  <directory "/home/sites/mobd.gomoshi.com/current/public">
+    Order allow,deny
+    Allow from all
+  </directory>
+</VirtualHost>

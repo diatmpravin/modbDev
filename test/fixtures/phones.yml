@@ -1,0 +1,13 @@
+quentin_phone:
+  account: quentin
+  name: Quentin Mobile
+  activation_code: QUENTIN1
+  moshi_key: abcd1234
+aaron_phone:
+  account: aaron
+  name: Aaron Mobile
+  activation_code: AARON123
+  moshi_key: abcd1234
+nobody_phone:
+  name: Nobody
+  activation_code: EMPTY707

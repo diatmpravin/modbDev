@@ -1,0 +1,5 @@
+<% form_for tag, :url => tags_path, :method => :put do |f| -%>
+  <p style="text-align:center">
+    <%= f.text_field :name, {:size => 30, :maxlength => 30} %>
+  </p>
+<% end -%>

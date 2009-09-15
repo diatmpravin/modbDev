@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <style>
+      .statement table{width:100%;border:solid 1px #cccccc;padding:2px}
+      .statement th{font-weight:bold;border-bottom:solid 1px #cccccc}
+      .statement td, .statement th{padding-top:1px;padding-bottom:1px}
+      .statement td.amount, .statement th.amount{text-align:right;padding-right:5px}
+      .statement td.taxes{border-top:solid 1px #cccccc}
+      .statement td.total{border-top:solid 1px #cccccc;font-weight:bold}
+      .statement tr.two{background-color: #ddd;}
+      .statement tr.one{background-color: white;}
+    </style>
+  </head>
+  <body>
+    <%= yield :layout %>
+  </body>
+</html>

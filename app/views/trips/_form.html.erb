@@ -1,0 +1,35 @@
+<% form_for trip do |f| -%>
+  <div class="color"><img src="<%= trip.color.filename %>" /></div>
+  <div class="detail">
+    <h4><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></h4>
+    <p><%= human_miles(trip.miles) %> over <%= human_duration(trip.duration) %></p>
+    <p>Max Speed: <%= trip.max_speed %> mph</p>
+    <p>Average Speed: <%= trip.average_speed %> mph</p>
+    <p>Average RPM: <%= trip.average_rpm %></p>
+    <p>MPG: <%= trip.average_mpg %></p>
+    <p>Events: <%= trip.events.length %></p>
+    <h4>Trip Tags</h4>
+    <ul>
+      <% trip.tags.each do |tag| -%>
+        <li>
+          <%= link_to '', '#', :class => 'remove' %>
+          <span><%= tag.name %></span>
+          <%= hidden_field_tag 'trip[tag_ids][]', tag.id, :class => 'id' %>
+        </li>
+      <% end -%>
+      <li>
+        <%= link_to '', '#', :class => 'add' %>
+        <select class="tagSelect">
+          <%= tag_options_for(trip) %>
+        </select>
+      </li>
+    </ul>
+  </div>
+  <div class="spacer"></div>
+  <div style="float:right">
+    <div class="loading"></div>
+    <%= link_to 'Cancel ', '#', {:class => 'cancel simple'} %>
+    <%= link_to 'Save ', '#', {:class => 'save simple'} %>
+  </div>
+  <div class="clear"></div>
+<% end -%>

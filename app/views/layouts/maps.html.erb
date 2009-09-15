@@ -1,0 +1,10 @@
+<% content_for(:javascript) do -%>
+  <%= mapquest_include_tags %>
+  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
+  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
+  <%= javascript_include_tag 'moshimap' %>
+  <%= javascript_include_tag 'maps' %>
+<% end -%>
+<% inside_layout 'internal' do -%>
+  <%= yield %>
+<% end -%>

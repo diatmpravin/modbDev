@@ -1,0 +1,30 @@
+<%= messages %>
+
+<div class="users">
+  <div class="buttonsLeft">
+    <%= button_tag 'Add User', :class => 'addUser' %>
+  </div>
+  <div class="clear spacer"></div>
+
+  <div class="user" id="new">
+    <%= render :partial => 'form', :locals => {:user => @user} %>
+  </div>
+  <% @users.each do |user| -%>
+    <div class="<%= cycle('user', 'user odd') %>">
+      <div class="view">
+        <%= render :partial => 'user', :locals => {:user => user} %>
+      </div>
+      <div class="edit">
+        <%= render :partial => 'form', :locals => {:user => user} %>
+      </div>
+    </div>
+  <% end -%>
+</div>
+
+<div class="clear"></div>
+
+<div id="removeUser" class="dialog">
+  <p>If you remove this user, they will be deleted permanently and will no longer have access to the site.</p>
+  <p>If this user manages any users or vehicles, they will be "moved up" one level and managed by you.</p>
+  <p>Are you sure you want to remove this user?</p>
+</div>

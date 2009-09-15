@@ -1,0 +1,31 @@
+<% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'wizard' %>
+<% end -%>
+<% inside_layout 'global' do -%>
+  <div id="header">
+    <div id="logo"></div>
+    <div id="welcome">
+      <span>Welcome <strong><%= h(current_user.login) %></strong></span>
+      <%= link_to "Logout", logout_path %>
+    </div>
+  </div>
+  <% if @show_navbar -%>
+    <div id="navbar">
+      <div class="float noRight"></div>
+      <div id="livelook" class="float">
+        <%= link_to 'Live Look', maps_path %>
+      </div>
+      <div class="float noLeft"></div>
+    </div>
+  <% else -%>
+    <div id="navbarShort">
+    </div>
+  <% end -%>
+  <div id="container">
+  <!--<div id="wizardContainer">
+    <div id="wizardContent">-->
+      <%= yield %>
+    <!--</div>
+  </div>-->
+  </div>
+<% end -%>

@@ -1,0 +1,40 @@
+<% content_for(:stylesheet) do -%>
+<style type="text/css">
+  #pane1 {
+    width:auto;
+    height:auto;
+    padding:0;
+    background:transparent;
+  }
+  #pane3 {
+    width:auto;
+    height:auto;
+  }
+</style>
+<% end -%>
+
+<div id="pane1">
+  <%= image_tag '/images/product/connect_this_to_this.jpg', :width => 310, :height => 165 %>
+  <%= image_tag '/images/product/click_here_to_buy.jpg', :width => 310, :height => 165 %>
+</div>
+
+<div id="pane3" class="corners">
+  <%= messages %>
+  
+  <%= render :partial => 'wizard/steps', :locals => {:selected => :create_account} %>
+  
+  <div class="wizard">
+    <div class="spacer"></div>
+    <div class="indent">
+      <p>Before you can continue setting up your account, we need to verify your email address.  When you signed up
+      we sent you an email with a verification link.  Please check your inbox for this email and click the verification
+      link to continue.</p>
+      
+      <p>If you have not received the verification email, you can click the link below to resend it.
+      If you do not see this email within the next few minutes, please check your spam folder.</p>
+    </div>
+
+  <div class="spacer"></div>
+  <div class="spacer"></div>
+  <p><%= link_to "Resend activation link to #{@email}", {:controller => 'accounts', :action => 'resend_activation'}, {:class => 'simple'} %>
+</div>

@@ -1,0 +1,29 @@
+<% form_for phone do |f| -%>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <%= error_message_on @phone, :name, :prepend_text => '* Name ' %>
+  </div>
+  <div class="field">
+    <h3>This phone has access to:</h3>
+    <ul>
+      <% if @devices.empty? -%>
+        <li style="font-style:italic">There are no vehicles on the account.</li>
+      <% end -%>
+      <% @devices.each do |device| -%>
+        <li>
+          <%= check_box_tag 'phone[device_ids][]', device.id, phone.devices.include?(device),
+            {:id => dom_id(device, dom_id(phone))} %>
+          <%= label_tag dom_id(device, dom_id(phone)), h(device.name) %>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
+  
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= link_to '', '#', :class => 'cancel button' %>
+    <%= link_to '', '#', :class => 'save button' %>
+  </div>
+<% end -%>
+<div class="clear"></div>

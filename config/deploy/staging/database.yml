@@ -1,0 +1,9 @@
+staging:
+  adapter: mysql
+  database: fleet
+  username: fleet
+  password: Eefi@a2z
+  host: localhost
+  encoding: utf8
+  pool: 25
+  timeout: 5000

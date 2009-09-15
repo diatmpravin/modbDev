@@ -1,0 +1,51 @@
+<%= messages %>
+
+<div class="reportSettings">
+  <div <%= !@report.data ? 'style="display:none"':'' %>>
+    <%= link_to 'Report Settings - Click to Open', '#', :class => 'simple openSettings' %>
+  </div>
+  <div class="reportForm" <%= @report.data ? 'style="display:none"':'' %>>
+    <h2>Report Settings</h2>
+    
+    <% form_for :report, @report, :html => {:method => :get} do |f| -%>
+      
+      <div class="col">
+        <div class="field">
+          <%= f.label :report_type %>
+          <%= f.select :report_type, Report.type_options %>
+        </div>
+        
+        <div class="field">
+          <%= f.label :range_type %>
+          <%= f.select :range_type, Report.range_options %>
+        </div>
+        
+        <div class="field">
+          <%= label_tag '' %>
+          <%= f.text_field :start_date, :size => 10, :maxlength => 10 %>
+          &nbsp; through &nbsp;
+          <%= f.text_field :end_date, :size => 10, :maxlength => 10 %>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="field">
+          <%= f.label :devices %>
+          <%= f.select :devices, @devices, {}, {:multiple => true} %>
+        </div>
+      </div>
+      
+      <div class="clear"></div>
+      <div class="buttons">
+        <%= link_to '', '#', :class => 'runReport button' %>
+      </div>
+      <div class="clear"></div>
+    <% end -%>
+  </div>
+</div>
+
+<div class="clear"></div>
+
+<% if @report.data -%>
+  <%= render :partial => report_partial(@report), :locals => {:report => @report} %>
+<% end -%>

@@ -1,0 +1,2285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://api.jasperwireless.com/ws/schema" targetNamespace="http://api.jasperwireless.com/ws/schema" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+  <xs:annotation>
+    <xs:documentation>Jasper API Service XML Schema</xs:documentation>
+    <xs:appinfo>
+        <version>2.67</version>
+        <releaseDate>2009-04-27</releaseDate>
+    </xs:appinfo>
+  </xs:annotation>
+        <!-- ===================== Types ========================== -->
+    <xs:complexType name="RequestType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The base type for all request payload types. The idea is to capture attributes common to all requests
+                (such as version, license key, message id etc.).
+
+                All concrete request types are derived from this abstract request type. This is the only place where
+                polymorphism is encouraged.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="messageId" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Message id used to uniquely identify (from the API client's perspective) this request.
+                        Client code can use "correlationId" in the response (from the ResponseType) to identify which
+                        request this response is regarding. Any string value can be provided if client does not care
+                        about this feature.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="version" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The API version (schema version) this request is based upon.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="licenseKey" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The license key used for request metering, or possible authorization purpose (limit API client
+                        itself, not the Control Center user).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+    <xs:complexType name="ResponseType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The base type of all responses. It contains some generic information about the response, including
+                timestamp, correlation id, version etc.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="correlationId" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Matches the "messageId" in the request.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="version" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The version of the response payload schema.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="build" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Server build number.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="timestamp" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>
+                        The time when server processes the request, in UTC format.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+    <xs:simpleType name="TerminalChangeType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                The enum change type for terminal changes. Each int value indicate a change type.
+                Each type allows a different set of target values pending business logic validation.
+                Commas (,) and asterisks (*) are not allowed in literal string target values:
+
+                1 - Terminal ID: literal string, max 50 characters
+                2 - Modem ID: literal string, max 40 characters
+                3 - SIM Status:
+                    "TEST_READY_NAME": Test Ready,
+                    "INVENTORY_NAME": Inventory,
+                    "TRIAL_NAME": Trial,
+                    "ACTIVATION_READY_NAME": Activation Ready,
+                    "ACTIVATED_NAME": Activated,
+                    "DEACTIVATED_NAME": Deactivated,
+                    "RETIRED_NAME": Retired,
+                    "PURGED_NAME": Purged
+                4 - Rate Plan: literal string, name of an existing Rate Plan
+                5 - Suspended: "Y" for Yes, "N" for No, or "F" for Fraud Review
+                6 - Customer: literal string, name of an existing Customer
+                7 - Overage Limit Override:
+                    "DEFAULT": None
+                    "TEMPORARY_OVERRIDE": Current cycle
+                    "PERMANENT_OVERRIDE": Ongoing
+                17 - Custom 1
+                18 - Custom 2
+                19 - Custom 3
+                21 - Secure SIM Username copy rule:
+                    "F" :  Unknown
+                    "N" :  Not enabled
+                    "O" :  Once
+                    "A" "  Always
+                    "L" :  Locked
+                22 - Secure SIM Password copy rule:
+                    "F" :  Unknown
+                    "N" :  Not enabled
+                    "O" :  Once
+                    "A" "  Always
+                    "L" :  Locked
+              
+                 ]]>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:int"/>
+    </xs:simpleType>
+    <xs:complexType name="TerminalType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about a Terminal.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="iccid" type="xs:string"/>
+            <xs:element name="terminalId" type="xs:string" minOccurs="0"/>
+            <xs:element name="modemId" type="xs:string" minOccurs="0"/>
+            <xs:element name="customer" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the customer this Terminal belongs to.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="endConsumerId" type="xs:string" minOccurs="0"/>
+            <xs:element name="suspended" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Suspended: "Y" for Yes, "N" for No, or "F" for Fraud Review
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ratePlan" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the rate plan.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                    SIM Status:
+                        "TEST_READY_NAME": Test Ready,
+                        "INVENTORY_NAME": Inventory,
+                        "TRIAL_NAME": Trial,
+                        "ACTIVATION_READY_NAME": Activation Ready,
+                        "ACTIVATED_NAME": Activated,
+                        "DEACTIVATED_NAME": Deactivated,
+                        "RETIRED_NAME": Retired,
+                        "PURGED_NAME": Purged,
+                        "REPLACED_NAME": Replaced
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="monthToDateUsage" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>
+                        Month to date usage in MB.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="overageLimitReached" type="xs:boolean"/>
+            <xs:element name="overageLimitOverride" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                    Overage Limit Override:
+                        "DEFAULT": None
+                        "TEMPORARY_OVERRIDE": Current cycle
+                        "PERMANENT_OVERRIDE": Ongoing
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateActivated" type="xs:dateTime" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        When the terminal is first activated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateAdded" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>
+                        When the terminal is first added to the system.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateModified" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>
+                        When the terminal is last modified.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="monthToDateDataUsage" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>
+                        Month to date data usage in MB.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="monthToDateSMSUsage" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>
+                        Month to date SMS usage in message.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="monthToDateVoiceUsage" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>
+                        Month to date voice usage in Secs
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="secureSimId" type="xs:string"/>
+            <xs:element name="custom1" type="xs:string"/>
+            <xs:element name="custom2" type="xs:string"/>
+            <xs:element name="custom3" type="xs:string"/>
+            <xs:element name="rating">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="termStartDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Term start date if this terminal is on Prepaid plan
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="termEndDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Term end date if this terminal is on Prepaid plan
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="renewalPolicy" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Renewal Policy:
+                                    "Deactivate": Deactivate,
+                                    "AutoRenew": Auto Renew,
+                                    "NamedPlan": Named plan
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="renewalRatePlan" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="secureSimUsernameCopyRule" type="xs:string">
+               <xs:annotation>
+                  <xs:documentation>
+                  SecureSIM Username copy rule:
+                  "F" :  Unknown
+                  "N" :  Not enabled
+                  "O" :  Once
+                  "A" "  Always
+                  "L" :  Locked
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="secureSimPasswordCopyRule" type="xs:string">
+                   <xs:annotation>
+                      <xs:documentation>
+                      SecureSIM Password copy rule:
+                      "F" :  Unknown
+                      "N" :  Not enabled
+                      "O" :  Once
+                      "A" "  Always
+                      "L" :  Locked
+                      </xs:documentation>
+                  </xs:annotation>
+              </xs:element>
+
+            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="msisdn" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    The MSISDN of the SIM.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+        <xs:complexType name="SmsMessageType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about SMS Message.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        <xs:element name="smsMsgId" type="xs:long"/>
+        <xs:element name="status" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                 If Message is Mobile Originated, status is Received.
+                 Message Status:
+                    "Cancelled": Cancelled,
+                    "CancelFailed": Cancel Failed,
+                    "CancelPending": Cancel Pending,
+                    "Delivered": Delivered,
+                    "Failed": Failed,
+                    "Pending": Pending,
+                    "Unknown": Unknown,
+                    "Received": Received
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element name="messageText" type="xs:string" minOccurs="0"/>
+        <xs:element name="senderLogin" type="xs:string" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                  For mobile originated message, senderLogin will be "Mobile Device"
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element name="sentToIccid" type="xs:string" minOccurs="0"/>
+        <xs:element name="sentFrom" type="xs:string" minOccurs="0"/>
+         <xs:element name="smsMsgAttemptStatus" type="xs:string" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>
+                    Message Attempt Status (Only applicable for Mobile Terminated Messages):
+                    "DeliverAckReceivedStatusSuccessful": Deliver AckReceivedStatus Successful,
+                    "SubmitFailed": Submit Failed,
+                    "FailedToGetConnection": Failed To Get Connection,
+                    "FailedToDeliver": Failed To Deliver,
+                    "SubmitAckReceivedStatusSuccessful": Submit AckReceivedStatus Successful,
+                    "SubmitAckReceivedStatusFailure": Submit AckReceivedStatus Failure,
+                    "CancelAckReceivedStatusSuccessful": Cancel AckReceivedStatus Successful,
+                    "CancelAckReceivedStatusFailure": Cancel AckReceived Status Failure,
+                    "MessageExpiredFailure": Message Expired Failure,
+                    "MessageDeleted": Message Deleted
+                    "Received": Received
+                </xs:documentation>
+               </xs:annotation>
+             </xs:element>
+        <xs:element name="msgType" type="xs:string" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    "MO" : Mobile Originated (MO),
+                    "MT" : Mobile Terminated (MT)
+                </xs:documentation>
+             </xs:annotation>
+        </xs:element>
+        <xs:element name="dateSent" type="xs:dateTime" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Date when the SMS message was sent
+                </xs:documentation>
+               </xs:annotation>
+        </xs:element>
+        <xs:element name="dateReceived" type="xs:dateTime" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Date when the SMS message was received by the system.
+                </xs:documentation>
+               </xs:annotation>
+        </xs:element>
+        <xs:element name="dateAdded" type="xs:dateTime">
+            <xs:annotation>
+            <xs:documentation>
+                When the Message is first added to the system.
+            </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element name="dateModified" type="xs:dateTime">
+        <xs:annotation>
+        <xs:documentation>
+            When the Message is last modified.
+        </xs:documentation>
+        </xs:annotation>
+            </xs:element>
+
+            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+       <xs:complexType name="SessionInfoType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about SIM session.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        <xs:element name="iccid" type="xs:string"/>
+        <xs:element name="ipAddress" type="xs:string"/>
+        <xs:element name="dateSessionStarted" type="xs:dateTime" minOccurs="1">
+            <xs:annotation>
+                <xs:documentation>
+                    Date when the session was started
+                </xs:documentation>
+               </xs:annotation>
+        </xs:element>
+            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+        <xs:complexType name="AlertDetailType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about an Alert.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+			<xs:element name="alertId" type="xs:long"/>
+			<xs:element name="alertDate" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>
+						Date when the alert was triggered
+					</xs:documentation>
+               </xs:annotation>
+			</xs:element>
+			<xs:element name="alertType" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>
+						"A" : Data Overage Limit Proximity Alert,
+						"B" : Data Included Usage Proximity Alert,
+						"C" : SMS Included Usage Proximity Alert,
+						"D" : Sim Activation Alert,
+						"E" : Device Credentials Alert,
+						"F" : Recent Data Usage Alert,
+						"U" : Unknown
+					</xs:documentation>
+				 </xs:annotation>
+			</xs:element>
+			<xs:element name="alertText" type="xs:string"/>
+			<xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="lax"/>
+    </xs:complexType>
+    <xs:complexType name="nacIdType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about a Network Access Config ID.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="nacId" type="xs:long" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="iccid" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+  </xs:complexType>
+   <xs:complexType name="nacType">
+        <xs:annotation>
+            <xs:documentation>
+                The detail information about a Network Access Config.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="nacId" type="xs:long" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="nacDescription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="voiceEnabled" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="smsEnabled" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="gprsEnabled" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MsisdnType">
+        <xs:annotation>
+            <xs:documentation>
+                The mapping information ICCID and MSISDN.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="iccid" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="msisdn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="DataUsageDetailType">
+    <xs:sequence>
+        <xs:element name="iccid" type="xs:string" minOccurs="0"/>
+        <xs:element name="cycleStartDate" type="xs:date" minOccurs="0"/>
+        <xs:element name="terminalId" type="xs:string" minOccurs="0"/>
+        <xs:element name="endConsumerId" type="xs:string" minOccurs="0"/>
+        <xs:element name="customer" type="xs:string" minOccurs="0"/>
+        <xs:element name="billable" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="zone" type="xs:string" minOccurs="0"/>
+        <xs:element name="sessionStartTime" type="xs:dateTime" minOccurs="0"/>
+        <xs:element name="duration" type="xs:long" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    called duration in secs
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element name="dataVolume" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Data volume in KB.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element name="countryCode" type="xs:string" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    ISO Standard Country Codes
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+    </xs:sequence>
+</xs:complexType>
+<xs:complexType name="SmsUsageDetailType">
+    <xs:sequence>
+        <xs:element name="iccid" type="xs:string" minOccurs="0"/>
+        <xs:element name="cycleStartDate" type="xs:date" minOccurs="0"/>
+        <xs:element name="terminalId" type="xs:string" minOccurs="0"/>
+        <xs:element name="endConsumerId" type="xs:string" minOccurs="0"/>
+        <xs:element name="customer" type="xs:string" minOccurs="0"/>
+        <xs:element name="billable" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="zone" type="xs:string" minOccurs="0"/>
+        <xs:element name="dateSent" type="xs:dateTime" minOccurs="0"/>
+        <xs:element name="sentFrom" type="xs:string" minOccurs="0"/>
+        <xs:element name="sentTo" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+</xs:complexType>
+<xs:complexType name="VoiceUsageDetailType">
+    <xs:sequence>
+        <xs:element name="iccid" type="xs:string" minOccurs="0"/>
+        <xs:element name="cycleStartDate" type="xs:date" minOccurs="0"/>
+        <xs:element name="terminalId" type="xs:string" minOccurs="0"/>
+        <xs:element name="endConsumerId" type="xs:string" minOccurs="0"/>
+        <xs:element name="customer" type="xs:string" minOccurs="0"/>
+        <xs:element name="billable" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="zone" type="xs:string" minOccurs="0"/>
+        <xs:element name="callTime" type="xs:dateTime" minOccurs="0"/>
+        <xs:element name="calledNumber" type="xs:string" minOccurs="0"/>
+        <xs:element name="callDuration" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Call Duration in secs
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+    </xs:sequence>
+</xs:complexType>
+<xs:complexType name="AccountType">
+    <xs:sequence>
+        <xs:element name="accountId" type="xs:long" minOccurs="0"/>
+        <xs:element name="accountName" type="xs:string" minOccurs="0"/>
+        <xs:element name="billable" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="status" type="xs:string" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    "A": Active,
+                    "I": Inactive, 
+                    "D": Deleted
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+    </xs:sequence>
+</xs:complexType>    <!-- ========= Echo ============ -->
+    <xs:element name="EchoRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="value" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EchoResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="value" type="xs:string"/>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetInvoice ============ -->
+    <xs:element name="GetInvoiceRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Request for GetInvoice API call. It retrieves the invoice of a given month for the a given Account.
+                A SOAP fault will be thrown if the requested invoice does not exist.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="accountId" type="xs:long"/>
+                        <xs:element name="cycleStartDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    First day of the billing cycle (CCYY-MM-DD) in UTC, 2006-08-01Z and 2006-08-01+00:00
+                                    are the same. If no value if given, defaults to current month.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetInvoiceResponse">
+        <xs:annotation>
+            <xs:documentation>
+                Response for GetInvoice API call.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="accountId" type="xs:long"/>
+                        <xs:element name="invoiceId" type="xs:long"/>
+                        <xs:element name="currency" type="xs:string"/>
+                        <xs:element name="invoiceDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>The date when the invoice is generated (CCYY-MM-DD) in
+                                    UTC.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="dueDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>Invoice due date (CCYY-MM-DD) in UTC.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="cycleStartDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    First day of the billing cycle (CCYY-MM-DD) in UTC.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="cycleEndDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Last day of the billing cycle (CCYY-MM-DD) in UTC.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="totalTerminals" type="xs:long"/>
+                        <xs:element name="dataVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The billable data volume in MB.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="subscriptionCharge" type="xs:decimal"/>
+                        <xs:element name="overageCharge" type="xs:decimal"/>
+                        <xs:element name="totalCharge" type="xs:decimal"/>
+                        <xs:element name="smsVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The billable sms volume.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="smsCharge" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SMS Charge.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="voiceVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The billable voice volume in Secs.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="voiceCharge" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Voice Charge.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="otherCharge" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Other Charge.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetTerminalUsage ============ -->
+    <xs:element name="GetTerminalUsageRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Request for GetTerminalUsage API call. It retrieves the terminal usage of a given month (completed billing
+                cycle only) for the terminal identified by ICCID. The return result contains total and billable volumes
+                for data, voice and SMS. To get current month's usage of a terminal, please use GetTerminalDetails call
+                and the MonthToDateUsage fields.
+
+                If there is no terminal usage found for the given terminal, a SOAP fault with error code 200200 will be
+                returned.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="cycleStartDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    First day of the billing cycle (CCYY-MM-DD) in UTC, 2006-08-01Z and 2006-08-01+00:00
+                                    are the same. It is mandatory to provide a history billing cycle start date. If no value
+                                    is provided, a SOAP fault with error code 200200 will be returned indicating no terminal usage
+                                    is found.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetTerminalUsageResponse">
+        <xs:annotation>
+            <xs:documentation>
+                Response for GetTerminalUsage API call.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="terminalId" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Terminal's Terminal ID, optional.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="customer" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Terminal's Customer Name, optional.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="endConsumerId" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Terminal's End Consumer ID, optional.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="totalDataVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Total data volume in MB.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="billableDataVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The billable data volume in MB.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="cycleStartDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>First day of the billing cycle (CCYY-MM-DD) in UTC.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="billable" type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Indicating if the usage is billable.
+                                    For current billing cyle, it will be "false" since the billing calculation is not final yet.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="totalSMSVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Total SMS volume in messages.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="totalVoiceVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Total Voice volume in Secs.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="billableSMSVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Billable SMS volume in messages.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="billableVoiceVolume" type="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Billable Voice volume in Secs.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="ratePlan" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Rateplan name.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+<!-- ========= GetTerminalUsage ============ -->
+<xs:element name="GetTerminalUsageDataDetailsRequest">
+    <xs:annotation>
+        <xs:documentation>
+            Request for GetTerminalUsageDetails API call. It retrieves the terminal usage details of a given month (completed billing
+            cycle only) for the terminal identified by ICCID. The return result contains both billable and non-billable usages.
+            To get current month's usage of a terminal, please use GetTerminalDetails call and the MonthToDateUsage fields.
+
+            If there is no terminal usage found for the given terminal, a SOAP fault with error code 200200 will be
+            returned.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="cycleStartDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>
+                                First day of the billing cycle (CCYY-MM-DD) in UTC, 2006-08-01Z and 2006-08-01+00:00
+                                are the same. It is mandatory to provide a history billing cycle start date. If no value
+                                is provided, a SOAP fault with error code 200200 will be returned indicating no terminal usage
+                                details is found.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="GetTerminalUsageDataDetailsResponse">
+    <xs:annotation>
+        <xs:documentation>
+            Response for GetTerminalUsageDetails API call.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="usageDetails">
+			    <xs:complexType>
+				<xs:sequence>
+				    <xs:element name="usageDetail" type="DataUsageDetailType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			    </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+</xs:element>
+<!-- ========= GetTerminalUsage ============ -->
+<xs:element name="GetTerminalUsageSmsDetailsRequest">
+    <xs:annotation>
+        <xs:documentation>
+            Request for GetTerminalUsageSmsDetails API call. It retrieves the terminal usage details of a given month (completed billing
+            cycle only) for the terminal identified by ICCID. The return result contains both billable and non-billable usages.
+            To get current month's usage of a terminal, please use GetTerminalDetails call and the MonthToDateUsage fields.
+
+            If there is no terminal usage found for the given terminal, a SOAP fault with error code 200200 will be
+            returned.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="cycleStartDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>
+                                First day of the billing cycle (CCYY-MM-DD) in UTC, 2006-08-01Z and 2006-08-01+00:00
+                                are the same. It is mandatory to provide a history billing cycle start date. If no value
+                                is provided, a SOAP fault with error code 200200 will be returned indicating no terminal usage
+                                details is found.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="GetTerminalUsageSmsDetailsResponse">
+    <xs:annotation>
+        <xs:documentation>
+            Response for GetTerminalUsageSmsDetails API call.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="smsUsageDetails">
+			    <xs:complexType>
+				<xs:sequence>
+				    <xs:element name="smsUsageDetail" type="SmsUsageDetailType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			    </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+</xs:element>
+<!-- ========= GetTerminalUsage ============ -->
+<xs:element name="GetTerminalUsageVoiceDetailsRequest">
+    <xs:annotation>
+        <xs:documentation>
+            Request for GetTerminalUsageVoiceDetails API call. It retrieves the terminal usage details of a given month (completed billing
+            cycle only) for the terminal identified by ICCID. The return result contains both billable and non-billable usages.
+            To get current month's usage of a terminal, please use GetTerminalDetails call and the MonthToDateUsage fields.
+
+            If there is no terminal usage found for the given terminal, a SOAP fault with error code 200200 will be
+            returned.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="cycleStartDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>
+                                First day of the billing cycle (CCYY-MM-DD) in UTC, 2006-08-01Z and 2006-08-01+00:00
+                                are the same. It is mandatory to provide a history billing cycle start date. If no value
+                                is provided, a SOAP fault with error code 200200 will be returned indicating no terminal usage
+                                details is found.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="GetTerminalUsageVoiceDetailsResponse">
+    <xs:annotation>
+        <xs:documentation>
+            Response for GetTerminalUsageVoiceDetails API call.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="voiceUsageDetails">
+			    <xs:complexType>
+				<xs:sequence>
+				    <xs:element name="voiceUsageDetail" type="VoiceUsageDetailType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			    </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+</xs:element>
+   <!-- ========= GetSessionInfo ============ -->
+    <xs:element name="GetSessionInfoRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the session details for a terminal (given an iccid).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSessionInfoResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="sessionInfo">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="session" type="SessionInfoType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= EditTerminal ============ -->
+    <xs:element name="EditTerminalRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Schedule a terminal change. The change can happen immediately (effective date is empty or current date
+                in UTC); or it can be scheduled for future.
+
+                If the request failed, a SOAP fault will be returned. Detailed reason about the failure
+                will be in the detail section of the fault.
+
+                Here are the list of validation error tokens:
+
+                SYSTEM_ERROR = System error occurred
+                INVALID_EFFECTIVE_DATE = Invalid format, cannot enter dates in the past
+                ACTIVATION_IN_PAST = Cannot enter dates in the past
+
+                DEVICEID_NULL = No Terminal Id value specified
+                DEVICEID_INVALID_FORMAT = Invalid entry Terminal ID limited to 50 characters and cannot contain commas (,) or asterisks (*)
+
+                MODEMID_NULL = No Modem ID value specified
+                MODEMID_INVALID_FORMAT = Invalid entry Modem ID limited to 40 characters and cannot contain commas (,) or asterisks (*)
+
+                SIMSTATUS_NULL = No SIM Status value specified
+                SIMSTATUS_INVALID = Invalid SIM status value
+                SIMSTATUS_INVALID_TRANSITION = New SIM value not allowed based on current value
+                SIMSTATUS_TRANSITION_UNAUTHORIZED = New SIM value not allowed
+                SIMSTATUS_NULL_IN_DB = SIM status is empty in database
+                SIMSTATUS_SUSPENDED = Cannot change SIM Status for suspended or fraud review SIM
+
+                RATEPLAN_NULL = No Rate Plan value specified
+                RATEPLAN_INVALID = Rate Plan requested not available
+
+                CUSTOMER_SUSPEND_NULL = No Customer Suspend value specified
+                CUSTOMER_SUSPEND_INVALID_STATUS = Invalid Parameters
+
+                CUSTOMER_NAME_NULL = No Customer value specified
+                CUSTOMER_NAME_TOO_MANY_CHARS = Customer limited to 100 characters
+                CUSTOMER_NAME_INVALID_FORMAT = Customer cannot contain commas
+                CUSTOMERNAME_INVALID = Customer Name requested not available
+
+                OVERRIDEMODE_INVALID = Invalid Overage Limit Override value
+                OVERRIDEMODE_NULL = No value specified
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="effectiveDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The scheduled date (CCYY-MM-DD) for the change to be applied in UTC.
+                                    Default to current date, which indicates the execute the change immediately.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="targetValue" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The target value of the change. Refer to the documentation about TerminalChangeType
+                                    for a list of possible values for each change type.
+
+                                    This element is optional, if omitted indicating the target value is NULL.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="changeType" type="TerminalChangeType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EditTerminalResponse">
+        <xs:annotation>
+            <xs:documentation>
+                Response for EditTerminal API call.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="effectiveDate" type="xs:date"/>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+<!-- ========= EditTerminalRating ============ -->
+<xs:element name="EditTerminalRatingRequest">
+    <xs:annotation>
+        <xs:documentation>
+            Edit terminal rating
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="termStartDate" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Term start date (CCYY-MM-DD) in UTC.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="termEndDate" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Term end date (CCYY-MM-DD) in UTC.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="renewalMode" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Renewal Mode should be one of the following Letters
+                                A : AutoRenew
+                                D : Deactivate
+                                N : NamedPlan
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="renewalRatePlan" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Renewal rateplan name if renewal mode is NamedPlan if not, this
+                                will be ignored
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="EditTerminalRatingResponse">
+    <xs:annotation>
+        <xs:documentation>
+            Response for EditTerminal API call.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="ResponseType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="status" type="xs:string"/>
+                    <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+    <!-- ========= GetAccounts ============ -->
+    <xs:element name="GetAccountsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get list of Accounts
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+
+
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAccountsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="accountIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="accountId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetAccountDetails ============ -->
+    <xs:element name="GetAccountDetailsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the details for a list of Accounts (given list of accountids).
+                At least one accountid should be provided, maximum limit is 50 for performance reasons.
+
+                The returned results are not guaranteed to be in the same ordering as the request.
+                Not found Accounts will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="accountids">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="accountid" type="xs:long" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAccountDetailsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="accounts">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="account" type="AccountType" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+<!-- =========GetAvailableEvents =========-->
+<xs:element name="GetAvailableEventsRequest">
+    <xs:annotation>
+        <xs:documentation>                Get all events exposed to the account, given an account ID.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="GetAvailableEventsResponse">
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="ResponseType">
+                <xs:sequence>
+                    <xs:element name="AvailableEvents">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="AvailableEvent" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="EventName" type="xs:string"/>
+                                            <xs:element name="Version" type="xs:long"/>
+                                            <xs:element name="Term" type="xs:long" minOccurs="0"/>
+                                            <xs:element name="Price" type="xs:decimal"/>
+                                            <xs:element name="IncludedData" type="xs:decimal"/>
+                                            <xs:element name="DataOverageRate" type="xs:decimal"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<!-- =========ActivateTerminalEvent =========-->
+<xs:element name="ActivateTerminalEventRequest">
+    <xs:annotation>
+        <xs:documentation>                Triggers activation of an event for a SIM on the effective date.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="eventName" type="xs:string"/>
+                    <xs:element name="effectiveDate" type="xs:dateTime" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="ActivateTerminalEventResponse">
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="ResponseType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="status" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<!-- ========= GetTerminalEvents ============-->
+<xs:element name="GetTerminalEventsRequest">
+    <xs:annotation>
+        <xs:documentation>                 Returns list of events for a SIM; Includes historic events, active events and future scheduled events.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="since" type="xs:dateTime" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="GetTerminalEventsResponse">
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="ResponseType">
+                <xs:sequence>
+                    <xs:element name="terminalEvents">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="terminalEvent" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="eventInstanceId" type="xs:long"/>
+                                            <xs:element name="iccid" type="xs:string"/>
+                                            <xs:element name="eventName" type="xs:string"/>
+                                            <xs:element name="createdDate" type="xs:dateTime"/>
+                                            <xs:element name="activeStatus" type="xs:string"/>
+                                            <xs:element name="startDate" type="xs:dateTime"/>
+                                            <xs:element name="endDate" type="xs:dateTime"/>
+                                            <xs:element name="price" type="xs:decimal"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:any minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<!-- ========= DeleteTerminalEvent ============-->
+<xs:element name="DeleteTerminalEventRequest">
+    <xs:annotation>
+        <xs:documentation>                 Deletes a single forward-schedule event instance based on the unique ID of the event instance; This action may only be issued against an existing event instance that has not yet started (ie, start date/time &gt; current date/time); If the call is attempted against an event instance that has already started, an error status indicating that condition is returned.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="RequestType">
+                <xs:sequence>
+                    <xs:element name="eventInstanceId" type="xs:long"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+<xs:element name="DeleteTerminalEventResponse">
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="ResponseType">
+                <xs:sequence>
+                    <xs:element name="eventInstanceId" type="xs:long"/>
+                    <xs:element name="iccid" type="xs:string"/>
+                    <xs:element name="status" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:element>
+    <!-- ========= GetTerminalDetails ============ -->
+    <xs:element name="GetTerminalDetailsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the terminal details for a list of terminals (given list of iccids).
+                At least one iccid should be provided, maximum limit is 50 for performance reasons.
+
+                The returned results are not guaranteed to be in the same ordering as the request.
+                Not found terminals will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="iccids">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="iccid" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetTerminalDetailsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="terminals">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="terminal" type="TerminalType" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetModifiedTerminals ============ -->
+    <xs:element name="GetModifiedTerminalsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the terminals accessible to this user which have been modified since the given time (not inclusive).
+                If the "since" parameter is omitted, it means return all iccids.
+
+                The result will be a list of iccids ordered by oldest first. This API call is useful for keeping client
+                side data in sync with Jasper's.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="since" type="xs:dateTime" minOccurs="0"/>
+                    </xs:sequence>
+                    <xs:attribute name="accountId" type="xs:long">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies the optional AccountId
+                            </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
+
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetModifiedTerminalsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="iccids">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="iccid" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetCoverageMap ============ -->
+	<xs:element name="GetCoverageMapRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Get the URL of the coverage map image for a given address.
+                If the address is invalid, no mapUrl will be returned, and
+                matchType will indicate the problem with the address.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="RequestType">
+					<xs:sequence>
+						<xs:element name="address" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>The full address (street address, city, state, optional zip code) or just the zip code</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetCoverageMapResponse">
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="ResponseType">
+					<xs:sequence>
+						<xs:element name="mapUrl" type="xs:string" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>The URL of the map image</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="matchType" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>The type of match (ex. STREET, ZIP, etc.) if the address was found, or the type of error (ex. ERROR_PARSE, ERROR_NOT_FOUND, etc.) if the address was invalid</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>    <!-- ========= GetCoverageMapByLatLong ============ -->
+	<xs:element name="GetCoverageMapByLatLongRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Get the URL of the coverage map image for a given latitude/longitude.
+                If the latitude or longitude is invalid, a SOAP fault will be returned.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="RequestType">
+					<xs:sequence>
+						<xs:element name="x" type="xs:double">
+							<xs:annotation>
+								<xs:documentation>longitude in WGS84 decimal degrees</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+                        <xs:element name="y" type="xs:double">
+                            <xs:annotation>
+                                <xs:documentation>latitude in WGS84 decimal degrees</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetCoverageMapByLatLongResponse">
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="ResponseType">
+					<xs:sequence>
+						<xs:element name="mapUrl" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>The URL of the map image</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>    <!-- ========= GetCoverage ============ -->
+	<xs:element name="GetCoverageRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Get the coverage information for a given address.
+                If the address is invalid, matchType will be a string that starts with "ERROR_" (ERROR_PARSE, ERROR_NOT_FOUND, etc.), indicating the problem with the address.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="address" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>The full address (street address, city, state, optional zip code) or just the zip code</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetCoverageResponse">
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="ResponseType">
+					<xs:sequence>
+						<xs:element name="live" type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>true if there is coverage at this location, false otherwise</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="comingSoon" type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>true if coverage will be available at this location soon, false otherwise; note that comingSoon = false for locations with current coverage (live = true)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="matchType" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>The type of match (ex. STREET, ZIP, etc.) if the address was found, or the type of error (ex. ERROR_PARSE, ERROR_NOT_FOUND, etc.) if the address was invalid</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>    <!-- ========= GetCoverageByLatLong ============ -->
+	<xs:element name="GetCoverageByLatLongRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Get the coverage information for a given latitude/longitude. Only
+                locations within the US and Mexico are supported.
+                If the latitude or longitude is invalid, a SOAP fault will be returned.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="RequestType">
+					<xs:sequence>
+						<xs:element name="x" type="xs:double">
+							<xs:annotation>
+								<xs:documentation>longitude in WGS84 decimal degrees</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+                        <xs:element name="y" type="xs:double">
+                            <xs:annotation>
+                                <xs:documentation>latitude in WGS84 decimal degrees</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetCoverageByLatLongResponse">
+		<xs:complexType mixed="false">
+			<xs:complexContent mixed="false">
+				<xs:extension base="ResponseType">
+					<xs:sequence>
+						<xs:element name="live" type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>true if there is coverage at this location, false otherwise</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="comingSoon" type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>true if coverage will be available at this location soon, false otherwise; note that comingSoon = false for locations with current coverage (live = true)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>   <!-- ========= GetSmsMessageDetails ============ -->
+    <xs:element name="GetSMSDetailsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the SMS Message Details for list of given smsmsgids.
+
+                The return result are not guaranteed to be in same ordering as request.
+                Not found messages will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                     <xs:sequence>
+			    <xs:element name="smsMsgIds">
+				<xs:complexType>
+				    <xs:sequence>
+					<xs:element name="smsMsgId" type="xs:long" minOccurs="1" maxOccurs="unbounded"/>
+				    </xs:sequence>
+				</xs:complexType>
+			    </xs:element>
+                    </xs:sequence>
+                 <xs:attribute name="messageTextEncoding" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies encoding format of message text - LITERAL(default) or BASE64.
+                                Note: Text retrieved will be encoded in the format specified
+                            </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>    
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSMSDetailsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="smsMessages">
+			    <xs:complexType>
+				<xs:sequence>
+				    <xs:element name="smsMessage" type="SmsMessageType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			    </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+              <!-- ========= GetSmsMessageIds ============ -->
+    <xs:element name="GetModifiedSMSRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get SmsMessageIds that have been sent/received for the given date range.
+                If "iccid" parameter is omitted, it means return messageids across all visible terminals.
+                If "fromDate" parameter is omitted, it means return messageids starting at the beginning of time.
+                If "toDate" parameter is omitted, it means return messageids up to the current date.
+
+                The result will be a list of smsmsgids.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                    	<xs:element name="iccid" type="xs:string" minOccurs="0"/>
+                        <xs:element name="fromDate" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="toDate" type="xs:dateTime" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetModifiedSMSResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="smsMsgIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="smsMsgId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+               <!-- ========= GetAlerts ============ -->
+    <xs:element name="GetAlertsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the Alerts accessible to this user which have been added since the given time (not inclusive).
+                If the "since" parameter is omitted, it means return all alertIds.
+
+                The result will be a list of alertIds ordered by oldest first. This API call is useful for keeping client
+                side data in sync with Jasper's.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="since" type="xs:dateTime" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAlertsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="alertIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="alertId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= GetAlertDetails ============ -->
+    <xs:element name="GetAlertDetailsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the alert details (given list of alert ids).
+                At least one alert id should be provided, maximum limit is 50 for performance reasons.
+
+                The returned results are not guaranteed to be in the same ordering as the request.
+                Not found alerts will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="alertIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="alertId" type="xs:long" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAlertDetailsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="alerts">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="alert" type="AlertDetailType" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+<!-- ========= SendSms ============ -->
+ <xs:element name="SendSMSRequest">
+     <xs:annotation>
+         <xs:documentation>
+             Send SMS message to device. Message length should be less than 160 characters
+
+             The response will be smsMsgId.
+         </xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+         <xs:complexContent>
+             <xs:extension base="RequestType">
+                 <xs:sequence>
+                     <xs:element name="sentToIccid" type="xs:string"/>
+                     <xs:element name="messageText" type="xs:string"/>
+                 </xs:sequence>
+                 <xs:attribute name="messageTextEncoding" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies encoding format of message text - LITERAL(default) or BASE64.
+                                Note: Text has to be encoded in the format specified
+                            </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute> 
+             </xs:extension>
+         </xs:complexContent>
+     </xs:complexType>
+ </xs:element>
+ <xs:element name="SendSMSResponse">
+     <xs:complexType>
+         <xs:complexContent>
+             <xs:extension base="ResponseType">
+                 <xs:sequence>
+                     <xs:element name="smsMsgId" type="xs:long"/>
+                     <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                 </xs:sequence>
+             </xs:extension>
+         </xs:complexContent>
+     </xs:complexType>
+ </xs:element>
+
+<!-- ========= GetTerminalsBySecureSimId ============ -->
+	<xs:element name="GetTerminalsBySecureSimIdRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Get the terminals accessible to this user given it's SecureSIM Id
+
+                The result will be a list of iccids ordered by oldest first. This API call is useful for getting the ICCIDs
+                for a given SecureSIM id
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="RequestType">
+					<xs:sequence>
+						<xs:element name="secureSimId" type="xs:string"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetTerminalsBySecureSimIdResponse">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ResponseType">
+					<xs:sequence>
+						<xs:element name="iccids">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="iccid" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element><!-- ========= GetNetworkAccessConfig ============ -->
+    <xs:element name="GetNetworkAccessConfigRequest">
+        <xs:annotation>
+            <xs:documentation>
+                GetNetworkAccessConfig takes an ICCID and returns the associated Network Access ID.
+
+                The result will be a Network Access ID.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                   <xs:sequence>
+                    	<xs:element name="iccid" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetNetworkAccessConfigResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="nacIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="nacId" type="nacIdType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+<!-- ========= GetAllNetworkAccessConfigs ============ -->
+    <xs:element name="GetAllNetworkAccessConfigsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                GetAllNetworkAccessConfigs returns all the network access configs available.
+
+                The result will be a list of nacIds.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAllNetworkAccessConfigsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="nacIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="nacId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ========= GetNetworkAccessConfigDetails ============ -->
+    <xs:element name="GetNetworkAccessConfigDetailsRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the Network Access Config details for a given list of Network Access Config IDs.
+                At least one nacID should be provided, maximum limit is 50 for performance reasons.
+
+                The returned results are not guaranteed to be in the same ordering as the request.
+                Not found nacIDs will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="nacIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="nacId" type="xs:long" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetNetworkAccessConfigDetailsResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="nacs">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="nac" type="nacType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element><!-- ========= EditNetworkAcessConfig ============ -->
+	<xs:element name="EditNetworkAccessConfigRequest">
+		<xs:annotation>
+			<xs:documentation>
+                Change the ICCID's Network Access Config to the target Network Access Config.
+
+                The result will be the ICCID and the effective date of the change.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="RequestType">
+					<xs:sequence>
+						<xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="nacId" type="xs:long"/>
+                        <xs:element name="effectiveDate" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The scheduled date (CCYY-MM-DD) for the change to be applied in UTC.
+                                    Default to current date, which indicates the execute the change immediately.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+    <xs:element name="EditNetworkAccessConfigResponse">
+        <xs:annotation>
+            <xs:documentation>
+                Response for EditNetworkAcessConfig API call.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="iccid" type="xs:string"/>
+                        <xs:element name="effectiveDate" type="xs:date"/>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    <!-- ========= SetupExpressAccount ============ -->
+    <xs:element name="SetupExpressAccountRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Setup an Express Account by giving Qcode, Account Name, Email. New Express Account will be created,
+                along with the account admin user (with the email as its username).
+
+                The ICCID and DeviceID mapping is defined by matching them in the order of the list. The terminals given
+                in the request will be allocated to the new Express Account, and their deviceId will be set accordingly.
+
+                If the target account already exists, only the terminal allocation will happen.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="qcode" type="xs:string"/>
+                        <xs:element name="accountName" type="xs:string"/>
+                        <xs:element name="email" type="xs:string"/>
+                        <xs:element name="iccids">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="iccid" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="devceIds">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="deviceId" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SetupExpressAccountResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- ========= SendIpMessage ============ -->
+     <xs:element name="SendIpMessageRequest">
+         <xs:annotation>
+             <xs:documentation>
+                 Send IP network message to device. Any error will be returned as SOAP fault.
+                 If the delivery was successful, the response message from the device will be returned (usually BASE64 encoded). 
+             </xs:documentation>
+         </xs:annotation>
+         <xs:complexType>
+             <xs:complexContent>
+                 <xs:extension base="RequestType">
+                     <xs:sequence>
+                         <xs:element name="iccid" type="xs:string"/>
+                         <xs:element name="protocol" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    TCP or UDP
+                                </xs:documentation>
+                            </xs:annotation>
+                         </xs:element>
+                         <xs:element name="port" type="xs:int"/>
+                         <xs:element name="message" type="xs:string"/>
+                         <xs:element name="responseTimeout" type="xs:int">
+                             <xs:annotation>
+                                 <xs:documentation>
+                                     How long (in ms) should the server wait for an response from the device.
+                                     Maximum 10000 (10s).
+                                 </xs:documentation>
+                             </xs:annotation>
+                         </xs:element>
+                     </xs:sequence>
+                     <xs:attribute name="messageEncoding" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Specifies encoding format of message text - LITERAL(default) or BASE64.
+                                    Note: Message has to be encoded in the format specified
+                                </xs:documentation>
+                            </xs:annotation>
+                    </xs:attribute>
+                 </xs:extension>
+             </xs:complexContent>
+         </xs:complexType>
+     </xs:element>
+     <xs:element name="SendIpMessageResponse">
+         <xs:complexType>
+             <xs:complexContent>
+                 <xs:extension base="ResponseType">
+                     <xs:sequence>
+                         <xs:element name="responseMessage" type="xs:string"/>
+                     </xs:sequence>
+                     <xs:attribute name="messageEncoding" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Specifies encoding format of message text - LITERAL(default) or BASE64.
+                                    Note: Response message will be encoded in the format specified
+                                </xs:documentation>
+                            </xs:annotation>
+                    </xs:attribute>
+                 </xs:extension>
+             </xs:complexContent>
+         </xs:complexType>
+     </xs:element>
+
+    <xs:element name="GetTerminalsByMsisdnRequest">
+        <xs:annotation>
+            <xs:documentation>
+                Get the ICCID(s) for a list of terminals (given list of msisdns).
+                At least one msisdn should be provided, maximum limit is 50 for performance reasons.
+
+                The returned results are not guaranteed to be in the same ordering as the request.
+                Not found terminals will not be part of the result.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RequestType">
+                    <xs:sequence>
+                        <xs:element name="msisdns">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="msisdn" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetTerminalsByMsisdnResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="ResponseType">
+                    <xs:sequence>
+                        <xs:element name="terminals">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="terminal" type="MsisdnType" minOccurs="1" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element></xs:schema>

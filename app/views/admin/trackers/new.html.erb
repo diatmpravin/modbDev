@@ -1,0 +1,5 @@
+<div class="tracker">
+  <%= render :partial => 'form', :locals => {:tracker => @tracker, :method => 'post', :url => admin_trackers_path} %>
+  <br/>
+  <%= link_to 'Back to list', admin_trackers_path, :class => 'simple' %>
+</div>

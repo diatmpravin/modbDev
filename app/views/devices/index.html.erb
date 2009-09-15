@@ -1,0 +1,46 @@
+<%= messages %>
+<div class="devices">
+  <div class="buttonsLeft">
+    <%= link_to '', '#', :class => 'addVehicle button' %>
+  </div>
+  <div class="clear spacer"></div>
+  
+  <% @devices.each do |device| -%>
+    <div class="device">
+      <div class="view">
+        <%= render :partial => 'device', :locals => {:device => device} %>
+      </div>
+      <div class="edit">
+        <%= render :partial => 'form', :locals => {:device => device} %>
+      </div>
+    </div>
+  <% end -%>
+</div>
+
+<div id="newAlertRecipient" class="dialog">
+  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
+</div>
+
+<div id="removeDevice" class="dialog">
+  <p>If you remove this vehicle, it will be deleted permanently.</p>
+  <p>Any associated vehicle history will be erased.</p>
+  <p>Are you sure you want to remove this vehicle?</p>
+</div>
+
+<div id="addDevice" class="dialog">
+  <% form_for @device, { :autocomplete => 'off'} do |f| -%>
+    <div class="field">
+      <%= label_tag 'Enter IMEI Number: ' %>
+      <%= text_field_tag :imei, '' %>
+    </div>
+
+    <div class="field">
+      <%= label_tag 'Confirm IMEI Number: ' %>
+      <%= text_field_tag :imei_confirmation, '' %>
+    </div>
+
+    <br/>
+
+    <p>The IMEI Number is located on the label on the Tracker.</p>
+  <% end -%>
+</div>

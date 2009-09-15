@@ -1,0 +1,50 @@
+<div class="standardInfo">
+  <h2><%= h(device.name || 'Vehicle') %></h2>
+
+  <div class="field">
+    <%= image_tag device.color.filename %>
+    <%= device.color.name %>
+  </div>
+
+  <div class="field">
+    <%= label_tag :imei_number, 'IMEI Number' %>
+    <%= h(device.imei_number) %>
+  </div>
+
+  <div class="field deleteOn">
+    Will be deleted on <span class="date"><%= device.will_be_deleted_on.to_s(:local) if device.to_be_deleted? -%></span>. 
+    <%= link_to "Undo this", "#", :class => "simple undoDelete" %>
+  </div>
+</div>
+
+<div class="alertInfo">
+  <table>
+    <tr>
+      <td>Speed Alerts</td>
+      <td><%= check_image device.alert_on_speed %></td>
+      <!--<td>80 MPH</td>-->
+    </tr>
+    <tr>
+      <td>Aggressive Driving Alerts</td>
+      <td><%= check_image device.alert_on_aggressive %></td>
+    </tr>
+    <tr>
+      <td>Idle Time Alerts</td>
+      <td><%= check_image device.alert_on_idle %></td>
+      <!--<td>5 min</td>-->
+    </tr>
+    <tr>
+      <td>After Hours Alerts</td>
+      <td><%= check_image device.alert_on_after_hours %></td>
+      <!--<td>Evenings</td>-->
+    </tr>
+  </table>
+</div>
+
+<div class="clear"></div>
+<div class="buttons">
+  <div class="loading"></div>
+  <%= link_to '', '#', :class => 'editSettings button' %>
+  <%= link_to '', '#', :class => 'delete button' %>
+</div>
+<div class="clear"></div>

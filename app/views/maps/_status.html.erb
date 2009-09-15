@@ -1,0 +1,22 @@
+<h3>CURRENT STATUS</h3>
+<div class="section">
+  <div class="time"><%= current_user.zone.now.to_s(:local) %></div>
+  <div class="date"><%= current_user.zone.today.to_s(:local) %></div>
+</div>
+<div class="devices">
+  <% devices.each do |device| -%>
+    <div class="device <%= cycle('section', 'section alternating') %>" id="<%=dom_id(device)%>">
+      <div class="color"><img src="<%= device.color.filename %>" /></div>
+      <div class="detail">
+        <h4><%= h(device.name || 'Vehicle') %></h4>
+        <% if device.position -%>
+          <% if device.position.running? -%>
+            Moving at <%= device.position.speed %> mph
+          <% else -%>
+            Stationary
+          <% end -%>
+        <% end -%>
+      </div>
+    </div>
+  <% end -%>
+</div>

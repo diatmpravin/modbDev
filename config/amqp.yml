@@ -1,0 +1,23 @@
+development:
+  host: 'maude.gomoshi.com'
+  user: 'enelson'
+  pass: 'enelson'
+  vhost: 'mobd'
+
+test:
+  host: 'maude.gomoshi.com'
+  user: 'enelson'
+  pass: 'enelson'
+  vhost: 'mobd'
+
+staging:
+  host: 'maude.gomoshi.com'
+  user: 'enelson'
+  pass: 'enelson'
+  vhost: 'mobd'
+
+production:
+  host: 'maude.gomoshi.com'
+  user: 'enelson'
+  pass: 'enelson'
+  vhost: 'mobd'

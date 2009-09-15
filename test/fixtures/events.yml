@@ -1,0 +1,4 @@
+quentin_event:
+  point: quentin_point
+  event_type: 1
+  occurred_at: <%= Time.parse("02/05/2009 08:00:00").to_s(:db) %>

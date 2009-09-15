@@ -1,0 +1,31 @@
+<div class="reportResult">
+  <h2><%= report.title %></h2>
+  
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Miles Driven</th>
+      <th>Operating Time (hh:mm)</th>
+      <th>Idle Time (hh:mm)</th>
+      <th>Events</th>
+    </tr>
+    <% report.data.each do |row| -%>
+      <tr>
+        <td><%= row[:date] %></td>
+        <td><%= row[:miles] %></td>
+        <td><%= row[:duration] %></td>
+        <td><%= row[:idle_time] %></td>
+        <td>
+          <% events = []
+             events << "#{row[:events][:speed]} Speed" if row[:events][:speed] > 0
+             events << "#{row[:events][:geofence]} Geofence" if row[:events][:geofence] > 0
+             events << "#{row[:events][:idle_time]} Idle Time" if row[:events][:idle_time] > 0
+             events << "#{row[:events][:aggressive]} Aggressive Driving" if row[:events][:aggressive] > 0
+             events << "#{row[:events][:after_hours]} After Hours" if row[:events][:after_hours] > 0
+          -%>
+          <%= events.any? ? events.join('<br/>') : 'None' %>
+        </td>
+      </tr>
+    <% end -%>
+  </table>
+</div>

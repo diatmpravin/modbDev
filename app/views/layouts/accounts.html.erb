@@ -1,0 +1,7 @@
+<% @title = 'Account Settings' -%>
+<% content_for(:javascript) do -%>
+  <%= javascript_include_tag 'accounts' %>
+<% end -%>
+<% inside_layout 'settings' do -%>
+  <%= yield %>
+<% end -%>

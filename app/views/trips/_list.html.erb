@@ -1,0 +1,13 @@
+<h3><%= date.to_s(:local) %></h3>
+<div class="trips">
+  <% trips.each do |trip| -%>
+    <div class="trip <%= cycle('section', 'section alternating') %>" id="<%=dom_id(trip)%>">
+      <div class="view">
+        <%= render :partial => 'trip', :locals => {:trip => trip} %>
+      </div>
+      <div class="edit">
+        <%= render :partial => 'form', :locals => {:trip => trip} %>
+      </div>
+    </div>
+  <% end -%>
+</div>

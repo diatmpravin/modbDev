@@ -1,0 +1,8 @@
+<% @title = 'Phone Settings' -%>
+<% content_for(:javascript) do -%>
+  <%= javascript_include_tag 'phones' %>
+  <%= javascript_include_tag 'phone_finder' %>
+<% end -%>
+<% inside_layout 'settings' do -%>
+  <%= yield %>
+<% end -%>

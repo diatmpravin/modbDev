@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:jws="http://api.jasperwireless.com/ws/schema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://api.jasperwireless.com/ws/schema">
+
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://api.jasperwireless.com/ws/schema"
+                   elementFormDefault="qualified" attributeFormDefault="unqualified"
+                   xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+            <xs:import namespace="http://api.jasperwireless.com/ws/schema"
+                       schemaLocation="JasperAPI.xsd"/>
+        </xs:schema>
+    </types>
+
+    <message name="EditTerminalRequest">
+        <part name="body" element="jws:EditTerminalRequest"/>
+    </message>
+
+    <message name="EditTerminalResponse">
+        <part name="body" element="jws:EditTerminalResponse"/>
+    </message>
+
+    <message name="EditTerminalRatingRequest">
+        <part name="body" element="jws:EditTerminalRatingRequest"/>
+    </message>
+
+    <message name="EditTerminalRatingResponse">
+        <part name="body" element="jws:EditTerminalRatingResponse"/>
+    </message>
+
+    <message name="GetTerminalDetailsRequest">
+        <part name="body" element="jws:GetTerminalDetailsRequest"/>
+    </message>
+
+    <message name="GetTerminalDetailsResponse">
+        <part name="body" element="jws:GetTerminalDetailsResponse"/>
+    </message>
+
+    <message name="GetModifiedTerminalsRequest">
+        <part name="body" element="jws:GetModifiedTerminalsRequest"/>
+    </message>
+
+    <message name="GetModifiedTerminalsResponse">
+        <part name="body" element="jws:GetModifiedTerminalsResponse"/>
+    </message>
+
+    <message name="GetTerminalsBySecureSimIdRequest">
+        <part name="body" element="jws:GetTerminalsBySecureSimIdRequest"/>
+    </message>
+
+    <message name="GetTerminalsBySecureSimIdResponse">
+        <part name="body" element="jws:GetTerminalsBySecureSimIdResponse"/>
+    </message>
+
+    <message name="GetSessionInfoRequest">
+        <part name="body" element="jws:GetSessionInfoRequest"/>
+    </message>
+
+    <message name="GetSessionInfoResponse">
+        <part name="body" element="jws:GetSessionInfoResponse"/>
+    </message>
+
+    <message name="GetTerminalsByMsisdnRequest">
+        <part name="body" element="jws:GetTerminalsByMsisdnRequest"/>
+    </message>
+
+    <message name="GetTerminalsByMsisdnResponse">
+        <part name="body" element="jws:GetTerminalsByMsisdnResponse"/>
+    </message>
+
+    <portType name="TerminalPortType">
+        <operation name="EditTerminal">
+            <input message="jws:EditTerminalRequest"/>
+            <output message="jws:EditTerminalResponse"/>
+        </operation>
+        <operation name="EditTerminalRating">
+            <input message="jws:EditTerminalRatingRequest"/>
+            <output message="jws:EditTerminalRatingResponse"/>
+        </operation>
+        <operation name="GetTerminalDetails">
+            <input message="jws:GetTerminalDetailsRequest"/>
+            <output message="jws:GetTerminalDetailsResponse"/>
+        </operation>
+        <operation name="GetModifiedTerminals">
+            <input message="jws:GetModifiedTerminalsRequest"/>
+            <output message="jws:GetModifiedTerminalsResponse"/>
+        </operation>
+        <operation name="GetTerminalsBySecureSimId">
+            <input message="jws:GetTerminalsBySecureSimIdRequest"/>
+            <output message="jws:GetTerminalsBySecureSimIdResponse"/>
+        </operation>
+        <operation name="GetSessionInfo">
+            <input message="jws:GetSessionInfoRequest"/>
+            <output message="jws:GetSessionInfoResponse"/>
+        </operation>
+        <operation name="GetTerminalsByMsisdn">
+            <input message="jws:GetTerminalsByMsisdnRequest"/>
+            <output message="jws:GetTerminalsByMsisdnResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="TerminalBinding" type="jws:TerminalPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="EditTerminal">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/EditTerminal"/>
+            <input name="EditTerminalRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="EditTerminalResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+        <operation name="EditTerminalRating">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/EditTerminalRating"/>
+            <input name="EditTerminalRatingRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="EditTerminalRatingResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+        <operation name="GetTerminalDetails">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails"/>
+            <input name="GetTerminalDetailsRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="GetTerminalDetailsResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+        <operation name="GetModifiedTerminals">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/GetModifiedTerminals"/>
+            <input name="GetModifiedTerminalsRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="GetModifiedTerminalsResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+         <operation name="GetTerminalsBySecureSimId">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/GetTerminalsBySecureSimId"/>
+            <input name="GetTerminalsBySecureSimIdRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="GetTerminalsBySecureSimIdResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+        <operation name="GetSessionInfo">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/GetSessionInfo"/>
+            <input name="GetSessionInfoRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="GetSessionInfoResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+        <operation name="GetTerminalsByMsisdn">
+            <!-- static logic string used to match Endpoint -->
+            <soap:operation soapAction="http://api.jasperwireless.com/ws/service/terminal/GetTerminalsByMsisdn"/>
+            <input name="GetTerminalsByMsisdnRequest">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </input>
+            <output name="GetTerminalsByMsisdnResponse">
+                <soap:body use="literal" namespace="http://api.jasperwireless.com/ws/schema"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="TerminalService">
+        <port binding="jws:TerminalBinding" name="TerminalPort">
+            <soap:address location="https://api.jaspersystems.com/ws/service/terminal"/>
+        </port>
+    </service>
+</definitions>
+

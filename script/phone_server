@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'daemons'
+
+ENV["RAILS_ENV"] = ARGV[1] || ENV["RAILS_ENV"] || "production"
+
+rails = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+phone_server = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'phone_server'))
+
+options = {
+  :app_name   => "phone_server",
+  :ARGV       => ARGV,
+  :dir_mode   => :normal,
+  :dir        => File.join(File.dirname(__FILE__), '..', 'log'),
+  :log_output => true,
+  :multiple   => false,
+  :backtrace  => true,
+  :monitor    => false
+}
+
+Daemons.run_proc(options[:app_name], options) do
+  require rails
+  require phone_server
+  PhoneServer.run
+end

@@ -1,0 +1,10 @@
+<% form_for user, :index => user.id, :html => {:autocomplete => "off"} do |f| -%>
+  <strong><%= h(user.name) %></strong> (<%= h(user.login) %>)
+  
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= button_tag 'Edit', :class => 'edit' %>
+    <%= button_tag 'Remove', :class => 'delete' %>
+  </div>
+  <div class="clear"></div>
+<% end -%>

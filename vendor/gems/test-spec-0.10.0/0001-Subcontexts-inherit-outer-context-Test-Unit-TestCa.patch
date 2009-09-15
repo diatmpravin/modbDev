@@ -1,0 +1,55 @@
+From 7f6cc03fccee270ecb1848880e54b240371c7311 Mon Sep 17 00:00:00 2001
+From: Chris Gaffney <cgaffney@crayoninterface.com>
+Date: Fri, 6 Feb 2009 11:49:47 -0500
+Subject: [PATCH] Subcontexts inherit outer context Test::Unit::TestCase by default.
+
+---
+ lib/test/spec.rb            |    4 ++--
+ test/spec_nestedcontexts.rb |   19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git lib/test/spec.rb lib/test/spec.rb
+index a16dd8d..b58bca1 100644
+--- lib/test/spec.rb
++++ lib/test/spec.rb
+@@ -397,8 +397,8 @@ class Test::Spec::TestCase
+
+     # old-style (RSpec <1.0):
+
+-    def context(name, superclass=Test::Unit::TestCase, klass=Test::Spec::TestCase, &block)
+-      (Test::Spec::CONTEXTS[self.name + "\t" + name] ||= klass.new(name, self, superclass)).add(&block)
++    def context(name, superclass=nil, klass=Test::Spec::TestCase, &block)
++      (Test::Spec::CONTEXTS[self.name + "\t" + name] ||= klass.new(name, self, superclass || self.superclass)).add(&block)
+     end
+
+     def xcontext(name, superclass=Test::Unit::TestCase, &block)
+diff --git test/spec_nestedcontexts.rb test/spec_nestedcontexts.rb
+index baf7ab4..d8e49fa 100644
+--- test/spec_nestedcontexts.rb
++++ test/spec_nestedcontexts.rb
+@@ -24,3 +24,22 @@ context "Outer context" do
+     end
+   end
+ end
++
++class SpecializedTestCase < ::Test::Unit::TestCase
++  def test_truth
++    assert true
++  end
++end
++
++context "Outer context with class", SpecializedTestCase do
++  context "Inner context" do
++    specify "is outer context class" do
++      self.should.be.a.kind_of SpecializedTestCase
++    end
++  end
++  context "Inner context with class", Test::Unit::TestCase do
++    specify "is specified context class" do
++      self.should.be.a.kind_of Test::Unit::TestCase
++    end
++  end
++end
+--
+1.6.1.2
+

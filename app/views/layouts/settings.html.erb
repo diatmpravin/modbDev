@@ -1,0 +1,27 @@
+<% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'settings' %>
+<% end -%>
+<% inside_layout 'global' do -%>
+  <%= render :partial => "common/header" %>
+  <div id="navbar">
+    <div class="noLeft noRight">
+      <h1><%= @title %></h1>
+    </div>
+
+    <% requires_role(User::Role::DISPATCH) do -%>
+      <div class="float noRight"></div>
+      <div id="livelook" class="float">
+        <%= link_to 'Live Look', maps_path %>
+      </div>
+      <div class="float noLeft"></div>
+    <% end -%>
+  </div>
+  <%= yield :side %>
+  <div id="settingsContainer">
+    <div id="settings">
+      <div id="settingsContent">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+<% end -%>

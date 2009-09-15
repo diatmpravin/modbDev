@@ -1,0 +1,13 @@
+quentin_recipient:
+  account: quentin
+  recipient_type: 0
+  email: quentin@example.com
+quentin_sms:
+  account: quentin
+  recipient_type: 1
+  phone_number: 3135551212
+  phone_carrier: sprint
+aaron_recipient:
+  account: aaron
+  recipient_type: 0
+  email: aaron@example.com

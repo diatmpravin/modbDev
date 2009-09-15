@@ -1,0 +1,21 @@
+<h2><%= h(phone.name || 'Phone') %> - <%= h(phone.activation_code) %></h2>
+
+<div>
+  <% unless phone.devices.empty? -%>
+    <h3>This phone has access to:</h3>
+    <ul>
+      <% phone.devices.each do |device| -%>
+        <li>
+          <%= h(device.name) %>
+        </li>
+      <% end -%>
+    </ul>
+  <% end -%>
+</div>
+
+<div class="buttons">
+  <div class="loading"></div>
+  <%= link_to '', '#', :class => 'editSettings button' %>
+  <%= link_to '', '#', :class => 'delete button' %>
+</div>
+<div class="clear"></div>

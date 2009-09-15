@@ -1,0 +1,10 @@
+quentin_trip:
+  device: quentin_device
+  start: <%= Time.parse("02/05/2009 08:00:00").to_s(:db) %>
+  finish: <%= Time.parse("02/05/2009 08:15:00").to_s(:db) %>
+  miles: 6
+aaron_trip:
+  device: aaron_device
+  start: <%= Time.parse("02/05/2009 08:00:00").to_s(:db) %>
+  finish: <%= Time.parse("02/05/2009 08:15:00").to_s(:db) %>
+  miles: 7

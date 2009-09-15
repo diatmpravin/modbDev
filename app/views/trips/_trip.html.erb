@@ -1,0 +1,17 @@
+<div class="color"><img src="<%= trip.color.filename %>" /></div>
+<div class="detail">
+  <!--<div class="buttons"><%= link_to 'Edit', '#', {:class => 'editSettings simple'} %></div>-->
+  <h4><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></h4>
+  <p><%= human_miles(trip.miles) %> over <%= human_duration(trip.duration) %></p>
+  <div class="additional">
+    <p>Max Speed: <%= trip.max_speed %> mph</p>
+    <p>Average Speed: <%= trip.average_speed %> mph</p>
+    <p>Average RPM: <%= trip.average_rpm %></p>
+    <p>MPG: <%= trip.average_mpg %></p>
+    <p>Events: <%= trip.events.length %></p>
+    <p class="tags">
+      <%= format_tags(trip.tags) %>
+      (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
+    </p>
+  </div>
+</div>

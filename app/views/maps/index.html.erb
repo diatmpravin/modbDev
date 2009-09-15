@@ -1,0 +1,57 @@
+<div id="navbar">
+  <div class="vehicles">
+    <%= collection_select :device, :id, @devices, :id, :name, 
+      {:include_blank => (@devices.length > 1 ? 'All Vehicles' : false)} %>
+  </div>
+  <div>
+    <%= check_box_tag :show_geofences, 1, {:checked => false } %>
+    <%= label_tag :show_geofences, 'Show Geofences' %>
+  </div>
+  <div>
+    <%= check_box_tag :show_labels, 1, {:checked => false } %>
+    <%= label_tag :show_labels, 'Show Labels' %>
+  </div>
+  <div class="noRight"></div>
+  
+  <div class="float noRight"></div>
+  <div id="livelook" class="float">
+    <%= link_to 'Live Look', '#' %>
+  </div>
+  <div class="float noLeft"></div>
+</div>
+
+<div id="history">
+  <div id="historyMonth">
+    <a href="#" id="monthBackward"></a>
+    <a href="#" id="monthForward"></a>
+    <span>Month</span>
+  </div>
+  <div id="historyScroller"></div>
+  <div class="loading"></div>
+</div>
+
+<div id="sidebarContainer">
+  <div id="sidebar">
+    <div id="sidebarContent">
+      <%= render :partial => 'status', :locals => {:devices => @devices} %>
+    </div>
+  </div>
+</div>
+
+<div id="tripSummary">
+  <div class="top"></div>
+  <ul></ul>
+  <div class="bottom"></div>
+</div>
+
+<div id="tagDialog" class="dialog">
+  <%= render :partial => 'tags/form', :locals => {:tag => current_account.tags.new} %>
+</div>
+
+<div>
+  <div id="mapContainer">
+    <div style="text-align:center;font-style:italic;padding-top:50px">
+      Please wait, loading...
+    </div>
+  </div>
+</div>

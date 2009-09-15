@@ -1,0 +1,21 @@
+<div class="content">
+  <div class="listContainer">
+    <h2>Select Your Phone</h2>
+    
+    <% if @phones.empty? -%>
+      <p>Sorry!  No phones found.</p>
+    <% else -%>
+      <div class="phoneList">
+        <% @phones.each do |phone| -%>
+          <div class="phone">
+            <%= link_to phone_image_tag(phone.thumbnail_path) + formatted_phone_name(phone, @carrier), phone_finder_carrier_phone_path(@carrier, phone, @terms), 
+              :onclick => "return PhoneFinder.phone(this)" %>
+          </div>
+        <% end -%>
+      </div>
+    <% end -%>
+  </div>
+</div>
+<div class="back">
+  <%= link_to "Back", phone_finder_carrier_path(@carrier) %>
+</div>

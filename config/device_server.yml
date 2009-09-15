@@ -1,0 +1,29 @@
+# List the IP/port combinations the device server will listen on
+development:
+  localhost:
+    host: 0.0.0.0
+    port: 4187
+staging:
+  bunny_tcp:
+    host: 67.23.6.13
+    port: 4187
+  bunny_udp:
+    host: 67.23.6.13
+    port: 4189
+    type: udp
+test:
+  test_tcp:
+    host: testing
+    port: 3000
+  test_udp:
+    host: testing
+    port: 3001
+    type: udp
+production:
+  walter_tcp:
+    host: 192.168.51.74
+    port: 4187
+  walter_udp:
+    host: 192.168.51.74
+    port: 4189
+    type: udp

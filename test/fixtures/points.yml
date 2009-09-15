@@ -1,0 +1,34 @@
+quentin_point:
+  device: quentin_device
+  leg: quentin_leg
+  event: 4001
+  latitude: 33.68418
+  longitude: -84.40866
+  altitude: 263
+  speed: 61
+  accelerating: true
+  decelerating: false
+  rpm: 2400
+  heading: 252
+  satellites: 9
+  hdop: 1.7
+  miles: 17
+  mpg: 18
+  occurred_at: <%= Time.parse("02/05/2009 08:00:00").to_s(:db) %>
+quentin_point2:
+  device: quentin_device
+  leg: quentin_leg
+  event: 4001
+  latitude: 33.68418
+  longitude: -84.40866
+  altitude: 263
+  speed: 51
+  accelerating: true
+  decelerating: false
+  rpm: 1713
+  heading: 252
+  satellites: 9
+  hdop: 1.7
+  miles: 23
+  mpg: 22
+  occurred_at: <%= Time.parse("02/05/2009 08:15:00").to_s(:db) %>

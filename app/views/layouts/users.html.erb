@@ -1,0 +1,7 @@
+<% @title = 'User Management' -%>
+<% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'users' %>
+<% end -%>
+<% inside_layout 'settings' do -%>
+  <%= yield %>
+<% end -%>

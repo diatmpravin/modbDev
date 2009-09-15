@@ -1,0 +1,35 @@
+<% content_for(:side) do -%>
+  <%= render :partial => 'phone_finder/phone_finder' %>
+<% end -%>
+
+<%= messages %>
+<div class="phones">
+  <div class="buttonsLeft">
+    <%= link_to '', '#', :class => 'downloadPhoneSoftware button' %>
+  </div>
+  <div class="buttons">
+    <%= link_to '', '#', :class => 'activatePhoneSoftware button' %>
+  </div>
+  <div class="clear" style="padding-bottom:16px"></div>
+  
+  <% @phones.each do |phone| -%>
+    <div class="phone">
+      <div class="view">
+        <%= render :partial => 'phone', :locals => {:phone => phone} %>
+      </div>
+      <div class="edit">
+        <%= render :partial => 'form', :locals => {:phone => phone, :devices => @devices} %>
+      </div>
+    </div>
+  <% end -%>
+  
+  <% if @phones.empty? -%>
+    <div class="phone">
+      <p>You can download the MOBD Mobile Tracker application to your phone by clicking "Download Phone Software" above.</p>
+      <div class="spacer"></div>
+      <p>If you have already downloaded the software, you can activate your phone by clicking "Activate Phone Software".</p>
+    </div>
+  <% end -%>
+</div>
+
+<%= render :partial => 'software_download' %>

@@ -1,0 +1,9 @@
+5b3f7563ae1b4a7160fda7fe34240d40c5777dcd	not-for-merge	branch '1-2-stable' of git://github.com/rails/rails
+71926912a127da29530520d435c83c48778ac2b2	not-for-merge	branch '2-0-stable' of git://github.com/rails/rails
+2b158543247a150e8ec568becf360e7376f8ab84	not-for-merge	branch '2-1-stable' of git://github.com/rails/rails
+3cb89257b4d7bd706c642e0838909ed13019f557	not-for-merge	branch '2-2-stable' of git://github.com/rails/rails
+b600bf2cd728c90d50cc34456c944b2dfefe8c8d		branch '2-3-stable' of git://github.com/rails/rails
+d6b9f8410c990b3d68d1970f1461a1d385d098d7	not-for-merge	branch '3-0-unstable' of git://github.com/rails/rails
+dcba6e114884d993089fc1aa47bfaa7c4258a536	not-for-merge	branch 'master' of git://github.com/rails/rails
+0a091d0725fee86228fd4bf8a135b35d5e860976	not-for-merge	branch 'path_refactor' of git://github.com/rails/rails
+030dfe3f831aacd60bbfa525dfac4cd5921b6530	not-for-merge	branch 'wip_abstract_controller' of git://github.com/rails/rails

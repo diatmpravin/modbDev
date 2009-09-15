@@ -1,0 +1,36 @@
+<% datetime = current_user.zone.now -%>
+<div id="dateTimeInternal"><%= (datetime.to_i + datetime.utc_offset) * 1000 %></div>
+<div id="header">
+  <div id="logo"></div>
+  <div id="welcome">
+    <span><strong><%= h(current_account.name) %></strong> &middot; <%= h(current_user.name) %></span>
+    <%= link_to "Logout", logout_path %>
+  </div>
+  <div id="topnav">
+    <ul class="sf-menu">
+      <% requires_role(User::Role::REPORTS) do -%>
+        <li>
+          <%= link_to 'Reports', reports_path %>
+        </li>
+      <% end -%>
+      <% requires_role(User::Role::SUPERUSER) do -%>
+        <li>
+          <%= link_to 'Account', edit_account_path %>
+        </li>
+      <% end -%>
+      <li>
+        <%= link_to 'Settings', '#' %>
+        <ul>
+          <% requires_role(User::Role::FLEET) do -%>
+            <li><%= link_to 'Vehicles', devices_path %></li>
+            <li><%= link_to 'Geofences', geofences_path %></li>
+          <% end -%>
+          <% requires_role(User::Role::USERS) do -%>
+            <li><%= link_to 'Phones', phones_path %></li>
+            <li><%= link_to 'Users', users_path %></li>
+          <% end -%>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

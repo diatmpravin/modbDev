@@ -1,0 +1,3 @@
+quentin_gar:
+  geofence: quentin_geofence
+  alert_recipient: quentin_recipient

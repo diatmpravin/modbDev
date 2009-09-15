@@ -1,0 +1,6 @@
+quentin_geofence:
+  account: quentin
+  geofence_type: 0
+  coordinates: <%= [{:latitude => 40.222222, :longitude => -86.333333}, {:latitude => 40.333333, :longitude => -85.333333}].to_yaml.inspect %>
+  radius: 15
+  name: Home

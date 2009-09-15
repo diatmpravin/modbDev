@@ -1,0 +1,24 @@
+<% form_for tracker, :url => url, :html => {:method => method} do |f| -%>
+  <div class="field">
+    <%= f.label :imei_number, 'IMEI Number (Tracker ID)' %>
+    <%= f.text_field :imei_number, :maxlength => 20, :size => 20 %>
+    <%= error_message_on tracker, :imei_number, :prepend_text => '* IMEI Number ' %>
+  </div>
+  <div class="field">
+    <%= f.label :sim_number, 'SIM Number' %>
+    <%= f.text_field :sim_number, :maxlength => 20, :size => 20 %>
+    <%= error_message_on tracker, :sim_number, :prepend_text => '* SIM Number ' %>
+  </div>
+  <div class="field">
+    <%= f.label :msisdn_number, 'MSISDN Number' %>
+    <%= f.text_field :msisdn_number, :maxlength => 20, :size => 20, :disabled => true %>
+  </div>
+  <div class="field">
+    <%= f.label :status, 'Status' %>
+    <%= f.select :status, [['Unknown (Not Yet Tested)', 0], ['Inventory', 1], ['Active', 2]] %>
+  </div>
+  <div class="field">
+    <%= label_tag '', '&nbsp;' %>
+    <%= f.submit 'Save' %>
+  </div>
+<% end -%>

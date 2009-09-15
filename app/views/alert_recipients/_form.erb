@@ -1,0 +1,12 @@
+<% form_for alert_recipient, :url => alert_recipients_path, :method => :put do |f| -%>
+  <%= f.radio_button :recipient_type, AlertRecipient::EMAIL, :checked => true, :class => 'email_radio' %> Email
+  <%= f.radio_button :recipient_type, AlertRecipient::PHONE, :class => 'phone_radio' %> Phone
+  <div class="spacer"></div>
+  <div class="email">
+    <%= f.text_field :email, :size => 30, :maxlength => 50 %>
+  </div>
+  <div class="phone">
+    <%= f.text_field :phone_number, :size => 10, :maxlength => 10 %>
+    <%= f.select :phone_carrier, AlertRecipient.carrier_options %>
+  </div>
+<% end -%>

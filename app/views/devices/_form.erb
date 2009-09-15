@@ -1,0 +1,104 @@
+<% form_for device, :index => device.id, :html => {:autocomplete => "off"} do |f| -%>
+  <div class="standardInfo">
+    <div class="field">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+      <%= error_message_on device, :name, :prepend_text => '* Name ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :imei_number, 'IMEI Number' %>
+      <%= f.text_field :imei_number %>
+      <%= error_message_on device, :tracker, :prepend_text => '* IMEI Number ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :vin_number, 'VIN Number' %>
+      <%= f.text_field :vin_number %>
+      <%= error_message_on device, :vin_number, :prepend_text => '* VIN Number ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :color_id, 'Color' %>
+      <%= f.collection_select :color_id, Color::COLORS, :color_id, :name %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :odometer, 'Odometer' %>
+      <%= f.text_field :odometer, :maxlength => 6, :size => 6 %>
+    </div>
+    
+    <div class="field alerts">
+      <h3>Alert recipients</h3>
+      <input type="hidden" name="alertFieldName" value="device[<%=device.id%>][alert_recipient_ids][]"/>
+      <ul>
+        <% device.alert_recipients.each do |a| -%>
+          <li>
+            <%= link_to '', '#', :class => "remove" %>
+            <span><%= a.display_string %></span>
+            <%= hidden_field_tag "device[#{device.id}][alert_recipient_ids][]", a.id, :class => 'id' %>
+          </li>
+        <% end -%>
+        <li>
+          <%= link_to '', '#', :class => "add" %>
+          <select class="recipientSelect">
+            <%= alert_options_for(device) %>
+          </select>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="alertInfo">
+    <table>
+      <tr>
+        <td>
+          <%= help_tooltip :speed_alert %>
+          <%= f.label :alert_on_speed, 'Speed Alerts' %>
+        </td>
+        <td><%= f.check_box :alert_on_speed %></td>
+        <td class="extra" <%= device.alert_on_speed ? 'style="display:block"' : '' %>>
+          <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]} %> mph
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= help_tooltip :aggressive_driving_alert %>
+          <%= f.label :alert_on_aggressive, 'Aggressive Driving Alerts' %>
+        </td>
+        <td><%= f.check_box :alert_on_aggressive %></td>
+        <td class="extra" <%= device.alert_on_aggressive ? 'style="display:block"' : '' %>>
+          <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]} %> rpm
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= help_tooltip :idle_alert %>
+          <%= f.label :alert_on_idle, 'Idle Time Alerts' %>
+        </td>
+        <td><%= f.check_box :alert_on_idle %></td>
+        <td class="extra" <%= device.alert_on_idle ? 'style="display:block"' : '' %>>
+          <%= f.select :alert_on_idle, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= help_tooltip :after_hours_alert %>
+          <%= f.label :alert_on_after_hours, 'After Hours Alerts' %>
+        </td>
+        <td><%= f.check_box :alert_on_after_hours %></td>
+        <td class="extra" <%= device.alert_on_after_hours ? 'style="display:block"' : '' %>>
+          From <%= f.text_field :after_hours_start_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
+          to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="clear"></div>
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= link_to '', '#', :class => 'cancel button' %>
+    <%= link_to '', '#', :class => 'save button' %>
+  </div>
+<% end -%>

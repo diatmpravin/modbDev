@@ -1,0 +1,8 @@
+quentin_tracker:
+  imei_number: "123456789012345"
+  sim_number: "10002000300040005000"
+  status: 2
+aaron_tracker:
+  imei_number: "098765432109876"
+  sim_number: "10002000400050006000"
+  status: 2

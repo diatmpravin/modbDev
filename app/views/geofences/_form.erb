@@ -1,0 +1,83 @@
+<% form_for geofence do |f| -%>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <%= error_message_on geofence, :name, :prepend_text => '* Name ' %>
+  </div>
+  
+  <h3>Geofence Shape</h3>
+  <div class="shapeChooser">
+    <%= link_to '', "##{Geofence::Type::ELLIPSE}",
+      :class => (geofence.geofence_type==Geofence::Type::ELLIPSE ? 'ellipse selected' : 'ellipse'),
+      :title => 'Ellipse' %>
+    <%= link_to '', "##{Geofence::Type::RECTANGLE}",
+      :class => (geofence.geofence_type==Geofence::Type::RECTANGLE ? 'rectangle selected' : 'rectangle'),
+      :title => 'Rectangle' %>
+    <%= link_to '', "##{Geofence::Type::POLYGON}",
+      :class => (geofence.geofence_type==Geofence::Type::POLYGON ? 'polygon selected' : 'polygon'),
+      :title => 'Polygon' %>
+    <%= f.hidden_field :geofence_type %>
+  </div>
+  
+  <div class="field">
+    <h3>Apply to these vehicles</h3>
+    <ul>
+      <% devices.each do |device| -%>
+        <li>
+          <%= check_box_tag 'geofence[device_ids][]', device.id, geofence.devices.include?(device),
+            {:id => dom_id(device, dom_id(geofence))} %>
+          <%= label_tag dom_id(device, dom_id(geofence)), h(device.name) %>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
+  
+  <h3>Boundary settings</h3>
+  <div class="field">
+    <ul>
+      <li>
+        <%= f.check_box :alert_on_entry %>
+        <%= f.label :alert_on_entry, 'Send alert on entry?' %>
+      </li>
+      <li>
+        <%= f.check_box :alert_on_exit %>
+        <%= f.label :alert_on_exit, 'Send alert on exit?' %>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="field alerts">
+    <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>
+    <h3>Alert recipients</h3>
+    <ul>
+      <% geofence.alert_recipients.each do |a| -%>
+        <li>
+          <%= link_to '', '#', :class => "remove" %>
+          <span><%= a.display_string %></span>
+          <%= hidden_field_tag 'geofences[alert_recipient_ids][]', a.id, :class => 'id' %>
+        </li>
+      <% end -%>
+      <li>
+        <%= link_to '', '#', :class => "add" %>
+        <select class="recipientSelect">
+          <%= alert_options_for(geofence) %>
+        </select>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="coordinates" id="coord_<%=dom_id(geofence)%>">
+    <% geofence.coordinates.each do |coord| -%>
+      <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude] %>
+      <%= hidden_field_tag 'geofence[coordinates][][longitude]', coord[:longitude] %>
+    <% end -%>
+  </div>
+  
+  <div class="clear spacer"></div>
+  <div class="spacer"></div>
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= link_to '', '#', :class => 'cancel button' %>
+    <%= link_to '', '#', :class => 'save button' %>
+  </div>
+<% end -%>

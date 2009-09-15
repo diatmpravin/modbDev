@@ -1,0 +1,22 @@
+<% inside_layout 'global' do -%>
+  <div id="header">
+    <div id="logo"></div>
+    <% if logged_in? -%>
+      <div id="welcome">
+        <span>Admin User <strong><%= h(current_user.login) %></strong></span>
+        <%= link_to "Logout", admin_logout_path %>
+        <p><%= link_to "Admin Menu", admin_menu_path %></p>
+      </div>
+    <% end -%>
+  </div>
+  
+  <div id="admin">
+    <div id="settingsContainer">
+      <div id="settings">
+        <div id="settingsContent">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end -%>

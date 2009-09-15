@@ -1,0 +1,8 @@
+quentin_device:
+  account: quentin
+  name: "Quentin's Device"
+  tracker: quentin_tracker
+aaron_device:
+  account: aaron
+  name: "Aaron's Device"
+  tracker: aaron_tracker

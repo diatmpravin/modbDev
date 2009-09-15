@@ -1,0 +1,24 @@
+<div class="content">
+  <div class="phoneContainer">
+    <h2><%= formatted_phone_name(@phone, @carrier) %> on <%= @carrier.name %></h2>
+    
+    <% if @status == "green" -%>
+      <div class="green-box">This phone supports MOBD.</div>
+      <%= phone_image_tag @phone.thumbnail_path, :class => "thumbnail" %>
+      <p>Your phone supports the MOBD mobile software.</p>
+    <% elsif @status == "red" -%>
+      <div class="red-box">This phone does not support MOBD.</div>
+      <%= phone_image_tag @phone.thumbnail_path, :class => "thumbnail" %>
+      <p>Unfortunately, your phone does not support the MOBD mobile software.  Please note that you can still use
+      this phone to receive alerts via text message (if supported).</p>
+    <% else -%>
+      <div class="yellow-box">Certification is pending for this phone.</div>
+      <%= phone_image_tag @phone.thumbnail_path, :class => "thumbnail" %>
+      <p>This phone's platform is compatible with MOBD.  However, final certification is still in progress.  If you
+      experience problems downloading MOBD to this phone, please contact us at 877-288-7707.</p>
+    <% end -%>
+  </div>
+</div>
+<div class="back">
+  <%= link_to "Back", phone_finder_carrier_phones_path(@carrier, @terms) %>
+</div>
