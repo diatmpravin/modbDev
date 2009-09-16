@@ -130,6 +130,11 @@ class User < ActiveRecord::Base
     Mailer.deliver_activation(self)
   end
   
+  def forgot_password
+    generate_password_reset_code
+    Mailer.deliver_forgotten_password(self)
+  end
+  
   # Mark that this account is now active
   def activate
     self.activated_at = Time.now
@@ -161,6 +166,10 @@ class User < ActiveRecord::Base
   
   def random_digest
     ActiveSupport::SecureRandom.hex(20)
+  end
+
+  def generate_password_reset_code
+    self.password_reset_code = random_digest
   end
   
   def make_activation_code

@@ -160,6 +160,19 @@ describe "User", ActiveSupport::TestCase do
     end
   end
   
+  context "Resetting Password" do
+    specify "forgotten password generates a reset code and sends an email" do
+      Mailer.deliveries.clear
+      @user.password_reset_code.should.be.nil
+      
+      @user.forgot_password
+      
+      @user.password_reset_code.should.not.be.nil
+      Mailer.deliveries.length.should.be 1
+      Mailer.deliveries.clear
+    end
+  end
+  
   context "Time Zone" do
     specify "validates time zone" do
       @user.time_zone = 'Central Time (US & Canada)'
