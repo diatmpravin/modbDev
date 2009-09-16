@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
           end
           
           default = maps_path
-
+          
           flash.discard
           redirect_back_or_default(default)
         else
@@ -27,11 +27,11 @@ class SessionsController < ApplicationController
           render :action => 'waiting_on_activation', :layout => 'wizard'
         end
       else
-        flash.now[:error] = 'Your username or password is incorrect'
+        flash.now[:error] = 'Your Username or Password is incorrect.'
         render :action => 'new'
       end
     else
-      flash.now[:error] = 'Invalid account'
+      flash.now[:error] = 'Your Account ID is incorrect.'
       render :action => 'new'
     end
   end

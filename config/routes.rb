@@ -3,24 +3,27 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'maps'
   
   # Accounts
-  map.resource :account, :collection => {
-    :resend_activation => :get
-  }, :member => {
-    :activate => :get
-  }
-  map.signup '/signup', :controller => 'accounts', :action => 'new'
+  map.resource :account
   
   # Sessions
   map.resources :sessions
-  map.login '/login', :controller => 'sessions', :action => 'new', :conditions => { :method => :get }
-  map.connect '/login', :controller => 'sessions', :action => 'create', :conditions => { :method => :post }
+  map.login '/login', :controller => 'sessions', :action => 'new', :conditions => {:method => :get}
+  map.connect '/login', :controller => 'sessions', :action => 'create', :conditions => {:method => :post}
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
   # Maps
   map.resources :maps, :collection => {:status => :get}, :member => {:status => :get}
   
   # Users
-  map.resources :users
+  map.resources :users, :collection => {
+    :resend_activation => :get,
+    :forgot_password => :get,
+    :reset_password => :get
+  }, :member => {
+    :activate => :get
+  }
+  map.forgot_password '/users/forgot_password', :controller => 'users', :action => 'forgot_password', :conditions => {:method => :post}
+  map.reset_password '/users/reset_password/:id', :controller => 'users', :action => 'reset_password'
   
   # Devices
   map.resources :devices, :member => {:position => :get} do |devices|

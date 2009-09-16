@@ -132,6 +132,8 @@ class User < ActiveRecord::Base
   
   def forgot_password
     generate_password_reset_code
+    save(false)
+    
     Mailer.deliver_forgotten_password(self)
   end
   
