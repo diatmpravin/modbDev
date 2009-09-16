@@ -22,11 +22,10 @@ config.action_mailer.smtp_settings = {
   :domain => 'gomoshi.com'
 }
 
+config.action_mailer.default_url_options = {
+  :host => 'localhost',
+  :port => 3000
+}
+
 # Setup cookies to work with base domain
 config.action_controller.session[:domain] = ".fleet.local"
-
-# Mail host URL
-class ActionMailer::Base
-  default_url_options[:host] = 'localhost'
-  default_url_options[:port] = 3000
-end

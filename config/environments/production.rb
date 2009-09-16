@@ -29,10 +29,9 @@ config.action_mailer.smtp_settings = {
   :domain => 'gomoshi.com'
 }
 
-# Mail host URL
-class ActionMailer::Base
-  default_url_options[:host] = 'fleet.gomoshi.com'
-end
+config.action_mailer.default_url_options = {
+  :host => 'fleet.gomoshi.com'
+}
 
 # Setup cookies to work with base domain
 config.action_controller.session[:domain] = ".gomoshi.com"

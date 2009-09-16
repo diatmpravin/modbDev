@@ -16,13 +16,10 @@ config.action_controller.perform_caching             = false
 # Disable request forgery protection in test environment
 config.action_controller.allow_forgery_protection    = false
 
-# Tell Action Mailer not to deliver emails to the real world.
-# The :test delivery method accumulates sent emails in the
-# ActionMailer::Base.deliveries array.
+# ActionMailer test settings
 config.action_mailer.delivery_method = :test
 
-# Mail host URL
-class ActionMailer::Base
-  default_url_options[:host] = 'localhost'
-  default_url_options[:port] = 3000
-end
+config.action_mailer.default_url_options = {
+  :host => 'localhost',
+  :port => 3000
+}
