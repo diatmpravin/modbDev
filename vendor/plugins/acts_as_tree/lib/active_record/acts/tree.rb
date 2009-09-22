@@ -1,3 +1,5 @@
+# PLUGIN EDITED 9/22/09 Elliot Nelson: I hate to edit a plugin inline like this,
+# but I need control over whether child nodes are dependent.
 module ActiveRecord
   module Acts
     module Tree
@@ -40,11 +42,15 @@ module ActiveRecord
         # * <tt>order</tt> - makes it possible to sort the children according to this SQL snippet.
         # * <tt>counter_cache</tt> - keeps a count in a +children_count+ column if set to +true+ (default: +false+).
         def acts_as_tree(options = {})
-          configuration = { :foreign_key => "parent_id", :order => nil, :counter_cache => nil }
+          configuration = { :foreign_key => "parent_id", :order => nil, :counter_cache => nil, :dependent => :destroy }
           configuration.update(options) if options.is_a?(Hash)
-
+          
+          # Don't include any keys with nil values in the has_many options hash
+          has_many_options = {:class_name => name}
+          [:foreign_key, :order, :counter_cache, :dependent].each { |key| has_many_options[key] = configuration[key] if configuration[key] }
+          
           belongs_to :parent, :class_name => name, :foreign_key => configuration[:foreign_key], :counter_cache => configuration[:counter_cache]
-          has_many :children, :class_name => name, :foreign_key => configuration[:foreign_key], :order => configuration[:order], :dependent => :destroy
+          has_many :children, has_many_options
 
           class_eval <<-EOV
             include ActiveRecord::Acts::Tree::InstanceMethods
