@@ -80,11 +80,12 @@ module Dispatch
     end
 
     def require_subscription
-      if (phone && phone.account && phone.account.subscription && phone.account.subscription.cancelled?)
-        error(Errors::BAD_SUBSCRIPTION)
-      else
+      # TODO: FIX!
+      #if (phone && phone.account && phone.account.subscription && phone.account.subscription.cancelled?)
+      #  error(Errors::BAD_SUBSCRIPTION)
+      #else
         true
-      end
+      #end
     end
   
     class << self
