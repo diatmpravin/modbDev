@@ -9,17 +9,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090916153746) do
+ActiveRecord::Schema.define(:version => 20090922142116) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "setup_status",                :default => 1
-    t.boolean  "accept_terms",                :default => false
-    t.boolean  "accept_offers",               :default => false
+    t.integer  "setup_status",                      :default => 1
+    t.boolean  "accept_terms",                      :default => false
+    t.boolean  "accept_offers",                     :default => false
     t.date     "today"
     t.integer  "number"
-    t.string   "name",          :limit => 50
+    t.string   "name",                :limit => 50
+    t.integer  "parent_account_id"
+    t.boolean  "reseller",                          :default => false
+    t.boolean  "can_assign_reseller",               :default => false
   end
 
   create_table "admin_users", :force => true do |t|
