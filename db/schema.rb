@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090922142116) do
+ActiveRecord::Schema.define(:version => 20090922143056) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(:version => 20090922142116) do
     t.date     "today"
     t.integer  "number"
     t.string   "name",                :limit => 50
-    t.integer  "parent_account_id"
+    t.integer  "parent_id"
     t.boolean  "reseller",                          :default => false
     t.boolean  "can_assign_reseller",               :default => false
   end
@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(:version => 20090922142116) do
 
   create_table "users", :force => true do |t|
     t.integer  "account_id"
-    t.integer  "parent_user_id"
+    t.integer  "parent_id"
     t.string   "login",                     :limit => 30
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40

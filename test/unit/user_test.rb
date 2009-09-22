@@ -12,15 +12,17 @@ describe "User", ActiveSupport::TestCase do
       @user.account.should.equal accounts(:quentin)
     end
     
-    specify "has a parent user" do
-      @user.parent_user.should.be.nil
-      @child.parent_user.should.equal @user
+    specify "has many devices" do
+      @user.devices.should.equal [devices(:quentin_device)]
     end
-
-    specify "has users as children" do
-      @user.users.should.equal [@child]
-      @child.users.should.be.empty
-    end
+  end
+  
+  specify "acts as tree" do
+    @user.parent.should.be.nil
+    @user.children.should.equal [@child]
+    
+    @child.parent.should.equal @user
+    @child.children.should.equal []
   end
   
   context "Validations" do
@@ -190,7 +192,7 @@ describe "User", ActiveSupport::TestCase do
   end
   
   specify "will promote users when destroyed" do
-    new_user = @user.users.build(
+    new_user = @user.children.build(
       :account => @account,
       :login => 'guybrush',
       :name => 'Guybrush Threepwood',
@@ -200,7 +202,7 @@ describe "User", ActiveSupport::TestCase do
     )
     new_user.should.save
     
-    child_user = new_user.users.build(
+    child_user = new_user.children.build(
       :account => @account,
       :login => 'oranges',
       :name => 'Oswald Orange',
@@ -210,12 +212,12 @@ describe "User", ActiveSupport::TestCase do
     )
     child_user.should.save
     
-    child_user.parent_user.should.equal new_user
-    new_user.parent_user.should.equal @user
+    child_user.parent.should.equal new_user
+    new_user.parent.should.equal @user
     
     new_user.destroy
     
-    child_user.reload.parent_user.should.equal @user
-    @user.users.should.include(child_user)
+    child_user.reload.parent.should.equal @user
+    @user.children.should.include(child_user)
   end
 end

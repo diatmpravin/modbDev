@@ -2,7 +2,12 @@ quentin:
   created_at: <%= 5.days.ago.to_s :db %>
   setup_status: 0
   number: 10001
+  reseller: true
+  can_assign_reseller: true
 aaron:
+  parent: quentin
+  reseller: true
+  can_assign_reseller: false
   created_at: <%= 1.days.ago.to_s :db %>
   setup_status: 0
   number: 60001

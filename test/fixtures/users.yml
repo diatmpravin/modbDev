@@ -16,4 +16,4 @@ child:
   created_at: <%= 5.days.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>
   time_zone: Eastern Time (US & Canada)
-  parent_user: quentin
+  parent: quentin

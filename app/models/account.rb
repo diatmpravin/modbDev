@@ -1,4 +1,6 @@
 class Account < ActiveRecord::Base
+  acts_as_tree :order => 'name', :dependent => nil
+  
   has_many :devices, :dependent => :destroy
   has_many :phones, :dependent => :destroy
   has_many :geofences, :dependent => :destroy

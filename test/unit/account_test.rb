@@ -31,6 +31,14 @@ describe "Account", ActiveSupport::TestCase do
     end
   end
 
+  specify "acts as tree" do
+    @account.parent.should.be.nil
+    @account.children.should.equal [accounts(:aaron)]
+    
+    accounts(:aaron).parent.should.equal @account
+    accounts(:aaron).children.should.equal []
+  end
+  
   specify "can get the 'today' value" do
     a = accounts(:quentin)
     a.today.should.equal Date.today

@@ -1,8 +1,8 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
+  acts_as_tree :order => 'login', :dependent => nil
+  
   belongs_to :account
-  belongs_to :parent_user, :class_name => 'User'
-  has_many :users, :foreign_key => :parent_user_id
   has_many :devices
   
   # Virtual attribute for the unencrypted password
@@ -25,12 +25,11 @@ class User < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :login, :email, :password, :password_confirmation,
-    :account, :parent_user, :users, :current_password, :roles, :name,
-    :time_zone, :devices
+    :account, :current_password, :roles, :name, :time_zone, :devices
   
   before_save :encrypt_password
   before_create :make_activation_code
-  after_destroy :promote_child_records
+  before_destroy :promote_child_records
   
   class Role
     # Defined as bit positions
@@ -179,12 +178,10 @@ class User < ActiveRecord::Base
   end
   
   def promote_child_records
-    users.each do |user|
-      user.update_attribute(:parent_user_id, self.parent_user_id)
-    end
-    
-    devices.each do |device|
-      device.update_attribute(:user_id, self.parent_user_id)
-    end
+    # Take any users or devices that were children of this user, and "promote"
+    # them up the tree.
+    User.update_all({:parent_id => self.parent_id}, {:parent_id => self.id})
+    Device.update_all({:user_id => self.parent_id}, {:user_id => self.id})
+    self.reload
   end
 end
