@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090922143056) do
+ActiveRecord::Schema.define(:version => 20091012141310) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20090922143056) do
     t.boolean  "to_be_deleted"
     t.integer  "odometer"
     t.integer  "user_id"
+    t.string   "time_zone",            :limit => 64, :default => "Eastern Time (US & Canada)"
   end
 
   create_table "events", :force => true do |t|

@@ -22,6 +22,7 @@ class Device < ActiveRecord::Base
   validates_uniqueness_of :tracker_id, :message => 'is already in use'
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
+  validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
   
   validates_numericality_of :odometer, :allow_nil => true
   
@@ -33,7 +34,7 @@ class Device < ActiveRecord::Base
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients,
     :vin_number, :after_hours_start_text, :after_hours_end_text,
-    :odometer, :user
+    :odometer, :user, :time_zone
   
   after_create :assign_phones
 
@@ -48,9 +49,8 @@ class Device < ActiveRecord::Base
     self.tracker ? tracker.imei_number : nil
   end
   
-  # Time zone for this device
   def zone
-    account.zone
+    ActiveSupport::TimeZone[self[:time_zone]]
   end
   
   # Connected flag

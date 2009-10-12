@@ -375,9 +375,20 @@ describe "Device", ActiveSupport::TestCase do
     @device.reload.position.should.be.nil
   end
   
-  specify "knows about its time zone" do
-    @account.time_zone = 'Eastern Time (US & Canada)'
-    @device.reload.zone.name.should.equal 'Eastern Time (US & Canada)'
+  context "Time Zone" do
+    specify "validates time zone" do
+      @device.time_zone = 'Central Time (US & Canada)'
+      @device.should.save
+      
+      @device.time_zone = 'Not a real time zone'
+      @device.should.not.save
+      @device.errors.on(:time_zone).should.equal 'is not included in the list'
+    end
+    
+    specify "has a shortcut for its zone object" do
+      @device.time_zone = 'Eastern Time (US & Canada)'
+      @device.zone.name.should.equal 'Eastern Time (US & Canada)'
+    end
   end
   
   specify "allows alert_recipient_ids=, but enforces account ownership" do
