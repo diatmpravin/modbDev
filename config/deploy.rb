@@ -18,6 +18,7 @@ set :git_shallow_clone, 1
 set :deploy_via, :copy
 set :copy_strategy, :export
 set :copy_compression, :bzip2
+set :copy_exclude, 'doc/resources'
 
 # Determine what branch. Order: tag => branch => master
 set :branch, ENV['TAG'] || ENV['BRANCH'] || 'master'
