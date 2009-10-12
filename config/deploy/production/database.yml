@@ -1,4 +1,4 @@
-staging:
+production:
   adapter: mysql
   database: fleet
   username: fleet
