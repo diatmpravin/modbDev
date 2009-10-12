@@ -10,18 +10,17 @@ set :webgrp, 'www-data'
 set :runner, 'root'
 
 # Repository
-set :scm, :subversion
+set :scm, :git
+set :repository, 'git@git.gomoshi.com:fleet.git'
+set :git_shallow_clone, 1
+
+# Copy deploy strategy
 set :deploy_via, :copy
 set :copy_strategy, :export
+set :copy_compression, :bzip2
 
-# Branches & tags
-if(ENV['TAG'])
-  set :repository, "https://maude.gomoshi.com/svn/MobdFleet/tags/#{ENV['TAG']}"
-elsif(ENV['BRANCH'])
-  set :repository, "https://maude.gomoshi.com/svn/MobdFleet/branches/#{ENV['BRANCH']}"
-else
-  set :repository, "https://maude.gomoshi.com/svn/MobdFleet/trunk"
-end
+# Determine what branch. Order: tag => branch => master
+set :branch, ENV['TAG'] || ENV['BRANCH'] || 'master'
 
 # Dependencies
 
@@ -69,7 +68,3 @@ namespace :deploy do
     sudo "touch #{current_path}/tmp/restart.txt"
   end
 end
-
-#role :app, "your app-server here"
-#role :web, "your web-server here"
-#role :db,  "your db-server here", :primary => true
