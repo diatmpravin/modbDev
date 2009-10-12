@@ -66,7 +66,7 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       @account = accounts(:quentin)
     end
     
-    specify "works" do
+    xspecify "activating by login works" do
       dispatch({'action' => 'activate_by_login',
         'phone' => @phone.activation_code,
         'username' => 'quentin',
@@ -77,7 +77,7 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['moshi_key'].should.equal @phone.reload.moshi_key
     end
     
-    specify "errors out if phone does not exist" do
+    xspecify "activating by login errors out if phone does not exist" do
       dispatch({'action' => 'activate_by_login',
         'phone' => 'birds',
         'username' => 'quentin',
@@ -87,7 +87,7 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['code'].should.equal Dispatch::Errors::INVALID_PHONE
     end
     
-    specify "errors out if login is invalid" do
+    xspecify "activating by login errors out if login is invalid" do
       dispatch({'action' => 'activate_by_login',
         'phone' => @phone.activation_code,
         'username' => 'quentin',
@@ -97,7 +97,7 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['code'].should.equal Dispatch::Errors::INVALID_LOGIN
     end
     
-    specify "errors if there are too many phones" do
+    xspecify "errors if there are too many phones" do
       Phone.expects(:count).returns(21)
       
       dispatch({'action' => 'activate_by_login',
