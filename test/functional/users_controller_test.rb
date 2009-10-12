@@ -93,4 +93,17 @@ describe "UsersController", ActionController::TestCase do
       assigns(:user).errors.on(:password).should.not.be.nil
     end
   end
+  
+  context "List users" do
+    setup do
+      @user = users(:quentin)
+      login_as :quentin
+    end
+    
+    specify "list works" do
+      get :index
+      
+      template.should.equal 'index'
+    end
+  end
 end
