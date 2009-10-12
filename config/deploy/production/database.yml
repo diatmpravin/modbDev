@@ -1,9 +1,9 @@
-#production:
-  #adapter: mysql
-  #database: fleet
-  #username: fleet
-  #password: 
-  #host: localhost
-  #encoding: utf8
-  #pool: 25
-  #timeout: 5000
+staging:
+  adapter: mysql
+  database: fleet
+  username: fleet
+  password: AKa8Fai[
+  host: localhost
+  encoding: utf8
+  pool: 25
+  timeout: 5000
