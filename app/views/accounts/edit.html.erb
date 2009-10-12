@@ -15,14 +15,9 @@
   <% end %>
 
   <% form_for :account, :url => account_path, :html => {:method => :put} do |f| -%>
-    <h2>Account Settings</h2>
+    <!--<h2>Account Settings</h2>
     
-    <div class="field">
-      <%= f.label :time_zone %>
-      <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s %>
-    </div>
-    
-    <div class="spacer"></div>
+    <div class="spacer"></div>-->
     
     <h2>Security Settings</h2>
     

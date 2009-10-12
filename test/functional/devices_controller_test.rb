@@ -10,22 +10,13 @@ describe "Devices Controller", ActionController::TestCase do
   
   context "Viewing devices" do
     specify "works" do
-      @account.subscription.update_attribute(:next_bill_date, Date.today)
-
       get :index
       
       template.should.be 'index'
       assigns(:devices).length.should.be 1
       assigns(:devices).first.should.equal devices(:quentin_device)
-      assigns(:subscription).should.equal @account.subscription
 
       assigns(:device).should.not.be.nil
-    end
-
-    specify "requires working subscription (cancelled)" do
-      @account.subscription.update_attribute(:status, "cancelled")
-      get :index
-      should.redirect_to edit_account_path
     end
     
     specify "has a json view" do
@@ -66,14 +57,11 @@ describe "Devices Controller", ActionController::TestCase do
   end
   
   context "Adding devices" do
-
     setup do
       Tracker.create(:imei_number => '923456789012345')
     end
     
     specify "works" do
-      Subscription.any_instance.expects(:charge_proration).returns(true)
-      
       Device.should.differ(:count).by(1) do
         xhr :post, :create, {
             :imei => '923456789012345',
@@ -109,21 +97,6 @@ describe "Devices Controller", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['error'].should =~ /unknown tracker/i
     end
-
-    specify "handles payment errors" do
-      Subscription.any_instance.expects(:charge_proration).returns(false)
-
-      Device.should.differ(:count).by(0) do
-        xhr :post, :create, {
-            :imei => '923456789012345',
-            :imei_confirmation => '923456789012345'
-        }
-      end
-      
-      json['status'].should.equal 'failure'
-      json['error'].should =~ /Error charging your/i
-    end
-
   end
   
   context "Editing devices" do
@@ -174,43 +147,14 @@ describe "Devices Controller", ActionController::TestCase do
       assigns(:device).name.should.equal "I'm a name that's 31 characters"
       assigns(:device).errors.on(:name).should.equal "is too long (maximum is 30 characters)"
     end
-
-    specify "uses :update to undelete a device" do
-      @device.mark_for_deletion
-
-      put :update, {:id => @device.id, :undelete => true}
-      status.should.be :success
-      template.should.be nil
-
-      @device.reload
-      @device.to_be_deleted?.should.be false
-    end
   end
   
   context "Destroying devices" do
     setup do
       @device = devices(:quentin_device)
-      @sub = subscriptions(:quentin)
-      @sub.update_attribute(:next_bill_date, Date.parse("01/02/2009"))
     end
 
-    specify "mark to be deleted at next bill date" do
-      Device.should.differ(:count).by(0) do
-        post :destroy, {
-          :id => @device.id
-        }
-      end
-
-      @device.reload
-      @device.to_be_deleted.should.be true
-
-      json['status'].should.equal 'mark'
-      json['delete_at'].should.equal "January 02, 2009"
-    end
-
-    specify "flat removes the tracker when user is in setup wizard" do
-      accounts(:quentin).update_attribute(:setup_status, 1)
-      
+    specify "destroy works" do
       Device.should.differ(:count).by(-1) do
         post :destroy, {
           :id => @device.id
@@ -220,7 +164,6 @@ describe "Devices Controller", ActionController::TestCase do
       json['status'].should.equal 'success'
       @account.reload.devices.should.be.empty
     end
-    
   end
   
   context "Getting device's current position" do

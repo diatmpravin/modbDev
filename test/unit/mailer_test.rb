@@ -26,7 +26,7 @@ describe "Mailer", ActiveSupport::TestCase do
     Mailer.deliveries.first.body.should =~ /test alert/
   end
   
-  specify "account activation" do
+  xspecify "account activation" do
     @account = accounts(:quentin)
     Mailer.deliver_activation(@account)
     

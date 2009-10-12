@@ -47,15 +47,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['code'].should.equal 0
       response['moshi_key'].should.equal @phone.reload.moshi_key
     end
-
-    specify "errors out if failed subscription" do
-      a = accounts(:quentin)
-      a.subscription.update_attribute(:status, "cancelled")
-      @phone.activate(a) 
-
-      dispatch({'action' => 'activate', 'phone' => @phone.activation_code})
-      response['code'].should.equal Dispatch::Errors::BAD_SUBSCRIPTION
-    end
     
     specify "errors out if phone does not exist" do
       dispatch({'action' => 'activate', 'phone' => 'birds'})
@@ -157,18 +148,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['code'].should.equal 0
       response['trips'].length.should.equal 1
       response['trips'][0]['id'].should.equal trip.id
-    end
-
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'get_trips',
-        'device_id' => @device.id,
-        'start_date' => '20090201',
-        'end_date' => '20090208'
-      })
-      
-      response['code'].should.equal 8
     end
   
     specify "errors out if device don't belong to phone" do
@@ -289,19 +268,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['points'][0]['device_id'].should.equal devices(:quentin_device).id
     end
     
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'get_map',
-        'dimensions' => {
-          'width' => 320,
-          'height' => 240
-        }
-      })
-      
-      response['code'].should.equal 8
-    end
-
     specify "works for an updated map request" do
       # calls coordinates_for
       MapQuest.expects(:call).with {|s, xml| xml =~ /<PixToLL>/}.returns(
@@ -450,21 +416,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       response['points'][0]['speed'].should.equal @trip.points.first.speed
     end
     
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'get_trip_map',
-        'device_id' => @trip.device_id,
-        'trip_id' => @trip.id,
-        'dimensions' => {
-          'width' => 320,
-          'height' => 240
-        }
-      })
-      
-      response['code'].should.equal 8
-    end
-    
     specify "works for an updated map request" do
       # calls coordinates_for
       MapQuest.expects(:call).with {|s, xml| xml =~ /<PixToLL>/}.returns(
@@ -523,19 +474,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
         'binary' => 'a'
       })
     end
-
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'get_tile',
-        'col' => -2,
-        'row' => -2,
-        'session_id' => 'free-beer'
-      })
-      
-      response['code'].should.equal 8
-    end
-    
   end
   
   # Uses "tiles" from /test/fixtures/tmp/cache
@@ -560,20 +498,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
         'binary' => 'a'
       })
     end
-
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'get_tiles',
-        'tiles' => [
-          {'col' => -2, 'row' => -2}
-        ],
-        'session_id' => 'free-beer'
-      })
-      
-      response['code'].should.equal 8
-    end
-    
   end
   
   context "Toggling geofences" do
@@ -608,18 +532,6 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       @device.reload.geofences.should.not.include @geofence
     end
 
-    specify "requires a valid subscription" do
-      subscriptions(:quentin).update_attribute(:status, "cancelled")
-      dispatch_with(@phone, {
-        'action' => 'associate_geofence',
-        'device_id' => @device.id,
-        'geofence_id' => @geofence.id,
-        'associated' => false
-      })
-      
-      response['code'].should.equal 8
-    end
-    
     specify "links correctly" do
       @device.geofences.clear
       @device.geofences.should.not.include @geofence

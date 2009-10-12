@@ -9,14 +9,14 @@ describe "Accounts Controller", ActionController::TestCase do
       @response   = ActionController::TestResponse.new
     end
 
-    specify "should allow signup" do
+    xspecify "should allow signup" do
       assert_difference 'Account.count' do
         create_account
         assert_response :success
       end
     end
 
-    specify "should require login on signup" do
+    xspecify "should require login on signup" do
       assert_no_difference 'Account.count' do
         create_account(:login => nil)
         assert assigns(:account).errors.on(:login)
@@ -24,7 +24,7 @@ describe "Accounts Controller", ActionController::TestCase do
       end
     end
 
-    specify "should require password on signup" do
+    xspecify "should require password on signup" do
       assert_no_difference 'Account.count' do
         create_account(:password => nil)
         assert assigns(:account).errors.on(:password)
@@ -32,7 +32,7 @@ describe "Accounts Controller", ActionController::TestCase do
       end
     end
 
-    specify "should require password confirmation on signup" do
+    xspecify "should require password confirmation on signup" do
       assert_no_difference 'Account.count' do
         create_account(:password_confirmation => nil)
         assert assigns(:account).errors.on(:password_confirmation)
@@ -40,7 +40,7 @@ describe "Accounts Controller", ActionController::TestCase do
       end
     end
 
-    specify "should require email on signup" do
+    xspecify "should require email on signup" do
       assert_no_difference 'Account.count' do
         create_account(:email => nil)
         assert assigns(:account).errors.on(:email)
@@ -61,17 +61,17 @@ describe "Accounts Controller", ActionController::TestCase do
       @account = accounts(:quentin)
     end
     
-    specify "shows an edit form" do
-      @account.subscription.update_attribute(:next_bill_date, Date.today)
+    xspecify "shows an edit form" do
+      #@account.subscription.update_attribute(:next_bill_date, Date.today)
 
       get :edit
       
       template.should.be 'edit'
       assigns(:account).should.equal @account
-      assigns(:subscription).should.equal @account.subscription
+      #assigns(:subscription).should.equal @account.subscription
     end
     
-    specify "works" do
+    xspecify "works" do
       put :update, {
         :account => {
           :current_password => 'test',
@@ -89,7 +89,7 @@ describe "Accounts Controller", ActionController::TestCase do
       flash[:notice].should.not.be.nil
     end
     
-    specify "fails if current password is not correct" do
+    xspecify "fails if current password is not correct" do
       put :update, {
         :account => {
           :email => 'new email',
@@ -102,7 +102,7 @@ describe "Accounts Controller", ActionController::TestCase do
       flash[:error].should.not.be.nil
     end
     
-    specify "handles errors gracefully" do
+    xspecify "handles errors gracefully" do
       Account.any_instance.expects(:update_attributes).returns(false)
       
       put :update, {
@@ -125,7 +125,7 @@ describe "Accounts Controller", ActionController::TestCase do
       @account = accounts(:quentin)
     end
     
-    specify "works" do
+    xspecify "destroying works" do
       account_id = @account.id
       Mailer.expects(:deliver_account_cancelled).with(@account)
       delete :destroy, {
@@ -137,7 +137,7 @@ describe "Accounts Controller", ActionController::TestCase do
       Account.find_by_id(account_id).should.be.nil
     end
     
-    specify "requires current password" do
+    xspecify "destroying requires current password" do
       delete :destroy, {
         :password => 'not test',
         :format => 'json'
