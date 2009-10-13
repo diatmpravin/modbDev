@@ -11,13 +11,13 @@ test:
   vhost: 'mobd'
 
 staging:
-  host: 'maude.gomoshi.com'
-  user: 'enelson'
-  pass: 'enelson'
-  vhost: 'mobd'
+  host: 'smokey.gomoshi.com'
+  user: 'mobd'
+  pass: 'il_i3Yai'
+  vhost: '/jasper_gateway'
 
 production:
-  host: 'maude.gomoshi.com'
-  user: 'enelson'
-  pass: 'enelson'
-  vhost: 'mobd'
+  host: 'smokey.gomoshi.com'
+  user: 'mobd'
+  pass: 'il_i3Yai'
+  vhost: '/jasper_gateway'
