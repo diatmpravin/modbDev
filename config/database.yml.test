@@ -1,0 +1,16 @@
+defaults: &defaults
+  adapter: mysql
+  username: root
+  password: 
+  host: localhost
+  encoding: utf8
+  pool: 5
+  timeout: 5000
+
+development:
+  database: fleet_devel
+  <<: *defaults
+
+test:
+  database: fleet_test
+  <<: *defaults

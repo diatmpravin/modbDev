@@ -24,6 +24,7 @@ set :copy_exclude, 'doc/resources'
 set :branch, ENV['TAG'] || ENV['BRANCH'] || 'master'
 
 # Dependencies
+depend(:remote, :gem, 'newrelic_rpm', '>= 2.9.5')
 
 # Fix for sudo to properly use the shell
 default_run_options[:pty] = true

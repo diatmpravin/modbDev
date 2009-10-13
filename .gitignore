@@ -1,7 +1,9 @@
-*.swp
+# Metadata
+.*.swp
+.DS_Store
 *.swo
+.~*#
+
+# Local configs
 config/database.yml
 config/payments_server.yml
-log
-tmp
-.~*#
