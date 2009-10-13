@@ -7,7 +7,6 @@
  */
 Reports = {
   init: function() {
-    q('a.runReport').click(Reports.run);
     q('a.openSettings').click(Reports.openSettings);
     
     q('#report_start_date,#report_end_date').datepicker({
@@ -15,11 +14,6 @@ Reports = {
       maxDate: new Date(MoshiTime.serverTime),
       constrainInput: true
     });
-  }
-  ,
-  run: function() {
-    q(this).closest('form').submit();
-    return false;
   }
   ,
   openSettings: function() {

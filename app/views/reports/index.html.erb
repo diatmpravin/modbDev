@@ -7,8 +7,7 @@
   <div class="reportForm" <%= @report.data ? 'style="display:none"':'' %>>
     <h2>Report Settings</h2>
     
-    <% form_for :report, @report, :html => {:method => :get} do |f| -%>
-      
+    <% form_for :report, @report, :html => {:method => :post, :target => '_blank'} do |f| -%>
       <div class="col">
         <div class="field">
           <%= f.label :report_type %>
@@ -37,15 +36,17 @@
       
       <div class="clear"></div>
       <div class="buttons">
-        <%= link_to '', '#', :class => 'runReport button' %>
+        <%= submit_tag 'Run Report' %>
       </div>
       <div class="clear"></div>
     <% end -%>
   </div>
 </div>
 
+<!--
 <div class="clear"></div>
 
 <% if @report.data -%>
   <%= render :partial => report_partial(@report), :locals => {:report => @report} %>
 <% end -%>
+-->

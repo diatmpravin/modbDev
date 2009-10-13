@@ -12,4 +12,17 @@ class ReportsController < ApplicationController
     end
   end
   
+  def create
+    @report = Report.new(current_account, params[:report] || {})
+    @report.run
+    
+    if @report.error
+      flash.now[:error] = @report.error
+      render :action => 'index'
+      return
+    end
+    
+    render :action => 'report', :layout => 'report_blank'
+  end
+  
 end

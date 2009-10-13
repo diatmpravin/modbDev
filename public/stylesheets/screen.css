@@ -986,13 +986,13 @@ td.extra {
 }
 
 /* REPORTS */
+.reportResult {
+  margin:16px;
+}
 .reportResult h2 {
   font-size:150%;
   margin:16px 0 0 0;
   padding-bottom:8px;
-}
-.reportResult table {
-  width:100%;
 }
 .reportResult th {
   border:solid 1px black;
@@ -1012,6 +1012,10 @@ td.extra {
 .reportSettings .col {
   float:left;
   width:450px;
+}
+
+body#report_blank {
+  background-color:white;
 }
 
 /*** WIZARD ***/
