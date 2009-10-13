@@ -22,6 +22,7 @@ Rails::Initializer.run do |config|
   
   # Gem dependencies
   config.gem 'eventmachine'
+  config.gem 'newrelic_rpm'
   #config.gem 'mini_magick'
   
   # Only load the plugins named here, in the order given. By default, all plugins 
