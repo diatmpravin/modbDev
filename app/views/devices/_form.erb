@@ -78,7 +78,7 @@
         </td>
         <td><%= f.check_box :alert_on_idle %></td>
         <td class="extra" <%= device.alert_on_idle ? 'style="display:block"' : '' %>>
-          <%= f.select :alert_on_idle, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+          <%= f.select :idle_threshold, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
         </td>
       </tr>
       <tr>

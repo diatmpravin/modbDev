@@ -4,3 +4,11 @@
 #navbar #livelook.selected a {
   background:transparent url(/images/live_look_selected.gif) no-repeat 24px center;
 }
+
+#settings .devices .device {
+  width: 98%;
+}
+
+#settings .devices .device .view {
+  width: 100%;
+}
