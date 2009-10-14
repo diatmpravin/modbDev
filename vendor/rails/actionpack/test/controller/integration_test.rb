@@ -240,6 +240,14 @@ class IntegrationProcessTest < ActionController::IntegrationTest
       render :text => "foo: #{params[:foo]}", :status => 200
     end
 
+    def post_with_multiparameter_params
+      render :text => "foo(1i): #{params[:"foo(1i)"]}, foo(2i): #{params[:"foo(2i)"]}", :status => 200
+    end
+
+    def multipart_post_with_multiparameter_params
+      render :text => "foo(1i): #{params[:"foo(1i)"]}, foo(2i): #{params[:"foo(2i)"]}, filesize: #{params[:file].size}", :status => 200
+    end
+
     def post
       render :text => "Created", :status => 201
     end
@@ -254,6 +262,8 @@ class IntegrationProcessTest < ActionController::IntegrationTest
       redirect_to :action => "get"
     end
   end
+
+  FILES_DIR = File.dirname(__FILE__) + '/../fixtures/multipart'
 
   def test_get
     with_test_route_set do
@@ -360,6 +370,24 @@ class IntegrationProcessTest < ActionController::IntegrationTest
     end
   end
 
+  def test_post_with_multiparameter_attribute_parameters
+    with_test_route_set do
+      post '/post_with_multiparameter_params', :"foo(1i)" => "bar", :"foo(2i)" => "baz"
+
+      assert_equal 200, status
+      assert_equal "foo(1i): bar, foo(2i): baz", response.body
+    end
+  end
+
+  def test_multipart_post_with_multiparameter_attribute_parameters
+    with_test_route_set do
+      post '/multipart_post_with_multiparameter_params', :"foo(1i)" => "bar", :"foo(2i)" => "baz", :file => fixture_file_upload(FILES_DIR + "/mona_lisa.jpg", "image/jpg")
+
+      assert_equal 200, status
+      assert_equal "foo(1i): bar, foo(2i): baz, filesize: 159528", response.body
+    end
+  end
+
   def test_head
     with_test_route_set do
       head '/get'
@@ -413,5 +441,25 @@ class MetalTest < ActionController::IntegrationTest
     assert_response 404
     assert_response :not_found
     assert_equal '', response.body
+  end
+end
+
+class StringSubclassBodyTest < ActionController::IntegrationTest
+  class SafeString < String
+  end
+
+  class SafeStringMiddleware
+    def self.call(env)
+      [200, {"Content-Type" => "text/plain", "Content-Length" => "12"}, [SafeString.new("Hello World!")]]
+    end
+  end
+
+  def setup
+    @integration_session = ActionController::Integration::Session.new(SafeStringMiddleware)
+  end
+
+  def test_string_subclass_body
+    get '/'
+    assert_equal 'Hello World!', response.body
   end
 end

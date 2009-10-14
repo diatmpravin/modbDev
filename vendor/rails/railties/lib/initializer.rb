@@ -303,7 +303,7 @@ module Rails
     end
 
     def load_gems
-      unless $gems_build_rake_task
+      unless $gems_rake_task
         @configuration.gems.each { |gem| gem.load }
       end
     end
@@ -442,7 +442,7 @@ Run `rake gems:install` to install the missing gems.
     def initialize_database_middleware
       if configuration.frameworks.include?(:active_record)
         if configuration.frameworks.include?(:action_controller) &&
-            ActionController::Base.session_store == ActiveRecord::SessionStore
+            ActionController::Base.session_store.name == 'ActiveRecord::SessionStore'
           configuration.middleware.insert_before :"ActiveRecord::SessionStore", ActiveRecord::ConnectionAdapters::ConnectionManagement
           configuration.middleware.insert_before :"ActiveRecord::SessionStore", ActiveRecord::QueryCache
         else
