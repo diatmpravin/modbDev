@@ -9,11 +9,10 @@ Devices = {
   init: function() {
     q('a.addVehicle').live('click', Devices.newDevice);
     
-    q('div.device').live('mouseover', function() {
-      q('div.view .buttons').hide();
+    q('.device .view').live('mouseover', function() {
       q(this).find('.buttons').show();
     }).live('mouseout', function() {
-      q('div.view .buttons').hide();
+      q(this).find('.buttons').hide();
     });
     
     q('div.device a.editSettings').live('click', Devices.edit);
