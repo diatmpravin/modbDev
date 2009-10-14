@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'maps'
   
   # Accounts
-  map.resource :account
+  map.resources :accounts
   
   # Sessions
   map.resources :sessions
