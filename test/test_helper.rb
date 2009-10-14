@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 require 'test/spec/rails'
 require 'freeze_time'
+require 'mocha'
 
 # Request Forgery Protection hack
 # form_authenticity_token causes an error in test mode because protect_against_forgery is turned off.
