@@ -10,7 +10,12 @@ class RoutesTest < ActionController::IntegrationTest
   test "maps is root" do
     assert_equal "/", path_for(:controller => "maps", :action => "index")
   end
-
+  
+  test "accounts resources" do
+    assert_equal "/accounts", accounts_path
+    assert_equal "/accounts/1", account_path(1)
+  end
+  
   test "login/logout" do
     assert_equal "/login", login_path
     assert_equal "/logout", logout_path
@@ -24,6 +29,27 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/maps/1/status", status_map_path(1)
   end
 
+  test "users resources" do
+    assert_equal "/users", users_path
+    assert_equal "/users/1", user_path(1)
+    
+    assert_equal "/users/resend_activation", resend_activation_users_path
+    assert_equal "/users/forgot_password", forgot_password_users_path
+    assert_equal "/users/reset_password", reset_password_users_path
+    
+    assert_equal "/users/1/activate", activate_user_path(1)
+  end
+  
+  test "devices resources" do
+    assert_equal "/devices", devices_path
+    assert_equal "/devices/1", device_path(1)
+    
+    assert_equal "/devices/1/position", position_device_path(1)
+    
+    assert_equal "/devices/1/trips/2", device_trip_path(1, 2)
+    assert_equal "/devices/1/geofences/2", device_geofence_path(1, 2)
+  end
+  
   test "trips resource" do
     assert_equal "/trips", trips_path
     assert_equal "/trips/1", trip_path(1)
