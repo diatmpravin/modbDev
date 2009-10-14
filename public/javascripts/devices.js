@@ -47,7 +47,7 @@ Devices = {
       }
     }).siblings('.ui-dialog-buttonpane').prepend('<div class="loading"></div>');
     
-    q('td input[type=checkbox]').change(function() {
+    q('td input[type=checkbox]').live("click", function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
     });
     
