@@ -1,0 +1,31 @@
+<h2>Account List</h2>
+
+<div>
+  <%= link_to 'Create Account', new_account_path, :class => 'simple' %>
+  <br/><br/>
+</div>
+
+<div>
+  <table class="styled">
+    <thead>
+      <tr>
+        <th>Number</th>
+        <th>Name</th>
+        <th>Reseller?</th>
+        <th>Can Create Resellers?</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @accounts.each do |account| -%>
+        <tr>
+          <td><%= account.number %></td>
+          <td><%= account.name %></td>
+          <td><%= account.reseller? %></td>
+          <td><%= account.can_assign_reseller? %></td>
+          <td>(edit)</td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+</div>

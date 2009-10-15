@@ -14,9 +14,11 @@
         </li>
       <% end -%>
       <% requires_role(User::Role::SUPERUSER) do -%>
-        <li>
-          <%= link_to 'Account', edit_account_path %>
-        </li>
+        <% if current_account.reseller? -%>
+          <li>
+            <%= link_to 'Accounts', accounts_path %>
+          </li>
+        <% end -%>
       <% end -%>
       <li>
         <%= link_to 'Settings', '#' %>

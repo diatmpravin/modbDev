@@ -7,6 +7,7 @@ quentin:
   created_at: <%= 5.days.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>
   time_zone: Eastern Time (US & Canada)
+  roles: <%= 1 %>
 child:
   account: quentin
   login: child
@@ -17,3 +18,4 @@ child:
   activated_at: <%= 5.days.ago.to_s :db %>
   time_zone: Eastern Time (US & Canada)
   parent: quentin
+  roles: <%= 2 | 4 | 8 %>

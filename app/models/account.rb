@@ -14,7 +14,7 @@ class Account < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
-    :name
+    :name, :reseller, :can_assign_reseller
   
   def setup?
     self.setup_status == 0
