@@ -4,8 +4,7 @@ class Report
   
   REPORT_TYPES = {
     0 => 'Vehicle Summary Report',
-    1 => 'Daily Summary Report',
-    2 => 'Event Detail Report'
+    1 => 'Daily Summary Report'
   }
   
   RANGE_TYPES = {
@@ -52,10 +51,9 @@ class Report
         run_vehicle_summary_report
       when 1
         run_daily_summary_report
-      when 2
-        run_event_detail_report
       else
         nil
+      end
     end
   end
   
@@ -168,37 +166,6 @@ class Report
     end
     
     @title = "Daily Summary Report for #{device.name} - #{@start_date} through #{@end_date}"
-    
-    report
-  end
-  
-  def run_event_detail_report
-    report = []
-    
-    if !@devices || @devices.blank?
-      @error = 'You must choose one or more vehicles to run this report'
-      return nil
-    end
-    
-    # Custom find in order to pull in the device name
-    events = Event.in_range(@start_date, @end_date, @account.zone).all(
-      :joins => 'INNER JOIN points ON events.point_id = points.id ' +
-                'INNER JOIN devices ON points.device_id = devices.id',
-      :conditions => {'points.device_id' => @devices},
-      :order => 'events.occurred_at',
-      :select => 'events.*, devices.name AS device_name'
-    )
-    
-    events.each do |event|
-      report << {
-        :date => event.occurred_at.to_date.to_s,
-        :time => event.occurred_at.to_time.to_s(:local),
-        :device => event.device_name,  # attribute from custom find
-        :text => event.type_text
-      }
-    end
-    
-    @title = "Event Detail Report - #{@start_date} through #{@end_date}"
     
     report
   end
