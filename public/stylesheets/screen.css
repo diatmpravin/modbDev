@@ -921,6 +921,28 @@ td.extra {
   display:none;
 }
 
+/* landmark settings */
+#landmarks #sidebar h3 {
+  color:black;
+  font-weight:bold;
+  padding:0.2em 0.6em 0.2em 0;
+  margin-bottom:8px;
+  background:transparent;
+}
+#landmarks .buttons {
+  margin:0;
+}
+#landmarks #settingsContainer {
+  padding:0;
+}
+#landmarks #settings {
+  padding:0;
+}
+#landmarks #sidebarContainer {
+  width:320px;
+}
+
+
 /*** ALERTS ***/
 #newAlertRecipient {
   display:none;

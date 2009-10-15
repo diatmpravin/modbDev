@@ -25,6 +25,7 @@
         <ul>
           <% requires_role(User::Role::FLEET) do -%>
             <li><%= link_to 'Vehicles', devices_path %></li>
+            <li><%= link_to 'Landmarks', landmarks_path %></li>
             <li><%= link_to 'Geofences', geofences_path %></li>
           <% end -%>
           <% requires_role(User::Role::USERS) do -%>

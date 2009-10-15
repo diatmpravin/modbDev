@@ -37,6 +37,9 @@ ActionController::Routing::Routes.draw do |map|
   # Geofences
   map.resources :geofences
   
+  # Landmarks
+  map.resources :landmarks
+  
   # Phones
   map.resources :phones, :collection => {
     :activate => [:post],

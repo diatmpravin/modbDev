@@ -60,6 +60,11 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/geofences/1", geofence_path(1)
   end
 
+  test "landmarks resources" do
+    assert_equal "/landmarks", landmarks_path
+    assert_equal "/landmarks/1", landmark_path(1)
+  end
+ 
   test "tags resource" do
     assert_equal "/tags", tags_path
     assert_equal "/tags/1", tag_path(1)
