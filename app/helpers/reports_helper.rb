@@ -5,8 +5,6 @@ module ReportsHelper
         'vehicle_summary'
       when 1
         'daily_summary'
-      when 2
-        'event_detail'
       else
         nil
     end
