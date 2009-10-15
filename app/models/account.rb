@@ -4,6 +4,7 @@ class Account < ActiveRecord::Base
   has_many :devices, :dependent => :destroy
   has_many :phones, :dependent => :destroy
   has_many :geofences, :dependent => :destroy
+  has_many :landmarks, :dependent => :destroy
   has_many :alert_recipients, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
@@ -14,7 +15,7 @@ class Account < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
-    :name, :reseller, :can_assign_reseller
+    :name, :reseller, :can_assign_reseller, :landmarks
   
   def setup?
     self.setup_status == 0

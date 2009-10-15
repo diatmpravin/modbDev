@@ -18,6 +18,10 @@ describe "Account", ActiveSupport::TestCase do
       @account.should.respond_to(:geofences)
     end
     
+    specify "has many landmarks" do
+      @account.should.respond_to(:landmarks)
+    end
+    
     specify "has many alert recipients" do
       @account.should.respond_to(:alert_recipients)
     end
