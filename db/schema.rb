@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091012141310) do
+ActiveRecord::Schema.define(:version => 20091015133721) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -111,6 +111,16 @@ ActiveRecord::Schema.define(:version => 20091012141310) do
     t.string   "name",           :limit => 30
     t.boolean  "alert_on_exit",                :default => false
     t.boolean  "alert_on_entry",               :default => false
+  end
+
+  create_table "landmarks", :force => true do |t|
+    t.integer  "account_id"
+    t.decimal  "latitude",                 :precision => 8, :scale => 5
+    t.decimal  "longitude",                :precision => 8, :scale => 5
+    t.integer  "radius",                                                 :default => 100
+    t.string   "name",       :limit => 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "legs", :force => true do |t|
