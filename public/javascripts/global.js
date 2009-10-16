@@ -70,6 +70,17 @@ jQuery(function() {
 });
 
 /* Plugins and Utilities */
+
+/**
+ * .errors(list)
+ *
+ * Call .errors() on a container element that you would like to display
+ * errors in -- typically a jQuery dialog box. Given either a string or
+ * an array of strings, .errors() will add the appropriate number of divs
+ * with class 'error' to the top of the container specified.
+ *
+ * Calling errors() with no parameters will clear errors from the container.
+ */
 jQuery.fn.errors = function(o) {
   this.find('.error').remove();
   if (jQuery.isArray(o)) {
@@ -82,4 +93,22 @@ jQuery.fn.errors = function(o) {
     this.prepend('<div class="error">' + o + '</div>');
   }
   return this;
+};
+
+/**
+ * clearRailsForm()
+ *
+ * Need a better name for this. This is an attempt to encapsulate "clearing"
+ * a Rails form, which includes clearing any input fields and stripping away
+ * any error text and error styling.
+ *
+ * Can be called on any container, but most likely a form.
+ */
+jQuery.fn.clearRailsForm = function() {
+  this.clearForm()
+      .find('.loading').hide().end()
+      .find('.fieldWithErrors').each(function() {
+        q(this).replaceWith(this.childNodes);
+      }).end()
+      .find('.formError').remove();
 };
