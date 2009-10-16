@@ -120,46 +120,6 @@ describe "Report", ActiveSupport::TestCase do
     end
   end
   
-  context "Event Detail Report" do
-    specify "works" do
-      report = Report.new(@account, {
-        :start_date => '02/01/2009',
-        :end_date => '02/10/2009',
-        :devices => @devices.map(&:id),
-        :report_type => 2,
-        :range_type => 0
-      })
-      
-      report.data[0][:date].should.equal '02/05/2009'
-      report.data[0][:time].should.equal '08:00 AM UTC'
-      report.data[0][:device].should.equal 'Quentin\'s Device'
-      report.data[0][:text].should.equal 'Enter Boundary'
-    end
-    
-    specify "errors on missing dates" do
-      report = Report.new(@account, {
-        :devices => @devices.map(&:id),
-        :report_type => 2,
-        :range_type => 0
-      })
-      
-      report.run
-      report.error.should.equal 'You must specify valid start and end dates'
-    end
-    
-    specify "requires at least one vehicle" do
-      report = Report.new(@account, {
-        :start_date => '02/01/2009',
-        :end_date => '02/10/2009',
-        :report_type => 2,
-        :range_type => 0
-      })
-      
-      report.run
-      report.error.should.equal 'You must choose one or more vehicles to run this report'
-    end
-  end
-  
   context "Singleton helpers" do
     specify "provides report type options" do
       o = Report.type_options
