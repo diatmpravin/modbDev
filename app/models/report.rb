@@ -47,13 +47,12 @@ class Report
     end
     
     case report_type
-      when 0
-        run_vehicle_summary_report
-      when 1
-        run_daily_summary_report
-      else
-        nil
-      end
+    when 0
+      run_vehicle_summary_report
+    when 1
+      run_daily_summary_report
+    else
+      nil
     end
   end
   
