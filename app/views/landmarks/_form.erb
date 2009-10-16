@@ -1,0 +1,26 @@
+<% form_for landmark do |f| -%>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, :size => 20, :maxlength => 30 %>
+    <%= error_message_on landmark, :name, :prepend_text => '* Name ' %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :latitude %>
+    <%= f.text_field :latitude, :size => 11, :maxlength => 11 %>
+    <%= error_message_on landmark, :latitude, :prepend_text => '* Latitude ' %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :longitude %>
+    <%= f.text_field :longitude, :size => 11, :maxlength => 11 %>
+    <%= error_message_on landmark, :longitude, :prepend_text => '* Longitude ' %>
+  </div>
+  
+  <div class="clear spacer"></div>
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= button_tag 'Cancel', :class => 'cancel' %>
+    <%= button_tag 'Save', :class => 'save' %>
+  </div>
+<% end -%>
