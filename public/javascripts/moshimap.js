@@ -116,6 +116,10 @@ MoshiProxy = {
     );
     
     this.map.setBestFitMargin(75);
+
+    // Update the Rollover/Info Window to our custom specifications
+    this.map.getInfoWindow().setMaxWidth(200);
+    this.map.getInfoWindow().setMinWidth(200);
     
     // Initialize any map controls
     this.map.addControl(new Moshi.ZoomControl(),
