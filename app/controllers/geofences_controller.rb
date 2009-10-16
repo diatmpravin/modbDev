@@ -15,7 +15,7 @@ class GeofencesController < ApplicationController
     respond_to do |format|
       format.html
       format.json {
-        render :json => @geofences
+        render :text => @geofences.to_json(:methods => [:device_ids])
       }
     end
   end

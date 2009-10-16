@@ -34,6 +34,7 @@ Maps = {
   devices: [],
   trips: [],
   trip: null,
+  tripsByDevice: [],
   tripPoints: 0,
   activity: {},
   today: null,
@@ -48,7 +49,7 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').change(Geofences.toggle).attr('checked', false);
+    q('#show_geofences').change(Geofences.updateVisibility).attr('checked', false);
     q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
@@ -77,8 +78,8 @@ Maps = {
     Maps.buildHistoryScroller();
     Maps.prepareHistoryScroller();
     Maps.getMonthTripData();
+
     Maps.livelook();
-    
     Maps.corners();
   }
   ,
@@ -117,6 +118,7 @@ Maps = {
     
     if (q('#livelook').hasClass('selected')) {
       Maps.livelook();
+      Geofences.updateVisibility();
     } else {
       q('#historyScroller li.selected').click();
     }
@@ -143,7 +145,7 @@ Maps = {
          .removeClass('selected').find('.additional,.buttons').hide();
     Maps.scrollPane(false, '.trips');
     
-    q.getJSON('/trips/' + _this.attr('id').match(/trip_(.*)/)[1], function(json) {
+    q.getJSON('/trips/' + _this.attr('id').match(/trip_(.*)/)[1] + ".json", function(json) {
       Maps.trip = json.trip;
       MoshiMap.moshiMap.displayTrip(Maps.trip);
     });
@@ -167,7 +169,7 @@ Maps = {
     }
     
     var device_id = q('#device_id').val();
-    var jsonURL = (device_id == '' ? '/devices' : '/devices/' + device_id);
+    var jsonURL = (device_id == '' ? '/devices' : '/devices/' + device_id) + ".json";
     var htmlURL = (device_id == '' ? '/maps/status' : '/maps/status?device_id=' + device_id);
     
     q('.loading').show();
@@ -275,7 +277,7 @@ Maps = {
         continue;
       }
       
-      var trips = Maps.trips_by_device[Maps.devices[i].device.id];
+      var trips = Maps.tripsByDevice[Maps.devices[i].device.id];
       if (trips) {
         var num = 0;
         for(var j = 0; j < trips.length; j++) {
@@ -362,16 +364,16 @@ Maps = {
     endRange.setUTCMonth(endRange.getUTCMonth()+1);
     endRange.setUTCDate(endRange.getUTCDate()-1);
     
-    q.getJSON('/trips', {
+    q.getJSON('/trips.json', {
       'start_date': Maps.rubyDateFormat(Maps.historyMonth),
       'end_date': Maps.rubyDateFormat(endRange)
     }, function(json) {
       Maps.trips = json.trips;
-      Maps.trips_by_device = [];
+      Maps.tripsByDevice = [];
       for(var i = 0; i < Maps.trips.length; i++) {
         var id = Maps.trips[i].device_id;
-        Maps.trips_by_device[id] = Maps.trips_by_device[id] || [];
-        Maps.trips_by_device[id][Maps.trips_by_device[id].length] = Maps.trips[i];
+        Maps.tripsByDevice[id] = Maps.tripsByDevice[id] || [];
+        Maps.tripsByDevice[id][Maps.tripsByDevice[id].length] = Maps.trips[i];
       }
     });
   }
@@ -616,16 +618,28 @@ Geofences = {
   fences: [],
 
   init: function() {
-    q.getJSON('/geofences', function(json) {
+    q.getJSON('/geofences.json', function(json) {
       Geofences.fences = json;
       Geofences.buildGeofences();
     });
   }
   ,
-  toggle: function() {
-    var bool = q(this).attr('checked');
+  updateVisibility: function() {
+    var toggleTo = q("#show_geofences").attr('checked'),
+        fence,
+        device = q("#device_id").val();
+
+    device = device == "" ? -1 : parseInt(device);
+
     for(var i = 0; i < Geofences.fences.length; i++) {
-      Geofences.fences[i].geofence.shape.setValue('visible', bool);
+      fence = Geofences.fences[i].geofence;
+      changeTo = toggleTo;
+
+      if(toggleTo && device >= 0) {
+        changeTo = fence.device_ids.indexOf(device) >= 0;
+      }
+
+      fence.shape.setValue('visible', changeTo);
     }
   }
   ,

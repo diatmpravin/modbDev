@@ -17,12 +17,6 @@ describe "Geofences Controller", ActionController::TestCase do
       json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
     end
 
-    xspecify "requires working subscription (cancelled)" do
-      @account.subscription.update_attribute(:status, "cancelled")
-      get :index
-      should.redirect_to edit_account_path
-    end
-    
     specify "returns device-specific geofences if device is specified" do
       @account.geofences.create(:radius => 3)
       assert @account.geofences.length > 1
@@ -31,6 +25,17 @@ describe "Geofences Controller", ActionController::TestCase do
       
       json.length.should.be 1
       json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
+    end
+
+    specify "geofences should include list of linked devices" do
+      @account.geofences.create(:radius => 3)
+      assert @account.geofences.length > 1
+
+      get :index, :format => 'json'
+
+      json.length.should.be 2
+      json[0]['geofence']['device_ids'].should.equal [@device.id]
+      json[1]['geofence']['device_ids'].should.equal []
     end
     
     specify "errors out if device belongs to a different account" do
