@@ -2,8 +2,13 @@ class DeviceReport
   
   # Event codes reported by the device
   module Event
+
+    # Periodic location event with ignition ON
     PERIODIC_IGNITION_ON = 4001
+
+    # Periodic location event with ignition OFF
     PERIODIC_IGNITION_OFF = 4002
+
     PERIODIC_HEARTBEAT = 4006
     
     DIRECTION = 6001
