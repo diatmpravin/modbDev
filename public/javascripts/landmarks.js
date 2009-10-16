@@ -9,9 +9,68 @@ Landmarks = {
   init: function() {
     Landmarks.corners();
     
+    q('#addLandmark').live('click', Landmarks.newLandmark);
+    q('div.landmark[id=new] input.save').live('click', Landmarks.create);
+    q('div.landmark[id=new] input.cancel').live('click', Landmarks.cancelNew);
+    
+    //q('div.landmark[id!=new] input.save').live('click', Landmarks.save);
+    //q('div.landmark[id!=new] input.cancel').live('click', Landmarks.cancel);
+    
+    q('div.landmark[id!=new]').live('mouseover', function() {
+      q(this).addClass('hover');
+    }).live('mouseout', function() {
+      q(this).removeClass('hover');
+    });
+    
     q(window).resize(Landmarks.resize);
     Landmarks.resize();
     
+    //Landmarks.buildLandmarks();
+  }
+  ,
+  newLandmark: function() {
+    q('#new').show('fast').siblings('.landmark').hide('fast');
+    q('#addLandmark').hide('fast');
+    
+    //Landmarks.enterMode();
+    
+    return false;
+  }
+  ,
+  create: function() {
+    var _new = q('#new');
+     
+    _new.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _new.find('.loading').show(); },
+      success: function(json) {
+        if (json.status == 'success') {
+          q('#addLandmark').show('fast');
+          _new.hide('fast', function() {
+            q(this).clearRailsForm();
+          }).siblings('.landmark').show('fast');
+          
+          q('<div class="landmark" style="display:none"><div class="view">'
+            + json.view
+            + '</div><div class="edit">'
+            + json.edit
+            + '</div></div>').insertAfter('#new').show('fast');
+        } else {
+          _new.html(json.html);
+        }
+      }
+    });
+  }
+  ,
+  cancelNew: function() {
+    q('#addLandmark').show('fast');
+    q('#new').hide('fast', function() {
+      q(this).clearRailsForm();
+    }).siblings('.landmark').show('fast');
+    
+    // Landmarks.exitMode();
+    
+    return false;
   }
   ,
   corners: function() {

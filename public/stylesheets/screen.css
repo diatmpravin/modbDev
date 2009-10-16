@@ -941,7 +941,32 @@ td.extra {
 #landmarks #sidebarContainer {
   width:320px;
 }
-
+#settings .landmarks {
+  overflow:auto;
+}
+#settings .landmarks #new {
+  display:none;
+}
+#settings .landmark {
+  padding:4px 0 4px 4px;
+  border-top:solid 1px #d2d3d3;
+  overflow:hidden;
+}
+#settings .landmark h2 {
+  float:left;
+}
+#settings .landmark .buttons {
+  margin-top:0px;
+}
+#settings .landmark .view .buttons {
+  display:none;
+}
+#settings .landmarks .hover {
+  background-color:#f0f0f0;
+}
+#settings .landmarks .hover .view .buttons {
+  display:block;
+}
 
 /*** ALERTS ***/
 #newAlertRecipient {
