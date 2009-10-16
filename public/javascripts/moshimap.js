@@ -174,7 +174,14 @@ MoshiProxy = {
       for(var j = 0; j < leg.points.length; j++) {
         var point = leg.points[j];
         
-        var title = point.time_of_day + '  ' + '<i>' + point.speed + ' mph</i>';
+        var title = point.time_of_day + '  ';
+
+        if(point.speed == 0) {
+          title += "<i>Stationary</i>";
+        } else {
+          title += '<i>' + point.speed + ' mph</i>';
+        }
+
         var description = '';
         for(var k = 0; k < point.events.length; k++) {
           description += point.events[k].type_text + '<br/>';
