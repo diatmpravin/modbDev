@@ -30,7 +30,7 @@ describe "Landmarks Controller", ActionController::TestCase do
       Landmark.should.differ(:count).by(1) do
         post :create, {
           :landmark => {
-            :name => 'My Landmark'
+            :name => 'My Landmark',
             :latitude => '39.267',
             :longitude => '-86.9074'
           },
@@ -38,6 +38,7 @@ describe "Landmarks Controller", ActionController::TestCase do
         }
         
         json['status'].should.equal 'success'
+        json['view'].should =~ /<h2>My Landmark<\/h2>/
         
         @account.reload.landmarks.length.should.equal 2
         @account.landmarks.last.latitude.should.equal BigDecimal.new('39.267')
@@ -55,6 +56,7 @@ describe "Landmarks Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'failure'
+      json['html'].should =~ /can't be blank/
     end
   end
   
