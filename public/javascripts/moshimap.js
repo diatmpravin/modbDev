@@ -177,7 +177,7 @@ MoshiProxy = {
         var title = point.time_of_day + '  ';
 
         if(point.speed == 0) {
-          title += "<i>Stationary</i>";
+          title += "<i>Idle</i>";
         } else {
           title += '<i>' + point.speed + ' mph</i>';
         }
