@@ -49,7 +49,7 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').change(Geofences.toggle).attr('checked', false);
+    q('#show_geofences').change(Geofences.updateVisibility).attr('checked', false);
     q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
@@ -118,6 +118,7 @@ Maps = {
     
     if (q('#livelook').hasClass('selected')) {
       Maps.livelook();
+      Geofences.updateVisibility();
     } else {
       q('#historyScroller li.selected').click();
     }
@@ -623,10 +624,22 @@ Geofences = {
     });
   }
   ,
-  toggle: function() {
-    var bool = q(this).attr('checked');
+  updateVisibility: function() {
+    var toggleTo = q("#show_geofences").attr('checked'),
+        fence,
+        device = q("#device_id").val();
+
+    device = device == "" ? -1 : parseInt(device);
+
     for(var i = 0; i < Geofences.fences.length; i++) {
-      Geofences.fences[i].geofence.shape.setValue('visible', bool);
+      fence = Geofences.fences[i].geofence;
+      changeTo = toggleTo;
+
+      if(toggleTo && device >= 0) {
+        changeTo = fence.device_ids.indexOf(device) >= 0;
+      }
+
+      fence.shape.setValue('visible', changeTo);
     }
   }
   ,
