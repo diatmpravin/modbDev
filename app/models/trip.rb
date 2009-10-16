@@ -43,6 +43,7 @@ class Trip < ActiveRecord::Base
       self.miles = last_point.miles - first_point.miles
       self.miles += Device::ROLLOVER_MILES if self.miles < 0
       self.idle_time = compute_idle_time
+      self.average_mpg = compute_average_mpg
       self.save
     end
   end
@@ -70,11 +71,6 @@ class Trip < ActiveRecord::Base
   def average_rpm
     points.average(:rpm).to_i
   end
-  
-  def average_mpg
-    points.average(:mpg)
-  end
-  
   
   def events
     Event.find(:all,
@@ -114,5 +110,16 @@ class Trip < ActiveRecord::Base
     end
     
     sum
+  end
+  
+  def compute_average_mpg
+    return points[0].mpg if duration <= 0
+    
+    sum = 0
+    points[0..-2].each_index do |i|
+      sum += (points[i+1].occurred_at - points[i].occurred_at) * (points[i+1].mpg + points[i].mpg) / 2
+    end
+    
+    sum / duration
   end
 end

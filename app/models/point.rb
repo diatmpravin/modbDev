@@ -38,7 +38,7 @@ class Point < ActiveRecord::Base
   
   attr_accessible :event, :occurred_at, :latitude, :longitude, :altitude,
     :speed, :accelerating, :decelerating, :rpm, :heading, :satellites,
-    :hdop, :miles, :leg, :device
+    :hdop, :miles, :leg, :device, :mpg
   
   after_save :update_trip
   

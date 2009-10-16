@@ -153,6 +153,49 @@ describe "Trip", ActiveSupport::TestCase do
       
       @trip.reload.idle_time.should.equal 300
     end
+    
+    specify "updates average miles per gallon" do
+      # Simple interval test: whole mpgs at 15 minutes apart
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:30:00 UTC'),
+        :miles => 50,
+        :mpg => 26
+      )
+      @trip.reload.average_mpg.should.equal 22
+      
+      # Single point test (should return the only mpg point we have)
+      @trip.legs[0].points.last.destroy
+      @trip.legs[0].points.last.destroy
+      @trip.legs[0].points[0].update_attributes(:mpg => 7)
+      @trip.reload.average_mpg.should.equal 7
+      
+      # Variable interval test: 1 min, 30 sec, 2 min, 2 min
+      estimated_mpg = (3.5*1 + 8*0.5 + 12*2 + 16.5*2) / 5.5
+      estimated_mpg = BigDecimal.new(estimated_mpg.to_s).floor(1)
+      
+      @trip.legs[0].points[0].update_attributes(:mpg => 0)
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:01:00 UTC'),
+        :miles => 50,
+        :mpg => 7
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:01:30 UTC'),
+        :miles => 50,
+        :mpg => 9
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:03:30 UTC'),
+        :miles => 50,
+        :mpg => 15
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:05:30 UTC'),
+        :miles => 50,
+        :mpg => 18
+      )
+      @trip.reload.average_mpg.should.equal estimated_mpg
+    end
   end
   
   context "Trip Info Helpers" do
@@ -173,10 +216,6 @@ describe "Trip", ActiveSupport::TestCase do
     
     specify "knows average rpm" do
       @trip.average_rpm.should.equal 2056
-    end
-    
-    specify "knows average mpg" do
-      @trip.average_mpg.should.equal 20
     end
   end
   
