@@ -242,7 +242,6 @@ describe "Device", ActiveSupport::TestCase do
     
     context "Geofence checking" do
       setup do
-        Mailer.deliveries.clear
         @geofence = geofences(:quentin_geofence)
       end
       
@@ -353,6 +352,117 @@ describe "Device", ActiveSupport::TestCase do
         Mailer.deliveries.first.body.should =~ /Quentin's Device experienced rapid deceleration/
       end
     end
+
+    context "After Hours" do
+
+      setup do
+        @device.update_attributes(
+          :alert_on_after_hours => true,
+          :after_hours_start => 64800,  # 18:00
+          :after_hours_end => 21600     # 06:00
+        )
+      end
+
+      ##
+      ## NOTE: All times merged into @example_location are given in 
+      ##       GMT and the account we're working with is EST - 5
+      ##
+
+      specify "sets event and alert when trip crosses after-hour boundary" do
+        # Point right before
+        Event.should.differ(:count).by(0) do
+          @device.process(@example_location.merge(:time => "22:55:00"))
+        end
+
+        # Point right after
+        Event.should.differ(:count).by(1) do
+          @device.process(@example_location.merge(:time => "23:00:10"))
+        end
+
+        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.first.body.should =~ /Quentin's Device is running after hours/
+
+        p = Point.find(:last)
+        p.events.length.should.equal 1
+        p.events[0].event_type.should.equal Event::AFTER_HOURS
+      end
+
+      specify "sets event and alert when new trip started during after-hours" do
+        # Point right before
+        Event.should.differ(:count).by(1) do
+          @device.process(@example_location.merge(
+            :time => "23:10:00", :event => '6011'))
+        end
+
+        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.first.body.should =~ /Quentin's Device is running after hours/
+
+        p = Point.find(:last)
+        p.events.length.should.equal 1
+        p.events[0].event_type.should.equal Event::AFTER_HOURS
+      end
+
+      specify "only sends one alert per trip leg" do
+        # Start the trip
+        Event.should.differ(:count).by(0) do
+          @device.process(@example_location.merge(:time => "22:55:00"))
+        end
+
+        # Multiple points
+        Event.should.differ(:count).by(5) do
+          @device.process(@example_location.merge(:time => "23:00:10"))
+          @device.process(@example_location.merge(:time => "23:30:10"))
+          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "02:32:52", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "03:30:30", :date => "2009/02/18"))
+        end
+
+        @device.process(@example_location.merge(:time => "03:33:30", :date => "2009/02/18", :event => '6012'))
+
+        Mailer.deliveries.length.should.equal 1
+
+
+        # New trip
+        Trip.should.differ(:count).by(1) do
+          Event.should.differ(:count).by(3) do
+            @device.process(@example_location.merge(:time => "05:00:00", :date => "2009/02/18", :event => '6011'))
+            @device.process(@example_location.merge(:time => "05:30:00", :date => "2009/02/18"))
+            @device.process(@example_location.merge(:time => "06:30:00", :date => "2009/02/18"))
+          end
+        end
+
+        @device.process(@example_location.merge(:time => "06:30:00", :date => "2009/02/18", :event => '6012'))
+        
+        Mailer.deliveries.length.should.equal 2
+
+        # No longer after-hours
+        Trip.should.differ(:count).by(1) do
+          Event.should.differ(:count).by(0) do
+            @device.process(@example_location.merge(:time => "11:01:00", :date => "2009/02/18", :event => '6011'))
+            @device.process(@example_location.merge(:time => "11:20:00", :date => "2009/02/18"))
+          end
+        end
+
+        # No more deliveries
+        Mailer.deliveries.length.should.equal 2
+      end
+
+      specify "all points made during after-hours are flagged as such" do
+        # Multiple points
+        Event.should.differ(:count).by(5) do
+          @device.process(@example_location.merge(:time => "23:00:10"))
+          @device.process(@example_location.merge(:time => "23:30:10"))
+          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "02:32:52", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "03:30:30", :date => "2009/02/18"))
+        end
+
+        @device.trips.last.points.each do |point|
+          assert point.events.exists?(:event_type => Event::AFTER_HOURS)
+        end
+      end
+
+    end
     
     specify "will update extended information if available" do
       @example_location[:fw_version] = 'ABCD'
@@ -418,7 +528,7 @@ describe "Device", ActiveSupport::TestCase do
     d.phones.should.equal @account.phones
     
     # Doesn't apply if you give it a specific phone list
-    d = @account.devices.new(:name => 'Specifying a Phone', :phones => [test_phone])
+    d = @account.devices.new(:name => 'specifying a Phone', :phones => [test_phone])
     d.tracker = Tracker.create(:imei_number => '987321000192873')
     d.phones.should.equal [test_phone]
     
