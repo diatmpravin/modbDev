@@ -96,7 +96,7 @@ jQuery.fn.errors = function(o) {
 };
 
 /**
- * clearRailsForm()
+ * .clearRailsForm()
  *
  * Need a better name for this. This is an attempt to encapsulate "clearing"
  * a Rails form, which includes clearing any input fields and stripping away
@@ -112,3 +112,20 @@ jQuery.fn.clearRailsForm = function() {
       }).end()
       .find('.formError').remove();
 };
+
+/**
+ * .dialogLoader()
+ *
+ * Call on a jQuery dialog pane to add a loading div (hidden by default) to the
+ * lower left inside the button row.  Subsequent calls on the same dialog will
+ * return the existing loading div.
+ */
+jQuery.fn.dialogLoader = function() {
+  var loader = q('.dialog').siblings('.ui-dialog-buttonpane').find('.loading');
+  if (loader.length == 0) {
+    loader = q('<div class="loading"></div>').prependTo(
+      q('.dialog').siblings('.ui-dialog-buttonpane')
+    );
+  }
+  return loader;
+}
