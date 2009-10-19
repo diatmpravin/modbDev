@@ -13,8 +13,9 @@ Landmarks = {
     q('div.landmark[id=new] input.save').live('click', Landmarks.create);
     q('div.landmark[id=new] input.cancel').live('click', Landmarks.cancelNew);
     
-    //q('div.landmark[id!=new] input.save').live('click', Landmarks.save);
-    //q('div.landmark[id!=new] input.cancel').live('click', Landmarks.cancel);
+    q('div.landmark[id!=new] input.edit').live('click', Landmarks.edit);
+    q('div.landmark[id!=new] input.save').live('click', Landmarks.save);
+    q('div.landmark[id!=new] input.cancel').live('click', Landmarks.cancel);
     
     q('div.landmark[id!=new]').live('mouseover', function() {
       q(this).addClass('hover');
@@ -71,6 +72,51 @@ Landmarks = {
     // Landmarks.exitMode();
     
     return false;
+  }
+  ,
+  edit: function() {
+    q('#addLandmark').hide('fast');
+    q(this).closest('div.landmark')
+           .siblings('div.landmark').hide('fast').end()
+           .find('div.edit').show('fast').end()
+           .find('div.view').hide('fast');
+  }
+  ,
+  save: function() {
+    var _edit = q(this).closest('div.edit');
+    
+    _edit.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _edit.find('.loading').show(); },
+      success: function(json) {
+        if (json.status == 'success') {
+          q('#addLandmark').show('fast');
+          _edit.siblings('div.view').html(json.view).show('fast')
+               .closest('div.landmark')
+               .siblings('div.landmark[id!=new]').show('fast');
+          
+          _edit.hide('fast', function() {
+            _edit.html(json.edit);
+          });
+        } else {
+          _edit.html(json.html);
+        }
+      }
+    });
+  }
+  ,
+  cancel: function() {
+    var _edit = q(this).closest('div.edit');
+    
+    q('#addLandmark').show('fast');
+    _edit.closest('div.landmark')
+         .siblings('div.landmark[id!=new]').show('fast').end()
+         .find('div.view').show('fast').end()
+         .find('div.edit').hide('fast', function() {
+           q.get(_edit.find('form').attr('action') + '/edit', function(html) {
+             _edit.html(html);
+           });
+         });
   }
   ,
   corners: function() {
