@@ -26,7 +26,7 @@ class Device < ActiveRecord::Base
 
   validates_numericality_of :odometer, :allow_nil => true
 
-  validate_on_create :number_of_records
+  validate_on_create :validate_number_of_records
 
   attr_accessible :name, :account, :points, :trips, :phone_devices, :phones,
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
@@ -231,7 +231,7 @@ class Device < ActiveRecord::Base
     end
   end
 
-  def number_of_records
+  def validate_number_of_records
     if Device.count(:conditions => {:account_id => account_id}) >= 20
       errors.add_to_base 'Too many devices'
     end
