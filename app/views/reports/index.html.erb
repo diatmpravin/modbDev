@@ -13,15 +13,15 @@
         
         <% fields_for :range do |f_r| -%>
           <div class="field">
-            <%= f_r.label :range_type, 'Date Range' %>
-            <%= f_r.select :range_type, Report::DateRange.type_options, :selected => 0 %>
+            <%= f_r.label :type, 'Date Range' %>
+            <%= f_r.select :type, Report::DateRange.type_options, :selected => 0 %>
           </div>
           
           <div id="date_select" class="field" style="display:none">
             <%= label_tag '' %>
-            <%= f_r.text_field :start_date, :size => 10, :maxlength => 10 %>
+            <%= f_r.text_field :start, :size => 10, :maxlength => 10 %>
             &nbsp; through &nbsp;
-            <%= f_r.text_field :end_date, :size => 10, :maxlength => 10 %>
+            <%= f_r.text_field :end, :size => 10, :maxlength => 10 %>
           </div>
         <% end -%>
 
@@ -36,8 +36,8 @@
 
             <% @devices.each do |device| -%>
               <div class="field">
-                <%= check_box_tag "device[#{device.id}]" %>
-                <%= label_tag "device[#{device.id}]", device.name, :class => 'checkbox' %>
+                <%= check_box_tag "devices[#{device.id}]" %>
+                <%= label_tag "devices[#{device.id}]", device.name, :class => 'checkbox' %>
               </div>
             <% end -%>
           </div>

@@ -7,7 +7,8 @@
  */
 Reports = {
   init: function() {
-    q('#range_range_type').change(function(event) {
+    q('#range_type').change(function(event) {
+      // Custom is 7
       if(event.target.value == 7) {
         q("#date_select").slideDown();
       } else {
@@ -23,7 +24,7 @@ Reports = {
       });
     });
 
-    q('#range_start_date,#range_end_date').datepicker({
+    q('#range_start,#range_end').datepicker({
       duration: 'fast',
       maxDate: new Date(MoshiTime.serverTime),
       constrainInput: true
