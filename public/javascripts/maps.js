@@ -49,7 +49,7 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').change(Geofences.updateVisibility).attr('checked', false);
+    q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
     q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
@@ -118,7 +118,7 @@ Maps = {
     
     if (q('#livelook').hasClass('selected')) {
       Maps.livelook();
-      Geofences.updateVisibility();
+      GeofencesView.updateVisibility();
     } else {
       q('#historyScroller li.selected').click();
     }
@@ -609,81 +609,13 @@ Trips = {
     _this.find('option:selected').remove();
     _this.val('');
   }
-}
-
-Geofences = {
-  ELLIPSE: 0,
-  RECTANGLE: 1,
-  POLYGON: 2,
-  fences: [],
-
-  init: function() {
-    q.getJSON('/geofences.json', function(json) {
-      Geofences.fences = json;
-      Geofences.buildGeofences();
-    });
-  }
-  ,
-  updateVisibility: function() {
-    var toggleTo = q("#show_geofences").attr('checked'),
-        fence,
-        device = q("#device_id").val();
-
-    device = device == "" ? -1 : parseInt(device);
-
-    for(var i = 0; i < Geofences.fences.length; i++) {
-      fence = Geofences.fences[i].geofence;
-      changeTo = toggleTo;
-
-      if(toggleTo && device >= 0) {
-        changeTo = fence.device_ids.indexOf(device) >= 0;
-      }
-
-      fence.shape.setValue('visible', changeTo);
-    }
-  }
-  ,
-  buildGeofences: function() {
-    for(var i = 0; i < Geofences.fences.length; i++) {
-      Geofences.shape(Geofences.fences[i].geofence);
-      MoshiMap.moshiMap.geofenceCollection.add(Geofences.fences[i].geofence.shape);
-    }
-  }
-  ,
-  shape: function(fence) {
-    if (fence.geofence_type == Geofences.ELLIPSE) {
-      fence.shape = new MQA.EllipseOverlay();
-    } else if (fence.geofence_type == Geofences.RECTANGLE) {
-      fence.shape = new MQA.RectangleOverlay();
-    } else if (fence.geofence_type == Geofences.POLYGON) {
-      fence.shape = new MQA.PolygonOverlay();
-    }
-    
-    fence.points = new MQLatLngCollection();
-    for(var i = 0; i < fence.coordinates.length; i++) {
-      fence.points.add(new MQA.LatLng(fence.coordinates[i].latitude, fence.coordinates[i].longitude));
-    }
-    
-    fence.shape.setShapePoints(fence.points);
-    fence.shape.setValue('visible', false);
-    Geofences.setFenceColor(fence, '#ff0000');
-    
-    return fence.shape;
-  }
-  ,
-  setFenceColor: function(fence, color) {
-    fence.shape.setColor(color);
-    fence.shape.setColorAlpha(0.4);
-    fence.shape.setFillColor(color);
-    fence.shape.setFillColorAlpha(0.2);
-  }
-}
+};
 
 /* Initializer */
 q(function() {
   q('#mapContainer').moshiMap().init();
   Maps.init();
-  Geofences.init();
+  GeofencesView.init();
   Trips.init();
   
   // keeping this around for a little while in case i have to switch to IE7 opacity style

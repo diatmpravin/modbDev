@@ -1,11 +1,32 @@
-<% @title = 'Landmark Settings' -%>
 <% content_for(:javascript) do -%>
+  <%= javascript_include_tag 'settings' %>
   <%= mapquest_include_tags %>
   <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
   <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'landmarks' %>
+  <%= javascript_include_tag 'geofences_view' %>
 <% end -%>
-<% inside_layout 'settings' do -%>
-  <%= yield %>
+<% inside_layout 'global' do -%>
+  <%= render :partial => 'common/header' %>
+  
+  <div id="navbar">
+    <div class="noLeft">
+      <h1>Landmark Settings</h1>
+    </div>
+    <div>
+      <%= check_box_tag :show_geofences, 1, {:checked => false } %>
+      <%= label_tag :show_geofences, 'Show Geofences' %>
+    </div>
+    <div class="noRight"></div>
+    
+    <%= render :partial => 'common/livelook' %>
+  </div>
+  <div id="settingsContainer">
+    <div id="settings">
+      <div id="settingsContent">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
 <% end -%>

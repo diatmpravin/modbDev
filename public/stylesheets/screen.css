@@ -289,6 +289,9 @@ a.close {
   height:4px;
   background:#e0decc url(/images/navbar_bg_short.gif) repeat-x left top;
 }
+#navbar h1 {
+  margin-right:16px;
+}
 
 /*** LAYOUTS ***/
 

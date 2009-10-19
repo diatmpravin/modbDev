@@ -9,6 +9,9 @@ Landmarks = {
   init: function() {
     Landmarks.corners();
     
+    q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
+    //q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
+    
     q('#addLandmark').live('click', Landmarks.newLandmark);
     q('div.landmark[id=new] input.save').live('click', Landmarks.create);
     q('div.landmark[id=new] input.cancel').live('click', Landmarks.cancelNew);
@@ -221,6 +224,7 @@ Landmarks = {
   createMapLandmark: function(landmarkDiv, temporary) {
     var latitude = landmarkDiv.find('input[name$=[latitude]]').attr('value');
     var longitude = landmarkDiv.find('input[name$=[longitude]]').attr('value');
+    var name = landmarkDiv.find('input[name$=[name]]').attr('value');
     
     if (!(latitude && latitude.match(/^[-]?[0-9]+([\.][0-9]+)?$/) &&
           longitude && longitude.match(/^[-]?[0-9]+([\.][0-9]+)?$/))) {
@@ -229,6 +233,7 @@ Landmarks = {
     
     if (landmarkDiv.data('point')) {
       landmarkDiv.data('point').setValue('latLng', new MQA.LatLng(latitude, longitude));
+      landmarkDiv.data('point').setValue('infoTitleHTML', name);
       
       return landmarkDiv.data('point');
     } else {
@@ -236,7 +241,7 @@ Landmarks = {
       
       point.setValue('shadow', new MQA.Icon('/images/blank.gif'));
       point.setValue('rolloverEnabled', true);
-      point.setValue('infoTitleHTML', landmarkDiv.find('input[name$=[name]]').attr('value'));
+      point.setValue('infoTitleHTML', name);
       
       MQA.EventManager.addListener(point, 'mouseup', Landmarks.updateLandmarkFromMap);
       
@@ -276,48 +281,9 @@ Landmarks = {
   }
 };
 
-/*
-
-    if (fence == null) {
-      var tl = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX-50, centerY-50));
-      var br = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX+50, centerY+50));
-      Geofences.fence = {
-        type: 0,
-        coords: [
-          {latitude: tl.lat, longitude: tl.lng},
-          {latitude: br.lat, longitude: br.lng}
-        ]
-      };
-      Geofences.shape(Geofences.fence);
-      MoshiMap.moshiMap.tempCollection.add(Geofences.fence.shape);
-    } else {
-      Geofences.fence = fence;
-      Geofences.setFenceColor(Geofences.fence, '#ff0000');
-    }
-    
-    */
-
-/*
-    _create = function(ll, isCorner) {
-      var mqPoi = new MQA.Poi(ll);
-      if (isCorner) {
-        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_corner.png', 9, 9));
-      } else {
-        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_edge.png', 9, 9));
-      }
-      mqPoi.setValue('iconOffset', new MQA.Point(-4, -4));
-      mqPoi.setValue('draggable', true);
-      mqPoi.setValue('shadow', null);
-      MoshiMap.moshiMap.tempCollection.add(mqPoi);
-      Geofences.fence.pois[Geofences.fence.pois.length] = mqPoi;
-      MQA.EventManager.addListener(mqPoi, 'mousedown', Geofences.dragCornerStart);
-      MQA.EventManager.addListener(mqPoi, 'mouseup', Geofences.dragCornerEnd);
-      
-      return mqPoi;
-    };*/
-
 /* Initializer */
 jQuery(function() {
   q('#mapContainer').moshiMap().init();
   Landmarks.init();
+  GeofencesView.init();
 });
