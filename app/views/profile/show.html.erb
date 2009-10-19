@@ -1,6 +1,15 @@
 <div>
   <%= messages %>
 
+  <h2>Account Information</h2>
+
+  <div class="field">
+    <label>Account Number: </label>
+    <strong><%= @user.account.number %></strong>
+  </div>
+
+  <div class="spacer"></div>
+
   <% form_for :user, :url => profile_path, :html => {:method => :put} do |f| -%>
     <h2>Profile Settings</h2>
 

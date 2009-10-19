@@ -8,7 +8,7 @@ describe "ProfileController", ActionController::TestCase do
   end
 
   context "Show" do
-  
+
     specify "shows edit form" do
       get :show
       template.should.be "show"
@@ -43,7 +43,7 @@ describe "ProfileController", ActionController::TestCase do
           :login_confirmation => "testing",
           :password => "wootzor",
           :password_confirmation => "wootzor",
-          :email => "test@example.com" 
+          :email => "test@example.com"
         }
       }
 
@@ -59,11 +59,45 @@ describe "ProfileController", ActionController::TestCase do
       u.crypted_password.should.not.equal old_pass
     end
 
-    xspecify "security settings require current password"
+    specify "security settings require current password" do
+      params = {
+        :user => {
+          :login => "testing",
+          :login_confirmation => "testing",
+          :password => "wootzor",
+          :password_confirmation => "wootzor",
+          :email => "test@example.com"
+        }
+      }
 
-    xspecify "if password given, must match confirmation as well"
+      u = users(:quentin)
+      old_pass = u.crypted_password
 
-    xspecify "if login given, must match confirmation as well"
+      put :update, params
+      template.should.be "show"
+
+      u.reload
+      u.crypted_password.should.equal old_pass
+    end
+
+    specify "if password given, must match confirmation as well" do
+      params = {
+        :user => {
+          :current_password => "test",
+          :password => "wootzor",
+          :password_confirmation => "failzor"
+        }
+      }
+
+      u = users(:quentin)
+      old_pass = u.crypted_password
+
+      put :update, params
+      template.should.be "show"
+
+      u.reload
+      u.crypted_password.should.equal old_pass
+    end
 
   end
 

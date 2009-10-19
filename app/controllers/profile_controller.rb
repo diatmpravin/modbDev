@@ -10,9 +10,15 @@ class ProfileController < ApplicationController
   # PUT /profile
   def update
     @user = current_user
-    @user.update_attributes(params[:user])
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "Profile settings updated."
 
-    redirect_to profile_path
+      redirect_to profile_path
+    else
+      flash[:error] = "Unable to update Profile. Please fix errors below."
+
+      render :action => "show"
+    end
   end
 
 end
