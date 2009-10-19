@@ -1,23 +1,15 @@
 class Report
+  extend Concerns
+
+  concerned_with 'date_range'
+
   attr_accessor :account, :report_type, :range_type, :start_date,
-    :end_date, :devices, :title, :error
+    :end_date, :devices, :error
   
-  REPORT_TYPES = {
+  TYPES = {
     0 => 'Vehicle Summary Report',
     1 => 'Daily Summary Report'
   }
-  
-  RANGE_TYPES = {
-    0 => 'Date Range'
-  }
-  
-  def self.type_options
-    REPORT_TYPES.invert
-  end
-  
-  def self.range_options
-    RANGE_TYPES.invert
-  end
   
   def initialize(account, opts = {})
     opts = opts.with_indifferent_access

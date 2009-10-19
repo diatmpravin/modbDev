@@ -2,14 +2,7 @@ class ReportsController < ApplicationController
   layout except_ajax('reports')
   
   def index
-    @report = Report.new(current_account, params[:report] || {})
-    @devices = current_account.devices.all(:select => 'name, id').map {|d| [d.name, d.id]}
-    
-    @report.run
-    
-    if @report.error
-      flash.now[:error] = @report.error
-    end
+    @devices = current_account.devices.all
   end
   
   def create
@@ -18,11 +11,11 @@ class ReportsController < ApplicationController
     
     if @report.error
       flash.now[:error] = @report.error
+
       render :action => 'index'
-      return
+    else
+      render :action => 'report', :layout => 'report_blank'
     end
-    
-    render :action => 'report', :layout => 'report_blank'
   end
   
 end

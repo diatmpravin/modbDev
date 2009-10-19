@@ -7,18 +7,27 @@
  */
 Reports = {
   init: function() {
-    q('a.openSettings').click(Reports.openSettings);
-    
-    q('#report_start_date,#report_end_date').datepicker({
+    q('#range_range_type').change(function(event) {
+      if(event.target.value == 7) {
+        q("#date_select").slideDown();
+      } else {
+        q("#date_select").slideUp();
+      }
+    });
+
+    q('#select_all').change(function(event) {
+      var checked = this.checked;
+
+      q(this).parents("#device_select").find(":select").each(function() {
+        this.checked = checked;
+      });
+    });
+
+    q('#range_start_date,#range_end_date').datepicker({
       duration: 'fast',
       maxDate: new Date(MoshiTime.serverTime),
       constrainInput: true
     });
-  }
-  ,
-  openSettings: function() {
-    q(this).closest('div').hide('fast').siblings().show('fast');
-    return false;
   }
 };
 

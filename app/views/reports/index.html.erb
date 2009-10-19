@@ -1,36 +1,46 @@
 <%= messages %>
 
 <div class="reportSettings">
-  <div <%= !@report.data ? 'style="display:none"':'' %>>
-    <%= link_to 'Report Settings - Click to Open', '#', :class => 'simple openSettings' %>
-  </div>
-  <div class="reportForm" <%= @report.data ? 'style="display:none"':'' %>>
+  <div class="reportForm">
     <h2>Report Settings</h2>
     
-    <% form_for :report, @report, :html => {:method => :post, :target => '_blank'} do |f| -%>
+    <% form_for :report, :html => {:method => :post, :target => '_blank'} do |f| -%>
       <div class="col">
         <div class="field">
-          <%= f.label :report_type %>
-          <%= f.select :report_type, Report.type_options %>
+          <%= f.label :type %>
+          <%= f.select :type, Report::TYPES.invert %>
         </div>
         
-        <div class="field">
-          <%= f.label :range_type %>
-          <%= f.select :range_type, Report.range_options %>
-        </div>
-        
-        <div class="field">
-          <%= label_tag '' %>
-          <%= f.text_field :start_date, :size => 10, :maxlength => 10 %>
-          &nbsp; through &nbsp;
-          <%= f.text_field :end_date, :size => 10, :maxlength => 10 %>
-        </div>
-      </div>
-      
-      <div class="col">
-        <div class="field">
-          <%= f.label :devices %>
-          <%= f.select :devices, @devices, {}, {:multiple => true} %>
+        <% fields_for :range do |f_r| -%>
+          <div class="field">
+            <%= f_r.label :range_type, 'Date Range' %>
+            <%= f_r.select :range_type, Report::DateRange.type_options, :selected => 0 %>
+          </div>
+          
+          <div id="date_select" class="field" style="display:none">
+            <%= label_tag '' %>
+            <%= f_r.text_field :start_date, :size => 10, :maxlength => 10 %>
+            &nbsp; through &nbsp;
+            <%= f_r.text_field :end_date, :size => 10, :maxlength => 10 %>
+          </div>
+        <% end -%>
+
+        <div id="device_select" class="field">
+          <%= label :devices, 'Vehicles' %>
+
+          <div style="max-height: 150px; overflow:auto">
+            <div class="field">
+              <%= check_box_tag "select_all" %>
+              <%= label_tag "select_all", "Select All", :class => 'checkbox' %>
+            </div>
+
+            <% @devices.each do |device| -%>
+              <div class="field">
+                <%= check_box_tag "device[#{device.id}]" %>
+                <%= label_tag "device[#{device.id}]", device.name, :class => 'checkbox' %>
+              </div>
+            <% end -%>
+          </div>
         </div>
       </div>
       
@@ -42,11 +52,3 @@
     <% end -%>
   </div>
 </div>
-
-<!--
-<div class="clear"></div>
-
-<% if @report.data -%>
-  <%= render :partial => report_partial(@report), :locals => {:report => @report} %>
-<% end -%>
--->
