@@ -51,7 +51,11 @@ Landmarks = {
     q('#new').show('fast').siblings('.landmark').hide('fast');
     q('#addLandmark').hide('fast');
     
-    //Landmarks.enterMode();
+    var mc = MoshiMap.moshiMap.map.getCenter();
+    q('#new').find('input[name$=[latitude]]').attr('value', mc.lat);
+    q('#new').find('input[name$=[longitude]]').attr('value', mc.lng);
+    
+    Landmarks.createMapLandmark(q('#new'), true).setValue('draggable', true);
   }
   ,
   create: function() {
@@ -66,12 +70,14 @@ Landmarks = {
           _new.hide('fast', function() {
             q(this).clearRailsForm();
           }).siblings('.landmark').show('fast');
+          Landmarks.deleteMapLandmark(_new);
           
-          q('<div class="landmark" style="display:none"><div class="view">'
+          var _div = q('<div class="landmark" style="display:none"><div class="view">'
             + json.view
             + '</div><div class="edit">'
             + json.edit
             + '</div></div>').insertAfter('#new').show('fast');
+          Landmarks.createMapLandmark(_div);
         } else {
           _new.html(json.html);
         }
@@ -85,7 +91,7 @@ Landmarks = {
       q(this).clearRailsForm();
     }).siblings('.landmark').show('fast');
     
-    // Landmarks.exitMode();
+    Landmarks.deleteMapLandmark(q('#new'));
   }
   ,
   edit: function() {
@@ -99,6 +105,7 @@ Landmarks = {
   ,
   save: function() {
     var _edit = q(this).closest('div.edit');
+    var _landmark = _edit.closest('div.landmark');
     
     _edit.find('form').ajaxSubmit({
       dataType: 'json',
@@ -106,12 +113,12 @@ Landmarks = {
       success: function(json) {
         if (json.status == 'success') {
           q('#addLandmark').show('fast');
-          _edit.siblings('div.view').html(json.view).show('fast')
-               .closest('div.landmark')
-               .siblings('div.landmark[id!=new]').show('fast');
+          _landmark.siblings('div.landmark[id!=new]').show('fast').end()
+                   .find('div.view').html(json.view).show('fast');
           
           _edit.hide('fast', function() {
             _edit.html(json.edit);
+            Landmarks.createMapLandmark(_landmark).setValue('draggable', false);
           });
         } else {
           _edit.html(json.html);
@@ -146,9 +153,7 @@ Landmarks = {
       complete: function() { _dialog.dialog('close').dialogLoader().hide(); },
       success: function(json) {
         if (json.status == 'success') {
-          if (_landmark.data('point')) {
-            MoshiMap.moshiMap.pointCollection.removeItem(_landmark.data('point'));
-          }
+          Landmarks.deleteMapLandmark(_landmark);
           _landmark.hide('fast', function() {
             _landmark.remove();
           });
@@ -213,7 +218,7 @@ Landmarks = {
     }
   }
   ,
-  createMapLandmark: function(landmarkDiv) {
+  createMapLandmark: function(landmarkDiv, temporary) {
     var latitude = landmarkDiv.find('input[name$=[latitude]]').attr('value');
     var longitude = landmarkDiv.find('input[name$=[longitude]]').attr('value');
     
@@ -235,11 +240,31 @@ Landmarks = {
       
       MQA.EventManager.addListener(point, 'mouseup', Landmarks.updateLandmarkFromMap);
       
-      MoshiMap.moshiMap.pointCollection.add(point);
+      if (temporary) {
+        MoshiMap.moshiMap.tempCollection.add(point);
+      } else {
+        MoshiMap.moshiMap.pointCollection.add(point);
+      }
+      
       landmarkDiv.data('point', point);
       point.landmark = landmarkDiv;
       
       return point;
+    }
+  }
+  ,
+  deleteMapLandmark: function(landmarkDiv) {
+    var point = landmarkDiv.data('point');
+    
+    if (point) {
+      MQA.EventManager.clearListeners(point, 'mouseup');
+      
+      if (MoshiMap.moshiMap.tempCollection.contains(point)) {
+        MoshiMap.moshiMap.tempCollection.removeItem(point);
+      } else {
+        MoshiMap.moshiMap.pointCollection.removeItem(point);
+      }
+      landmarkDiv.removeData('point');
     }
   }
   ,
@@ -250,6 +275,27 @@ Landmarks = {
     }
   }
 };
+
+/*
+
+    if (fence == null) {
+      var tl = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX-50, centerY-50));
+      var br = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX+50, centerY+50));
+      Geofences.fence = {
+        type: 0,
+        coords: [
+          {latitude: tl.lat, longitude: tl.lng},
+          {latitude: br.lat, longitude: br.lng}
+        ]
+      };
+      Geofences.shape(Geofences.fence);
+      MoshiMap.moshiMap.tempCollection.add(Geofences.fence.shape);
+    } else {
+      Geofences.fence = fence;
+      Geofences.setFenceColor(Geofences.fence, '#ff0000');
+    }
+    
+    */
 
 /*
     _create = function(ll, isCorner) {
