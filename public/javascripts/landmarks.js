@@ -27,6 +27,8 @@ Landmarks = {
       q(this).removeClass('hover');
     });
     
+    q('div.landmark input').live('keypress', Landmarks.coordinateEntry);
+    
     q("#removeLandmark").dialog({
       title: 'Delete Landmark',
       modal: true,
@@ -42,7 +44,7 @@ Landmarks = {
     q(window).resize(Landmarks.resize);
     Landmarks.resize();
     
-    //Landmarks.buildLandmarks();
+    Landmarks.buildLandmarks();
   }
   ,
   newLandmark: function() {
@@ -91,7 +93,8 @@ Landmarks = {
     q(this).closest('div.landmark')
            .siblings('div.landmark').hide('fast').end()
            .find('div.edit').show('fast').end()
-           .find('div.view').hide('fast');
+           .find('div.view').hide('fast').end()
+           .data('point').setValue('draggable', true);
   }
   ,
   save: function() {
@@ -119,16 +122,17 @@ Landmarks = {
   ,
   cancel: function() {
     var _edit = q(this).closest('div.edit');
+    var _landmark = _edit.closest('div.landmark');
     
     q('#addLandmark').show('fast');
-    _edit.closest('div.landmark')
-         .siblings('div.landmark[id!=new]').show('fast').end()
-         .find('div.view').show('fast').end()
-         .find('div.edit').hide('fast', function() {
-           q.get(_edit.find('form').attr('action') + '/edit', function(html) {
-             _edit.html(html);
-           });
-         });
+    _landmark.siblings('div.landmark[id!=new]').show('fast').end()
+             .find('div.view').show('fast').end()
+             .find('div.edit').hide('fast', function() {
+                q.get(_edit.find('form').attr('action') + '/edit', function(html) {
+                  _edit.html(html);
+                  Landmarks.createMapLandmark(_landmark).setValue('draggable', false);
+                });
+              });
   }
   ,
   destroy: function() {
@@ -142,6 +146,9 @@ Landmarks = {
       complete: function() { _dialog.dialog('close').dialogLoader().hide(); },
       success: function(json) {
         if (json.status == 'success') {
+          if (_landmark.data('point')) {
+            MoshiMap.moshiMap.pointCollection.removeItem(_landmark.data('point'));
+          }
           _landmark.hide('fast', function() {
             _landmark.remove();
           });
@@ -150,6 +157,15 @@ Landmarks = {
         }
       }
     });
+  }
+  ,
+  coordinateEntry: function(e) {
+    var _landmark = q(this).closest('div.landmark');
+    
+    if (Landmarks.coordinateTimer) { clearTimeout(Landmarks.coordinateTimer); }
+    Landmarks.coordinateTimer = setTimeout(function() {
+      Landmarks.createMapLandmark(_landmark);
+    }, 500);
   }
   ,
   corners: function() {
@@ -183,7 +199,76 @@ Landmarks = {
       }, 500);
     }
   }
+  ,
+  buildLandmarks: function() {
+    Landmarks.landmarks = [];
+    
+    q('div.landmark[id!=new]').each(function() {
+      Landmarks.createMapLandmark(q(this));
+    });
+    
+    var bounds = MoshiMap.moshiMap.pointCollection.getBoundingRect();
+    if (bounds) {
+      MoshiMap.moshiMap.map.bestFitLL([bounds.ul, bounds.lr]);
+    }
+  }
+  ,
+  createMapLandmark: function(landmarkDiv) {
+    var latitude = landmarkDiv.find('input[name$=[latitude]]').attr('value');
+    var longitude = landmarkDiv.find('input[name$=[longitude]]').attr('value');
+    
+    if (!(latitude && latitude.match(/^[-]?[0-9]+([\.][0-9]+)?$/) &&
+          longitude && longitude.match(/^[-]?[0-9]+([\.][0-9]+)?$/))) {
+      return;
+    }
+    
+    if (landmarkDiv.data('point')) {
+      landmarkDiv.data('point').setValue('latLng', new MQA.LatLng(latitude, longitude));
+      
+      return landmarkDiv.data('point');
+    } else {
+      var point = new MQA.Poi(new MQA.LatLng(latitude, longitude));
+      
+      point.setValue('shadow', new MQA.Icon('/images/blank.gif'));
+      point.setValue('rolloverEnabled', true);
+      point.setValue('infoTitleHTML', landmarkDiv.find('input[name$=[name]]').attr('value'));
+      
+      MQA.EventManager.addListener(point, 'mouseup', Landmarks.updateLandmarkFromMap);
+      
+      MoshiMap.moshiMap.pointCollection.add(point);
+      landmarkDiv.data('point', point);
+      point.landmark = landmarkDiv;
+      
+      return point;
+    }
+  }
+  ,
+  updateLandmarkFromMap: function(mqEvent) {
+    if (this.landmark) {
+      this.landmark.find('input[name$=[latitude]]').attr('value', this.latLng.lat).end()
+                   .find('input[name$=[longitude]]').attr('value', this.latLng.lng);
+    }
+  }
 };
+
+/*
+    _create = function(ll, isCorner) {
+      var mqPoi = new MQA.Poi(ll);
+      if (isCorner) {
+        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_corner.png', 9, 9));
+      } else {
+        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_edge.png', 9, 9));
+      }
+      mqPoi.setValue('iconOffset', new MQA.Point(-4, -4));
+      mqPoi.setValue('draggable', true);
+      mqPoi.setValue('shadow', null);
+      MoshiMap.moshiMap.tempCollection.add(mqPoi);
+      Geofences.fence.pois[Geofences.fence.pois.length] = mqPoi;
+      MQA.EventManager.addListener(mqPoi, 'mousedown', Geofences.dragCornerStart);
+      MQA.EventManager.addListener(mqPoi, 'mouseup', Geofences.dragCornerEnd);
+      
+      return mqPoi;
+    };*/
 
 /* Initializer */
 jQuery(function() {

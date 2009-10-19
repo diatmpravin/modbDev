@@ -11,11 +11,22 @@ describe "Landmarks Controller", ActionController::TestCase do
   end
   
   context "Listing landmarks" do
-    specify "works" do
+    specify "works in html" do
       get :index
       
       template.should.equal 'index'
       assigns(:landmarks).should.include landmarks(:quentin)
+    end
+    
+    specify "works in json" do
+      get :index, {
+        :format => 'json'
+      }
+      
+      json[0]['landmark']['id'].should.equal @landmark.id
+      json[0]['landmark']['name'].should.equal @landmark.name
+      json[0]['landmark']['latitude'].should.equal @landmark.latitude.to_f
+      json[0]['landmark']['longitude'].should.equal @landmark.longitude.to_f
     end
   end
   

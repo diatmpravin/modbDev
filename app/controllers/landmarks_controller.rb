@@ -7,6 +7,13 @@ class LandmarksController < ApplicationController
   
   def index
     @landmarks = current_account.landmarks
+    
+    respond_to do |format|
+      format.html
+      format.json {
+        render :text => @landmarks.to_json
+      }
+    end
   end
   
   def new
@@ -25,7 +32,6 @@ class LandmarksController < ApplicationController
   end
   
   def destroy
-    sleep 3
     @landmark.destroy
     
     respond_to do |format|
