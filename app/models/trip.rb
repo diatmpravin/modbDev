@@ -34,7 +34,7 @@ class Trip < ActiveRecord::Base
     self.tags = device.account.tags.find(list)
   end
   
-  def update_point_data
+  def update_point_data(do_save = true)
     first_point = points.first
     last_point = points.last
     if first_point && last_point
@@ -44,7 +44,7 @@ class Trip < ActiveRecord::Base
       self.miles += Device::ROLLOVER_MILES if self.miles < 0
       self.idle_time = compute_idle_time
       self.average_mpg = compute_average_mpg
-      self.save
+      self.save if do_save
     end
   end
   

@@ -66,6 +66,8 @@ Maps = {
     q('#monthForward').live('click', function() { Maps.adjustHistoryMonth(1); });
     
     q('.trip:not(.selected)').live('click', Maps.selectTrip);
+    q('.device:not(.selected)').live('click', Maps.selectDevice);
+    q('.device.selected').live('click', Maps.unselectDevice);
     
     q('.device').live('click', Maps.centerDevice);
     
@@ -151,6 +153,16 @@ Maps = {
     });
   }
   ,
+  selectDevice: function() {
+    q(this).addClass('selected').find('.additional').show()
+      .end().siblings('.device')
+      .removeClass('selected').find('.additional').hide();
+  }
+  ,
+  unselectDevice: function() {
+    q(this).removeClass('selected').find('.additional').hide();
+  }
+  ,
   livelook: function() {
     q('#livelook').addClass('selected');
     q('#historyScroller li').removeClass('selected');
@@ -171,7 +183,13 @@ Maps = {
     var device_id = q('#device_id').val();
     var jsonURL = (device_id == '' ? '/devices' : '/devices/' + device_id) + ".json";
     var htmlURL = (device_id == '' ? '/maps/status' : '/maps/status?device_id=' + device_id);
-    
+
+    var sel, currentlySelectedId;
+
+    if((sel = q('.devices .device.selected')).length > 0) {
+      currentlySelectedId = sel.attr("id").split("_")[1];
+    }
+
     q('.loading').show();
     q.getJSON(jsonURL, function(json) {
       MoshiMap.moshiMap.clearPoints();
@@ -207,6 +225,11 @@ Maps = {
         q('.loading').hide();
         Maps.corners();
         Maps.scrollPane(true, '.devices');
+
+        // Make sure we keep the selected device open
+        if(currentlySelectedId) {
+          q('.devices #device_' + currentlySelectedId).click();
+        }
         
         if (Maps.livelookTimer) { clearTimeout(Maps.livelookTimer); }
         Maps.livelookTimer = setTimeout(Maps.livelookUpdate, 60000);
