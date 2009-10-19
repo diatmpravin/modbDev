@@ -17,10 +17,26 @@ Landmarks = {
     q('div.landmark[id!=new] input.save').live('click', Landmarks.save);
     q('div.landmark[id!=new] input.cancel').live('click', Landmarks.cancel);
     
+    q('div.landmark input.delete').live('click', function() {
+      q('#removeLandmark').dialog('open').data('landmark', q(this).closest('div.landmark'));
+    });
+    
     q('div.landmark[id!=new]').live('mouseover', function() {
       q(this).addClass('hover');
     }).live('mouseout', function() {
       q(this).removeClass('hover');
+    });
+    
+    q("#removeLandmark").dialog({
+      title: 'Delete Landmark',
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 450,
+      buttons: {
+        'Yes, delete this landmark': Landmarks.destroy,
+        'No, do not delete': function() { q(this).dialog('close'); }
+      }
     });
     
     q(window).resize(Landmarks.resize);
@@ -34,8 +50,6 @@ Landmarks = {
     q('#addLandmark').hide('fast');
     
     //Landmarks.enterMode();
-    
-    return false;
   }
   ,
   create: function() {
@@ -70,8 +84,6 @@ Landmarks = {
     }).siblings('.landmark').show('fast');
     
     // Landmarks.exitMode();
-    
-    return false;
   }
   ,
   edit: function() {
@@ -117,6 +129,27 @@ Landmarks = {
              _edit.html(html);
            });
          });
+  }
+  ,
+  destroy: function() {
+    var _dialog = q(this);
+    var _landmark = q(this).data('landmark');
+    
+    _landmark.find('div.edit form').ajaxSubmit({
+      dataType: 'json',
+      type: 'DELETE',
+      beforeSubmit: function() { _dialog.dialogLoader().show(); },
+      complete: function() { _dialog.dialog('close').dialogLoader().hide(); },
+      success: function(json) {
+        if (json.status == 'success') {
+          _landmark.hide('fast', function() {
+            _landmark.remove();
+          });
+        } else {
+          location.reload();
+        }
+      }
+    });
   }
   ,
   corners: function() {

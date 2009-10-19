@@ -115,5 +115,40 @@ describe "Landmarks Controller", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['html'].should =~ /can't be blank/
     end
+    
+    specify "prevents access to other accounts" do
+      should.raise(ActiveRecord::RecordNotFound) do
+        put :update, {
+          :id => landmarks(:aaron).id,
+          :landmark => {
+            @landmark.id.to_s => {
+              :name => 'Much Better Name'
+            }
+          }
+        }
+      end
+    end
+  end
+  
+  context "Removing a landmark" do
+    specify "works" do
+      Landmark.should.differ(:count).by(-1) do
+        delete :destroy, {
+          :id => @landmark.id
+        }
+      end
+      
+      json['status'].should.equal 'success'
+    end
+    
+    specify "prevents access to other accounts" do
+      Landmark.should.differ(:count).by(0) do
+        should.raise(ActiveRecord::RecordNotFound) do
+          delete :destroy, {
+            :id => landmarks(:aaron).id
+          }
+        end
+      end
+    end
   end
 end

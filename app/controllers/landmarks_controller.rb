@@ -25,6 +25,16 @@ class LandmarksController < ApplicationController
   end
   
   def destroy
+    sleep 3
+    @landmark.destroy
+    
+    respond_to do |format|
+      format.json {
+        render :json => {
+          :status => 'success'
+        }
+      }
+    end
   end
   
   protected
