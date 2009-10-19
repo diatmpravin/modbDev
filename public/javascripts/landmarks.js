@@ -2,8 +2,6 @@
  * Landmarks
  *
  * Constants and functions used on the Landmark Settings page.
- *
- * Remember: jQuery = q() or $q()!
  */
 Landmarks = {
   init: function() {
@@ -50,6 +48,9 @@ Landmarks = {
     Landmarks.buildLandmarks();
   }
   ,
+  /**
+   * Show the user a new landmark form and associated point on the map.
+   */
   newLandmark: function() {
     q('#new').show('fast').siblings('.landmark').hide('fast');
     q('#addLandmark').hide('fast');
@@ -61,6 +62,9 @@ Landmarks = {
     Landmarks.createMapLandmark(q('#new'), true).setValue('draggable', true);
   }
   ,
+  /**
+   * Submit a new landmark.
+   */
   create: function() {
     var _new = q('#new');
      
@@ -88,6 +92,9 @@ Landmarks = {
     });
   }
   ,
+  /**
+   * Hide the new landmark form and associated point on the map.
+   */
   cancelNew: function() {
     q('#addLandmark').show('fast');
     q('#new').hide('fast', function() {
@@ -97,6 +104,9 @@ Landmarks = {
     Landmarks.deleteMapLandmark(q('#new'));
   }
   ,
+  /**
+   * Show the user the edit form for an existing landmark.
+   */
   edit: function() {
     q('#addLandmark').hide('fast');
     q(this).closest('div.landmark')
@@ -106,6 +116,9 @@ Landmarks = {
            .data('point').setValue('draggable', true);
   }
   ,
+  /**
+   * Submit changes to an existing landmark.
+   */
   save: function() {
     var _edit = q(this).closest('div.edit');
     var _landmark = _edit.closest('div.landmark');
@@ -130,6 +143,9 @@ Landmarks = {
     });
   }
   ,
+  /**
+   * Hide the edit form for an existing landmark.
+   */
   cancel: function() {
     var _edit = q(this).closest('div.edit');
     var _landmark = _edit.closest('div.landmark');
@@ -145,6 +161,9 @@ Landmarks = {
               });
   }
   ,
+  /**
+   * Delete an existing landmark and associated point on the map.
+   */
   destroy: function() {
     var _dialog = q(this);
     var _landmark = q(this).data('landmark');
@@ -167,6 +186,9 @@ Landmarks = {
     });
   }
   ,
+  /**
+   * Update the point on the map as the user types in the landmark form.
+   */
   coordinateEntry: function(e) {
     var _landmark = q(this).closest('div.landmark');
     
@@ -180,6 +202,10 @@ Landmarks = {
     q('#sidebar').corners('transparent');
   }
   ,
+  /**
+   * TODO: This code is on at least three pages almost verbatim, massage it into a
+   * generic function and stick it in a file by itself.
+   */
   resize: function() {
     var _mapContainer = q('#mapContainer');
     var mapHeight = Math.max(350,
@@ -208,6 +234,9 @@ Landmarks = {
     }
   }
   ,
+  /**
+   * Create points on the map for each landmark and fit them onto the map.
+   */
   buildLandmarks: function() {
     Landmarks.landmarks = [];
     
@@ -221,6 +250,9 @@ Landmarks = {
     }
   }
   ,
+  /**
+   * Create or update the map point for a landmark container (div).
+   */
   createMapLandmark: function(landmarkDiv, temporary) {
     var latitude = landmarkDiv.find('input[name$=[latitude]]').attr('value');
     var longitude = landmarkDiv.find('input[name$=[longitude]]').attr('value');
@@ -258,6 +290,9 @@ Landmarks = {
     }
   }
   ,
+  /**
+   * Delete the map point associated with the given landmark container (div).
+   */
   deleteMapLandmark: function(landmarkDiv) {
     var point = landmarkDiv.data('point');
     
@@ -273,6 +308,9 @@ Landmarks = {
     }
   }
   ,
+  /**
+   * Update the landmark form as the user drags the point on the map.
+   */
   updateLandmarkFromMap: function(mqEvent) {
     if (this.landmark) {
       this.landmark.find('input[name$=[latitude]]').attr('value', this.latLng.lat).end()
