@@ -50,10 +50,6 @@ Devices = {
     q('td input[type=checkbox]').live("click", function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
     });
-    
-    q('input.timepick').timepickr({
-      convention: 12
-    });
   }
   ,
   newDevice: function() {
@@ -108,7 +104,13 @@ Devices = {
     var _edit = _view.siblings('div.edit');
     
     _view.hide('normal').closest('div.device').siblings().hide();
-    _edit.show('normal');
+    _edit.show('normal', function() {
+      _edit.find('input.timepick').timepickr({
+        convention: 12,
+        format12: '{h:02.d}:{m:02.d} {z:s}',
+        trigger: 'click'
+      });
+    });
     
     return false;
   }
