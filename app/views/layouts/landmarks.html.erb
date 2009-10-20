@@ -6,6 +6,9 @@
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'landmarks' %>
   <%= javascript_include_tag 'geofences_view' %>
+  <% javascript_tag do -%>
+    GeofencesView.fences = <%= geofences_for_json %>;
+  <% end -%>
 <% end -%>
 <% inside_layout 'global' do -%>
   <%= render :partial => 'common/header' %>
@@ -15,8 +18,16 @@
       <h1>Landmark Settings</h1>
     </div>
     <div>
-      <%= check_box_tag :show_geofences, 1, {:checked => false } %>
+      <%= check_box_tag :show_geofences, 1, {:checked => false} %>
       <%= label_tag :show_geofences, 'Show Geofences' %>
+    </div>
+    <div>
+      <%= check_box_tag :show_vehicles, 1, {:checked => false} %>
+      <%= label_tag :show_vehicles, 'Show Vehicles' %>
+    </div>
+    <div>
+      <%= check_box_tag :show_labels, 1, {:checked => false} %>
+      <%= label_tag :show_labels, 'Show Labels' %>
     </div>
     <div class="noRight"></div>
     

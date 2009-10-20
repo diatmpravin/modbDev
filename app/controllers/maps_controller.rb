@@ -5,6 +5,7 @@ class MapsController < ApplicationController
   
   def index
     @devices = current_account.devices
+    @geofences = current_account.geofences
     
     # Default the device shown if they only have one
     if @devices.length == 1

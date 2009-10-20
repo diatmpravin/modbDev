@@ -14,13 +14,18 @@ GeofencesView = {
   ELLIPSE: 0,
   RECTANGLE: 1,
   POLYGON: 2,
-  fences: [],
+  fences: null,
 
   init: function() {
-    q.getJSON('/geofences.json', function(json) {
-      GeofencesView.fences = json;
+    // If fences aren't already defined, load them with an ajax call.
+    if (GeofencesView.fences != null) {
       GeofencesView.buildGeofences();
-    });
+    } else {
+      q.getJSON('/geofences.json', function(json) {
+        GeofencesView.fences = json;
+        GeofencesView.buildGeofences();
+      });
+    }
   }
   ,
   updateVisibility: function() {

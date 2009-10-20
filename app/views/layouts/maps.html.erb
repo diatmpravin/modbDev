@@ -5,6 +5,9 @@
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'maps' %>
   <%= javascript_include_tag 'geofences_view' %>
+  <% javascript_tag do -%>
+    GeofencesView.fences = <%= geofences_for_json %>;
+  <% end -%>
 <% end -%>
 <% inside_layout 'internal' do -%>
   <%= yield %>
