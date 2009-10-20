@@ -9,4 +9,16 @@ module ReportsHelper
         nil
     end
   end
+
+  def report_type_options
+    @@report_type_options ||= [].tap do |opts|
+      Report::TYPES.keys.sort.each do |k|
+        opts << [ Report::TYPES[k], k ]
+      end
+    end
+  end
+
+  def report_range_options
+    @@range_type_options ||= Report::DateRange::TYPES.map {|t| [ t.label, t.type ]}
+  end
 end

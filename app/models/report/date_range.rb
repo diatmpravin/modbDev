@@ -108,9 +108,6 @@ class Report
     ].freeze
 
     class << self
-      def type_options
-        @range_type_options ||= Report::DateRange::TYPES.map {|t| [ t.label, t.type ]}
-      end
 
       def for_type(type)
         TYPE[type]
