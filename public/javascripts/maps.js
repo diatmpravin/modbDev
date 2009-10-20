@@ -66,7 +66,7 @@ Maps = {
     q('#monthBackward').live('click', function() { Maps.adjustHistoryMonth(-1); });
     q('#monthForward').live('click', function() { Maps.adjustHistoryMonth(1); });
     
-    q('.trip:not(.selected)').live('click', Maps.selectTrip);
+    // .trip:click is now bound in Trips.init, below
     q('.device:not(.selected)').live('click', Maps.showDeviceInfo);
     q('.device.selected').live('click', Maps.hideDeviceInfo);
     
@@ -140,7 +140,11 @@ Maps = {
     }
   }
   ,
-  selectTrip: function() {
+  selectTrip: function(event) {
+    if (event.isPropagationStopped()) {
+      return;
+    }
+    
     var _this = q(this);
     
     _this.addClass('selected').find('.additional,.buttons').show()
@@ -482,6 +486,9 @@ Trips = {
     q('.trip a.cancel').live('click', Trips.cancel);
     q('.trip a.add').live('click', Trips.displayForm);
     q('.trip a.remove').live('click', Trips.removeTag);
+    q('.trip a.collapse').live('click', Trips.collapse);
+    
+    q('.trip:not(.selected)').live('click', Maps.selectTrip);
     
     q('#tagDialog input').live('keypress', function(e) {
       // Capture ENTER and submit dialog
@@ -560,6 +567,39 @@ Trips = {
   displayForm: function() {
     q('#tagDialog').dialog('open')
                    .data('tagList', q(this).closest('ul'));
+    return false;
+  }
+  ,
+  collapse: function(event) {
+    // We aren't trying to "view" this trip
+    event.stopPropagation();
+    
+    var _this = q(this);
+    var _trip = _this.closest('.trip');
+    
+    q(this).closest('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
+      success: function(json) {
+        if (json.status == 'success') {
+          _trip.hide('fast', function() {
+            _trip.prev('.trip')
+                 .find('div.view').html(json.view).end()
+                 .find('div.edit').html(json.edit).end()
+                 .click();
+            _trip.remove();
+            
+            // After removing a trip, need to correct for alternating styles
+            q('.trip:even').removeClass('alternating');
+            q('.trip:odd').addClass('alternating');
+          });
+        } else {
+          _this.show('fast').siblings('.loading').hide('fast');
+          alert('failure');
+        }
+      }
+    });
+    
     return false;
   }
   ,
