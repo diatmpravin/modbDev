@@ -50,6 +50,7 @@ Maps = {
     q('#device_id').change(Maps.selectDevice);
     
     q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
+    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
     q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
@@ -639,6 +640,7 @@ q(function() {
   q('#mapContainer').moshiMap().init();
   Maps.init();
   GeofencesView.init();
+  LandmarksView.init();
   Trips.init();
   
   // keeping this around for a little while in case i have to switch to IE7 opacity style

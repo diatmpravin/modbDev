@@ -6,6 +6,8 @@ class GeofencesController < ApplicationController
   layout except_ajax('geofences')
   
   def index
+    @landmarks = current_account.landmarks
+    
     if @device
       @geofences = @device.geofences
     else

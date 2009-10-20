@@ -16,6 +16,8 @@ Geofences = {
   init: function() {
     Geofences.corners();
     
+    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
+    
     q('a.addGeofence').live('click', Geofences.newGeofence);
     q('div.geofence[id=new] a.save').live('click', Geofences.create);
     q('div.geofence[id=new] a.cancel').live('click', Geofences.cancelNew);
@@ -638,4 +640,5 @@ Geofences = {
 jQuery(function() {
   q('#mapContainer').moshiMap().init();
   Geofences.init();
+  LandmarksView.init();
 });
