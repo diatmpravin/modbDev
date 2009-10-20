@@ -36,6 +36,8 @@ LandmarksView = {
       var landmark = LandmarksView.landmarks[i].landmark;
       
       var point = new MQA.Poi(new MQA.LatLng(landmark.latitude, landmark.longitude));
+      point.setValue('icon', new MQA.Icon('/images/landmark.png', 24, 24));
+      point.setValue('iconOffset', new MQA.Point(-12, -21));
       point.setValue('shadow', new MQA.Icon('/images/blank.gif'));
       point.setValue('rolloverEnabled', true);
       point.setValue('infoTitleHTML', landmark.name);
