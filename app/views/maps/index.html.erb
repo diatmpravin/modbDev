@@ -1,7 +1,7 @@
 <div id="navbar">
   <div class="vehicles">
     <%= collection_select :device, :id, @devices, :id, :name, 
-      {:include_blank => (@devices.length > 1 ? 'All Vehicles' : false)} %>
+      {:include_blank => 'All Vehicles'} %>
   </div>
   <div>
     <%= check_box_tag :show_geofences, 1, {:checked => false} %>
