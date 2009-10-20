@@ -67,8 +67,8 @@ Maps = {
     q('#monthForward').live('click', function() { Maps.adjustHistoryMonth(1); });
     
     q('.trip:not(.selected)').live('click', Maps.selectTrip);
-    q('.device:not(.selected)').live('click', Maps.selectDevice);
-    q('.device.selected').live('click', Maps.unselectDevice);
+    q('.device:not(.selected)').live('click', Maps.showDeviceInfo);
+    q('.device.selected').live('click', Maps.hideDeviceInfo);
     
     q('.device').live('click', Maps.centerDevice);
     
@@ -154,13 +154,13 @@ Maps = {
     });
   }
   ,
-  selectDevice: function() {
+  showDeviceInfo: function() {
     q(this).addClass('selected').find('.additional').show()
       .end().siblings('.device')
       .removeClass('selected').find('.additional').hide();
   }
   ,
-  unselectDevice: function() {
+  hideDeviceInfo: function() {
     q(this).removeClass('selected').find('.additional').hide();
   }
   ,

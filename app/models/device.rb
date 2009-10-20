@@ -91,6 +91,23 @@ class Device < ActiveRecord::Base
     end
   end
 
+  # Get a string representation of the device's current status
+  def current_status
+    if self.position
+      if self.position.running?
+        if (speed = self.position.speed) > 0
+          "Moving at #{speed} mph"
+        else
+          "Idle"
+        end
+      else
+        "Stationary"
+      end
+    else
+      "No Data"
+    end
+  end
+
   ##
   # Handle a report from the physical device
   #
@@ -223,7 +240,7 @@ class Device < ActiveRecord::Base
 
           point.events.create(:event_type => Event::AFTER_HOURS)
 
-          # If our last point is NOT an after_hours event, then we send
+          # If the previous point is NOT an after_hours event, then we send
           # our alert. Otherwise, we assume the alert has already been sent
           if !last_point ||
              !last_point.events.exists?(:event_type => Event::AFTER_HOURS)
