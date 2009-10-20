@@ -298,7 +298,7 @@ a.close {
 /* screen-specific containers */
 /*
 #sessions {
-  
+
 }
 #sessions #layout {
   background-color:#0a1113;
@@ -549,7 +549,7 @@ a.close {
 #sidebarContainer {
   float:right;
   width:250px;
-  height:100%;  
+  height:100%;
   padding:16px;
   border-left:solid 1px #b4b2a3;
   background-color:#323c3e;
@@ -625,6 +625,16 @@ a.add {
 #sidebar .device:hover {
   background:transparent url(/images/vehicle_find.gif) no-repeat right top;
 }
+#sidebar .device {
+  cursor: pointer;
+}
+#sidebar .devices .selected {
+  border-top:solid 1px #cfcfcf;
+  border-bottom:solid 1px #cfcfcf;
+}
+#sidebar .device .additional {
+  display:none;
+}
 
 /* trips */
 #sidebar .trips {
@@ -666,7 +676,7 @@ a.add {
   color:#6a6a6a;
 }
 .tagEntry {
-  
+
 }
 
 /* clock display */
@@ -1159,7 +1169,7 @@ ul.summary li.summary7 { background-position:0 -150px; }
   width: 45%;
 }
 #subscription .subscription {
-  margin-top: 1em; 
+  margin-top: 1em;
 }
 .subscription table {
   width: 90%;
@@ -1532,7 +1542,7 @@ only slightly modified
 table.styled {
 	border-collapse: collapse;
 	border-left: 1px solid #ccc;
-	border-top: 1px solid #ccc; 
+	border-top: 1px solid #ccc;
 	color: #333;
 }
 
@@ -1546,7 +1556,7 @@ table.styled thead tr th.csv {
   text-align: left;
 }
 
-table.styled td, 
+table.styled td,
 table.styled th {
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
@@ -1555,7 +1565,7 @@ table.styled th {
   text-align:left;
 }
 
-table.styled tr.odd th, 
+table.styled tr.odd th,
 table.styled tr.odd td {
 	background: #efefef;
 }

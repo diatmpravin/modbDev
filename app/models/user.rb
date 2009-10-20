@@ -159,7 +159,7 @@ class User < ActiveRecord::Base
   end
   
   def current_password_matches
-    if (email_changed? || !password.blank?) &&
+    if (email_changed? || !password.blank? || login_changed?) &&
       (!crypted_password.blank? && !authenticated?(current_password))
       errors.add(:current_password, ' is not correct')
     end

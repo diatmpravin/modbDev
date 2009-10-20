@@ -84,6 +84,13 @@ class Device < ActiveRecord::Base
     self.after_hours_end = text_to_seconds(text)
   end
 
+  # Get a DataAggregate object containing trip and point data for a given day
+  def data_for(day = self.user.zone.today)
+    DataAggregator.new.tap do |da|
+      da.points = self.points.in_range(day, day, self.user.zone)
+    end
+  end
+
   ##
   # Handle a report from the physical device
   #

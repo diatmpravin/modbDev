@@ -13,13 +13,9 @@
           <%= link_to 'Reports', reports_path %>
         </li>
       <% end -%>
-      <% requires_role(User::Role::SUPERUSER) do -%>
-        <% if current_account.reseller? -%>
-          <li>
-            <%= link_to 'Accounts', accounts_path %>
-          </li>
-        <% end -%>
-      <% end -%>
+        <li>
+          <%= link_to 'Profile', profile_path %>
+        </li>
       <li>
         <%= link_to 'Settings', '#' %>
         <ul>

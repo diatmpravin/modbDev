@@ -549,4 +549,25 @@ describe "Device", ActiveSupport::TestCase do
     @device.after_hours_end = 60
     @device.after_hours_end_text.should.equal '12:01 am'
   end
+  
+  context "Aggregating for 'Today'" do
+
+    specify "can get a data aggregator for a given day, giving it the points that fit in the given day" do
+      @device.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697, 
+        :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST").utc, :miles => 100)
+      @device.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697, 
+        :occurred_at => Time.parse("01/01/2009 02:15:30 PM EST").utc, :miles => 200)
+      @device.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697, 
+        :occurred_at => Time.parse("01/01/2009 03:30:30 PM EST").utc, :miles => 300)
+      @device.reload
+
+      data = @device.data_for(Date.parse("01/01/2009")) 
+      data.should.not.be.nil
+      data.miles.should.equal 200
+    end
+
+  end
 end

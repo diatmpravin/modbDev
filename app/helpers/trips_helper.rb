@@ -1,6 +1,8 @@
 module TripsHelper
   def human_duration(duration)
-    if duration < 60
+    if duration == 0
+      0
+    elsif duration < 60
       '<1 minute'
     else
       pluralize((duration / 60).to_i, 'minutes')

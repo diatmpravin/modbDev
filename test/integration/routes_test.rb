@@ -39,6 +39,11 @@ class RoutesTest < ActionController::IntegrationTest
     
     assert_equal "/users/1/activate", activate_user_path(1)
   end
+
+  test "users have a profile" do
+    assert_equal "/profile", profile_path
+    assert_equal "/profile/edit", edit_profile_path
+  end
   
   test "devices resources" do
     assert_equal "/devices", devices_path

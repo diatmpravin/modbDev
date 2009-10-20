@@ -22,8 +22,11 @@ ActionController::Routing::Routes.draw do |map|
   }, :member => {
     :activate => :get
   }
+
   map.forgot_password '/users/forgot_password', :controller => 'users', :action => 'forgot_password', :conditions => {:method => :post}
   map.reset_password '/users/reset_password/:id', :controller => 'users', :action => 'reset_password'
+
+  map.resource :profile, :controller => 'profile'
   
   # Devices
   map.resources :devices, :member => {:position => :get} do |devices|
