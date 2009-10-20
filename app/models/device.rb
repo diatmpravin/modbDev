@@ -91,6 +91,23 @@ class Device < ActiveRecord::Base
     end
   end
 
+  # Get a string representation of the device's current status
+  def current_status
+    if self.position
+      if self.position.running?
+        if (speed = self.position.speed) > 0
+          "Moving at #{speed} mph"
+        else
+          "Idle"
+        end
+      else
+        "Stationary"
+      end
+    else
+      "No Data"
+    end
+  end
+
   ##
   # Handle a report from the physical device
   #

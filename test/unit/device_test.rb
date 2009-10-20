@@ -484,6 +484,22 @@ describe "Device", ActiveSupport::TestCase do
     @device.points.delete_all
     @device.reload.position.should.be.nil
   end
+
+  specify "can get current status of device" do
+    @device.current_status.should.equal "Moving at 51 mph"
+
+    p = @device.points.create :speed => 0, :event => '4001', :occurred_at => 10.minutes.from_now
+    @device.reload
+    @device.current_status.should.equal "Idle"
+
+    @device.points.create :speed => 0, :event => '6012', :occurred_at => 20.minutes.from_now
+    @device.reload
+    @device.current_status.should.equal "Stationary"
+
+    @device.points.clear
+    @device.reload
+    @device.current_status.should.equal "No Data"
+  end
   
   context "Time Zone" do
     specify "validates time zone" do
