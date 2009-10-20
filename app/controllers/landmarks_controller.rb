@@ -1,7 +1,6 @@
 class LandmarksController < ApplicationController
   before_filter :new_landmark, :only => [:new, :create]
   before_filter :set_landmark, :only => [:show, :edit, :update, :destroy]
-  before_filter :save_landmark, :only => [:create, :update]
   
   layout except_ajax('landmarks')
   
@@ -21,6 +20,7 @@ class LandmarksController < ApplicationController
   end
   
   def create
+    save_landmark(params[:landmark].first)
   end
   
   def show
@@ -30,6 +30,7 @@ class LandmarksController < ApplicationController
   end
   
   def update
+    save_landmark(params[:landmark][@landmark.id.to_s])
   end
   
   def destroy
@@ -53,9 +54,7 @@ class LandmarksController < ApplicationController
     @landmark = current_account.landmarks.find(params[:id])
   end
   
-  def save_landmark
-    record = params[:landmark][@landmark.new_record? ? 0 : @landmark.id.to_s]
-    
+  def save_landmark(record)
     if @landmark.update_attributes(record)
       respond_to do |format|
         format.json {
