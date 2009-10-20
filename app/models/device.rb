@@ -216,7 +216,7 @@ class Device < ActiveRecord::Base
 
           point.events.create(:event_type => Event::AFTER_HOURS)
 
-          # If our last point is NOT an after_hours event, then we send
+          # If the previous point is NOT an after_hours event, then we send
           # our alert. Otherwise, we assume the alert has already been sent
           if !last_point ||
              !last_point.events.exists?(:event_type => Event::AFTER_HOURS)
