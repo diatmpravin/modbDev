@@ -4,7 +4,12 @@
  * Constants and functions used on the Landmark Settings page.
  */
 Landmarks = {
+  landmarkCollection: new MQA.ShapeCollection(),
+  
   init: function() {
+    Landmarks.landmarkCollection.setName('landmarks');
+    MoshiMap.moshiMap.map.addShapeCollection(Landmarks.landmarkCollection);
+    
     Landmarks.corners();
     
     q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
@@ -59,7 +64,9 @@ Landmarks = {
     q('#new').find('input[name$=[latitude]]').attr('value', mc.lat);
     q('#new').find('input[name$=[longitude]]').attr('value', mc.lng);
     
-    Landmarks.createMapLandmark(q('#new'), true).setValue('draggable', true);
+    var tempLandmark = Landmarks.createMapLandmark(q('#new'), true);
+    tempLandmark.setValue('draggable', true);
+    Landmarks.highlightMapLandmark(tempLandmark);
   }
   ,
   /**
@@ -78,6 +85,7 @@ Landmarks = {
             q(this).clearRailsForm();
           }).siblings('.landmark').show('fast');
           Landmarks.deleteMapLandmark(_new);
+          Landmarks.highlightMapLandmark();
           
           var _div = q('<div class="landmark" style="display:none"><div class="view">'
             + json.view
@@ -102,6 +110,7 @@ Landmarks = {
     }).siblings('.landmark').show('fast');
     
     Landmarks.deleteMapLandmark(q('#new'));
+    Landmarks.highlightMapLandmark();
   }
   ,
   /**
@@ -114,6 +123,7 @@ Landmarks = {
            .find('div.edit').show('fast').end()
            .find('div.view').hide('fast').end()
            .data('point').setValue('draggable', true);
+    Landmarks.highlightMapLandmark(q(this).closest('div.landmark').data('point'));
   }
   ,
   /**
@@ -141,6 +151,7 @@ Landmarks = {
         }
       }
     });
+    Landmarks.highlightMapLandmark();
   }
   ,
   /**
@@ -159,6 +170,7 @@ Landmarks = {
                   Landmarks.createMapLandmark(_landmark).setValue('draggable', false);
                 });
               });
+    Landmarks.highlightMapLandmark();
   }
   ,
   /**
@@ -244,7 +256,7 @@ Landmarks = {
       Landmarks.createMapLandmark(q(this));
     });
     
-    var bounds = MoshiMap.moshiMap.pointCollection.getBoundingRect();
+    var bounds = Landmarks.landmarkCollection.getBoundingRect();
     if (bounds) {
       MoshiMap.moshiMap.map.bestFitLL([bounds.ul, bounds.lr]);
     }
@@ -271,17 +283,19 @@ Landmarks = {
     } else {
       var point = new MQA.Poi(new MQA.LatLng(latitude, longitude));
       
+      point.setValue('icon', new MQA.Icon('/images/landmark.png', 24, 24));
+      point.setValue('iconOffset', new MQA.Point(-12, -21));
       point.setValue('shadow', new MQA.Icon('/images/blank.gif'));
+      point.setValue('altIcon', new MQA.Icon('/images/landmark_faded.png', 24, 24));
+      point.setValue('altIconOffset', new MQA.Point(-12, -21));
+      point.setValue('altShadow', new MQA.Icon('/images/blank.gif'));
       point.setValue('rolloverEnabled', true);
+      point.setValue('keepRolloverOnDrag', false);
       point.setValue('infoTitleHTML', name);
       
       MQA.EventManager.addListener(point, 'mouseup', Landmarks.updateLandmarkFromMap);
       
-      if (temporary) {
-        MoshiMap.moshiMap.tempCollection.add(point);
-      } else {
-        MoshiMap.moshiMap.pointCollection.add(point);
-      }
+      Landmarks.landmarkCollection.add(point);
       
       landmarkDiv.data('point', point);
       point.landmark = landmarkDiv;
@@ -299,11 +313,7 @@ Landmarks = {
     if (point) {
       MQA.EventManager.clearListeners(point, 'mouseup');
       
-      if (MoshiMap.moshiMap.tempCollection.contains(point)) {
-        MoshiMap.moshiMap.tempCollection.removeItem(point);
-      } else {
-        MoshiMap.moshiMap.pointCollection.removeItem(point);
-      }
+      Landmarks.landmarkCollection.removeItem(point);
       landmarkDiv.removeData('point');
     }
   }
@@ -315,6 +325,26 @@ Landmarks = {
     if (this.landmark) {
       this.landmark.find('input[name$=[latitude]]').attr('value', this.latLng.lat).end()
                    .find('input[name$=[longitude]]').attr('value', this.latLng.lng);
+    }
+  }
+  ,
+  /**
+   * Highlight the given landmark by "fading" all the others.
+   *
+   * If no parameter is given, reset all landmarks to normal icons.
+   */
+  highlightMapLandmark: function(landmark) {
+    var n = Landmarks.landmarkCollection.getSize();
+    
+    if (landmark) {
+      for(var i = 0; i < n; i++) {
+        Landmarks.landmarkCollection.getAt(i).setValue('altStateFlag', true);
+      }
+      landmark.setValue('altStateFlag', false);
+    } else {
+      for(var i = 0; i < n; i++) {
+        Landmarks.landmarkCollection.getAt(i).setValue('altStateFlag', false);
+      }
     }
   }
 };

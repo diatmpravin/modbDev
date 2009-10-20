@@ -237,7 +237,7 @@ class Device < ActiveRecord::Base
 
     end
   end
-
+  
   protected
   def assign_phones
     if phones.empty?
