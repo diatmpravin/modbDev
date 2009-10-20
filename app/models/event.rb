@@ -22,6 +22,7 @@ class Event < ActiveRecord::Base
   RAPID_DECEL = 6
   IDLE = 7
   AFTER_HOURS = 8
+  AT_LANDMARK = 9
   
   TEXT = {
     ENTER_BOUNDARY => 'Enter Boundary',
@@ -31,7 +32,8 @@ class Event < ActiveRecord::Base
     RAPID_ACCEL => 'Accel Exceed',
     RAPID_DECEL => 'Decel Exceed',
     IDLE => 'Idle',
-    AFTER_HOURS => 'After Hours'
+    AFTER_HOURS => 'After Hours',
+    AT_LANDMARK => 'At Landmark'
   }
   
   attr_accessible :event_type, :geofence_name, :speed_threshold, :point,

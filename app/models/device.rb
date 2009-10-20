@@ -142,7 +142,7 @@ class Device < ActiveRecord::Base
         end
       end
 
-      # Handle boundary testing
+      # Handle boundary testing for geofences
       if last_point
         geofences.each do |fence|
           if fence.contain?(point) && !fence.contain?(last_point)
@@ -163,6 +163,13 @@ class Device < ActiveRecord::Base
         end
       end
 
+      # Handle boundary testing for landmarks
+      account.landmarks.each do |landmark|
+        if landmark.contain?(point)
+          point.events.create(:event_type => Event::AT_LANDMARK, :geofence_name => landmark.name)
+        end
+      end
+      
       # Handle various other vehicle tests
       if point.speed > speed_threshold
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)

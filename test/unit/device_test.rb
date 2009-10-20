@@ -281,27 +281,32 @@ describe "Device", ActiveSupport::TestCase do
       end
     end
     
-    context "Speed thresholds" do
-      specify "creates events" do
-        @device.update_attribute(:speed_threshold, 75)
-        @example_location[:event] = '6002'
-        @example_location[:speed] = '76'
-        
-        Event.should.differ(:count).by(1) do
-          @device.process(@example_location)
-        end
-        Mailer.deliveries.length.should.be 0
+    
+    context "Landmark checking" do
+      setup do
+        @landmark = landmarks(:quentin)
       end
       
-      specify "sends alerts" do
-        @device.update_attribute(:speed_threshold, 75)
-        @device.update_attribute(:alert_on_speed, true)
-        @example_location[:event] = '6002'
-        @example_location[:speed] = '76'
+      specify "points outside the landmark do not get events" do
+        @device.process(@example_location)
+        @device.points.reload.last.events.should.be.empty
+      end
+      
+      specify "points inside the landmark do get events" do
+        # Sanity check
+        @landmark.radius.should.equal 100
+        @landmark.latitude.should.equal BigDecimal.new('40.22222')
+        @landmark.longitude.should.equal BigDecimal.new('-86.33333')
+        
+        # Test
+        @example_location[:latitude] = '40.223'
+        @example_location[:longitude] = '-86.33333'
         
         @device.process(@example_location)
-        Mailer.deliveries.length.should.be 1
-        Mailer.deliveries.first.body.should =~ /Quentin's Device speed reached 76 mph \(exceeded limit of 75 mph\)/
+        point = @device.points.reload.last
+        
+        point.events.should.not.be.empty
+        point.events.first.event_type.should.equal Event::AT_LANDMARK
       end
     end
     
