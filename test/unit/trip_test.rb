@@ -219,6 +219,82 @@ describe "Trip", ActiveSupport::TestCase do
     end
   end
   
+  context "Collapsing a trip" do
+    setup do
+      leg = Leg.new
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+      )
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 22,
+        :miles => 35,
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+      )
+      
+      @t = devices(:quentin_device).trips.new
+      @t.legs << leg
+      @t.save
+      
+      @trip.update_point_data
+    end
+    
+    specify "legs on the trip are moved to the collapsed trip" do
+      @trip.legs.length.should.equal 1
+      @t.collapse.should.equal @trip
+      @trip.reload.legs.length.should.equal 2
+      
+      Trip.find_by_id(@t.id).should.be.nil
+    end
+    
+    specify "update data runs correctly on the collapsed trip" do
+      # Sanity check on prior values
+      @trip.miles.should.equal 6
+      @trip.finish.should.equal Time.parse('02/05/2009 08:15:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20')
+      
+      # Test
+      @t.collapse.should.equal @trip
+      @trip.reload
+      
+      @trip.miles.should.equal 18
+      @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20.4')
+    end
+    
+    specify "collapsed trip inherits all tags (but no duplicate rows)" do
+      tag1 = accounts(:quentin).tags.create(:name => 'Tag 1')
+      tag2 = accounts(:quentin).tags.create(:name => 'Tag 2')
+      tag3 = accounts(:quentin).tags.create(:name => 'Tag 3')
+      tag4 = accounts(:quentin).tags.create(:name => 'Tag 4')
+      
+      @trip.update_attributes(:tags => [tag1, tag2])
+      @t.update_attributes(:tags => [tag2, tag4])
+      
+      @t.collapse.should.equal @trip
+      
+      @trip.reload
+      @trip.tags.length.should.equal 3
+      @trip.tags.should.include(tag1)
+      @trip.tags.should.include(tag2)
+      @trip.tags.should.not.include(tag3)
+      @trip.tags.should.include(tag4)
+    end
+    
+    specify "the first trip in the list can't collapse" do
+      @trip.should.not.collapse
+    end
+  end
+  
   specify "can get a list of events" do
     @trip.events.should.include(events(:quentin_event))
   end

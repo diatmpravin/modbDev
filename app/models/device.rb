@@ -3,7 +3,7 @@ class Device < ActiveRecord::Base
   belongs_to :user
   belongs_to :tracker
   has_many :points, :order => 'occurred_at'
-  has_many :trips
+  has_many :trips, :order => 'start'
   has_many :phone_devices, :dependent => :delete_all
   has_many :phones, :through => :phone_devices
   has_many :device_geofences, :dependent => :delete_all

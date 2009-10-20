@@ -1,6 +1,8 @@
 class Trip < ActiveRecord::Base
   belongs_to :device
-  has_many :legs
+  has_many :legs, :order => 'created_at'
+  # NOTE: Ideally, legs would be ordered by their first point's occurred_at field.
+  # This might need to become a stored fields on legs.
   has_many :points, :through => :legs, :order => 'occurred_at'
   has_many :trip_tags, :dependent => :delete_all
   has_many :tags, :through => :trip_tags, :order => 'name'
@@ -77,6 +79,29 @@ class Trip < ActiveRecord::Base
       :conditions => ['legs.trip_id=?', self.id],
       :joins => ' INNER JOIN points ON points.id = events.point_id' +
                 ' INNER JOIN legs ON legs.id = points.leg_id')
+  end
+  
+  # Find the trip immediately before this one in the device's list of trips,
+  # then collapse this trip into it.  The new trip inherits any legs and tags
+  # from this trip.
+  #
+  # Returns the new trip if the collapse succeeded, false otherwise.
+  def collapse
+    list = device.trips.all(:select => :id)
+    index = list.index(self)
+    
+    if index && index > 0
+      trip = list[index-1].reload
+      
+      Leg.update_all({:trip_id => trip.id}, {:trip_id => self.id})
+      trip.tags = (trip.tags + self.tags).uniq
+      self.reload.destroy
+      trip.reload.update_point_data
+    
+      trip
+    else
+      false
+    end
   end
   
   # Extend default to_json
