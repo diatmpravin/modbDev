@@ -515,6 +515,7 @@ a.close {
   cursor:default;
 }
 #tripSummary ul {
+  height: 100%;
   background:transparent url(/images/history_hover_bg.gif) no-repeat left -10px;
 }
 #tripSummary li {
