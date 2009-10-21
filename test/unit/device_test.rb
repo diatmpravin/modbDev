@@ -338,24 +338,34 @@ describe "Device", ActiveSupport::TestCase do
       end
 
       specify "only send alerts on points with mph > 5 the previous point" do
+        # No alert, no event
+        @example_location[:speed] = 45
+        @example_location[:time] = '12:18:54',
+        Event.should.differ(:count).by(0) { @device.process(@example_location) }
+
         # Alert!
         @example_location[:speed] = 51
+        @example_location[:time] = '12:19:10',
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # No alert
         @example_location[:speed] = 52
+        @example_location[:time] = '12:19:30',
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # No alert
         @example_location[:speed] = 54
+        @example_location[:time] = '12:20:00',
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # Alert!
         @example_location[:speed] = 56
+        @example_location[:time] = '12:20:20',
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # Alert!
         @example_location[:speed] = 70
+        @example_location[:time] = '12:20:40',
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         Mailer.deliveries.length.should.equal 3
