@@ -624,7 +624,7 @@ a.add {
   margin-left:16px;
 }
 #sidebar .device:hover {
-  background:transparent url(/images/vehicle_find.gif) no-repeat right top;
+  background:transparent url(/images/vehicle_find.png) no-repeat right center;
 }
 #sidebar .device {
   cursor: pointer;
