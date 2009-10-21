@@ -137,4 +137,107 @@ describe "Trips Controller", ActionController::TestCase do
       end
     end
   end
+  
+  context "Collapsing a trip" do
+    setup do
+      @trip = trips(:quentin_trip)
+      
+      # Data pulled from trip unit tests.
+      leg = Leg.new
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+      )
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 22,
+        :miles => 35,
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+      )
+      
+      @trip2 = devices(:quentin_device).trips.new
+      @trip2.legs << leg
+      @trip2.save
+    end
+    
+    specify "works" do
+      put :collapse, {
+        :id => @trip2.id,
+        :format => 'json'
+      }
+      
+      json['status'].should.equal 'success'
+      json['view'].should =~ /<h4>03:00 AM EST<\/h4>/
+      json['edit'].should =~ /<h4>03:00 AM EST<\/h4>/
+    end
+    
+    specify "handles errors gracefully" do
+      put :collapse, {
+        :id => @trip.id,
+        :format => 'json'
+      }
+      
+      json['status'].should.equal 'failure'
+    end
+  end
+  
+  context "Expanding a trip" do
+    setup do
+      @trip = trips(:quentin_trip)
+      
+      # Data pulled from trip unit tests.
+      leg = Leg.new
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+      )
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 22,
+        :miles => 35,
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+      )
+      
+      @trip2 = devices(:quentin_device).trips.new
+      @trip2.legs << leg
+      @trip2.save
+    end
+    
+    specify "works" do
+      @trip2.collapse
+      @trip.reload
+      
+      put :expand, {
+        :id => @trip.id,
+        :format => 'json'
+      }
+      
+      json['status'].should.equal 'success'
+      json['view'].should =~ /<h4>03:00 AM EST<\/h4>/
+      json['edit'].should =~ /<h4>03:00 AM EST<\/h4>/
+      json['new_trip']['view'].should =~ /<h4>03:17 AM EST<\/h4>/
+      json['new_trip']['edit'].should =~ /<h4>03:17 AM EST<\/h4>/
+    end
+    
+    specify "handles errors gracefully" do
+      put :expand, {
+        :id => @trip.id,
+        :format => 'json'
+      }
+      
+      json['status'].should.equal 'failure'
+    end
+  end
 end

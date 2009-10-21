@@ -70,9 +70,26 @@ class TripsController < ApplicationController
   end
   
   def expand
-    render :json => {
-      :status => 'success'
-    }
+    if new_trip = @trip.expand
+      # Return the updated partials for the existing trip, along with the
+      # partials for the newly expanded trip.
+      render :json => {
+        :status => 'success',
+        :view => render_to_string(:action => 'show'),
+        :edit => render_to_string(:action => 'edit'),
+        :new_trip => begin
+          @trip = new_trip
+          {
+            :view => render_to_string(:action => 'show'),
+            :edit => render_to_string(:action => 'edit')
+          }
+        end
+      }
+    else
+      render :json => {
+        :status => 'failure'
+      }
+    end
   end
   
   protected
