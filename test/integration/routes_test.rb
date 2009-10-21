@@ -58,6 +58,9 @@ class RoutesTest < ActionController::IntegrationTest
   test "trips resource" do
     assert_equal "/trips", trips_path
     assert_equal "/trips/1", trip_path(1)
+    
+    assert_equal "/trips/1/collapse", collapse_trip_path(1)
+    assert_equal "/trips/1/expand", expand_trip_path(1)
   end
 
   test "geofences resource" do
