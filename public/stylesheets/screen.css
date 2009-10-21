@@ -135,24 +135,24 @@ a.help {
 }
 
 /* flash errors, warnings, etc. */
-#error {
+.messageBox {
   padding:4px;
+  margin-bottom:8px;
+}
+.messageBox p {
+  float: left;
+}
+#error {
   background-color:#ffeeee;
   border:solid 1px red;
-  margin-bottom:8px;
 }
 #warning {
-  padding:8px;
-  font-weight: bold;
   background-color:#ffffAA;
   border:solid 1px yellow;
-  margin-bottom:8px;
 }
 #notice {
-  padding:4px;
   background-color:#eeffee;
   border:solid 1px green;
-  margin-bottom:8px;
 }
 a.close {
   color:black;
