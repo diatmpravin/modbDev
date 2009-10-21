@@ -686,11 +686,14 @@ a.add {
 }
 #sidebar .trip a.collapse {
   background:transparent url(/images/collapse.png) no-repeat left top;
-  display:block;
+  display:none;
   height:16px;
   float:right;
   margin:2px 2px 0 0;
   width:16px;
+}
+#sidebar .hover a.collapse, #sidebar .selected a.collapse {
+  display:block;
 }
 #sidebar .trip a.expand {
   background:transparent url(/images/expand.png) no-repeat left top;

@@ -492,7 +492,15 @@ Trips = {
     q('.trip a.collapse').live('click', Trips.collapse);
     q('.trip a.expand').live('click', Trips.expand);
     
+    // Binding this event here to make sure it happens AFTER the
+    // expand & collapse functions.
     q('.trip:not(.selected)').live('click', Maps.selectTrip);
+    
+    q('.trip').live('mouseover', function() {
+      q(this).addClass('hover');
+    }).live('mouseout', function() {
+      q(this).removeClass('hover');
+    });
     
     q('#tagDialog input').live('keypress', function(e) {
       // Capture ENTER and submit dialog
