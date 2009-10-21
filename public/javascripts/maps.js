@@ -487,6 +487,7 @@ Trips = {
     q('.trip a.add').live('click', Trips.displayForm);
     q('.trip a.remove').live('click', Trips.removeTag);
     q('.trip a.collapse').live('click', Trips.collapse);
+    q('.trip a.expand').live('click', Trips.expand);
     
     q('.trip:not(.selected)').live('click', Maps.selectTrip);
     
@@ -577,7 +578,7 @@ Trips = {
     var _this = q(this);
     var _trip = _this.closest('.trip');
     
-    q(this).closest('form').ajaxSubmit({
+    _this.closest('form').ajaxSubmit({
       dataType: 'json',
       beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
       success: function(json) {
@@ -596,6 +597,28 @@ Trips = {
         } else {
           _this.show('fast').siblings('.loading').hide('fast');
           alert('failure');
+        }
+      }
+    });
+    
+    return false;
+  }
+  ,
+  expand: function(event) {
+    // We aren't trying to "view" this trip
+    event.stopPropagation();
+    
+    var _this = q(this);
+    var _trip = _this.closest('.trip');
+    
+    _this.closest('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
+      success: function(json) {
+        if (json.status == 'success') {
+          _this.show('fast').siblings('.loading').hide('fast');
+        } else {
+          _this.show('fast').siblings('.loading').hide('fast');
         }
       }
     });

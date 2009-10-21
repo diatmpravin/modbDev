@@ -21,5 +21,18 @@
       <%= format_tags(trip.tags) %>
       (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
     </p>
+    <% if trip.legs.length > 1 -%>
+      <div class="legs">
+        <% form_tag expand_trip_path(trip), :method => :put do -%>
+          <div class="loading"></div>
+          <%= link_to '', '#', {:class => 'expand'} %>
+        <% end -%>
+        <ul>
+          <% trip.legs.each_with_index do |leg, i| -%>
+            <li>Leg <%=i+1%></li>
+          <% end -%>
+        </ul>
+      </div>
+    <% end -%>
   </div>
 </div>

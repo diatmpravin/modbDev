@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_filter :set_device, :only => [:index, :summary]
-  before_filter :set_trip, :only => [:show, :edit, :update, :collapse]
+  before_filter :set_trip, :only => [:show, :edit, :update, :collapse, :expand]
   
   def index
     start_date = Date.parse(params[:start_date])
@@ -67,6 +67,12 @@ class TripsController < ApplicationController
         :status => 'failure'
       }
     end
+  end
+  
+  def expand
+    render :json => {
+      :status => 'success'
+    }
   end
   
   protected

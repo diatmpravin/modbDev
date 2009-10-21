@@ -665,6 +665,11 @@ a.add {
 #sidebar .trip .additional {
   display:none;
 }
+#sidebar .trip .legs {
+  border-top:solid 1px #cfcfcf;
+  padding-left:16px;
+  position:relative;
+}
 #sidebar .trip div.edit {
   display:none;
 }
@@ -679,16 +684,31 @@ a.add {
 
 }
 #sidebar .trip a.collapse {
-  background:transparent url(/images/collapse.gif) no-repeat left top;
+  background:transparent url(/images/collapse.png) no-repeat left top;
   display:block;
-  height:20px;
+  height:16px;
   float:right;
   margin:2px 2px 0 0;
-  width:20px;
+  width:16px;
+}
+#sidebar .trip a.expand {
+  background:transparent url(/images/expand.png) no-repeat left top;
+  bottom:0px;
+  display:block;
+  height:16px;
+  position:absolute;
+  right:2px;
+  width:16px;
 }
 #sidebar .trip div.view .loading {
   float:right;
   margin:2px 2px 0 0;
+}
+#sidebar .trip .legs .loading {
+  bottom:0px;
+  margin:0;
+  position:absolute;
+  right:2px;
 }
 
 /* clock display */

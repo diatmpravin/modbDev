@@ -35,10 +35,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   # Trips
-  map.resources :trips, :member => {:collapse => :put}
-  
-  # Legs
-  map.resources :legs
+  map.resources :trips, :member => {:collapse => :put, :expand => :put}
   
   # Geofences
   map.resources :geofences
