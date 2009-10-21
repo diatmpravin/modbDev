@@ -123,7 +123,11 @@ Landmarks = {
            .find('div.edit').show('fast').end()
            .find('div.view').hide('fast').end()
            .data('point').setValue('draggable', true);
-    Landmarks.highlightMapLandmark(q(this).closest('div.landmark').data('point'));
+    
+    var point = q(this).closest('div.landmark').data('point');
+    Landmarks.highlightMapLandmark(point);
+    MoshiMap.moshiMap.map.setCenter(point.latLng);
+    MoshiMap.moshiMap.map.setZoomLevel(12);
   }
   ,
   /**
@@ -258,7 +262,7 @@ Landmarks = {
     
     var bounds = Landmarks.landmarkCollection.getBoundingRect();
     if (bounds) {
-      MoshiMap.moshiMap.map.bestFitLL([bounds.ul, bounds.lr]);
+      MoshiMap.moshiMap.map.bestFitLL([bounds.ul, bounds.lr], false, 2, 12);
     }
   }
   ,
