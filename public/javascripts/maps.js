@@ -312,10 +312,13 @@ Maps = {
             num++;
           }
         }
+
         
         if (num > 0) {
+          var trips = num > 1 ? 'trips' : 'trip';
+
           html += '<li><div class="color"><img src="' + trip.color.filename +'" /></div><b>' +
-            Maps.devices[i].device.name + '</b><br/>' + '<span>' + num + ' trips</span></li>';
+            Maps.devices[i].device.name + '</b><br/><span>' + num + ' ' + trips + '</span></li>';
         }
       }
     }
