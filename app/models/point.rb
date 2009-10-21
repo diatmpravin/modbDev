@@ -20,7 +20,7 @@ class Point < ActiveRecord::Base
         "occurred_at BETWEEN ? AND ?",
         zone.parse(start_date.to_s),
         zone.parse(end_date.to_s).end_of_day
-      ]
+      ], :order => "occurred_at ASC"
     }
   }
   
