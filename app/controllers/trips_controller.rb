@@ -80,6 +80,7 @@ class TripsController < ApplicationController
         :new_trip => begin
           @trip = new_trip
           {
+            :id => @trip.id,
             :view => render_to_string(:action => 'show'),
             :edit => render_to_string(:action => 'edit')
           }

@@ -590,7 +590,7 @@ Trips = {
             _trip.prev('.trip')
                  .find('div.view').html(json.view).end()
                  .find('div.edit').html(json.edit).end()
-                 .click();
+                 .removeClass('selected').click();
             _trip.remove();
             
             // After removing a trip, need to correct for alternating styles
@@ -599,7 +599,6 @@ Trips = {
           });
         } else {
           _this.show('fast').siblings('.loading').hide('fast');
-          alert('failure');
         }
       }
     });
@@ -619,7 +618,21 @@ Trips = {
       beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
       success: function(json) {
         if (json.status == 'success') {
-          _this.show('fast').siblings('.loading').hide('fast');
+          _trip.find('div.view').html(json.view).end()
+               .find('div.edit').html(json.edit).end()
+               .removeClass('selected').click();
+          
+          q('<div class="trip section" style="display:none" id="trip_'
+            + json.new_trip.id
+            + '"><div class="view">'
+            + json.new_trip.view
+            + '</div><div class="edit">'
+            + json.new_trip.edit
+            + '</div></div>').insertAfter(_trip).show('fast');
+          
+          // After adding a trip, need to correct for alternating styles
+          q('.trip:even').removeClass('alternating');
+          q('.trip:odd').addClass('alternating');
         } else {
           _this.show('fast').siblings('.loading').hide('fast');
         }
