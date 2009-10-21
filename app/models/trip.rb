@@ -104,6 +104,24 @@ class Trip < ActiveRecord::Base
     end
   end
   
+  # Take the last leg of this trip and "expand" it out into its own trip. This
+  # new trip should be after this trip in the device's list of trips.
+  #
+  # Returns the new trip if the expand succeeded, false otherwise.
+  def expand
+    return false if legs.length < 2
+    
+    trip = device.trips.create
+    trip.legs << legs.last
+    trip.tags = self.tags
+    trip.update_point_data
+    
+    self.legs.reload
+    self.update_point_data
+    
+    trip
+  end
+  
   # Extend default to_json
   def to_json(options = {})
     super(options.merge(
