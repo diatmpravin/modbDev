@@ -239,20 +239,19 @@ class Device < ActiveRecord::Base
         #end
       end
 
-      if alert_on_after_hours? && point_is_after_hours?(point)
-        if point.running? ||
-           point.event == DeviceReport::Event::IGNITION_ON
+      if alert_on_after_hours? && point_is_after_hours?(point) && point.leg
+        point.events.create(:event_type => Event::AFTER_HOURS)
 
-          point.events.create(:event_type => Event::AFTER_HOURS)
+        # Get the point right before this one
+        # TODO Better handling of last_point above?
+        last = point.leg.points[-2]
 
-          # If the previous point is NOT an after_hours event, then we send
-          # our alert. Otherwise, we assume the alert has already been sent
-          if !last_point ||
-             !last_point.events.exists?(:event_type => Event::AFTER_HOURS)
-
-            alert_recipients.each do |r|
-              r.alert("#{self.name} is running after hours")
-            end
+        # If the previous point is NOT an after_hours event, then we send
+        # our alert. Otherwise, we assume the alert has already been sent
+        if !last ||
+           !last.events.exists?(:event_type => Event::AFTER_HOURS)
+          alert_recipients.each do |r|
+            r.alert("#{self.name} is running after hours")
           end
         end
       end

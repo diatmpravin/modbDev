@@ -447,7 +447,7 @@ describe "Device", ActiveSupport::TestCase do
           @device.process(@example_location.merge(:time => "23:00:10"))
         end
 
-        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.length.should.equal 1
         Mailer.deliveries.first.body.should =~ /Quentin's Device is running after hours/
 
         p = Point.find(:last)
@@ -462,7 +462,7 @@ describe "Device", ActiveSupport::TestCase do
             :time => "23:10:00", :event => '6011'))
         end
 
-        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.length.should.equal 1
         Mailer.deliveries.first.body.should =~ /Quentin's Device is running after hours/
 
         p = Point.find(:last)
@@ -481,26 +481,26 @@ describe "Device", ActiveSupport::TestCase do
           @device.process(@example_location.merge(:time => "23:00:10"))
           @device.process(@example_location.merge(:time => "23:30:10"))
           @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "02:32:52", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "03:30:30", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "00:32:52", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "00:40:00", :date => "2009/02/18"))
         end
 
-        @device.process(@example_location.merge(:time => "03:33:30", :date => "2009/02/18", :event => '6012'))
+        @device.process(@example_location.merge(:time => "00:45:00", :date => "2009/02/18", :event => '6012'))
 
         Mailer.deliveries.length.should.equal 1
-
 
         # New trip
         Trip.should.differ(:count).by(1) do
           Event.should.differ(:count).by(3) do
             @device.process(@example_location.merge(:time => "05:00:00", :date => "2009/02/18", :event => '6011'))
-            @device.process(@example_location.merge(:time => "05:30:00", :date => "2009/02/18"))
-            @device.process(@example_location.merge(:time => "06:30:00", :date => "2009/02/18"))
+            @device.process(@example_location.merge(:time => "05:10:00", :date => "2009/02/18", :event => '4001'))
+            @device.process(@example_location.merge(:time => "05:20:00", :date => "2009/02/18", :event => '6001'))
           end
         end
 
-        @device.process(@example_location.merge(:time => "06:30:00", :date => "2009/02/18", :event => '6012'))
+        @device.process(@example_location.merge(:time => "05:30:00", :date => "2009/02/18", :event => '6012'))
 
+        # Should have alerted on the Ignition On
         Mailer.deliveries.length.should.equal 2
 
         # No longer after-hours
