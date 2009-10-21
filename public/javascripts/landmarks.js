@@ -233,6 +233,7 @@ Landmarks = {
     _mapContainer.height(mapHeight);
     q('#sidebarContainer').height(mapHeight - 32);
     q('#sidebar').height(mapHeight - 32 - 16);
+    q('#sidebarContent').height(mapHeight - 32 - 32);
     
     var margin = q('.landmarks').position().top - q('#sidebar').position().top;
     var height = q('#sidebar').outerHeight() - 16;
