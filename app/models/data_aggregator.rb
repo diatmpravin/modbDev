@@ -2,6 +2,8 @@ class DataAggregator
 
   def initialize
     @points = []
+
+    @average_mpg = BigDecimal.new("0")
   end
 
   def points=(points)
@@ -11,7 +13,7 @@ class DataAggregator
 
   # Overall average MPG for this day's driving
   def mpg
-    @average_mpg || 0
+    @average_mpg.round(1)
   end
 
   # Total time of actual driving
@@ -31,7 +33,7 @@ class DataAggregator
     @trip.points = @points
     @trip.update_point_data(false)
 
-    @average_mpg = @trip.average_mpg
+    @average_mpg = BigDecimal.new("#{@trip.average_mpg}")
     @time = @trip.duration
     @miles = @trip.miles
   end

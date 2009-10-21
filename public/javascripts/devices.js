@@ -154,15 +154,15 @@ Devices = {
   }
   ,
   destroy: function() {
-    var _this = q(this);
-    var _view = _this.data("device").closest('div.view');
-    var _edit = _view.siblings('div.edit');
+    var _this = q(this),
+        _view = _this.data("device").closest('div.view'),
+        _edit = _view.siblings('div.edit');
 
     _edit.find('form').ajaxSubmit({
       dataType: 'json',
       type: 'delete',
       beforeSubmit: function() { _view.find('.loading').show(); },
-      complete: function() { _view.find('.loading').hide(); },
+      complete: function() { _view.find('.loading').hide(); _this.dialog('close'); },
       success: function(json) {
         if (json.status == 'success') {
           var _device = _view.closest('div.device');

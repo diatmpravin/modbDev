@@ -1,6 +1,6 @@
-<% [:error, :warning, :notice, :message].each do |key| -%>
+<% [:error, :warning, :notice].each do |key| -%>
   <% if flash[key] -%>
-    <% content_tag(:div, :id => key) do -%>
+    <% content_tag(:div, :id => key, :class => "messageBox") do -%>
       <%= link_to 'X', '#', :class => 'close', :alt => 'Hide message', :title => 'Hide message' %>
       <p><%= flash[key] %></p>
       <div class="clear"></div>
