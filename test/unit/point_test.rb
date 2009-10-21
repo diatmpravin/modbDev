@@ -38,10 +38,10 @@ describe "Point", ActiveSupport::TestCase do
     
     context "in_range scope" do
       setup do
-        @point1 = Point.create(:occurred_at => Time.parse('02/01/2009 23:59:59 EST'))
-        @point2 = Point.create(:occurred_at => Time.parse('02/02/2009 00:00:00 EST'))
-        @point3 = Point.create(:occurred_at => Time.parse('02/03/2009 23:59:59 EST'))
         @point4 = Point.create(:occurred_at => Time.parse('02/04/2009 00:00:00 EST'))
+        @point3 = Point.create(:occurred_at => Time.parse('02/03/2009 23:59:59 EST'))
+        @point2 = Point.create(:occurred_at => Time.parse('02/02/2009 00:00:00 EST'))
+        @point1 = Point.create(:occurred_at => Time.parse('02/01/2009 23:59:59 EST'))
       end
       
       specify "works" do
@@ -60,6 +60,12 @@ describe "Point", ActiveSupport::TestCase do
         list.should.not.include(@point2)
         list.should.include(@point3)
         list.should.include(@point4)
+      end
+
+      specify "orders in ascending order" do
+        zone = ActiveSupport::TimeZone['Central Time (US & Canada)']
+        list = Point.in_range(Date.parse('02/01/2009'), Date.parse('02/04/2009'), zone)
+        list.should.equal [@point1, @point2, @point3, @point4]
       end
     end
     
