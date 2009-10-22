@@ -7,7 +7,7 @@
  */
 Reports = {
   init: function() {
-    q('#report_range_type').change(function(event) {
+    q('#report_range_type').live("click", function(event) {
       // Custom is 7
       if(event.target.value == 7) {
         q("#date_select").slideDown();
