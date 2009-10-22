@@ -966,8 +966,11 @@ td.extra {
   border-top:solid 1px #d2d3d3;
   overflow:hidden;
 }
+#settings .geofence h2 {
+  float:left;
+}
 #settings .geofence .buttons {
-  margin-top:-32px;
+  margin-top:0px;
 }
 #settings .geofence .view .buttons {
   display:none;

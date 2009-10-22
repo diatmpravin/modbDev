@@ -1,9 +1,7 @@
-<h2><%= h(geofence.name || 'Geofence') %></h2>
-<div class="spacer"></div>
-<div class="spacer"></div>
+<h2><%= h(geofence.name) %></h2>
 <div class="buttons">
   <div class="loading"></div>
-  <%= link_to '', '#', :class => 'editSettings button' %>
-  <%= link_to '', '#', :class => 'delete button' %>
+  <%= button_tag 'Edit', :class => 'edit' %>
+  <%= button_tag 'Remove', :class => 'delete' %>
 </div>
 <div class="clear"></div>

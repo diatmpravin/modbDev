@@ -18,14 +18,14 @@ Geofences = {
     
     q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
     
-    q('a.addGeofence').live('click', Geofences.newGeofence);
-    q('div.geofence[id=new] a.save').live('click', Geofences.create);
-    q('div.geofence[id=new] a.cancel').live('click', Geofences.cancelNew);
+    q('input.addGeofence').live('click', Geofences.newGeofence);
+    q('div.geofence[id=new] input.save').live('click', Geofences.create);
+    q('div.geofence[id=new] input.cancel').live('click', Geofences.cancelNew);
     
-    q('div.geofence a.editSettings').live('click', Geofences.edit);
-    q('div.geofence[id!=new] a.save').live('click', Geofences.save);
-    q('div.geofence[id!=new] a.cancel').live('click', Geofences.cancel);
-    q('div.geofence a.delete').live('click', Geofences.destroy);
+    q('div.geofence input.edit').live('click', Geofences.edit);
+    q('div.geofence[id!=new] input.save').live('click', Geofences.save);
+    q('div.geofence[id!=new] input.cancel').live('click', Geofences.cancel);
+    q('div.geofence input.delete').live('click', Geofences.destroy);
     
     q('div.geofence .shapeChooser a').live('click', Geofences.changeShape);
     
@@ -48,8 +48,6 @@ Geofences = {
     
     q('a.new').hide('normal');
     Geofences.enterFenceMode(null, q('#new'));
-    
-    return false;
   }
   ,
   create: function() {
@@ -81,8 +79,6 @@ Geofences = {
     }).siblings('.geofence').show('normal');
     q('a.new').show('normal');
     Geofences.exitFenceMode();
-    
-    return false;
   }
   ,
   edit: function() {
@@ -97,8 +93,6 @@ Geofences = {
       _this.closest('.geofence').data('fence'),
       _this.closest('.geofence')
     );
-    
-    return false;
   }
   ,
   save: function() {
@@ -125,8 +119,6 @@ Geofences = {
       }
     });
     Geofences.exitFenceMode();
-    
-    return false;
   }
   ,
   cancel: function() {
@@ -141,8 +133,6 @@ Geofences = {
     });
     Geofences.loadGeofence(_this.closest('.geofence'), Geofences.fence);
     Geofences.exitFenceMode();
-    
-    return false;
   }
   ,
   destroy: function() {
@@ -168,8 +158,6 @@ Geofences = {
         }
       }
     });
-    
-    return false;
   }
   ,
   updateView: function(viewElem, callback) {
