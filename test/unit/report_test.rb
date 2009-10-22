@@ -33,7 +33,7 @@ describe "Report", ActiveSupport::TestCase do
       })
       
       report.should.not.be.valid
-      report.errors.first.should.equal 'You must specify valid start and end dates'
+      report.errors.should.include 'You must specify valid start and end dates'
     end
     
     specify "requires at least one vehicle" do
@@ -48,7 +48,7 @@ describe "Report", ActiveSupport::TestCase do
       })
       
       report.should.not.be.valid
-      report.errors.first.should.equal 'You must choose one or more vehicles to run this report'
+      report.errors.should.include 'You must choose one or more vehicles to run this report'
     end
   end
   
@@ -83,7 +83,7 @@ describe "Report", ActiveSupport::TestCase do
       })
       
       report.should.not.be.valid
-      report.errors.first.should.equal 'You must specify valid start and end dates'
+      report.errors.should.include 'You must specify valid start and end dates'
     end
     
     specify "errors on broken dates" do
@@ -98,7 +98,7 @@ describe "Report", ActiveSupport::TestCase do
       })
       
       report.should.not.be.valid
-      report.errors.first.should.equal 'You must specify valid start and end dates'
+      report.errors.should.include 'You must specify valid start and end dates'
     end
     
     specify "requires only one vehicle" do
@@ -113,7 +113,7 @@ describe "Report", ActiveSupport::TestCase do
       })
       
       report.run.should.be.nil
-      report.errors.first.should.equal 'You must choose one vehicle to run this report'
+      report.errors.should.include 'You must choose one vehicle to run this report'
       
       #report.error.should.equal 'You must choose one vehicle to run this report'
     end
