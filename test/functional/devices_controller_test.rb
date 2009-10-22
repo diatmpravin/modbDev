@@ -64,21 +64,24 @@ describe "Devices Controller", ActionController::TestCase do
     specify "works" do
       Device.should.differ(:count).by(1) do
         xhr :post, :create, {
-            :imei => '923456789012345',
-            :imei_confirmation => '923456789012345'
+          :name => 'Mine',
+          :imei => '923456789012345',
+          :imei_confirmation => '923456789012345'
         }
       end
       
       json['status'].should.equal 'success'
       device = @account.devices.last
+      device.name.should.equal 'Mine'
       device.imei_number.should.equal '923456789012345'
     end
     
     specify "handles mismatch imei numbers" do
       Device.should.differ(:count).by(0) do
         xhr :post, :create, {
-            :imei => '923456789012345',
-            :imei_confirmation => 'NOT IT!'
+          :name => 'Mine',
+          :imei => '923456789012345',
+          :imei_confirmation => 'NOT IT!'
         }
       end
       
@@ -89,13 +92,26 @@ describe "Devices Controller", ActionController::TestCase do
     specify "handle unknown imei number" do
       Device.should.differ(:count).by(0) do
         xhr :post, :create, {
-            :imei => '1234',
-            :imei_confirmation => '1234'
+          :name => 'Mine',
+          :imei => '1234',
+          :imei_confirmation => '1234'
         }
       end
       
       json['status'].should.equal 'failure'
       json['error'].should =~ /unknown tracker/i
+    end
+    
+    specify "handle generic device errors" do
+      Device.should.differ(:count).by(0) do
+        xhr :post, :create, {
+          :imei => '923456789012345',
+          :imei_confirmation => '923456789012345'
+        }
+      end
+      
+      json['status'].should.equal 'failure'
+      json['error'].should.include("Name can't be blank")
     end
   end
   

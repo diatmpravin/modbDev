@@ -1,23 +1,30 @@
 <table>
-  <tr>
-    <th>Date</th>
-    <th>Miles Driven</th>
-    <th>Avg MPG</th>
-    <th>Operating Time (hh:mm)</th>
-    <th>Idle Time (hh:mm)</th>
-    <th>Speed</th>
-    <th>Geofence</th>
-    <th>Idle</th>
-    <th>Aggressive</th>
-    <th>After Hours</th>
-  </tr>
-  <% report.data.each do |row| -%>
+  <thead>
     <tr>
+      <th rowspan="2">Date</th>
+      <th rowspan="2">Miles Driven</th>
+      <th rowspan="2">Average<br/>Fuel Economy</th>
+      <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+      <th rowspan="2">Idle Time<br/>(hh:mm)</th>
+      <th colspan="5">Events</th>
+    </tr>
+    <tr>
+      <th>Speed</th>
+      <th>Geofence</th>
+      <th>Idle</th>
+      <th>Aggressive</th>
+      <th>After Hours</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each_with_index do |row,i| -%>
+    <% next if row[:miles] == 0 %>
+    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
       <td><%= row[:date] %></td>
       <td><%= row[:miles] %></td>
-      <td><%= row[:mpg] %></td>
-      <td><%= row[:duration] %></td>
-      <td><%= row[:idle_time] %></td>
+      <td><%= mpg_format(row[:mpg]) %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
       <td><%= row[:speed] %></td>
       <td><%= row[:geofence] %></td>
       <td><%= row[:idle_time] %></td>
@@ -25,4 +32,17 @@
       <td><%= row[:after_hours] %></td>
     </tr>
   <% end -%>
+    <tr class="total">
+      <td>Total</td>
+      <td><%= report.data.sum(:miles) %></td>
+      <td><%= mpg_format(report.data.sum(:mpg)) %></td>
+      <td><%= duration_format(report.data.sum(:duration)) %></td>
+      <td><%= duration_format(report.data.sum(:idle_time)) %></td>
+      <td><%= report.data.sum(:speed) %></td>
+      <td><%= report.data.sum(:geofence) %></td>
+      <td><%= report.data.sum(:idle_time) %></td>
+      <td><%= report.data.sum(:aggressive) %></td>
+      <td><%= report.data.sum(:after_hours) %></td>
+    </tr>
+  </tbody>
 </table>

@@ -1,3 +1,5 @@
+require 'set'
+
 class Report
   autoload :DailySummaryReport, 'report/daily_summary_report'
   autoload :VehicleSummaryReport, 'report/vehicle_summary_report'
@@ -96,7 +98,7 @@ class Report
     end
 
     def errors
-      @errors ||= []
+      @errors ||= Set.new
     end
 
     def data
@@ -117,12 +119,6 @@ class Report
 
     def account
       @report.account
-    end
-
-    protected
-    def duration_format(seconds)
-      minutes = seconds.to_i / 60
-      "%02d:%02d" % [minutes / 60, minutes % 60]
     end
   end
 end

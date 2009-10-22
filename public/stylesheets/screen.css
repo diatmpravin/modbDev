@@ -76,7 +76,10 @@ a.simple:hover {
 }
 .key { text-align: right; }
 .value { font-weight: bold; }
-
+.note {
+  font-style:italic;
+  font-size:86%;
+}
 
 /* standard formats */
 .field {
@@ -963,8 +966,11 @@ td.extra {
   border-top:solid 1px #d2d3d3;
   overflow:hidden;
 }
+#settings .geofence h2 {
+  float:left;
+}
 #settings .geofence .buttons {
-  margin-top:-32px;
+  margin-top:0px;
 }
 #settings .geofence .view .buttons {
   display:none;
@@ -1085,6 +1091,11 @@ td.extra {
 .reportResult {
   margin:16px;
 }
+
+.reportResult table {
+  width: 100%;
+}
+
 .reportResult h2 {
   font-size:150%;
   margin:16px 0 0 0;
@@ -1092,15 +1103,41 @@ td.extra {
 }
 .reportResult th {
   border:solid 1px black;
-  background-color:#cccccc;
+  background-color: #DDD;
   font-weight:bold;
-  text-align:left;
+  text-align:center;
   padding:2px;
 }
+
+.reportResult tr {
+  border-left: 1px solid #888;
+  border-right: 1px solid #888;
+}
+
+.reportResult tr.odd {
+  background-color: #DDD;
+}
+
 .reportResult td {
+  color: black;
+  border: solid 1px #888;
+  padding:2px;
+  text-align:center;
+  line-height: 175%;
+}
+
+.reportResult tr.total {
   border:solid 1px black;
+  background-color: #1A1A1A;
+  font-weight:bold;
+  text-align:center;
   padding:2px;
 }
+
+.reportResult tr.total td {
+  color: white;
+}
+
 .reportSettings {
   border:solid 1px #9a9a9a;
   padding:8px;

@@ -18,7 +18,7 @@ describe "Geofences Controller", ActionController::TestCase do
     end
 
     specify "returns device-specific geofences if device is specified" do
-      @account.geofences.create(:radius => 3)
+      @account.geofences.create(:name => 'Test', :radius => 3)
       assert @account.geofences.length > 1
       
       get :index, :device_id => @device.id, :format => 'json'
@@ -28,7 +28,7 @@ describe "Geofences Controller", ActionController::TestCase do
     end
 
     specify "geofences should include list of linked devices" do
-      @account.geofences.create(:radius => 3)
+      @account.geofences.create(:name => 'Test', :radius => 3)
       assert @account.geofences.length > 1
 
       get :index, :format => 'json'
@@ -60,6 +60,7 @@ describe "Geofences Controller", ActionController::TestCase do
       Geofence.should.differ(:count).by(1) do
         post :create, {
           :geofence => {
+            :name => 'Test',
             :type => 0,
             :radius => 15,
             :coordinates => [
@@ -73,6 +74,8 @@ describe "Geofences Controller", ActionController::TestCase do
       end
       
       json['status'].should.equal 'success'
+      json['view'].should =~ /<h2>Test<\/h2>/
+      json['edit'].should =~ /value="Test"/
       
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
@@ -83,15 +86,21 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "handles errors gracefully" do
-      Geofence.any_instance.expects(:save).returns(false)
       post :create, {
         :geofence => {
-          :type => 0
+          :type => 0,
+          :radius => 15,
+          :coordinates => [
+            {:latitude => 50, :longitude => 50},
+            {:latitude => 100, :longitude => 100},
+            {:latitude => 0, :longitude => 0}
+          ]
         },
         :format => 'json'
       }
       
       json['status'].should.equal 'failure'
+      json['html'].should =~ /can't be blank/
     end
   end
   
@@ -120,19 +129,22 @@ describe "Geofences Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'success'
+      json['view'].should =~ /<h2>test 2<\/h2>/
+      json['edit'].should =~ /value="test 2"/
+      
       @geofence.reload.name.should.equal 'test 2'
     end
     
     specify "handles errors gracefully" do
-      Geofence.any_instance.expects(:save).returns(false)
       put :update, {
         :id => @geofence.id,
         :geofence => {
-          :name => 'hello'
+          :name => ''
         }
       }
       
       json['status'].should.equal 'failure'
+      json['html'].should =~ /can't be blank/
     end
   end
   

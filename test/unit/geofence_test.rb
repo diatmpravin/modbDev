@@ -23,6 +23,28 @@ describe "Geofence", ActiveSupport::TestCase do
   end
   
   context "Validations" do
+    specify "name must be present" do
+      @geofence.name = nil
+      @geofence.should.not.be.valid
+      @geofence.errors.on(:name).should.equal 'can\'t be blank'
+      
+      @geofence.name = ''
+      @geofence.should.not.be.valid
+      @geofence.errors.on(:name).should.equal 'can\'t be blank'
+      
+      @geofence.name = '1'
+      @geofence.should.be.valid
+    end
+    
+    specify "name must be less than 30 characters" do
+      @geofence.name = '1234567890123456789012345678901'
+      @geofence.should.not.be.valid
+      @geofence.errors.on(:name).should.equal 'is too long (maximum is 30 characters)'
+      
+      @geofence.name = '123456789012345678901234567890'
+      @geofence.should.be.valid
+    end
+    
     specify "enforces number of records" do
       Geofence.delete_all
       20.times do |i|
@@ -57,7 +79,7 @@ describe "Geofence", ActiveSupport::TestCase do
     end
     
     specify "can use the coordinates array immediately on a new geofence" do
-      geofence = @device.geofences.new
+      geofence = @device.geofences.new(:name => 'Test')
       geofence.coordinates << {:latitude => 10.05, :longitude => 10.05}
       geofence.should.save
       geofence.coordinates.should.equal [

@@ -53,15 +53,28 @@ describe "Device", ActiveSupport::TestCase do
   end
 
   context "Validations" do
-    specify "limits name to 30 chars" do
-      @device.name = "I'm exactly 30 characters long"
-      @device.should.be.valid
-
-      @device.name = "I'm a name that's 31 characters"
+    specify "name must be present" do
+      @device.name = nil
       @device.should.not.be.valid
-      @device.errors.on(:name).should.equal("is too long (maximum is 30 characters)")
+      @device.errors.on(:name).should.equal "can't be blank"
+      
+      @device.name = ''
+      @device.should.not.be.valid
+      @device.errors.on(:name).should.equal "can't be blank"
+      
+      @device.name = '1'
+      @device.should.be.valid
     end
-
+    
+    specify "name must be less than 30 characters" do
+      @device.name = '1234567890123456789012345678901'
+      @device.should.not.be.valid
+      @device.errors.on(:name).should.equal 'is too long (maximum is 30 characters)'
+      
+      @device.name = '123456789012345678901234567890'
+      @device.should.be.valid
+    end
+    
     specify "enforces number of records" do
       Device.delete_all
       20.times do |i|

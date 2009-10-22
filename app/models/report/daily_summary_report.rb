@@ -50,9 +50,9 @@ class Report
         report << {
           :date => date,
           :miles => miles[index] || 0,
-          :mpg => "%.1f" % (mpg[index] || 0),
-          :duration => duration_format(duration[index] || 0),
-          :idle_time => duration_format(idle_time[index] || 0),
+          :mpg => mpg[index] || 0,
+          :duration => (duration[index] || 0).to_i,
+          :idle_time => (idle_time[index] || 0).to_i,
           :speed => events[[index, Event::SPEED]] || 0,
           :geofence => [
             events[[index, Event::ENTER_BOUNDARY]] || 0,

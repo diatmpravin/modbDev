@@ -15,6 +15,9 @@ class Geofence < ActiveRecord::Base
   
   before_save :prepare_coordinates
   
+  validates_presence_of :name
+  validates_length_of :name, :maximum => 30,
+    :allow_nil => true, :allow_blank => true
   validate_on_create :number_of_records
   
   module Type
