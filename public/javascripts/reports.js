@@ -7,7 +7,7 @@
  */
 Reports = {
   init: function() {
-    q('#report_range_type').change(function(event) {
+    q('#report_range_type').live("click", function(event) {
       // Custom is 7
       if(event.target.value == 7) {
         q("#date_select").slideDown();
@@ -16,7 +16,7 @@ Reports = {
       }
     });
 
-    q('#select_all').change(function(event) {
+    q('#select_all').live("click", function(event) {
       var checked = this.checked;
 
       q(this).parents("#device_select").find(":select").each(function() {
