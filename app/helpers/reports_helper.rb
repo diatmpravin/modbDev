@@ -21,6 +21,10 @@ module ReportsHelper
     "%.1f" % mpg
   end
 
+  def average(report, col, rows)
+    report.data.sum(col) / rows
+  end
+
   def report_type_options
     @@report_type_options ||= [
       ['Vehicle Summary Report', 0],

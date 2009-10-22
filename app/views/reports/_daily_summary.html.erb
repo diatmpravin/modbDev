@@ -17,8 +17,11 @@
     </tr>
   </thead>
   <tbody>
+  <% row_count = 0 -%>
   <% report.data.each_with_index do |row,i| -%>
-    <% next if row[:miles] == 0 %>
+    <% next if row[:miles] == 0 -%>
+    <% row_count += 1 -%>
+
     <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
       <td><%= row[:date] %></td>
       <td><%= row[:miles] %></td>
@@ -43,6 +46,18 @@
       <td><%= report.data.sum(:event_idle) %></td>
       <td><%= report.data.sum(:event_aggressive) %></td>
       <td><%= report.data.sum(:event_after_hours) %></td>
+    </tr>
+    <tr class="total">
+      <td>Average</td>
+      <td><%= mpg_format(average(report, :miles, row_count)) %></td>
+      <td><%= mpg_format(average(report, :mpg, row_count)) %></td>
+      <td><%= duration_format(report.data.average(:duration)) %></td>
+      <td><%= duration_format(report.data.average(:idle_time)) %></td>
+      <td><%= mpg_format(average(report, :event_speed, row_count)) %></td>
+      <td><%= mpg_format(average(report, :event_geofence, row_count)) %></td>
+      <td><%= mpg_format(average(report, :event_idle, row_count)) %></td>
+      <td><%= mpg_format(average(report, :event_aggressive, row_count)) %></td>
+      <td><%= mpg_format(average(report, :event_after_hours, row_count)) %></td>
     </tr>
   </tbody>
 </table>
