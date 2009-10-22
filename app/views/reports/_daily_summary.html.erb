@@ -1,31 +1,36 @@
-<div class="reportResult">
-  <h2><%= report.title %></h2>
-  
-  <table>
+<table>
+  <thead>
     <tr>
-      <th>Date</th>
-      <th>Miles Driven</th>
-      <th>Operating Time (hh:mm)</th>
-      <th>Idle Time (hh:mm)</th>
-      <th>Events</th>
+      <th rowspan="2">Date</th>
+      <th rowspan="2">Miles Driven</th>
+      <th rowspan="2">Average<br/>Fuel Economy</th>
+      <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+      <th rowspan="2">Idle Time<br/>(hh:mm)</th>
+      <th colspan="5">Events</th>
     </tr>
-    <% report.data.each do |row| -%>
-      <tr>
-        <td><%= row[:date] %></td>
-        <td><%= row[:miles] %></td>
-        <td><%= row[:duration] %></td>
-        <td><%= row[:idle_time] %></td>
-        <td>
-          <% events = []
-             events << "#{row[:events][:speed]} Speed" if row[:events][:speed] > 0
-             events << "#{row[:events][:geofence]} Geofence" if row[:events][:geofence] > 0
-             events << "#{row[:events][:idle_time]} Idle Time" if row[:events][:idle_time] > 0
-             events << "#{row[:events][:aggressive]} Aggressive Driving" if row[:events][:aggressive] > 0
-             events << "#{row[:events][:after_hours]} After Hours" if row[:events][:after_hours] > 0
-          -%>
-          <%= events.any? ? events.join('<br/>') : 'None' %>
-        </td>
-      </tr>
-    <% end -%>
-  </table>
-</div>
+    <tr>
+      <th>Speed</th>
+      <th>Geofence</th>
+      <th>Idle</th>
+      <th>Aggressive</th>
+      <th>After Hours</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each_with_index do |row,i| -%>
+    <% next if row[:miles] == 0 %>
+    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
+      <td><%= row[:date] %></td>
+      <td><%= row[:miles] %></td>
+      <td><%= mpg_format(row[:mpg]) %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
+      <td><%= row[:speed] %></td>
+      <td><%= row[:geofence] %></td>
+      <td><%= row[:idle_time] %></td>
+      <td><%= row[:aggressive] %></td>
+      <td><%= row[:after_hours] %></td>
+    </tr>
+  <% end -%>
+  </tbody>
+</table>
