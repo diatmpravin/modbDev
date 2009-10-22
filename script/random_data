@@ -1,0 +1,104 @@
+# This script is used to generate a series of random trips
+# and points for a given device.
+
+USER = "quentin"
+DEVICE_INDEX = 0
+START_DATE = Date.parse("10/01/2009")
+END_DATE = Date.today
+
+CLEAR_EXISTING = false
+
+START_LAT = BigDecimal.new('42.78938')
+START_LON = BigDecimal.new('-86.10699')
+
+START_MILES = 10_000
+
+########################################
+
+user = User.find_by_login(USER)
+
+device = user.devices[DEVICE_INDEX]
+
+if CLEAR_EXISTING
+  device.trips.destroy_all
+  device.points.destroy_all
+end
+
+include DeviceReport::Event
+
+def val(bool)
+  bool ? "1" : "0"
+end
+
+POSSIBLE_EVENTS = [
+    # Periodic location event with ignition ON
+    PERIODIC_IGNITION_ON,
+    PERIODIC_HEARTBEAT,
+    DIRECTION,
+    RPM,
+    MILEAGE,
+    ACCELERATING,
+    DECELERATING,
+    BATTERY,
+    IDLE
+  ]
+
+def random_event
+  POSSIBLE_EVENTS[rand(POSSIBLE_EVENTS.length)] 
+end
+
+$current_miles = START_MILES
+
+(START_DATE..END_DATE).each do |date|
+
+  time = date.beginning_of_day
+
+  # x number of trips per day
+  rand(10).times do |i|
+    starts_at = i.hours.from_now(time)
+    point_count = rand(20) + 1
+
+    t = device.trips.create :start => starts_at
+    leg = t.legs.create
+
+    point_count.times do |i|
+      lat = START_LAT + (i * 0.01)
+      lon = START_LON + (i * 0.02) 
+
+      occurred_at = (i*10).minutes.from_now(starts_at)
+
+      accelerating = rand(100) < 50
+      mpg = rand(1000) / 10.0
+
+      event = 
+        if i == 1
+          6011
+        elsif i == point_count
+          6012
+        else
+          random_event
+        end
+
+      $current_miles += rand(100)
+
+      device.points.create(
+        :leg => leg,
+        :latitude => lat,
+        :longitude => lon,
+        :altitude => 1200,
+        :speed => rand(80),
+        :accelerating => val(accelerating),
+        :decelerating => val(!accelerating),
+        :miles => $current_miles,
+        :mpg => mpg,
+        :occurred_at => occurred_at,
+        :event => event
+      )
+    end
+  end
+
+end
+
+device.trips.each do |t|
+  t.update_point_data
+end
