@@ -1,3 +1,5 @@
+require 'set'
+
 class Report
   autoload :DailySummaryReport, 'report/daily_summary_report'
   autoload :VehicleSummaryReport, 'report/vehicle_summary_report'
@@ -35,6 +37,8 @@ class Report
       VehicleSummaryReport.new(self)
     when 1
       DailySummaryReport.new(self)
+    when 2
+      FuelEconomyReport.new(self)
     end
   end
   
@@ -94,7 +98,7 @@ class Report
     end
 
     def errors
-      @errors ||= []
+      @errors ||= Set.new
     end
 
     def data

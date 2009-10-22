@@ -25,12 +25,24 @@
       <td><%= mpg_format(row[:mpg]) %></td>
       <td><%= duration_format(row[:duration]) %></td>
       <td><%= duration_format(row[:idle_time]) %></td>
-      <td><%= row[:speed] %></td>
-      <td><%= row[:geofence] %></td>
-      <td><%= row[:idle_time] %></td>
-      <td><%= row[:aggressive] %></td>
-      <td><%= row[:after_hours] %></td>
+      <td><%= row[:event_speed] %></td>
+      <td><%= row[:event_geofence] %></td>
+      <td><%= row[:event_idle] %></td>
+      <td><%= row[:event_aggressive] %></td>
+      <td><%= row[:event_after_hours] %></td>
     </tr>
   <% end -%>
+    <tr class="total">
+      <td>Total</td>
+      <td><%= report.data.sum(:miles) %></td>
+      <td><%= mpg_format(report.data.sum(:mpg)) %></td>
+      <td><%= duration_format(report.data.sum(:duration)) %></td>
+      <td><%= duration_format(report.data.sum(:idle_time)) %></td>
+      <td><%= report.data.sum(:event_speed) %></td>
+      <td><%= report.data.sum(:event_geofence) %></td>
+      <td><%= report.data.sum(:event_idle) %></td>
+      <td><%= report.data.sum(:event_aggressive) %></td>
+      <td><%= report.data.sum(:event_after_hours) %></td>
+    </tr>
   </tbody>
 </table>
