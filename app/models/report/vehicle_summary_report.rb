@@ -43,7 +43,7 @@ class Report
         report << {
           :name => device.name,
           :miles => trips.map {|t| t.miles}.sum,
-          :mpg => "%.1f" % (trips.map {|t| t.average_mpg}.sum / trips.size.to_f),
+          :mpg => trips.map {|t| t.average_mpg}.sum / trips.size.to_f,
           :duration => trips.map {|t| t.duration}.sum,
           :idle_time => trips.map {|t| t.idle_time}.sum,
           :speed => events[Event::SPEED] || 0,

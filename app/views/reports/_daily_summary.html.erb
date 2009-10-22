@@ -22,9 +22,9 @@
     <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
       <td><%= row[:date] %></td>
       <td><%= row[:miles] %></td>
-      <td><%= row[:mpg] %></td>
-      <td><%= row[:duration] %></td>
-      <td><%= row[:idle_time] %></td>
+      <td><%= mpg_format(row[:mpg]) %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
       <td><%= row[:speed] %></td>
       <td><%= row[:geofence] %></td>
       <td><%= row[:idle_time] %></td>

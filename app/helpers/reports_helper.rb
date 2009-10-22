@@ -15,6 +15,10 @@ module ReportsHelper
     "%02d:%02d" % [minutes / 60, minutes % 60]
   end
 
+  def mpg_format(mpg)
+    "%.1f" % mpg
+  end
+
   def report_type_options
     @@report_type_options ||= [
       ['Vehicle Summary Report', 0],
