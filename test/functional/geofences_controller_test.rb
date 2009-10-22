@@ -18,7 +18,7 @@ describe "Geofences Controller", ActionController::TestCase do
     end
 
     specify "returns device-specific geofences if device is specified" do
-      @account.geofences.create(:radius => 3)
+      @account.geofences.create(:name => 'Test', :radius => 3)
       assert @account.geofences.length > 1
       
       get :index, :device_id => @device.id, :format => 'json'
@@ -28,7 +28,7 @@ describe "Geofences Controller", ActionController::TestCase do
     end
 
     specify "geofences should include list of linked devices" do
-      @account.geofences.create(:radius => 3)
+      @account.geofences.create(:name => 'Test', :radius => 3)
       assert @account.geofences.length > 1
 
       get :index, :format => 'json'
@@ -60,6 +60,7 @@ describe "Geofences Controller", ActionController::TestCase do
       Geofence.should.differ(:count).by(1) do
         post :create, {
           :geofence => {
+            :name => 'Test',
             :type => 0,
             :radius => 15,
             :coordinates => [
@@ -124,11 +125,10 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "handles errors gracefully" do
-      Geofence.any_instance.expects(:save).returns(false)
       put :update, {
         :id => @geofence.id,
         :geofence => {
-          :name => 'hello'
+          :name => ''
         }
       }
       
