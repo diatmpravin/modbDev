@@ -1126,6 +1126,18 @@ td.extra {
   line-height: 175%;
 }
 
+.reportResult tr.total {
+  border:solid 1px black;
+  background-color: #1A1A1A;
+  font-weight:bold;
+  text-align:center;
+  padding:2px;
+}
+
+.reportResult tr.total td {
+  color: white;
+}
+
 .reportSettings {
   border:solid 1px #9a9a9a;
   padding:8px;
