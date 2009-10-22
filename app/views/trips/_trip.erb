@@ -1,6 +1,14 @@
+<% hide_collapse ||= false -%>
+
 <div class="color"><img src="<%= trip.color.filename %>" /></div>
 <div class="detail">
-  <!--<div class="buttons"><%= link_to 'Edit', '#', {:class => 'editSettings simple'} %></div>-->
+  <% unless hide_collapse -%>
+    <% form_tag collapse_trip_path(trip), :method => :put do -%>
+      <div class="loading"></div>
+      <%= link_to '', '#', {:class => 'collapse'} %>
+    <% end -%>
+  <% end -%>
+  
   <h4><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></h4>
   <p><%= human_miles(trip.miles) %> over <%= human_duration(trip.duration) %></p>
   <div class="additional">
@@ -13,5 +21,18 @@
       <%= format_tags(trip.tags) %>
       (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
     </p>
+    <% if trip.legs.length > 1 -%>
+      <div class="legs">
+        <% form_tag expand_trip_path(trip), :method => :put do -%>
+          <div class="loading"></div>
+          <%= link_to '', '#', {:class => 'expand'} %>
+        <% end -%>
+        <ul>
+          <% trip.legs.each_with_index do |leg, i| -%>
+            <li>Leg <%=i+1%></li>
+          <% end -%>
+        </ul>
+      </div>
+    <% end -%>
   </div>
 </div>

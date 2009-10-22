@@ -49,7 +49,8 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').change(Geofences.toggle).attr('checked', false);
+    q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
+    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
     q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
@@ -65,7 +66,9 @@ Maps = {
     q('#monthBackward').live('click', function() { Maps.adjustHistoryMonth(-1); });
     q('#monthForward').live('click', function() { Maps.adjustHistoryMonth(1); });
     
-    q('.trip:not(.selected)').live('click', Maps.selectTrip);
+    // .trip:click is now bound in Trips.init, below
+    q('.device:not(.selected)').live('click', Maps.showDeviceInfo);
+    q('.device.selected').live('click', Maps.hideDeviceInfo);
     
     q('.device').live('click', Maps.centerDevice);
     
@@ -118,6 +121,7 @@ Maps = {
     
     if (q('#livelook').hasClass('selected')) {
       Maps.livelook();
+      GeofencesView.updateVisibility();
     } else {
       q('#historyScroller li.selected').click();
     }
@@ -136,7 +140,11 @@ Maps = {
     }
   }
   ,
-  selectTrip: function() {
+  selectTrip: function(event) {
+    if (event.isPropagationStopped()) {
+      return;
+    }
+    
     var _this = q(this);
     
     _this.addClass('selected').find('.additional,.buttons').show()
@@ -148,6 +156,16 @@ Maps = {
       Maps.trip = json.trip;
       MoshiMap.moshiMap.displayTrip(Maps.trip);
     });
+  }
+  ,
+  showDeviceInfo: function() {
+    q(this).addClass('selected').find('.additional').show()
+      .end().siblings('.device')
+      .removeClass('selected').find('.additional').hide();
+  }
+  ,
+  hideDeviceInfo: function() {
+    q(this).removeClass('selected').find('.additional').hide();
   }
   ,
   livelook: function() {
@@ -170,7 +188,13 @@ Maps = {
     var device_id = q('#device_id').val();
     var jsonURL = (device_id == '' ? '/devices' : '/devices/' + device_id) + ".json";
     var htmlURL = (device_id == '' ? '/maps/status' : '/maps/status?device_id=' + device_id);
-    
+
+    var sel, currentlySelectedId;
+
+    if((sel = q('.devices .device.selected')).length > 0) {
+      currentlySelectedId = sel.attr("id").split("_")[1];
+    }
+
     q('.loading').show();
     q.getJSON(jsonURL, function(json) {
       MoshiMap.moshiMap.clearPoints();
@@ -206,6 +230,11 @@ Maps = {
         q('.loading').hide();
         Maps.corners();
         Maps.scrollPane(true, '.devices');
+
+        // Make sure we keep the selected device open
+        if(currentlySelectedId) {
+          q('.devices #device_' + currentlySelectedId).click();
+        }
         
         if (Maps.livelookTimer) { clearTimeout(Maps.livelookTimer); }
         Maps.livelookTimer = setTimeout(Maps.livelookUpdate, 60000);
@@ -287,10 +316,13 @@ Maps = {
             num++;
           }
         }
+
         
         if (num > 0) {
+          var trips = num > 1 ? 'trips' : 'trip';
+
           html += '<li><div class="color"><img src="' + trip.color.filename +'" /></div><b>' +
-            Maps.devices[i].device.name + '</b><br/>' + '<span>' + num + ' trips</span></li>';
+            Maps.devices[i].device.name + '</b><br/><span>' + num + ' ' + trips + '</span></li>';
         }
       }
     }
@@ -457,6 +489,18 @@ Trips = {
     q('.trip a.cancel').live('click', Trips.cancel);
     q('.trip a.add').live('click', Trips.displayForm);
     q('.trip a.remove').live('click', Trips.removeTag);
+    q('.trip a.collapse').live('click', Trips.collapse);
+    q('.trip a.expand').live('click', Trips.expand);
+    
+    // Binding this event here to make sure it happens AFTER the
+    // expand & collapse functions.
+    q('.trip:not(.selected)').live('click', Maps.selectTrip);
+    
+    q('.trip').live('mouseover', function() {
+      q(this).addClass('hover');
+    }).live('mouseout', function() {
+      q(this).removeClass('hover');
+    });
     
     q('#tagDialog input').live('keypress', function(e) {
       // Capture ENTER and submit dialog
@@ -538,6 +582,74 @@ Trips = {
     return false;
   }
   ,
+  collapse: function(event) {
+    // We aren't trying to "view" this trip
+    event.stopPropagation();
+    
+    var _this = q(this);
+    var _trip = _this.closest('.trip');
+    
+    _this.closest('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
+      success: function(json) {
+        if (json.status == 'success') {
+          _trip.hide('fast', function() {
+            _trip.prev('.trip')
+                 .find('div.view').html(json.view).end()
+                 .find('div.edit').html(json.edit).end()
+                 .removeClass('selected').click();
+            _trip.remove();
+            
+            // After removing a trip, need to correct for alternating styles
+            q('.trip:even').removeClass('alternating');
+            q('.trip:odd').addClass('alternating');
+          });
+        } else {
+          _this.show('fast').siblings('.loading').hide('fast');
+        }
+      }
+    });
+    
+    return false;
+  }
+  ,
+  expand: function(event) {
+    // We aren't trying to "view" this trip
+    event.stopPropagation();
+    
+    var _this = q(this);
+    var _trip = _this.closest('.trip');
+    
+    _this.closest('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { _this.hide('fast').siblings('.loading').show('fast'); },
+      success: function(json) {
+        if (json.status == 'success') {
+          _trip.find('div.view').html(json.view).end()
+               .find('div.edit').html(json.edit).end()
+               .removeClass('selected').click();
+          
+          q('<div class="trip section" style="display:none" id="trip_'
+            + json.new_trip.id
+            + '"><div class="view">'
+            + json.new_trip.view
+            + '</div><div class="edit">'
+            + json.new_trip.edit
+            + '</div></div>').insertAfter(_trip).show('fast');
+          
+          // After adding a trip, need to correct for alternating styles
+          q('.trip:even').removeClass('alternating');
+          q('.trip:odd').addClass('alternating');
+        } else {
+          _this.show('fast').siblings('.loading').hide('fast');
+        }
+      }
+    });
+    
+    return false;
+  }
+  ,
   createTag: function() {
     var _this = q(this);
     
@@ -608,69 +720,14 @@ Trips = {
     _this.find('option:selected').remove();
     _this.val('');
   }
-}
-
-Geofences = {
-  ELLIPSE: 0,
-  RECTANGLE: 1,
-  POLYGON: 2,
-  fences: [],
-
-  init: function() {
-    q.getJSON('/geofences.json', function(json) {
-      Geofences.fences = json;
-      Geofences.buildGeofences();
-    });
-  }
-  ,
-  toggle: function() {
-    var bool = q(this).attr('checked');
-    for(var i = 0; i < Geofences.fences.length; i++) {
-      Geofences.fences[i].geofence.shape.setValue('visible', bool);
-    }
-  }
-  ,
-  buildGeofences: function() {
-    for(var i = 0; i < Geofences.fences.length; i++) {
-      Geofences.shape(Geofences.fences[i].geofence);
-      MoshiMap.moshiMap.geofenceCollection.add(Geofences.fences[i].geofence.shape);
-    }
-  }
-  ,
-  shape: function(fence) {
-    if (fence.geofence_type == Geofences.ELLIPSE) {
-      fence.shape = new MQA.EllipseOverlay();
-    } else if (fence.geofence_type == Geofences.RECTANGLE) {
-      fence.shape = new MQA.RectangleOverlay();
-    } else if (fence.geofence_type == Geofences.POLYGON) {
-      fence.shape = new MQA.PolygonOverlay();
-    }
-    
-    fence.points = new MQLatLngCollection();
-    for(var i = 0; i < fence.coordinates.length; i++) {
-      fence.points.add(new MQA.LatLng(fence.coordinates[i].latitude, fence.coordinates[i].longitude));
-    }
-    
-    fence.shape.setShapePoints(fence.points);
-    fence.shape.setValue('visible', false);
-    Geofences.setFenceColor(fence, '#ff0000');
-    
-    return fence.shape;
-  }
-  ,
-  setFenceColor: function(fence, color) {
-    fence.shape.setColor(color);
-    fence.shape.setColorAlpha(0.4);
-    fence.shape.setFillColor(color);
-    fence.shape.setFillColorAlpha(0.2);
-  }
-}
+};
 
 /* Initializer */
 q(function() {
   q('#mapContainer').moshiMap().init();
   Maps.init();
-  Geofences.init();
+  GeofencesView.init();
+  LandmarksView.init();
   Trips.init();
   
   // keeping this around for a little while in case i have to switch to IE7 opacity style

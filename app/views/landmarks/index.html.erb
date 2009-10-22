@@ -1,0 +1,44 @@
+<div id="sidebarContainer">
+  <div id="sidebar">
+    <div id="sidebarContent">
+      
+      <div class="landmarks">
+        <div class="buttons">
+          <%= button_tag 'Add Landmark', {:id => 'addLandmark'} %>
+        </div>
+        <div class="clear spacer"></div>
+        
+        <div class="landmark" id="new">
+          <%= render :partial => 'form', :locals => {:landmark => current_account.landmarks.new} %>
+        </div>
+        
+        <% @landmarks.each do |landmark| -%>
+          <div class="landmark">
+            <div class="view">
+              <%= render :partial => 'landmark', :locals => {:landmark => landmark} %>
+            </div>
+            <div class="edit">
+              <%= render :partial => 'form', :locals => {:landmark => landmark} %>
+            </div>
+          </div>
+        <% end -%>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div id="removeLandmark" class="dialog">
+  <p>If you delete this landmark, it will no longer display on any
+  maps. This action cannot be undone.</p>
+  <p>Are you sure you want to delete this landmark?</p>
+</div>
+
+<div>
+  <div id="mapContainer">
+    <div style="text-align:center;font-style:italic;padding-top:50px">
+      Please wait, loading...
+    </div>
+  </div>
+</div>
+<div class="clear"></div>

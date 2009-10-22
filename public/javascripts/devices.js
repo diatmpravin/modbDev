@@ -49,10 +49,16 @@ Devices = {
     
     q('td input[type=checkbox]').live("click", function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
+
+      Devices.initTimepickr(q(this).parents("div.edit"));
     });
-    
-    q('input.timepick').timepickr({
-      convention: 12
+  }
+  ,
+  initTimepickr: function(edit) {
+    edit.find('td:visible input.timepick').timepickr({
+      convention: 12,
+      format12: '{h:02.d}:{m:02.d} {z:s}',
+      trigger: 'click'
     });
   }
   ,
@@ -108,7 +114,9 @@ Devices = {
     var _edit = _view.siblings('div.edit');
     
     _view.hide('normal').closest('div.device').siblings().hide();
-    _edit.show('normal');
+    _edit.show('normal', function() {
+      Devices.initTimepickr(_edit);
+    });
     
     return false;
   }
@@ -152,15 +160,15 @@ Devices = {
   }
   ,
   destroy: function() {
-    var _this = q(this);
-    var _view = _this.data("device").closest('div.view');
-    var _edit = _view.siblings('div.edit');
+    var _this = q(this),
+        _view = _this.data("device").closest('div.view'),
+        _edit = _view.siblings('div.edit');
 
     _edit.find('form').ajaxSubmit({
       dataType: 'json',
       type: 'delete',
       beforeSubmit: function() { _view.find('.loading').show(); },
-      complete: function() { _view.find('.loading').hide(); },
+      complete: function() { _view.find('.loading').hide(); _this.dialog('close'); },
       success: function(json) {
         if (json.status == 'success') {
           var _device = _view.closest('div.device');

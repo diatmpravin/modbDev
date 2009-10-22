@@ -153,6 +153,49 @@ describe "Trip", ActiveSupport::TestCase do
       
       @trip.reload.idle_time.should.equal 300
     end
+    
+    specify "updates average miles per gallon" do
+      # Simple interval test: whole mpgs at 15 minutes apart
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:30:00 UTC'),
+        :miles => 50,
+        :mpg => 26
+      )
+      @trip.reload.average_mpg.should.equal 22
+      
+      # Single point test (should return the only mpg point we have)
+      @trip.legs[0].points.last.destroy
+      @trip.legs[0].points.last.destroy
+      @trip.legs[0].points[0].update_attributes(:mpg => 7)
+      @trip.reload.average_mpg.should.equal 7
+      
+      # Variable interval test: 1 min, 30 sec, 2 min, 2 min
+      estimated_mpg = (3.5*1 + 8*0.5 + 12*2 + 16.5*2) / 5.5
+      estimated_mpg = BigDecimal.new(estimated_mpg.to_s).floor(1)
+      
+      @trip.legs[0].points[0].update_attributes(:mpg => 0)
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:01:00 UTC'),
+        :miles => 50,
+        :mpg => 7
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:01:30 UTC'),
+        :miles => 50,
+        :mpg => 9
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:03:30 UTC'),
+        :miles => 50,
+        :mpg => 15
+      )
+      @trip.legs[0].points << Point.new(
+        :occurred_at => Time.parse('02/05/2009 08:05:30 UTC'),
+        :miles => 50,
+        :mpg => 18
+      )
+      @trip.reload.average_mpg.should.equal estimated_mpg
+    end
   end
   
   context "Trip Info Helpers" do
@@ -174,9 +217,172 @@ describe "Trip", ActiveSupport::TestCase do
     specify "knows average rpm" do
       @trip.average_rpm.should.equal 2056
     end
+  end
+  
+  context "Collapsing a trip" do
+    setup do
+      leg = Leg.new
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+      )
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 22,
+        :miles => 35,
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+      )
+      
+      @t = devices(:quentin_device).trips.new
+      @t.legs << leg
+      @t.save
+      
+      @trip.update_point_data
+    end
     
-    specify "knows average mpg" do
-      @trip.average_mpg.should.equal 20
+    specify "legs on the trip are moved to the collapsed trip" do
+      @trip.legs.length.should.equal 1
+      @t.collapse.should.equal @trip
+      @trip.reload.legs.length.should.equal 2
+      
+      Trip.find_by_id(@t.id).should.be.nil
+    end
+    
+    specify "update data runs correctly on the collapsed trip" do
+      # Sanity check on prior values
+      @trip.miles.should.equal 6
+      @trip.finish.should.equal Time.parse('02/05/2009 08:15:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20')
+      
+      # Test
+      @t.collapse.should.equal @trip
+      @trip.reload
+      
+      @trip.miles.should.equal 18
+      @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20.4')
+    end
+    
+    specify "collapsed trip inherits all tags (but no duplicate rows)" do
+      tag1 = accounts(:quentin).tags.create(:name => 'Tag 1')
+      tag2 = accounts(:quentin).tags.create(:name => 'Tag 2')
+      tag3 = accounts(:quentin).tags.create(:name => 'Tag 3')
+      tag4 = accounts(:quentin).tags.create(:name => 'Tag 4')
+      
+      @trip.update_attributes(:tags => [tag1, tag2])
+      @t.update_attributes(:tags => [tag2, tag4])
+      
+      @t.collapse.should.equal @trip
+      
+      @trip.reload
+      @trip.tags.length.should.equal 3
+      @trip.tags.should.include(tag1)
+      @trip.tags.should.include(tag2)
+      @trip.tags.should.not.include(tag3)
+      @trip.tags.should.include(tag4)
+    end
+    
+    specify "the first trip in the list can't collapse" do
+      @trip.should.not.collapse
+    end
+  end
+  
+  context "Expanding a trip" do
+    setup do
+      # Use the same test data from the collapse tests, but pre-collapse it.
+      @device = devices(:quentin_device)
+      
+      leg = Leg.new
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+      )
+      leg.points << Point.new(
+        :event => 4001,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 22,
+        :miles => 35,
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+      )
+      
+      t = @device.trips.new
+      t.legs << leg
+      t.save
+      
+      t.collapse
+      @trip.reload
+    end
+    
+    specify "the last leg of the trip is moved into a new trip" do
+      @device.trips.length.should.equal 1
+      @trip.legs.length.should.equal 2
+      
+      leg = @trip.legs.last
+      
+      new_trip = @trip.expand
+      new_trip.device.should.equal @device
+      new_trip.legs.should.equal [leg]
+      
+      @device.trips.reload.length.should.equal 2
+      @trip.legs.reload.length.should.equal 1
+    end
+    
+    specify "update data runs correctly on both trips" do
+      # Sanity check on the "collapsed" values
+      @trip.miles.should.equal 18
+      @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20.4')
+      
+      new_trip = @trip.expand
+      
+      # Test the "old" (expanded from) trip
+      @trip.miles.should.equal 6
+      @trip.finish.should.equal Time.parse('02/05/2009 08:15:00 UTC')
+      @trip.idle_time.should.equal 0
+      @trip.average_mpg.should.equal BigDecimal.new('20')
+      
+      # Test the "new" (expanded out) trip
+      new_trip.miles.should.equal 5
+      new_trip.start.should.equal Time.parse('02/05/2009 08:17:00 UTC')
+      new_trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
+      new_trip.idle_time.should.equal 0
+      new_trip.average_mpg.should.equal BigDecimal.new('21')
+    end
+    
+    specify "new trip inherits all tags" do
+      tag1 = accounts(:quentin).tags.create(:name => 'Tag 1')
+      tag2 = accounts(:quentin).tags.create(:name => 'Tag 2')
+      tag3 = accounts(:quentin).tags.create(:name => 'Tag 3')
+      
+      @trip.update_attributes(:tags => [tag1, tag2])
+      
+      new_trip = @trip.expand
+      
+      new_trip.tags.should.include(tag1)
+      new_trip.tags.should.include(tag2)
+      new_trip.tags.should.not.include(tag3)
+    end
+    
+    specify "trips with only one leg can't expand" do
+      new_trip = @trip.expand
+      
+      # Now both trips have one leg each
+      @trip.should.not.expand
+      new_trip.should.not.expand
     end
   end
   

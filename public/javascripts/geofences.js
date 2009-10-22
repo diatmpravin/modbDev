@@ -16,6 +16,8 @@ Geofences = {
   init: function() {
     Geofences.corners();
     
+    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
+    
     q('a.addGeofence').live('click', Geofences.newGeofence);
     q('div.geofence[id=new] a.save').live('click', Geofences.create);
     q('div.geofence[id=new] a.cancel').live('click', Geofences.cancelNew);
@@ -201,6 +203,7 @@ Geofences = {
     _mapContainer.height(mapHeight);
     q('#sidebarContainer').height(mapHeight - 32);
     q('#sidebar').height(mapHeight - 32 - 16);
+    q('#sidebarContent').height(mapHeight - 32 - 32);
     
     var margin = q('.geofences').position().top - q('#sidebar').position().top;
     var height = q('#sidebar').outerHeight() - 16;
@@ -638,4 +641,5 @@ Geofences = {
 jQuery(function() {
   q('#mapContainer').moshiMap().init();
   Geofences.init();
+  LandmarksView.init();
 });

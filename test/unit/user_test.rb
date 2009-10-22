@@ -85,11 +85,6 @@ describe "User", ActiveSupport::TestCase do
       assert_equal users(:quentin), User.authenticate(@account, 'quentin', 'new password')
     end
 
-    specify "should not rehash password" do
-      users(:quentin).update_attributes(:login => 'quentin2')
-      assert_equal users(:quentin), User.authenticate(@account, 'quentin2', 'test')
-    end
-
     specify "should authenticate user" do
       assert_equal users(:quentin), User.authenticate(@account, 'quentin', 'test')
     end

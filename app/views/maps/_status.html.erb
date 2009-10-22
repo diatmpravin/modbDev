@@ -9,12 +9,14 @@
       <div class="color"><img src="<%= device.color.filename %>" /></div>
       <div class="detail">
         <h4><%= h(device.name || 'Vehicle') %></h4>
+        <%= device.current_status %>
         <% if device.position -%>
-          <% if device.position.running? -%>
-            Moving at <%= device.position.speed %> mph
-          <% else -%>
-            Stationary
-          <% end -%>
+          <div class="additional">
+            <% data = device.data_for(current_user.zone.today) %>
+            <p>Today's Average MPG: <%= data.mpg %></p>
+            <p>Today's Drive Time: <%= human_duration(data.time) %></p>
+            <p>Today's Miles Driven: <%= data.miles %></p>
+          </div>
         <% end -%>
       </div>
     </div>

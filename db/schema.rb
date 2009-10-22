@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091015133721) do
+ActiveRecord::Schema.define(:version => 20091016141753) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(:version => 20091015133721) do
     t.datetime "updated_at"
     t.integer  "leg_id"
     t.integer  "device_id"
-    t.decimal  "mpg",          :precision => 4, :scale => 1
+    t.decimal  "mpg",          :precision => 4, :scale => 1, :default => 0.0
     t.decimal  "battery",      :precision => 3, :scale => 1
     t.integer  "signal"
     t.boolean  "locked"
@@ -200,7 +200,8 @@ ActiveRecord::Schema.define(:version => 20091015133721) do
     t.datetime "start"
     t.datetime "finish"
     t.integer  "miles"
-    t.integer  "idle_time",  :default => 0
+    t.integer  "idle_time",                                 :default => 0
+    t.decimal  "average_mpg", :precision => 4, :scale => 1, :default => 0.0
   end
 
   create_table "users", :force => true do |t|

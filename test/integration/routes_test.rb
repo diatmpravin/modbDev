@@ -39,6 +39,11 @@ class RoutesTest < ActionController::IntegrationTest
     
     assert_equal "/users/1/activate", activate_user_path(1)
   end
+
+  test "users have a profile" do
+    assert_equal "/profile", profile_path
+    assert_equal "/profile/edit", edit_profile_path
+  end
   
   test "devices resources" do
     assert_equal "/devices", devices_path
@@ -53,6 +58,9 @@ class RoutesTest < ActionController::IntegrationTest
   test "trips resource" do
     assert_equal "/trips", trips_path
     assert_equal "/trips/1", trip_path(1)
+    
+    assert_equal "/trips/1/collapse", collapse_trip_path(1)
+    assert_equal "/trips/1/expand", expand_trip_path(1)
   end
 
   test "geofences resource" do
@@ -60,6 +68,11 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/geofences/1", geofence_path(1)
   end
 
+  test "landmarks resources" do
+    assert_equal "/landmarks", landmarks_path
+    assert_equal "/landmarks/1", landmark_path(1)
+  end
+ 
   test "tags resource" do
     assert_equal "/tags", tags_path
     assert_equal "/tags/1", tag_path(1)

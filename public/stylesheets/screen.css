@@ -135,24 +135,24 @@ a.help {
 }
 
 /* flash errors, warnings, etc. */
-#error {
+.messageBox {
   padding:4px;
+  margin-bottom:8px;
+}
+.messageBox p {
+  float: left;
+}
+#error {
   background-color:#ffeeee;
   border:solid 1px red;
-  margin-bottom:8px;
 }
 #warning {
-  padding:8px;
-  font-weight: bold;
   background-color:#ffffAA;
   border:solid 1px yellow;
-  margin-bottom:8px;
 }
 #notice {
-  padding:4px;
   background-color:#eeffee;
   border:solid 1px green;
-  margin-bottom:8px;
 }
 a.close {
   color:black;
@@ -289,13 +289,16 @@ a.close {
   height:4px;
   background:#e0decc url(/images/navbar_bg_short.gif) repeat-x left top;
 }
+#navbar h1 {
+  margin-right:16px;
+}
 
 /*** LAYOUTS ***/
 
 /* screen-specific containers */
 /*
 #sessions {
-  
+
 }
 #sessions #layout {
   background-color:#0a1113;
@@ -512,6 +515,7 @@ a.close {
   cursor:default;
 }
 #tripSummary ul {
+  height: 100%;
   background:transparent url(/images/history_hover_bg.gif) no-repeat left -10px;
 }
 #tripSummary li {
@@ -546,7 +550,7 @@ a.close {
 #sidebarContainer {
   float:right;
   width:250px;
-  height:100%;  
+  height:100%;
   padding:16px;
   border-left:solid 1px #b4b2a3;
   background-color:#323c3e;
@@ -620,7 +624,17 @@ a.add {
   margin-left:16px;
 }
 #sidebar .device:hover {
-  background:transparent url(/images/vehicle_find.gif) no-repeat right top;
+  background:transparent url(/images/vehicle_find.png) no-repeat right center;
+}
+#sidebar .device {
+  cursor: pointer;
+}
+#sidebar .devices .selected {
+  border-top:solid 1px #cfcfcf;
+  border-bottom:solid 1px #cfcfcf;
+}
+#sidebar .device .additional {
+  display:none;
 }
 
 /* trips */
@@ -652,6 +666,11 @@ a.add {
 #sidebar .trip .additional {
   display:none;
 }
+#sidebar .trip .legs {
+  border-top:solid 1px #cfcfcf;
+  padding-left:16px;
+  position:relative;
+}
 #sidebar .trip div.edit {
   display:none;
 }
@@ -663,7 +682,37 @@ a.add {
   color:#6a6a6a;
 }
 .tagEntry {
-  
+
+}
+#sidebar .trip a.collapse {
+  background:transparent url(/images/collapse.png) no-repeat left top;
+  display:none;
+  height:16px;
+  float:right;
+  margin:2px 2px 0 0;
+  width:16px;
+}
+#sidebar .hover a.collapse, #sidebar .selected a.collapse {
+  display:block;
+}
+#sidebar .trip a.expand {
+  background:transparent url(/images/expand.png) no-repeat left top;
+  bottom:0px;
+  display:block;
+  height:16px;
+  position:absolute;
+  right:2px;
+  width:16px;
+}
+#sidebar .trip div.view .loading {
+  float:right;
+  margin:2px 2px 0 0;
+}
+#sidebar .trip .legs .loading {
+  bottom:0px;
+  margin:0;
+  position:absolute;
+  right:2px;
 }
 
 /* clock display */
@@ -921,6 +970,53 @@ td.extra {
   display:none;
 }
 
+/* landmark settings */
+#landmarks #sidebar h3 {
+  color:black;
+  font-weight:bold;
+  padding:0.2em 0.6em 0.2em 0;
+  margin-bottom:8px;
+  background:transparent;
+}
+#landmarks .buttons {
+  margin:0;
+}
+#landmarks #settingsContainer {
+  padding:0;
+}
+#landmarks #settings {
+  padding:0;
+}
+#landmarks #sidebarContainer {
+  width:320px;
+}
+#settings .landmarks {
+  overflow:auto;
+}
+#settings .landmarks #new {
+  display:none;
+}
+#settings .landmark {
+  padding:4px 0 4px 4px;
+  border-top:solid 1px #d2d3d3;
+  overflow:hidden;
+}
+#settings .landmark h2 {
+  float:left;
+}
+#settings .landmark .buttons {
+  margin-top:0px;
+}
+#settings .landmark .view .buttons {
+  display:none;
+}
+#settings .landmarks .hover {
+  background-color:#f0f0f0;
+}
+#settings .landmarks .hover .view .buttons {
+  display:block;
+}
+
 /*** ALERTS ***/
 #newAlertRecipient {
   display:none;
@@ -1109,7 +1205,7 @@ ul.summary li.summary7 { background-position:0 -150px; }
   width: 45%;
 }
 #subscription .subscription {
-  margin-top: 1em; 
+  margin-top: 1em;
 }
 .subscription table {
   width: 90%;
@@ -1482,7 +1578,7 @@ only slightly modified
 table.styled {
 	border-collapse: collapse;
 	border-left: 1px solid #ccc;
-	border-top: 1px solid #ccc; 
+	border-top: 1px solid #ccc;
 	color: #333;
 }
 
@@ -1496,7 +1592,7 @@ table.styled thead tr th.csv {
   text-align: left;
 }
 
-table.styled td, 
+table.styled td,
 table.styled th {
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
@@ -1505,7 +1601,7 @@ table.styled th {
   text-align:left;
 }
 
-table.styled tr.odd th, 
+table.styled tr.odd th,
 table.styled tr.odd td {
 	background: #efefef;
 }

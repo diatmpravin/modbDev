@@ -4,4 +4,9 @@ quentin:
   longitude: -86.33333
   radius: 100
   name: Store X
-  
+aaron:
+  account: aaron
+  latitude: 7.0
+  longitude: -4.0
+  radius: 50
+  name: Aaron Home
