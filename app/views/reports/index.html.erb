@@ -11,10 +11,10 @@
           <%= f.select :type, report_type_options %>
         </div>
         
-        <% fields_for :range do |f_r| -%>
+        <% f.fields_for :range, @report.range do |f_r| -%>
           <div class="field">
             <%= f_r.label :type, 'Date Range' %>
-            <%= f_r.select :type, report_range_options, :selected => 0 %>
+            <%= f_r.select :type, report_range_options %>
           </div>
           
           <div id="date_select" class="field" style="display:none">
@@ -30,13 +30,13 @@
 
           <div style="max-height: 150px; overflow:auto">
             <div class="field">
-              <%= check_box_tag "select_all", nil, true %>
+              <%= check_box_tag "select_all", nil, @report.devices.size == @devices.size %>
               <%= label_tag "select_all", "Select All", :class => 'checkbox' %>
             </div>
 
             <% @devices.each do |device| -%>
               <div class="field">
-                <%= check_box_tag "devices[#{device.id}]", '1', true %>
+                <%= check_box_tag "devices[#{device.id}]", '1', @report.devices.include?(device) %>
                 <%= label_tag "devices[#{device.id}]", device.name, :class => 'checkbox' %>
               </div>
             <% end -%>
