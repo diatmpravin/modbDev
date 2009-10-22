@@ -180,9 +180,9 @@ a.close {
 }
 #logo {
   float:left;
-  width:109px;
+  width:195px;
   height:85px;
-  background:transparent url(/images/mobd_logo.jpg) no-repeat top left;
+  background:transparent url(/images/logo.png) no-repeat top left;
 }
 #welcome {
   float:right;
