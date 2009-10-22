@@ -17,13 +17,13 @@
     </tr>
   </thead>
   <tbody>
-  <% report.data.each do |row| -%>
-    <tr>
+  <% report.data.each_with_index do |row, i| -%>
+    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
       <td><%= h(row[:name]) %></td>
       <td><%= row[:miles] %></td>
       <td><%= row[:mpg] %></td>
-      <td><%= row[:duration] %></td>
-      <td><%= row[:idle_time] %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
       <td><%= row[:speed] %></td>
       <td><%= row[:geofence] %></td>
       <td><%= row[:idle_time] %></td>

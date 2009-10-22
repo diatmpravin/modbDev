@@ -10,6 +10,11 @@ module ReportsHelper
     end
   end
 
+  def duration_format(seconds)
+    minutes = seconds.to_i / 60
+    "%02d:%02d" % [minutes / 60, minutes % 60]
+  end
+
   def report_type_options
     @@report_type_options ||= [
       ['Vehicle Summary Report', 0],

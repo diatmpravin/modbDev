@@ -17,9 +17,9 @@
     </tr>
   </thead>
   <tbody>
-  <% report.data.each do |row| -%>
+  <% report.data.each_with_index do |row,i| -%>
     <% next if row[:miles] == 0 %>
-    <tr>
+    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
       <td><%= row[:date] %></td>
       <td><%= row[:miles] %></td>
       <td><%= row[:mpg] %></td>

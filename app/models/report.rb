@@ -116,11 +116,5 @@ class Report
     def account
       @report.account
     end
-
-    protected
-    def duration_format(seconds)
-      minutes = seconds.to_i / 60
-      "%02d:%02d" % [minutes / 60, minutes % 60]
-    end
   end
 end

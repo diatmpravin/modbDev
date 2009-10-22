@@ -1097,18 +1097,29 @@ td.extra {
 }
 .reportResult th {
   border:solid 1px black;
-  background-color:#cccccc;
+  background-color: #DDD;
   font-weight:bold;
   text-align:center;
   padding:2px;
 }
 
+.reportResult tr {
+  border-left: 1px solid #888;
+  border-right: 1px solid #888;
+}
+
+.reportResult tr.odd {
+  background-color: #DDD;
+}
+
 .reportResult td {
-  border:solid 1px black;
+  color: black;
+  border: solid 1px #888;
   padding:2px;
-  text-align:right;
+  text-align:center;
   line-height: 175%;
 }
+
 .reportSettings {
   border:solid 1px #9a9a9a;
   padding:8px;
