@@ -20,7 +20,7 @@ describe "Report", ActiveSupport::TestCase do
       
       report.data[0][:name].should.equal 'Quentin\'s Device'
       report.data[0][:miles].should.equal 6
-      report.data[0][:duration].should.equal '00:15'
+      report.data[0][:duration].should.equal 900.0
     end
     
     specify "errors on missing dates" do
@@ -66,11 +66,11 @@ describe "Report", ActiveSupport::TestCase do
       
       report.data[0][:date].should.equal Date.parse('02/01/2009')
       report.data[0][:miles].should.equal 0
-      report.data[0][:duration].should.equal '00:00'
+      report.data[0][:duration].should.equal 0
       
       report.data[4][:date].should.equal Date.parse('02/05/2009')
       report.data[4][:miles].should.equal 6
-      report.data[4][:duration].should.equal '00:15'
+      report.data[4][:duration].should.equal 900
     end
     
     specify "errors on missing dates" do

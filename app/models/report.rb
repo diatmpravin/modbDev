@@ -1,3 +1,5 @@
+require 'set'
+
 class Report
   autoload :DailySummaryReport, 'report/daily_summary_report'
   autoload :VehicleSummaryReport, 'report/vehicle_summary_report'
@@ -94,7 +96,7 @@ class Report
     end
 
     def errors
-      @errors ||= []
+      @errors ||= Set.new
     end
 
     def data

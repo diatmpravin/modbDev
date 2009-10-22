@@ -72,8 +72,6 @@ class Report
     end
 
     def valid?
-      errors.clear
-
       if(devices.blank?)
         self.errors << 'You must choose one or more vehicles to run this report' 
       end
