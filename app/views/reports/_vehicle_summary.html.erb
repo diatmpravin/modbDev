@@ -45,15 +45,15 @@
     </tr>
     <tr class="total">
       <td>Average</td>
-      <td><%= report.data.average(:miles) %></td>
+      <td><%= mpg_format(report.data.average(:miles)) %></td>
       <td><%= mpg_format(report.data.average(:mpg)) %></td>
       <td><%= duration_format(report.data.average(:duration)) %></td>
       <td><%= duration_format(report.data.average(:idle_time)) %></td>
-      <td><%= report.data.average(:event_speed) %></td>
-      <td><%= report.data.average(:event_geofence) %></td>
-      <td><%= report.data.average(:event_idle) %></td>
-      <td><%= report.data.average(:event_aggressive) %></td>
-      <td><%= report.data.average(:event_after_hours) %></td>
+      <td><%= mpg_format(report.data.average(:event_speed)) %></td>
+      <td><%= mpg_format(report.data.average(:event_geofence)) %></td>
+      <td><%= mpg_format(report.data.average(:event_idle)) %></td>
+      <td><%= mpg_format(report.data.average(:event_aggressive)) %></td>
+      <td><%= mpg_format(report.data.average(:event_after_hours)) %></td>
     </tr>
   </tbody>
 </table>
