@@ -35,6 +35,8 @@ class Report
       VehicleSummaryReport.new(self)
     when 1
       DailySummaryReport.new(self)
+    when 2
+      FuelEconomyReport.new(self)
     end
   end
   

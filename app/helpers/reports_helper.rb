@@ -5,6 +5,8 @@ module ReportsHelper
         'vehicle_summary'
       when 1
         'daily_summary'
+      when 2
+        'fuel_economy'
       else
         nil
     end
@@ -13,7 +15,8 @@ module ReportsHelper
   def report_type_options
     @@report_type_options ||= [
       ['Vehicle Summary Report', 0],
-      ['Daily Summary Report', 1]
+      ['Daily Summary Report', 1],
+      ['Fuel Economy Report', 2]
     ].freeze
   end
 
