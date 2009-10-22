@@ -7,6 +7,7 @@ class Report
       report = Ruport::Data::Table(
         :date,
         :miles,
+        :mpg,
         :duration,
         :idle_time,
         :speed,
@@ -22,6 +23,9 @@ class Report
       ]
       
       miles = device.trips.sum(:miles, :group => 'DATE(start)',
+        :conditions => date_conditions)
+
+      mpg = device.trips.average(:average_mpg, :group => 'DATE(start)',
         :conditions => date_conditions)
       
       duration = device.trips.sum('TIME_TO_SEC(TIMEDIFF(finish, start))', :group => 'DATE(start)',
@@ -46,6 +50,7 @@ class Report
         report << {
           :date => date,
           :miles => miles[index] || 0,
+          :mpg => "%.1f" % (mpg[index] || 0),
           :duration => duration_format(duration[index] || 0),
           :idle_time => duration_format(idle_time[index] || 0),
           :speed => events[[index, Event::SPEED]] || 0,

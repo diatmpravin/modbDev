@@ -2,6 +2,7 @@
   <tr>
     <th>Vehicle</th>
     <th>Miles Driven</th>
+    <th>Avg MPG</th>
     <th>Operating Time (hh:mm)</th>
     <th>Idle Time (hh:mm)</th>
     <th>Speed</th>
@@ -14,6 +15,7 @@
     <tr>
       <td><%= h(row[:name]) %></td>
       <td><%= row[:miles] %></td>
+      <td><%= row[:mpg] %></td>
       <td><%= row[:duration] %></td>
       <td><%= row[:idle_time] %></td>
       <td><%= row[:speed] %></td>
