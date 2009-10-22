@@ -22,7 +22,11 @@ class ReportsController < ApplicationController
 
     respond_to do |with|
       with.html do
-        render :action => (@report.valid? ? 'report' : 'error'), :layout => 'report_blank'
+        if(@report.valid?)
+          render :action => 'report', :layout => 'report_blank'
+        else
+          render :action => 'error', :layout => false
+        end
       end
 
       with.csv do
