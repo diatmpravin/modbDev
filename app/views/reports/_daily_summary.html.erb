@@ -34,15 +34,15 @@
   <% end -%>
     <tr class="total">
       <td>Total</td>
-      <td><%= report.data.sigma(:miles) %></td>
-      <td><%= mpg_format(report.data.sigma(:mpg)) %></td>
-      <td><%= duration_format(report.data.sigma(:duration)) %></td>
-      <td><%= duration_format(report.data.sigma(:idle_time)) %></td>
-      <td><%= report.data.sigma(:speed) %></td>
-      <td><%= report.data.sigma(:geofence) %></td>
-      <td><%= report.data.sigma(:idle_time) %></td>
-      <td><%= report.data.sigma(:aggressive) %></td>
-      <td><%= report.data.sigma(:after_hours) %></td>
+      <td><%= report.data.sum(:miles) %></td>
+      <td><%= mpg_format(report.data.sum(:mpg)) %></td>
+      <td><%= duration_format(report.data.sum(:duration)) %></td>
+      <td><%= duration_format(report.data.sum(:idle_time)) %></td>
+      <td><%= report.data.sum(:speed) %></td>
+      <td><%= report.data.sum(:geofence) %></td>
+      <td><%= report.data.sum(:idle_time) %></td>
+      <td><%= report.data.sum(:aggressive) %></td>
+      <td><%= report.data.sum(:after_hours) %></td>
     </tr>
   </tbody>
 </table>
