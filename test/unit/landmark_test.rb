@@ -36,6 +36,38 @@ describe "Landmark", ActiveSupport::TestCase do
       @landmark.name = '123456789012345678901234567890'
       @landmark.should.be.valid
     end
+    
+    specify "latitude must be present" do
+      @landmark.latitude = nil
+      @landmark.should.not.be.valid
+      
+      @landmark.latitude = 42.0
+      @landmark.should.be.valid
+    end
+    
+    specify "latitude must be numeric" do
+      @landmark.latitude = 'abc123'
+      @landmark.should.not.be.valid
+      
+      @landmark.latitude = '-4.2'
+      @landmark.should.be.valid
+    end
+    
+    specify "longitude must be present" do
+      @landmark.longitude = nil
+      @landmark.should.not.be.valid
+      
+      @landmark.longitude = -86.0
+      @landmark.should.be.valid
+    end
+    
+    specify "longitude must be numeric" do
+      @landmark.longitude = 'abc123'
+      @landmark.should.not.be.valid
+      
+      @landmark.longitude = '-8.6'
+      @landmark.should.be.valid
+    end
   end
   
   specify "protects appropriate attributes" do
