@@ -1,0 +1,57 @@
+=== Javascript fix for jQuery & mqutils.js =====================================
+
+Including the MapQuest utility script "mqutils.js" breaks several jQuery UI
+components, the biggest problem being Dialog (user is unable to click anything
+inside the dialog in IE7, and the title bar close button disappears).
+
+This problem is the result of this function within mqutils.js, which only runs
+for Internet Explorer:
+
+----------
+function alphaBackgrounds(){
+   if(navigator.platform == "Win32" && navigator.appName == "Microsoft Internet Explorer" && window.attachEvent) {
+      var rslt = navigator.appVersion.match(/MSIE (\d+\.\d+)/, '');
+      var itsAllGood = (rslt != null && Number(rslt[1]) >= 5.5);
+      for (i=0; i<document.all.length; i++){
+         var bg = document.all[i].currentStyle.backgroundImage;
+         if (itsAllGood && bg){
+            if (bg.match(/\.png/i) != null){
+               if (document.all[i].style.backgroundImage) {
+               var mypng = bg.substring(5,bg.length-2);
+               document.all[i].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+mypng+"', sizingMethod='scale')";
+               document.all[i].style.backgroundImage = "url(/images/background-form-button.gif)";
+               }
+            }
+         }
+      }
+   }
+}
+----------
+
+This global alpha hack breaks jQuery UI, so I have replaced it with a similar
+function that ignores elements that receive their background images from
+classes. All MapQuest components have hard-coded styles, so this change seems
+to keep the intended MapQuest functionality without breaking jQuery.
+
+Here's the new function for reference:
+
+----------
+function alphaBackgrounds() {
+  if (navigator.platform == "Win32" && navigator.appName == "Microsoft Internet Explorer" && window.attachEvent) {
+    var rslt = navigator.appVersion.match(/MSIE (\d+\.\d+)/, '');
+    var itsAllGood = (rslt != null && Number(rslt[1]) >= 5.5);
+    if (itsAllGood) {
+      for (i=0; i<document.all.length; i++) {
+        var bg = document.all[i].currentStyle.backgroundImage;
+        if (bg && 
+            bg.match(/\.png/i) != null &&
+            document.all[i].style.backgroundImage) {
+          var mypng = bg.substring(5, bg.length-2);
+          document.all[i].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + mypng + "', sizingMethod='scale')";
+          document.all[i].style.backgroundImage = "url(/images/background-form-button.gif)";
+        }
+      }
+    }
+  }
+}
+----------
