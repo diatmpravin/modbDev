@@ -39,11 +39,18 @@ class Report
         
         # Hashify
         events = Hash[*events.inject([]) {|arr, elem| arr.concat(elem)}]
+
+        # Make sure not to divide mpg by 0
+        if(trips.size == 0)
+          mpg = 0
+        else
+          mpg = trips.map {|t| t.average_mpg}.sum / trips.size.to_f
+        end
         
         report << {
           :name => device.name,
           :miles => trips.map {|t| t.miles}.sum,
-          :mpg => trips.map {|t| t.average_mpg}.sum / trips.size.to_f,
+          :mpg => mpg,
           :duration => trips.map {|t| t.duration}.sum,
           :idle_time => trips.map {|t| t.idle_time}.sum,
           :speed => events[Event::SPEED] || 0,
