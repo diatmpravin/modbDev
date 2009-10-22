@@ -1,17 +1,5 @@
 class Report
   class VehicleSummaryReport < Generator
-    # COLUMNS = {
-    #   :name        => 'Vehicle',
-    #   :miles       => 'Miles Driven',
-    #   :duration    => 'Operating Time',
-    #   :idle_time   => 'Idle Time',
-    #   :speed       => 'Speed',
-    #   :geofence    => 'Geofence',
-    #   :idle_alert  => 'Idle',
-    #   :aggressive  => 'Aggressive',
-    #   :after_hours => 'After Hours'
-    # }
-
     def run
       return nil unless valid?
 
@@ -21,11 +9,11 @@ class Report
         :mpg,
         :duration,
         :idle_time,
-        :speed,
-        :geofence,
-        :idle_time,
-        :aggressive,
-        :after_hours
+        :event_speed,
+        :event_geofence,
+        :event_idle,
+        :event_aggressive,
+        :event_after_hours
       )
 
       devices.each do |device|
@@ -53,18 +41,18 @@ class Report
           :mpg => mpg,
           :duration => trips.map {|t| t.duration}.sum,
           :idle_time => trips.map {|t| t.idle_time}.sum,
-          :speed => events[Event::SPEED] || 0,
-          :geofence => [
+          :event_speed => events[Event::SPEED] || 0,
+          :event_geofence => [
             events[Event::ENTER_BOUNDARY] || 0,
             events[Event::EXIT_BOUNDARY] || 0
           ].sum,
-          :idle_time => events[Event::IDLE] || 0,
-          :aggressive => [
+          :event_idle => events[Event::IDLE] || 0,
+          :event_aggressive => [
             events[Event::RPM] || 0,
             events[Event::RAPID_ACCEL] || 0,
             events[Event::RAPID_DECEL] || 0
           ].sum,
-          :after_hours => events[Event::AFTER_HOURS] || 0
+          :event_after_hours => events[Event::AFTER_HOURS] || 0
         }
       end
       

@@ -10,11 +10,11 @@ class Report
         :mpg,
         :duration,
         :idle_time,
-        :speed,
-        :geofence,
-        :idle_time,
-        :aggressive,
-        :after_hours
+        :event_speed,
+        :event_geofence,
+        :event_idle,
+        :event_aggressive,
+        :event_after_hours
       )
       
       # Get info for each day, relying on database calc wherever possible
@@ -53,18 +53,18 @@ class Report
           :mpg => mpg[index] || 0,
           :duration => (duration[index] || 0).to_i,
           :idle_time => (idle_time[index] || 0).to_i,
-          :speed => events[[index, Event::SPEED]] || 0,
-          :geofence => [
+          :event_speed => events[[index, Event::SPEED]] || 0,
+          :event_geofence => [
             events[[index, Event::ENTER_BOUNDARY]] || 0,
             events[[index, Event::EXIT_BOUNDARY]] || 0
           ].sum,
-          :idle_time => events[[index, Event::IDLE]] || 0,
-          :aggressive => [
+          :event_idle => events[[index, Event::IDLE]] || 0,
+          :event_aggressive => [
             events[[index, Event::RPM]] || 0,
             events[[index, Event::RAPID_ACCEL]] || 0,
             events[[index, Event::RAPID_DECEL]] || 0
           ].sum,
-          :after_hours => events[[index, Event::AFTER_HOURS]] || 0
+          :event_after_hours => events[[index, Event::AFTER_HOURS]] || 0
         }
       end
       
