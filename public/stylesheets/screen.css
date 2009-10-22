@@ -1127,15 +1127,11 @@ td.extra {
 }
 
 .reportResult tr.total {
-  border:solid 1px black;
-  background-color: #1A1A1A;
+  border:solid 1px #BBB;
+  background-color: #BBB;
   font-weight:bold;
   text-align:center;
   padding:2px;
-}
-
-.reportResult tr.total td {
-  color: white;
 }
 
 .reportSettings {
