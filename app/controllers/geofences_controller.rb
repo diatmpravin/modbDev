@@ -32,13 +32,20 @@ class GeofencesController < ApplicationController
     if @geofence.update_attributes(params[:geofence])
       respond_to do |format|
         format.json {
-          render :json => {:status => 'success'}
+          render :json => {
+            :status => 'success',
+            :view => render_to_string(:action => 'show'),
+            :edit => render_to_string(:action => 'edit')
+          }
         }
       end
     else
       respond_to do |format|
         format.json {
-          render :json => {:status => 'failure'}
+          render :json => {
+            :status => 'failure',
+            :html => render_to_string(:action => 'new')
+          }
         }
       end
     end
@@ -55,7 +62,11 @@ class GeofencesController < ApplicationController
     params[:geofence][:alert_recipient_ids] ||= []
     
     if @geofence.update_attributes(params[:geofence])
-      render :json => {:status => 'success'}
+      render :json => {
+        :status => 'success',
+        :view => render_to_string(:action => 'show'),
+        :edit => render_to_string(:action => 'edit')
+      }
     else
       render :json => {
         :status => 'failure',

@@ -74,6 +74,8 @@ describe "Geofences Controller", ActionController::TestCase do
       end
       
       json['status'].should.equal 'success'
+      json['view'].should =~ /<h2>Test<\/h2>/
+      json['edit'].should =~ /value="Test"/
       
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
@@ -84,15 +86,21 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "handles errors gracefully" do
-      Geofence.any_instance.expects(:save).returns(false)
       post :create, {
         :geofence => {
-          :type => 0
+          :type => 0,
+          :radius => 15,
+          :coordinates => [
+            {:latitude => 50, :longitude => 50},
+            {:latitude => 100, :longitude => 100},
+            {:latitude => 0, :longitude => 0}
+          ]
         },
         :format => 'json'
       }
       
       json['status'].should.equal 'failure'
+      json['html'].should =~ /can't be blank/
     end
   end
   
@@ -121,6 +129,9 @@ describe "Geofences Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'success'
+      json['view'].should =~ /<h2>test 2<\/h2>/
+      json['edit'].should =~ /value="test 2"/
+      
       @geofence.reload.name.should.equal 'test 2'
     end
     
@@ -133,6 +144,7 @@ describe "Geofences Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'failure'
+      json['html'].should =~ /can't be blank/
     end
   end
   

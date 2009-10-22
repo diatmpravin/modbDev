@@ -2,8 +2,6 @@
  * Geofences
  *
  * Constants and functions used on the Geofence Settings page.
- *
- * Remember: jQuery = q() or $q()!
  */
 Geofences = {
   ELLIPSE: 0,
@@ -18,14 +16,17 @@ Geofences = {
     
     q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
     
-    q('input.addGeofence').live('click', Geofences.newGeofence);
+    q('#addGeofence').live('click', Geofences.newGeofence);
     q('div.geofence[id=new] input.save').live('click', Geofences.create);
     q('div.geofence[id=new] input.cancel').live('click', Geofences.cancelNew);
     
     q('div.geofence input.edit').live('click', Geofences.edit);
     q('div.geofence[id!=new] input.save').live('click', Geofences.save);
     q('div.geofence[id!=new] input.cancel').live('click', Geofences.cancel);
-    q('div.geofence input.delete').live('click', Geofences.destroy);
+    
+    q('div.geofence input.delete').live('click', function() {
+      q('#removeGeofence').dialog('open').data('geofence', q(this).closest('div.geofence'));
+    });
     
     q('div.geofence .shapeChooser a').live('click', Geofences.changeShape);
     
@@ -36,20 +37,38 @@ Geofences = {
       q('div.view .buttons').hide();
     });
     
+    q("#removeGeofence").dialog({
+      title: 'Remove Geofence',
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 450,
+      buttons: {
+        'Yes, delete this geofence': Geofences.destroy,
+        'No, do not delete': function() { q(this).dialog('close'); }
+      }
+    });
+    
     q(window).resize(Geofences.resize);
     Geofences.resize();
     
     Geofences.buildGeofences();
   }
   ,
+  /**
+   * Show the new geofence form and an associated geofence on the map.
+   */
   newGeofence: function() {
-    q('#new').show('normal').siblings('.geofence').hide('normal');
+    q('#new').show('fast').siblings('.geofence').hide('fast');
     q('#new').find('a.ellipse').addClass('selected');
     
-    q('a.new').hide('normal');
+    q('#addGeofence').hide('fast');
     Geofences.enterFenceMode(null, q('#new'));
   }
   ,
+  /**
+   * Submit a new geofence.
+   */
   create: function() {
     var _new = q('#new');
     
@@ -59,8 +78,29 @@ Geofences = {
       beforeSubmit: function() { _new.find('.loading').show(); },
       success: function(json) {
         if (json.status == 'success') {
-          _new.hide('normal');
-          location.reload();
+          q('#addGeofence').show('fast');
+          
+          _new.hide('fast', function() {
+            q.get('/geofences/new', function(html) {
+              _new.html(html);
+              AlertRecipients.prepare(_new);
+            });
+          }).siblings('.geofence').show('fast');
+          Geofences.exitFenceMode();
+          
+          var _div = q('<div class="geofence" style="display:none"><div class="view">'
+            + json.view
+            + '</div><div class="edit">'
+            + json.edit
+            + '</div></div>').insertAfter('#new').show('fast');
+          AlertRecipients.prepare(_div);
+          
+          var fence = {};
+          Geofences.loadGeofence(_div, fence);
+          if (fence.shape) {
+            Geofences.fences[Geofences.fences.length] = fence;
+            _div.data('fence', fence);
+          }
         } else {
           _new.html(json.html);
         }
@@ -68,89 +108,126 @@ Geofences = {
     });
   }
   ,
+  /**
+   * Hide the new geofence form and associated geofence on the map.
+   */
   cancelNew: function() {
     var _new = q('#new');
+    q('#addGeofence').show('fast');
     
-    _new.hide('normal', function() {
+    _new.hide('fast', function() {
       q.get('/geofences/new', function(html) {
         _new.html(html);
         AlertRecipients.prepare(_new);
       });
-    }).siblings('.geofence').show('normal');
-    q('a.new').show('normal');
+    }).siblings('.geofence').show('fast');
+    
     Geofences.exitFenceMode();
   }
   ,
+  /**
+   * Show the user the edit form for an existing geofence.
+   */
   edit: function() {
-    var _this = q(this);
-    var _view = _this.parents('div.view');
-    var _edit = _view.siblings('div.edit');
+    var _geofence = q(this).closest('div.geofence');
+    q('#addGeofence').hide('fast');
     
-    q('a.new').hide('normal');
-    _view.hide('normal').closest('.geofence').siblings('.geofence').hide('normal');
-    _edit.show('normal');
-    Geofences.enterFenceMode(
-      _this.closest('.geofence').data('fence'),
-      _this.closest('.geofence')
-    );
+    _geofence.siblings('div.geofence').hide('fast').end()
+             .find('div.edit').show('fast').end()
+             .find('div.view').hide('fast');
+    
+    Geofences.enterFenceMode(_geofence.data('fence'), _geofence);
   }
   ,
+  /**
+   * Submit changes to an existing geofence.
+   */
   save: function() {
-    var _this = q(this);
-    var _edit = _this.closest('div.edit');
-    var _view = _edit.siblings('div.view');
+    var _edit = q(this).closest('div.edit'),
+        _geofence = _edit.closest('div.geofence');
     
-    Geofences.storeGeofence(Geofences.fence, _this.closest('.geofence'));
+    Geofences.storeGeofence(Geofences.fence, _geofence);
     _edit.find('form').ajaxSubmit({
       dataType: 'json',
       beforeSubmit: function() { _edit.find('.loading').show(); },
       success: function(json) {
         if (json.status == 'success') {
-          Geofences.updateView(_view, function() {
-            q('a.new').show('normal');
-            _view.show('normal').closest('.geofence').siblings('.geofence:not(#new)').show('normal');
-            _edit.hide('normal', function() {
-              Geofences.updateEditForm(_edit);
-            });
+          q('#addGeofence').show('fast');
+          _geofence.siblings('div.geofence[id!=new]').show('fast').end()
+                   .find('div.view').html(json.view).show('fast');
+          
+          _edit.hide('fast', function() {
+            _edit.html(json.edit);
+            AlertRecipients.prepare(_geofence);
           });
         } else {
           _edit.html(json.html);
         }
       }
     });
+    
     Geofences.exitFenceMode();
   }
   ,
+   /**
+   * Hide the edit form for an existing landmark.
+   */
   cancel: function() {
-    var _this = q(this);
-    var _edit = _this.closest('div.edit');
-    var _view = _edit.siblings('div.view');
+    var _edit = q(this).closest('div.edit');
+    var _landmark = _edit.closest('div.landmark');
     
-    q('a.new').show();
-    _view.show('normal').closest('.geofence').siblings('.geofence:not(#new)').show('normal');
-    _edit.hide('normal', function() {
-      Geofences.updateEditForm(_edit);
-    });
-    Geofences.loadGeofence(_this.closest('.geofence'), Geofences.fence);
+    q('#addLandmark').show('fast');
+    _landmark.siblings('div.landmark[id!=new]').show('fast').end()
+             .find('div.view').show('fast').end()
+             .find('div.edit').hide('fast', function() {
+                q.get(_edit.find('form').attr('action') + '/edit', function(html) {
+                  _edit.html(html);
+                  Landmarks.createMapLandmark(_landmark).setValue('draggable', false);
+                });
+              });
+    Landmarks.highlightMapLandmark();
+  }
+  ,
+  /**
+   * Hide the edit form for an existing geofence.
+   */
+  cancel: function() {
+    var _edit = q(this).closest('div.edit'),
+        _geofence = _edit.closest('div.geofence');
+    
+    q('#addGeofence').show();
+    _geofence.siblings('div.geofence[id!=new]').show('fast').end()
+             .find('div.view').show('fast').end()
+             .find('div.edit').hide('fast', function() {
+               q.get(_edit.find('form').attr('action') + '/edit', function(html) {
+                 _edit.html(html);
+                 AlertRecipients.prepare(_geofence);
+               });
+             });
+    
+    Geofences.loadGeofence(_geofence, Geofences.fence);
     Geofences.exitFenceMode();
   }
   ,
+  /**
+   * Delete an existing geofence and associated geofence on the map.
+   */
   destroy: function() {
-    var _view = q(this).closest('div.view');
-    var _edit = _view.siblings('div.edit');
+    var _dialog = q(this);
+    var _geofence = q(this).data('geofence');
     
-    _edit.find('form').ajaxSubmit({
+    _geofence.find('div.edit form').ajaxSubmit({
       dataType: 'json',
-      type: 'delete',
-      beforeSubmit: function() { _view.find('.loading').show(); },
+      type: 'DELETE',
+      beforeSubmit: function() { _dialog.dialogLoader().show(); },
+      complete: function() { _dialog.dialog('close').dialogLoader().hide(); },
       success: function(json) {
         if (json.status == 'success') {
-          var _geofence = _view.closest('div.geofence');
           if (_geofence.data('fence')) {
             MoshiMap.moshiMap.geofenceCollection.removeItem(_geofence.data('fence').shape);
           }
           
-          _geofence.hide('normal', function() {
+          _geofence.hide('fast', function() {
             _geofence.remove();
           });
         } else {
@@ -160,26 +237,14 @@ Geofences = {
     });
   }
   ,
-  updateView: function(viewElem, callback) {
-    q.get(viewElem.siblings('div.edit').find('form').attr('action'), function(html) {
-      viewElem.html(html);
-      if (typeof callback != 'undefined') {
-        callback();
-      }
-    });
-  }
-  ,
-  updateEditForm: function(editElem) {
-    q.get(editElem.find('form').attr('action') + '/edit', function(html) {
-      editElem.html(html);
-      AlertRecipients.prepare(editElem);
-    });
-  }
-  ,
   corners: function(elem) {
     q('#sidebar').corners('transparent');
   }
   ,
+  /**
+   * TODO: This code is on at least three pages almost verbatim, massage it into a
+   * generic function and stick it in a file by itself.
+   */  
   resize: function() {
     var _mapContainer = q('#mapContainer');
     var mapHeight = Math.max(350,
@@ -353,11 +418,19 @@ Geofences = {
     Geofences.createFenceHandles();
   }
   ,
+  /**
+   * Start dragging a geofence corner.
+   */
   dragCornerStart: function(mqEvent) {
     Geofences.corner = this;
     q('#mapContainer').bind('mousemove.geofence', Geofences.dragCorner);
   }
   ,
+  /**
+   * Handle corner while it is being dragged.
+   * NOTE: Currently only keeps track of how close it is to other corners.
+   * It would be cool if this function updated the actual geofence shape.
+   */
   dragCorner: function(event) {
     var clientX = event.clientX - q('#mapContainer').position().left - q('#mqtiledmap').position().left;
     var clientY = event.clientY - q('#mapContainer').position().top - q('#mqtiledmap').position().top;
@@ -376,6 +449,9 @@ Geofences = {
     }
   }
   ,
+  /**
+   * Cleanup after a corner has been dragged.
+   */
   dragCornerEnd: function(event) {
     var mqPoi = Geofences.corner;
     q('#mapContainer').unbind('mousemove.geofence');

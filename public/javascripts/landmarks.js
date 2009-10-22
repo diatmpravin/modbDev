@@ -36,7 +36,7 @@ Landmarks = {
     q('div.landmark input').live('keypress', Landmarks.coordinateEntry);
     
     q("#removeLandmark").dialog({
-      title: 'Delete Landmark',
+      title: 'Remove Landmark',
       modal: true,
       autoOpen: false,
       resizable: false,

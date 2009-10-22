@@ -4,7 +4,7 @@
       
       <div class="geofences">
         <div class="buttons">
-          <%= button_tag 'Add Geofence', :class => 'addGeofence' %>
+          <%= button_tag 'Add Geofence', {:id => 'addGeofence'} %>
         </div>
         <div class="clear spacer"></div>
         
@@ -30,6 +30,12 @@
 
 <div id="newAlertRecipient" class="dialog">
   <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
+</div>
+
+<div id="removeGeofence" class="dialog">
+  <p>If you remove this geofence, it will no longer display on any
+  maps or trigger any alerts. This action cannot be undone.</p>
+  <p>Are you sure you want to remove this geofence?</p>
 </div>
 
 <div>
