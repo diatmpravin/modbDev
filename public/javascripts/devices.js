@@ -7,7 +7,7 @@
  */
 Devices = {
   init: function() {
-    q('a.addVehicle').live('click', Devices.newDevice);
+    q('input.addVehicle').live('click', Devices.newDevice);
     
     q('.device .view').live('mouseover', function() {
       q(this).find('.buttons').show();
@@ -15,13 +15,13 @@ Devices = {
       q(this).find('.buttons').hide();
     });
     
-    q('div.device a.editSettings').live('click', Devices.edit);
-    q('div.device a.delete').live('click', function() { 
+    q('div.device input.edit').live('click', Devices.edit);
+    q('div.device input.delete').live('click', function() { 
       q("#removeDevice").dialog("open").data('device', q(this)); 
       return false;
     });
-    q('div.device[id!=new] a.save').live('click', Devices.save);
-    q('div.device[id!=new] a.cancel').live('click', Devices.cancel);
+    q('div.device[id!=new] input.save').live('click', Devices.save);
+    q('div.device[id!=new] input.cancel').live('click', Devices.cancel);
 
     q("#removeDevice").dialog({
       title: 'Remove Vehicle',
@@ -45,7 +45,7 @@ Devices = {
         'Add this Vehicle': Devices.create,
         'Cancel': function() { q(this).dialog('close'); }
       }
-    }).siblings('.ui-dialog-buttonpane').prepend('<div class="loading"></div>');
+    });
     
     q('td input[type=checkbox]').live("click", function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
@@ -68,8 +68,7 @@ Devices = {
   }
   ,
   create: function() {
-    var _this = q(this),
-    _loading = _this.siblings('.ui-dialog-buttonpane').find('.loading');
+    var _this = q(this);
 
     if(_this.data("running")) {
       return false; 
@@ -79,8 +78,8 @@ Devices = {
     
     _this.find('form').ajaxSubmit({
       dataType: 'json',
-      beforeSubmit: function() { _loading.show(); },
-      complete: function() { _loading.hide(); },
+      beforeSubmit: function() { _this.dialogLoader().show(); },
+      complete: function() { _this.dialogLoader().hide(); },
       success: function(json) {
         if (json.status == 'success') {
           location.reload();
