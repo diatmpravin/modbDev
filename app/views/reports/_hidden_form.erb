@@ -1,5 +1,5 @@
-<%= f.hidden_field :type %>
-<% fields_for :range, report.range do |f_r| -%>
+<%= form.hidden_field :type %>
+<% form.fields_for :range, report.range do |f_r| -%>
   <%= f_r.hidden_field :type %>
   <%= f_r.hidden_field :start %>
   <%= f_r.hidden_field :end %>

@@ -20,7 +20,15 @@ class ReportsController < ApplicationController
     @report = Report.new(current_account, params[:report])
     @report.run
 
-    render :action => (@report.valid? ? 'report' : 'error'), :layout => 'report_blank'
+    respond_to do |with|
+      with.html do
+        render :action => (@report.valid? ? 'report' : 'error'), :layout => 'report_blank'
+      end
+
+      with.csv do
+        render :text => @report.data.to_csv, :layout => false
+      end
+    end
   end
   
 end

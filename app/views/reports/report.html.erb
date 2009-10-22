@@ -1,1 +1,13 @@
-<%= render :partial => report_partial(@report), :locals => {:report => @report} %>
+<div class="reportResult">
+  <h2><%= @report.title %></h2>
+
+  <div>
+    <% form_for :report, :html => { :target => '_blank' } do |f| %>
+      <%= render :partial => 'hidden_form', :locals => { :report => @report, :form => f } %>
+      <%= hidden_field_tag(:format, 'csv') %>
+
+      <%= submit_tag 'Export to CSV' %>
+    <% end -%>
+  </div>
+  <%= render :partial => report_partial(@report), :locals => {:report => @report} %>
+</div>
