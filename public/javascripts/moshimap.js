@@ -120,6 +120,7 @@ MoshiProxy = {
     // Update the Rollover/Info Window to our custom specifications
     this.map.getInfoWindow().setMaxWidth(200);
     this.map.getInfoWindow().setMinWidth(200);
+    this.map.getRolloverWindow().setTextLength(30);
     
     // Initialize any map controls
     this.map.addControl(new Moshi.ZoomControl(),

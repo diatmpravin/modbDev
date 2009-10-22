@@ -211,7 +211,8 @@ Maps = {
           };
           
           if (!device.connected) {
-            options.title = 'As of ' + device.position.time_of_day;
+            options.title = device.name;
+            options.description = 'As of ' + device.position.time_of_day;
           }
           
           device.poi = MoshiMap.moshiMap.addPoint(device.position, options);
