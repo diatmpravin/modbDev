@@ -2,7 +2,7 @@
   <h2><%= @report.title %></h2>
 
   <div>
-    <% form_for :report, :html => { :target => '_blank' } do |f| %>
+    <% form_for :report, :html => { :target => '_blank', :class => 'multiSubmit' } do |f| %>
       <%= render :partial => 'hidden_form', :locals => { :report => @report, :form => f } %>
       <%= hidden_field_tag(:format, 'csv') %>
 

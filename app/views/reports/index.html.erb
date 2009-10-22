@@ -4,7 +4,7 @@
   <div class="reportForm">
     <h2>Report Settings</h2>
     
-    <% form_for :report, :html => {:method => :post, :target => '_blank'} do |f| -%>
+    <% form_for :report, :html => { :target => '_blank', :class => 'multiSubmit' } do |f| -%>
       <div class="col">
         <div class="field">
           <%= f.label :type %>
