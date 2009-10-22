@@ -30,16 +30,21 @@
 <div id="addDevice" class="dialog">
   <% form_for @device, { :autocomplete => 'off'} do |f| -%>
     <div class="field">
-      <%= label_tag 'Enter IMEI Number: ' %>
+      <%= label_tag :name, 'Name* ' %>
+      <%= text_field_tag :name, '' %>
+    </div>
+    
+    <div class="field">
+      <%= label_tag :imei, 'IMEI Number* ' %>
       <%= text_field_tag :imei, '' %>
     </div>
 
     <div class="field">
-      <%= label_tag 'Confirm IMEI Number: ' %>
+      <%= label_tag :imei_confirmation, 'Confirm IMEI Number* ' %>
       <%= text_field_tag :imei_confirmation, '' %>
     </div>
-
     <br/>
+    <p class="note">* Required Field</p>
 
     <p>The IMEI Number is located on the label on the Tracker.</p>
   <% end -%>

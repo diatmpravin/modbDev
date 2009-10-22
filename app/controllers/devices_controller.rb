@@ -41,7 +41,7 @@ class DevicesController < ApplicationController
   def create
     if params[:imei] == params[:imei_confirmation] && 
       (params[:imei].any? || params[:imei_confirmation].any?)
-      @device = current_account.devices.build
+      @device = current_account.devices.build(:name => params[:name])
       @device.user = current_user
       @device.tracker = Tracker.find_by_imei_number(params[:imei])
 

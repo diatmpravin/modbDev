@@ -20,6 +20,7 @@ class Device < ActiveRecord::Base
 
   validates_presence_of :tracker, :message => 'is not valid'
   validates_uniqueness_of :tracker_id, :message => 'is already in use'
+  validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}

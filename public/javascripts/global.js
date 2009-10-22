@@ -106,6 +106,7 @@ jQuery.fn.errors = function(o) {
  */
 jQuery.fn.clearRailsForm = function() {
   this.clearForm()
+      .errors()
       .find('.loading').hide().end()
       .find('.fieldWithErrors').each(function() {
         q(this).replaceWith(this.childNodes);

@@ -76,7 +76,10 @@ a.simple:hover {
 }
 .key { text-align: right; }
 .value { font-weight: bold; }
-
+.note {
+  font-style:italic;
+  font-size:86%;
+}
 
 /* standard formats */
 .field {

@@ -43,7 +43,7 @@ Devices = {
       width: 450,
       buttons: {
         'Add this Vehicle': Devices.create,
-        'Cancel': function() { q(this).dialog('close'); }
+        'Cancel': function() { q(this).dialog('close').clearRailsForm(); }
       }
     });
     
