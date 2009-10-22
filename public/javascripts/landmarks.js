@@ -12,7 +12,7 @@ Landmarks = {
     
     Landmarks.corners();
     
-    q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
+    q('#show_geofences').click(GeofencesView.updateVisibility).attr('checked', false);
     //q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
     
     q('#addLandmark').live('click', Landmarks.newLandmark);

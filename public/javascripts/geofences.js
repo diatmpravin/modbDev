@@ -14,7 +14,7 @@ Geofences = {
   init: function() {
     Geofences.corners();
     
-    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
+    q('#show_landmarks').click(LandmarksView.updateVisibility).attr('checked', false);
     
     q('#addGeofence').live('click', Geofences.newGeofence);
     q('div.geofence[id=new] input.save').live('click', Geofences.create);

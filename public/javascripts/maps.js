@@ -49,9 +49,9 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').change(GeofencesView.updateVisibility).attr('checked', false);
-    q('#show_landmarks').change(LandmarksView.updateVisibility).attr('checked', false);
-    q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
+    q('#show_geofences').click(GeofencesView.updateVisibility).attr('checked', false);
+    q('#show_landmarks').click(LandmarksView.updateVisibility).attr('checked', false);
+    q('#show_labels').click(Maps.toggleLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
     q('#historyScroller li').live('click', Maps.selectHistoryDate)
