@@ -49,6 +49,16 @@ Devices = {
     
     q('td input[type=checkbox]').live("click", function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
+
+      Devices.initTimepickr(q(this).parents("div.edit"));
+    });
+  }
+  ,
+  initTimepickr: function(edit) {
+    edit.find('td:visible input.timepick').timepickr({
+      convention: 12,
+      format12: '{h:02.d}:{m:02.d} {z:s}',
+      trigger: 'click'
     });
   }
   ,
@@ -105,11 +115,7 @@ Devices = {
     
     _view.hide('normal').closest('div.device').siblings().hide();
     _edit.show('normal', function() {
-      _edit.find('input.timepick').timepickr({
-        convention: 12,
-        format12: '{h:02.d}:{m:02.d} {z:s}',
-        trigger: 'click'
-      });
+      Devices.initTimepickr(_edit);
     });
     
     return false;

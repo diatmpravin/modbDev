@@ -188,9 +188,14 @@ class Device < ActiveRecord::Base
       end
       
       # Handle various other vehicle tests
-      if point.speed > speed_threshold
+
+      # Speed alert, if flagged and if a new point is > 5 mph from the previous speed alert point
+      if alert_on_speed? && point.speed > speed_threshold
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)
-        if alert_on_speed?
+        if !last_point ||
+          last_point.speed <= speed_threshold ||
+          (last_point.speed > speed_threshold && last_point.speed + 5 <= point.speed)
+
           alert_recipients.each do |r|
             r.alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)")
           end
@@ -234,20 +239,19 @@ class Device < ActiveRecord::Base
         #end
       end
 
-      if alert_on_after_hours? && point_is_after_hours?(point)
-        if point.running? ||
-           point.event == DeviceReport::Event::IGNITION_ON
+      if alert_on_after_hours? && point_is_after_hours?(point) && point.leg
+        point.events.create(:event_type => Event::AFTER_HOURS)
 
-          point.events.create(:event_type => Event::AFTER_HOURS)
+        # Get the point right before this one
+        # TODO Better handling of last_point above?
+        last = point.leg.points[-2]
 
-          # If the previous point is NOT an after_hours event, then we send
-          # our alert. Otherwise, we assume the alert has already been sent
-          if !last_point ||
-             !last_point.events.exists?(:event_type => Event::AFTER_HOURS)
-
-            alert_recipients.each do |r|
-              r.alert("#{self.name} is running after hours")
-            end
+        # If the previous point is NOT an after_hours event, then we send
+        # our alert. Otherwise, we assume the alert has already been sent
+        if !last ||
+           !last.events.exists?(:event_type => Event::AFTER_HOURS)
+          alert_recipients.each do |r|
+            r.alert("#{self.name} is running after hours")
           end
         end
       end
