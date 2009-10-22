@@ -1,16 +1,22 @@
 <table>
-  <tr>
-    <th>Vehicle</th>
-    <th>Miles Driven</th>
-    <th>Avg MPG</th>
-    <th>Operating Time (hh:mm)</th>
-    <th>Idle Time (hh:mm)</th>
-    <th>Speed</th>
-    <th>Geofence</th>
-    <th>Idle</th>
-    <th>Aggressive</th>
-    <th>After Hours</th>
-  </tr>
+  <thead>
+    <tr>
+      <th rowspan="2">Vehicle</th>
+      <th rowspan="2">Miles Driven</th>
+      <th rowspan="2">Avg Fuel Economy</th>
+      <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+      <th rowspan="2">Idle Time<br/>(hh:mm)</th>
+      <th colspan="5">Events</th>
+    </tr>
+    <tr>
+      <th>Speed</th>
+      <th>Geofence</th>
+      <th>Idle</th>
+      <th>Aggressive</th>
+      <th>After Hours</th>
+    </tr>
+  </thead>
+  <tbody>
   <% report.data.each do |row| -%>
     <tr>
       <td><%= h(row[:name]) %></td>
@@ -25,4 +31,5 @@
       <td><%= row[:after_hours] %></td>
     </tr>
   <% end -%>
+  </tbody>
 </table>

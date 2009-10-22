@@ -1085,6 +1085,11 @@ td.extra {
 .reportResult {
   margin:16px;
 }
+
+.reportResult table {
+  width: 100%;
+}
+
 .reportResult h2 {
   font-size:150%;
   margin:16px 0 0 0;
@@ -1094,12 +1099,15 @@ td.extra {
   border:solid 1px black;
   background-color:#cccccc;
   font-weight:bold;
-  text-align:left;
+  text-align:center;
   padding:2px;
 }
+
 .reportResult td {
   border:solid 1px black;
   padding:2px;
+  text-align:right;
+  line-height: 175%;
 }
 .reportSettings {
   border:solid 1px #9a9a9a;
