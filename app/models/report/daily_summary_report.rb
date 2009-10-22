@@ -51,7 +51,7 @@ class Report
           :date => date,
           :miles => miles[index] || 0,
           :mpg => "%.1f" % (mpg[index] || 0),
-          :duration => (duration[index] || 0).to_i
+          :duration => (duration[index] || 0).to_i,
           :idle_time => (idle_time[index] || 0).to_i,
           :speed => events[[index, Event::SPEED]] || 0,
           :geofence => [
