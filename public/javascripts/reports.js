@@ -16,7 +16,7 @@ Reports = {
       }
     });
 
-    q('#select_all').change(function(event) {
+    q('#select_all').live("click", function(event) {
       var checked = this.checked;
 
       q(this).parents("#device_select").find(":select").each(function() {
