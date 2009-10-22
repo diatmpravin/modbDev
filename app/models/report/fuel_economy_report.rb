@@ -14,19 +14,23 @@ class Report
         :mpg
       )
 
+      date_conditions =  ['DATE(start) BETWEEN ? AND ?', self.start.to_s(:db), self.end.to_s(:db)]
+
       mpg = device.trips.average(
         :average_mpg, 
         :group => 'DATE(start)',
-        :conditions => [
-          'DATE(start) BETWEEN ? AND ?', self.start.to_s(:db), self.end.to_s(:db)
-        ])
+        :conditions => date_conditions)
+
+      idle_time = device.trips.sum(:idle_time, :group => 'DATE(start)',
+        :conditions => date_conditions)
 
       Range.new(self.start, self.end).each do |date|
         index = date.to_s(:db)
 
         report << { 
           :date => date, 
-          :mpg => "%.1f" % (mpg[index] || 0)
+          :mpg => "%.1f" % (mpg[index] || 0),
+          :idle_time => (idle_time[index] || 0).to_i
         }
       end
 

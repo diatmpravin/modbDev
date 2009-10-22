@@ -8,7 +8,7 @@
 
 <script type="text/Javascript">
   q(document).ready(function() {
-    var chart = new FusionCharts("/fusion_charts/FCF_Line.swf", "chartId", "1000", "400");
+    var chart = new FusionCharts("/fusion_charts/FCF_MSColumn2DLineDY.swf", "chartId", "1000", "400");
     chart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data', :locals => {:report => report}) %>");
     chart.render("fuelEconomy");
   });
