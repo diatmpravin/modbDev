@@ -238,6 +238,15 @@ MoshiProxy = {
   MoshiMap.prototype.panToPoint = function(pointNumber) {
     this.map.panToLatLng(this.pointCollection.getAt(pointNumber).latLng);
   };
+
+  /**
+   * Close any popup window, info or rollover.
+   * Do this to prevent an IE 7 script error.
+   */
+  MoshiMap.prototype.closePopups = function() {
+    this.map.getInfoWindow().hide();
+    this.map.getRolloverWindow().hide();
+  };
   
   /**
    * Add an individual point to our list of displayed points.

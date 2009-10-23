@@ -146,6 +146,9 @@ Maps = {
     }
     
     var _this = q(this);
+
+    // IE 7 bug fix. Make sure any info windows are closed.
+    MoshiMap.moshiMap.closePopups();
     
     _this.addClass('selected').find('.additional,.buttons').show()
          .end().siblings('.trip')
