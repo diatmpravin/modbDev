@@ -38,7 +38,7 @@ class DataAggregator
       miles += trip.miles
     end
 
-    @average_mpg = BigDecimal.new("#{mpg / @trips.count.to_f}")
+    @average_mpg = BigDecimal.new("#{mpg / @trips.length.to_f}")
     @time = time
     @miles = miles
   end
