@@ -1,14 +1,13 @@
 class DataAggregator
 
   def initialize
-    @points = []
-
+    @trips = []
     @average_mpg = BigDecimal.new("0")
   end
 
-  def points=(points)
-    @points = points
-    preprocess_points unless @points.empty?
+  def trips=(trips)
+    @trips = trips
+    preprocess unless @trips.empty?
   end
 
   # Overall average MPG for this day's driving
@@ -28,14 +27,20 @@ class DataAggregator
 
   protected
   
-  def preprocess_points
-    @trip = Trip.new
-    @trip.points = @points
-    @trip.update_point_data(false)
+  def preprocess
+    time = 0
+    mpg = 0
+    miles = 0
 
-    @average_mpg = BigDecimal.new("#{@trip.average_mpg}")
-    @time = @trip.duration
-    @miles = @trip.miles
+    @trips.each do |trip|
+      time += trip.duration
+      mpg += trip.average_mpg
+      miles += trip.miles
+    end
+
+    @average_mpg = BigDecimal.new("#{mpg / @trips.count.to_f}")
+    @time = time
+    @miles = miles
   end
 
 end

@@ -649,17 +649,24 @@ describe "Device", ActiveSupport::TestCase do
 
   context "Aggregating for 'Today'" do
 
+    setup do
+      @device.points.clear
+      @device.trips.clear
+    end
+
     specify "can get a data aggregator for a given day, giving it the points that fit in the given day" do
-      @device.points.create(
+      t = @device.trips.create
+      l = t.legs.create
+      l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST").utc, :miles => 100)
-      @device.points.create(
+      l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
-        :occurred_at => Time.parse("01/01/2009 02:15:30 PM EST").utc, :miles => 200)
-      @device.points.create(
+        :occurred_at => Time.parse("01/01/2009 11:50:30 AM EST").utc, :miles => 200)
+      l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
-        :occurred_at => Time.parse("01/01/2009 03:30:30 PM EST").utc, :miles => 300)
-      @device.reload
+        :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST").utc, :miles => 300)
+      t.update_point_data
 
       data = @device.data_for(Date.parse("01/01/2009"))
       data.should.not.be.nil

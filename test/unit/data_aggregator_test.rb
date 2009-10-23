@@ -2,40 +2,98 @@ require 'test_helper'
 
 describe "DataAggregator", ActiveSupport::TestCase do
 
-  def build_points
-    @points = []
-    @points << Point.create(:occurred_at => Time.parse("02/01/2009 03:30:15 PM EST").utc,
-                :speed => 60, :miles => 12000, :mpg => 20)
-    @points << Point.create(:occurred_at => Time.parse("02/01/2009 03:40:15 PM EST").utc,
-                :speed => 60, :miles => 12010, :mpg => 20)
-    @points << Point.create(:occurred_at => Time.parse("02/01/2009 03:50:15 PM EST").utc,
-                :speed => 60, :miles => 12020, :mpg => 20)
-  end
+  context "Simple consecutive points" do
 
-  setup do
-    build_points
-    @data = DataAggregator.new
+    def build
+      @trip = Trip.create
+      leg = @trip.legs.create
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:30:15 PM EST").utc,
+                  :speed => 60, :miles => 12000, :mpg => 20)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:40:15 PM EST").utc,
+                  :speed => 60, :miles => 12010, :mpg => 20)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:50:15 PM EST").utc,
+                  :speed => 60, :miles => 12020, :mpg => 20)
+      @trip.update_point_data
+    end
 
-    # This should not create any more trips, legs, or points
-    Trip.should.differ(:count).by(0) do
-      Leg.should.differ(:count).by(0) do
-        Point.should.differ(:count).by(0) do
-          @data.points = @points
+    setup do
+      build
+      @data = DataAggregator.new
+
+      # This should not create any more trips, legs, or points
+      Trip.should.differ(:count).by(0) do
+        Leg.should.differ(:count).by(0) do
+          Point.should.differ(:count).by(0) do
+            @data.trips = [@trip]
+          end
         end
       end
     end
+
+    specify "can total distance driven over given points" do
+      @data.miles.should.equal 20
+    end
+
+    specify "can get overall average MPG" do
+      @data.mpg.should.equal 20
+    end
+
+    specify "can get total time driven" do
+      @data.time.should.equal 20.minutes 
+    end
+
   end
 
-  specify "can total distance driven over given points" do
-    @data.miles.should.equal 20
-  end
 
-  specify "can get overall average MPG" do
-    @data.mpg.should.equal 20
-  end
+  context "Handling multiple trips" do
 
-  specify "can get total time driven" do
-    @data.time.should.equal 20.minutes 
+    def build_points
+      @trips = []
+      # 20 minutes
+      @trips << (trip = Trip.create)
+      leg = trip.legs.create
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:30:15 PM EST").utc,
+                  :speed => 60, :miles => 12000, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:40:15 PM EST").utc,
+                  :speed => 60, :miles => 12010, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 03:50:15 PM EST").utc,
+                  :speed => 60, :miles => 12020, :mpg => 20, :leg => leg)
+
+      # 10 minutes
+      @trips << (trip = Trip.create)
+      leg = trip.legs.create
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 05:10:00 PM EST").utc,
+                  :speed => 60, :miles => 12030, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 05:15:00 PM EST").utc,
+                  :speed => 60, :miles => 12040, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 05:20:00 PM EST").utc,
+                  :speed => 60, :miles => 12050, :mpg => 20, :leg => leg)
+
+      # 60 minutes
+      @trips << (trip = Trip.create)
+      leg = trip.legs.create
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 07:00:00 PM EST").utc,
+                  :speed => 60, :miles => 12060, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 07:30:00 PM EST").utc,
+                  :speed => 60, :miles => 12070, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 07:45:00 PM EST").utc,
+                  :speed => 60, :miles => 12080, :mpg => 20, :leg => leg)
+      leg.points.create(:occurred_at => Time.parse("02/01/2009 08:00:00 PM EST").utc,
+                  :speed => 60, :miles => 12090, :mpg => 20, :leg => leg)
+
+      @trips.each {|t| t.update_point_data }
+    end
+
+    setup do
+      build_points
+      @data = DataAggregator.new
+      @data.trips = @trips
+    end
+
+    specify "properly aggregates time according to actual driving time, not trip duration" do
+      @data.time.should.equal 90 * 60 # time is seconds underneath
+    end
+
   end
 
 end
