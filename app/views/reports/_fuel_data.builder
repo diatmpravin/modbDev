@@ -1,8 +1,9 @@
+unit ||= ""
 xml.graph(:caption => report.title,
-          :subcaption => "For vehicle: #{report.devices[0].name}",
+          :subcaption => "For vehicle: #{report.devices[0].name} against #{series_name}",
           :xAxisName => 'Day',
           :PYAxisName => 'MPG',
-          :SYAxisName => 'Idle Time (minutes)',
+          :SYAxisName => y_axis_title,
           :showValues => '0',
           :showAlternateHGridColor => '1',
           :AlternateHGridColor => '323c3e',
@@ -17,8 +18,8 @@ xml.graph(:caption => report.title,
   end
 
   xml.dataset(
-    :seriesName => "MPG", 
-    :parentYAxis => 'P', 
+    :seriesName => "MPG",
+    :parentYAxis => 'P',
     :color => '318ba9',
     :renderAs => 'LINE'
   ) do
@@ -28,18 +29,14 @@ xml.graph(:caption => report.title,
   end
 
   xml.dataset(
-    :seriesName => "Idle Time", 
-    :parentYAxis => 'S', 
-    :color => '323c3e', 
+    :seriesName => series_name,
+    :parentYAxis => 'S',
+    :color => '323c3e',
     :alpha => '50',
-    :renderAs => 'LINE'
+    :renderAs => 'COLUMN'
   ) do
     report.data.each do |r|
-      formatted = duration_format(r[:idle_time])
-      xml.set :value => r[:idle_time] / 60.0, 
-        :toolText => "Idle for: #{formatted}",
-        :displayValue => "#{formatted}",
-        :showValue => r[:idle_time] > 0 ? "1" : "0"
+      xml.set :value => r[against], :toolText => "#{r[against]} #{unit}"
     end
   end
 

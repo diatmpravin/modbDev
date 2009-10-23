@@ -2,14 +2,66 @@
   <%= javascript_include_tag "fusion_charts/FusionCharts.js" %>
 <% end %>
 
-<div id="fuelEconomy">
+<div id="fuelEconomy_idle">
   Graph goes here
 </div>
 
 <script type="text/Javascript">
   q(document).ready(function() {
-    var chart = new FusionCharts("/fusion_charts/MSCombiDY2D.swf", "chartId", "1000", "400");
-    chart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data', :locals => {:report => report}) %>");
-    chart.render("fuelEconomy");
+    var idleChart = new FusionCharts("/fusion_charts/MSCombiDY2D.swf", "idleChartId", "1000", "400");
+    idleChart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data',
+                                                   :locals => {:report => report,
+                                                          :against => :idle_time,
+                                                          :series_name => "Idle Time",
+                                                          :y_axis_title => "Idle Time (minutes)" }) %>");
+    idleChart.render("fuelEconomy_idle");
+  });
+</script>
+
+<div id="fuelEconomy_speed">
+  Graph goes here
+</div>
+
+<script type="text/Javascript">
+  q(document).ready(function() {
+    var speedChart = new FusionCharts("/fusion_charts/MSCombiDY2D.swf", "speedChartId", "1000", "400");
+    speedChart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data',
+                                                        :locals => {:report => report,
+                                                          :against => :speed_events,
+                                                          :series_name => "Speed Events",
+                                                          :y_axis_title => "Speed Events" }) %>");
+    speedChart.render("fuelEconomy_speed");
+  });
+</script>
+
+<div id="fuelEconomy_rpm">
+  Graph goes here
+</div>
+
+<script type="text/Javascript">
+  q(document).ready(function() {
+    var rpmChart = new FusionCharts("/fusion_charts/MSCombiDY2D.swf", "rpmChartId", "1000", "400");
+    rpmChart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data',
+                                                      :locals => {:report => report,
+                                                        :against => :average_rpm,
+                                                        :series_name => "Average RPM",
+                                                        :y_axis_title => "RPM" }) %>");
+    rpmChart.render("fuelEconomy_rpm");
+  });
+</script>
+
+<div id="fuelEconomy_aggresive">
+  Graph goes here
+</div>
+
+<script type="text/Javascript">
+  q(document).ready(function() {
+    var aggresiveChart = new FusionCharts("/fusion_charts/MSCombiDY2D.swf", "aggresiveChartId", "1000", "400");
+    aggresiveChart.setDataXML("<%= escape_javascript render(:partial => 'fuel_data',
+                                                            :locals => {:report => report,
+                                                              :against => :aggresive,
+                                                              :series_name => "Aggresive Alerts",
+                                                              :y_axis_title => "Alerts" }) %>");
+    aggresiveChart.render("fuelEconomy_aggresive");
   });
 </script>
