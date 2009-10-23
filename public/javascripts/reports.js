@@ -7,6 +7,11 @@
  */
 Reports = {
   init: function() {
+    q('#report_type').live("click", function(event) {
+      q(".report_description").hide();
+      q("#report_" + event.target.value + "_description").show();
+    });
+
     q('#report_range_type').live("click", function(event) {
       // Custom is 7
       if(event.target.value == 7) {
