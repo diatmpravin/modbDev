@@ -1,0 +1,61 @@
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Start Time</th>
+      <th rowspan="2">End Time</th>
+      <th rowspan="2">Miles Driver</th>
+      <th rowspan="2">Average<br/>Fuel Economy</th>
+      <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+      <th rowspan="2">Idle Time<br/>(hh:mm)</th>
+      <th colspan="5">Events</th>
+    </tr>
+    <tr>
+      <th>Speed</th>
+      <th>Geofence</th>
+      <th>Idle</th>
+      <th>Aggressive</th>
+      <th>After Hours</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each_with_index do |row,i| -%>
+    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
+      <td><%= row[:start] %></td>
+      <td><%= row[:finish] %></td>
+      <td><%= row[:miles] %></td>
+      <td><%= mpg_format(row[:mpg]) %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
+      <td><%= row[:event_speed] %></td>
+      <td><%= row[:event_geofence] %></td>
+      <td><%= row[:event_idle] %></td>
+      <td><%= row[:event_aggressive] %></td>
+      <td><%= row[:event_after_hours] %></td>
+    </tr>
+  <% end -%>
+    <tr class="total">
+      <td colspan="2">Total</td>
+      <td><%= report.data.sum(:miles) %></td>
+      <td><%= mpg_format(report.data.sum(:mpg)) %></td>
+      <td><%= duration_format(report.data.sum(:duration)) %></td>
+      <td><%= duration_format(report.data.sum(:idle_time)) %></td>
+      <td><%= report.data.sum(:event_speed) %></td>
+      <td><%= report.data.sum(:event_geofence) %></td>
+      <td><%= report.data.sum(:event_idle) %></td>
+      <td><%= report.data.sum(:event_aggressive) %></td>
+      <td><%= report.data.sum(:event_after_hours) %></td>
+    </tr>
+    <tr class="total">
+      <td colspan="2">Average</td>
+      <td><%= mpg_format(report.data.average(:miles)) %></td>
+      <td><%= mpg_format(report.data.average(:mpg)) %></td>
+      <td><%= duration_format(report.data.average(:duration)) %></td>
+      <td><%= duration_format(report.data.average(:idle_time)) %></td>
+      <td><%= mpg_format(report.data.average(:event_speed)) %></td>
+      <td><%= mpg_format(report.data.average(:event_geofence)) %></td>
+      <td><%= mpg_format(report.data.average(:event_idle)) %></td>
+      <td><%= mpg_format(report.data.average(:event_aggressive)) %></td>
+      <td><%= mpg_format(report.data.average(:event_after_hours)) %></td>
+    </tr>
+  </tbody>
+</table>

@@ -7,6 +7,8 @@ module ReportsHelper
         'daily_summary'
       when 2
         'fuel_economy'
+      when 3
+        'trip_detail'
       else
         nil
     end
@@ -29,7 +31,8 @@ module ReportsHelper
     @@report_type_options ||= [
       ['Vehicle Summary Report', 0],
       ['Daily Summary Report', 1],
-      ['Fuel Economy Report', 2]
+      ['Fuel Economy Report', 2],
+      ['Trip Detail Report', 3]
     ].freeze
   end
 
