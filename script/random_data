@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # This script is used to generate a series of random trips
 # and points for a given device.
 
@@ -92,7 +93,8 @@ $current_miles = START_MILES
         :miles => $current_miles,
         :mpg => mpg,
         :occurred_at => occurred_at,
-        :event => event
+        :event => event,
+        :rpm => rand(10000) + 1000
       )
     end
   end
