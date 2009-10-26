@@ -8,6 +8,7 @@ class GeofencesController < ApplicationController
   
   def index
     @landmarks = current_account.landmarks
+    @devices = current_account.devices
     
     if @device
       @geofences = @device.geofences

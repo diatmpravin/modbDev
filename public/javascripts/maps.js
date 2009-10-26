@@ -49,9 +49,8 @@ Maps = {
     // Event handlers
     q('#device_id').change(Maps.selectDevice);
     
-    q('#show_geofences').click(GeofencesView.updateVisibility).attr('checked', false);
-    q('#show_landmarks').click(LandmarksView.updateVisibility).attr('checked', false);
-    q('#show_labels').click(Maps.toggleLabels).attr('checked', false);
+    q('#show_geofences,#show_landmarks,#show_labels').attr('checked', false);
+    q('#show_labels').click(Maps.toggleLabels);
     
     q('#livelook').live('click', Maps.livelook);
     q('#historyScroller li').live('click', Maps.selectHistoryDate)
@@ -121,7 +120,7 @@ Maps = {
     
     if (q('#livelook').hasClass('selected')) {
       Maps.livelook();
-      GeofencesView.updateVisibility();
+      q('#show_geofences').triggerHandler('click');
     } else {
       q('#historyScroller li.selected').click();
     }
@@ -223,7 +222,7 @@ Maps = {
       }
       
       // User may have turned on vehicle labels
-      q('#show_labels').change();
+      q('#show_labels').click();
       
       if (q.isFunction(callback)) {
         callback();
@@ -730,8 +729,8 @@ Trips = {
 q(function() {
   q('#mapContainer').moshiMap().init();
   Maps.init();
-  GeofencesView.init();
-  LandmarksView.init();
+  GeofencesView.init(q('#show_geofences'), q('#device_id'));
+  LandmarksView.init(q('#show_landmarks'));
   Trips.init();
   
   // keeping this around for a little while in case i have to switch to IE7 opacity style

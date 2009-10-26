@@ -15,8 +15,9 @@ GeofencesView = {
   RECTANGLE: 1,
   POLYGON: 2,
   fences: null,
-
-  init: function() {
+  vehicleListField: null,
+  
+  init: function(geofenceToggleField, vehicleListField) {
     // If fences aren't already defined, load them with an ajax call.
     if (GeofencesView.fences != null) {
       GeofencesView.buildGeofences();
@@ -26,26 +27,44 @@ GeofencesView = {
         GeofencesView.buildGeofences();
       });
     }
-  }
-  ,
-  updateVisibility: function() {
-    var toggleTo = q("#show_geofences").attr('checked'),
-        device = q('#device_id').val() || '';
-
-    device = device == '' ? -1 : parseInt(device);
-
-    for(var i = 0; i < GeofencesView.fences.length; i++) {
-      var fence = GeofencesView.fences[i].geofence;
-      var changeTo = toggleTo;
-
-      if(toggleTo && device >= 0) {
-        changeTo = fence.device_ids.indexOf(device) >= 0;
-      }
-
-      fence.shape.setValue('visible', changeTo);
+    
+    if (vehicleListField) {
+      GeofencesView.vehicleListField = vehicleListField;
+    }
+    
+    if (geofenceToggleField) {
+      geofenceToggleField.click(GeofencesView.toggleVisibility)
+                         .triggerHandler('click');
     }
   }
   ,
+  /**
+   * Toggle geofence visibility based on the geofence checkbox.
+   *
+   * If the vehicle list field is set, will restrict geofences shown to the
+   * vehicle selected.
+   */
+  toggleVisibility: function() {
+    var bool = q(this).attr('checked');
+    var device = -1;
+    
+    if (GeofencesView.vehicleListField) {
+      device = GeofencesView.vehicleListField.val() || '';
+      device = device == '' ? -1 : parseInt(device);
+    }
+
+    for(var i = 0; i < GeofencesView.fences.length; i++) {
+      var fence = GeofencesView.fences[i].geofence;
+      
+      fence.shape.setValue('visible',
+        bool && (device < 0 || fence.device_ids.indexOf(device) >= 0)
+      );
+    }
+  }
+  ,
+  /**
+   * Build geofence shapes for each geofence and add them to the collection.
+   */
   buildGeofences: function() {
     for(var i = 0; i < GeofencesView.fences.length; i++) {
       GeofencesView.shape(GeofencesView.fences[i].geofence);
@@ -53,6 +72,9 @@ GeofencesView = {
     }
   }
   ,
+  /**
+   * Create and store a geofence shape for the given geofence.
+   */
   shape: function(fence) {
     if (fence.geofence_type == GeofencesView.ELLIPSE) {
       fence.shape = new MQA.EllipseOverlay();

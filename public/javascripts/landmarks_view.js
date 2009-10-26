@@ -13,8 +13,8 @@
 LandmarksView = {
   landmarkCollection: new MQA.ShapeCollection(),
   landmarks: null,
-    
-  init: function() {
+  
+  init: function(landmarkToggleField) {
     LandmarksView.landmarkCollection.setName('landmarks');
     
     // If landmarks aren't already defined, load them with an ajax call.
@@ -25,6 +25,11 @@ LandmarksView = {
         LandmarksView.landmarks = json;
         LandmarksView.buildLandmarks();
       });
+    }
+    
+    if (landmarkToggleField) {
+      landmarkToggleField.click(LandmarksView.toggleVisibility)
+                         .triggerHandler('click');
     }
   }
   ,
@@ -49,7 +54,7 @@ LandmarksView = {
   /**
    * Toggle landmark visibility based on the landmark checkbox.
    */
-  updateVisibility: function() {
+  toggleVisibility: function() {
     if (q('#show_landmarks').attr('checked')) {
       MoshiMap.moshiMap.map.addShapeCollection(LandmarksView.landmarkCollection);
     } else {

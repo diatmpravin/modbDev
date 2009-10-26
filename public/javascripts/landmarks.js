@@ -12,9 +12,9 @@ Landmarks = {
     
     Landmarks.corners();
     
-    q('#show_geofences').click(GeofencesView.updateVisibility).attr('checked', false);
-    //q('#show_labels').change(Maps.toggleLabels).attr('checked', false);
-    
+    q('#show_geofences,#show_vehicles,#show_labels').attr('checked', false);
+    //q('#show_labels').click(Landmarks.toggleLabels);
+  
     q('#addLandmark').live('click', Landmarks.newLandmark);
     q('div.landmark[id=new] input.save').live('click', Landmarks.create);
     q('div.landmark[id=new] input.cancel').live('click', Landmarks.cancelNew);
@@ -358,5 +358,6 @@ Landmarks = {
 jQuery(function() {
   q('#mapContainer').moshiMap().init();
   Landmarks.init();
-  GeofencesView.init();
+  GeofencesView.init(q('#show_geofences'));
+  VehiclesView.init(q('#show_vehicles'), q('#show_labels'));
 });

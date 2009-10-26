@@ -5,8 +5,10 @@
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'landmarks' %>
   <%= javascript_include_tag 'geofences_view' %>
+  <%= javascript_include_tag 'vehicles_view' %>
   <% javascript_tag do -%>
     GeofencesView.fences = <%= geofences_for_json %>;
+    VehiclesView.vehicles = <%= devices_for_json %>;
   <% end -%>
 <% end -%>
 <% inside_layout 'global' do -%>

@@ -14,7 +14,7 @@ Geofences = {
   init: function() {
     Geofences.corners();
     
-    q('#show_landmarks').click(LandmarksView.updateVisibility).attr('checked', false);
+    q('#show_landmarks,#show_vehicles,#show_labels').attr('checked', false);
     
     q('#addGeofence').live('click', Geofences.newGeofence);
     q('div.geofence[id=new] input.save').live('click', Geofences.create);
@@ -705,5 +705,6 @@ Geofences = {
 jQuery(function() {
   q('#mapContainer').moshiMap().init();
   Geofences.init();
-  LandmarksView.init();
+  LandmarksView.init(q('#show_landmarks'));
+  VehiclesView.init(q('#show_vehicles'), q('#show_labels'));
 });

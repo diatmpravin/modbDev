@@ -7,6 +7,7 @@ class LandmarksController < ApplicationController
   def index
     @landmarks = current_account.landmarks
     @geofences = current_account.geofences
+    @devices = current_account.devices
     
     respond_to do |format|
       format.html
