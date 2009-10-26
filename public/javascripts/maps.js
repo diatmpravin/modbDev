@@ -50,7 +50,7 @@ Maps = {
     q('#device_id').change(Maps.selectDevice);
     
     q('#show_geofences,#show_landmarks,#show_labels').attr('checked', false);
-    q('#show_labels').click(Maps.toggleLabels);
+    q('#show_labels').click(Maps.updateLabels).attr('checked', false);
     
     q('#livelook').live('click', Maps.livelook);
     q('#historyScroller li').live('click', Maps.selectHistoryDate)
@@ -222,7 +222,7 @@ Maps = {
       }
       
       // User may have turned on vehicle labels
-      q('#show_labels').click();
+      Maps.updateLabels();
       
       if (q.isFunction(callback)) {
         callback();
@@ -472,8 +472,8 @@ Maps = {
     Maps.currentPane = selector;
   }
   ,
-  toggleLabels: function() {
-    var bool = q(this).attr('checked');
+  updateLabels: function() {
+    var bool = q("#show_labels").attr('checked');
     
     for(var i = 0; i < MoshiMap.moshiMap.pointCollection.getSize(); i++) {
       MoshiMap.moshiMap.pointCollection.getAt(i).setValue('labelVisible', bool);
