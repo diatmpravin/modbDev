@@ -9,6 +9,8 @@ module ReportsHelper
         'fuel_economy'
       when 3
         'trip_detail'
+      when 4
+        'fuel_summary'
       else
         nil
     end
@@ -32,7 +34,8 @@ module ReportsHelper
       ['Vehicle Summary Report', 0],
       ['Daily Summary Report', 1],
       ['Fuel Economy Report', 2],
-      ['Trip Detail Report', 3]
+      ['Trip Detail Report', 3],
+      ['Fuel Summary Report', 4]
     ].freeze
   end
 

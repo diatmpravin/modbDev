@@ -41,6 +41,8 @@ class Report
       FuelEconomyReport.new(self)
     when 3
       TripDetailReport.new(self)
+    when 4
+      FuelSummaryReport.new(self)
     end
   end
   

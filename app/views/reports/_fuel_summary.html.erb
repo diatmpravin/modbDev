@@ -1,0 +1,15 @@
+<% content_for :javascript do %>
+  <%= javascript_include_tag "fusion_charts/FusionCharts.js" %>
+<% end %>
+
+<div id="fuelSummary">
+  Graph goes here
+</div>
+
+<script type="text/Javascript">
+  q(document).ready(function() {
+    var idleChart = new FusionCharts("/fusion_charts/MSLine.swf", "summaryChartId", "1000", "500");
+    idleChart.setDataXML("<%= escape_javascript render(:partial => 'fuel_summary_data', :locals => {:report => report}) %>");
+    idleChart.render("fuelSummary");
+  });
+</script>
