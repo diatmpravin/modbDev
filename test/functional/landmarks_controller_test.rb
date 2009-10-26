@@ -75,6 +75,23 @@ describe "Landmarks Controller", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['html'].should =~ /can't be blank/
     end
+    
+    specify "correctly handles spaces entered in lat/long" do
+      post :create, {
+        :id => @landmark.id,
+        :landmark => [
+          {
+            :name => 'Test',
+            :latitude => '   -86.347   ',
+            :longitude => '   42.04   '
+          }
+        ]
+      }
+      
+      json['status'].should.equal 'success'
+      json['edit'].should =~ /value="-86.34700"/
+      json['edit'].should =~ /value="42.04000"/
+    end
   end
   
   context "Viewing and editing a landmark" do
@@ -138,6 +155,22 @@ describe "Landmarks Controller", ActionController::TestCase do
           }
         }
       end
+    end
+    
+    specify "correctly handles spaces entered in lat/long" do
+      put :update, {
+        :id => @landmark.id,
+        :landmark => {
+          @landmark.id.to_s => {
+            :latitude => '   -86.347   ',
+            :longitude => '   42.04   '
+          }
+        }
+      }
+      
+      json['status'].should.equal 'success'
+      json['edit'].should =~ /value="-86.34700"/
+      json['edit'].should =~ /value="42.04000"/
     end
   end
   

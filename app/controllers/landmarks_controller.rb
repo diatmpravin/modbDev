@@ -56,6 +56,10 @@ class LandmarksController < ApplicationController
   
   def save_landmark(record)
     if @landmark.update_attributes(record)
+      # Force lat & lng to load from db as valid floats (no lead/trail space,
+      # etc.).  TODO: Better way to handle this situation?
+      @landmark.reload
+      
       respond_to do |format|
         format.json {
           render :json => {
