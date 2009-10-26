@@ -122,10 +122,10 @@ jQuery.fn.clearRailsForm = function() {
  * return the existing loading div.
  */
 jQuery.fn.dialogLoader = function() {
-  var loader = q('.dialog').siblings('.ui-dialog-buttonpane').find('.loading');
+  var loader = q(this).siblings('.ui-dialog-buttonpane').find('.loading');
   if (loader.length == 0) {
     loader = q('<div class="loading"></div>').prependTo(
-      q('.dialog').siblings('.ui-dialog-buttonpane')
+      q(this).siblings('.ui-dialog-buttonpane')
     );
   }
   return loader;
