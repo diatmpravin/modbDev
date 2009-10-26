@@ -9,7 +9,7 @@ Reports = {
   init: function() {
     q('#report_type').live("click", function(event) {
       q(".report_description").hide();
-      q("#report_" + event.target.value + "_description").show();
+      Reports.showCurrentDescription();
     });
 
     q('#report_range_type').live("click", function(event) {
@@ -34,6 +34,13 @@ Reports = {
       maxDate: new Date(MoshiTime.serverTime),
       constrainInput: true
     });
+
+    Reports.showCurrentDescription();
+  }
+  ,
+  showCurrentDescription: function() {
+    q(".report_description").hide();
+    q("#report_" + q("#report_type").val() + "_description").show();
   }
 };
 

@@ -1143,6 +1143,10 @@ td.extra {
   width:450px;
 }
 
+.reportSettings .description {
+  width: 45%; 
+}
+
 body#report_blank {
   background-color:white;
 }
