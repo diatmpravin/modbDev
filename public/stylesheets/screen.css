@@ -429,7 +429,8 @@ a.close {
 .mapLabel {
   z-index:9;
   text-align:center;
-  font-size:8px;
+  font-size:12px;
+  font-weight: bold;
   background-color:#f9f2ff;
   border:solid 1px #1a1a1a;
   padding:0 2px 0 2px;
