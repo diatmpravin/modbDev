@@ -17,6 +17,7 @@ class Device < ActiveRecord::Base
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]
   VALID_IDLE_THRESHOLDS = [1, 2, 3, 4, 5, 10, 15, 20]
+  VALID_PITSTOP_THRESHOLDS = [5, 10, 15, 20, 30, 45, 60]
 
   validates_presence_of :tracker, :message => 'is not valid'
   validates_uniqueness_of :tracker_id, :message => 'is already in use'
@@ -35,7 +36,7 @@ class Device < ActiveRecord::Base
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients,
     :vin_number, :after_hours_start_text, :after_hours_end_text,
-    :odometer, :user, :time_zone
+    :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold
 
   after_create :assign_phones
 
@@ -145,7 +146,14 @@ class Device < ActiveRecord::Base
           point.leg = trip_point.leg
         end
       elsif point.trip_marker? && point.running?
-        point.leg = trips.create.legs.create
+        # Decide whether to create a new leg on the last known trip,
+        # or create the first leg of a brand new trip.
+        if trip_point && trip_point.leg && detect_pitstops? &&
+            point.occurred_at - trip_point.occurred_at < pitstop_threshold.minutes
+          point.leg = trip_point.leg.trip.legs.create
+        else
+          point.leg = trips.create.legs.create
+        end
       end
 
       point.save

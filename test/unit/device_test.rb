@@ -235,21 +235,35 @@ describe "Device", ActiveSupport::TestCase do
         point.device_id.should.equal @device.id
         point.leg.should.be.nil
       end
-
-      specify "will update odometer" do
-        @device.update_attribute(:odometer, 37000)
-
-        @example_location[:miles] = 30
-        @example_location[:time] = '20:18:54'
-        @device.process(@example_location)
-
-        @device.reload.odometer.should.equal 37000
-
-        @example_location[:miles] = 36
-        @example_location[:time] = '20:22:54'
-        @device.process(@example_location)
-
-        @device.reload.odometer.should.equal 37006
+      
+      specify "will create a new leg on an existing trip within the pitstop threshold" do
+        @device.update_attributes(:detect_pitstops => true, :pitstop_threshold => 5)
+        
+        @device.process(@example_location.merge(:event => '6011', :time => '2:00:00'))
+        point1 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '6012', :time => '2:15:00'))
+        point2 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '6011', :time => '2:19:45'))
+        point3 = Point.find(:last)
+        
+        point2.leg.should.equal point1.leg
+        point3.leg.should.not.equal point2.leg
+        point3.leg.trip.should.equal point2.leg.trip
+      end
+      
+      specify "will not create a new leg on an existing trip outside the pitstop threshold" do
+        @device.update_attributes(:detect_pitstops => true, :pitstop_threshold => 5)
+        
+        @device.process(@example_location.merge(:event => '6011', :time => '2:00:00'))
+        point1 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '6012', :time => '2:15:00'))
+        point2 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '6011', :time => '2:20:05'))
+        point3 = Point.find(:last)
+        
+        point2.leg.should.equal point1.leg
+        point3.leg.should.not.equal point2.leg
+        point3.leg.trip.should.not.equal point2.leg.trip
       end
     end
 
@@ -545,6 +559,22 @@ describe "Device", ActiveSupport::TestCase do
 
     end
 
+    specify "will update odometer" do
+      @device.update_attribute(:odometer, 37000)
+
+      @example_location[:miles] = 30
+      @example_location[:time] = '20:18:54'
+      @device.process(@example_location)
+
+      @device.reload.odometer.should.equal 37000
+
+      @example_location[:miles] = 36
+      @example_location[:time] = '20:22:54'
+      @device.process(@example_location)
+
+      @device.reload.odometer.should.equal 37006
+    end
+    
     specify "will update extended information if available" do
       @example_location[:fw_version] = 'ABCD'
       @example_location[:obd_fw_version] = '0011'

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091016141753) do
+ActiveRecord::Schema.define(:version => 20091026183615) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -82,6 +82,8 @@ ActiveRecord::Schema.define(:version => 20091016141753) do
     t.integer  "odometer"
     t.integer  "user_id"
     t.string   "time_zone",            :limit => 64, :default => "Eastern Time (US & Canada)"
+    t.boolean  "detect_pitstops",                    :default => false
+    t.integer  "pitstop_threshold",                  :default => 10
   end
 
   create_table "events", :force => true do |t|
