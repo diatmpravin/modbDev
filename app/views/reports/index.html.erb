@@ -29,14 +29,14 @@
           <%= label :devices, 'Vehicles' %>
 
           <div style="max-height: 150px; overflow:auto">
-            <div class="field">
+            <div class="field seperator">
               <%= check_box_tag "select_all", nil, @report.devices.size == @devices.size %>
-              <%= label_tag "select_all", "Select All", :class => 'checkbox' %>
+              <%= label_tag "select_all", "All Vehicles", :class => 'checkbox' %>
             </div>
 
             <% @devices.each do |device| -%>
               <div class="field">
-                <%= check_box_tag "devices[#{device.id}]", '1', @report.devices.include?(device) %>
+                <%= check_box_tag "devices[#{device.id}]", '1', @report.devices.include?(device), :class => 'vehicle_select' %>
                 <%= label_tag "devices[#{device.id}]", device.name, :class => 'checkbox' %>
               </div>
             <% end -%>

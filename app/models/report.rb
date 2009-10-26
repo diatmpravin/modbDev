@@ -76,6 +76,10 @@ class Report
       when 7 # Custom
         @start = Date.parse(opts[:start] || '')
         @end = Date.parse(opts[:end] || '')
+
+        if @start > @end
+          @report.errors << "Start date must be earlier or equal to end date"
+        end
       end
     rescue ArgumentError
       @report.errors << 'You must specify valid start and end dates'

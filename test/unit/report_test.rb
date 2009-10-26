@@ -5,6 +5,29 @@ describe "Report", ActiveSupport::TestCase do
     @account = accounts(:quentin)
     @devices = @account.devices
   end
+
+  context "All Reports" do
+
+    context "Custom Date Range" do
+
+      specify "start date must be < end date" do
+        report = Report.new(@account, {
+          :type => 0,
+          :devices => @devices,
+          :range => {
+            :type => 7,
+            :start => '02/10/2009',
+            :end => '02/01/2009',
+          }
+        })
+
+        report.should.not.be.valid
+        report.errors.should.include "Start date must be earlier or equal to end date"
+      end
+
+    end
+
+  end
   
   context "Vehicle Summary Report" do
     specify "works" do

@@ -29,6 +29,18 @@ Reports = {
       });
     });
 
+    // Any time that a specific vehicle is selected or unselected
+    // toggle the #select_all checkbox to inform the user that
+    // they are or aren't useing all vehicles
+    q(".vehicle_select").change(function() {
+      var p = q(this).parents("#device_select"),
+          all = p.find(".vehicle_select"),
+          on = p.find(".vehicle_select:checked");
+
+      q("#select_all").attr("checked", (all.size() == on.size()));
+    });
+
+
     q('#report_range_start,#report_range_end').datepicker({
       duration: 'fast',
       maxDate: new Date(MoshiTime.serverTime),
