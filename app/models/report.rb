@@ -36,6 +36,11 @@ class Report
     @range.end
   end
 
+  # Get this report as CSV
+  def to_csv
+    self.data.to_csv
+  end
+
   # Run the report, this needs to populate @data
   def run
     raise "Report must define #run which should build the report"
