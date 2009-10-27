@@ -24,7 +24,7 @@ xml.graph(:caption => report.title,
     :renderAs => 'LINE'
   ) do
     report.data.each do |r|
-      xml.set :value => r[:mpg], :toolText => "#{r[:mpg]} MPG"
+      xml.set :value => mpg_format(r[:mpg]), :toolText => "#{r[:mpg]} MPG" if r[:mpg] > 0.0
     end
   end
 
@@ -36,7 +36,7 @@ xml.graph(:caption => report.title,
     :renderAs => 'COLUMN'
   ) do
     report.data.each do |r|
-      xml.set :value => r[against], :toolText => "#{r[against]} #{unit}"
+      xml.set :value => r[against], :toolText => "#{r[against]} #{unit}" if r[:mpg] > 0.0
     end
   end
 

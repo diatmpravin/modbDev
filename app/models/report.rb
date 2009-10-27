@@ -36,6 +36,11 @@ class Report
     @range.end
   end
 
+  # Get today's date
+  def today
+    @range.today
+  end
+
   # Get this report as CSV
   def to_csv
     self.data.to_csv
@@ -59,20 +64,20 @@ class Report
       when 1 # Yesterday
         @start = @end = today - 1.day
       when 2 # This Week
-        @start = today.monday
-        @end = today
+        @start = today.beginning_of_week
+        @end = today.end_of_week
       when 3 # Last Week
-        @start = today.monday - 1.week
+        @start = 1.week.ago(today).beginning_of_week
         @end = @start.end_of_week
       when 4 # This Month
         @start = today.beginning_of_month
-        @end = today
+        @end = today.end_of_month
       when 5 # Last Month
-        @start = today.beginning_of_month - 1.month
+        @start = 1.month.ago(today).beginning_of_month
         @end = @start.end_of_month
       when 6 # This Year
         @start = today.beginning_of_year
-        @end = today
+        @end = today.end_of_year
       when 7 # Custom
         @start = Date.parse(opts[:start] || '')
         @end = Date.parse(opts[:end] || '')

@@ -8,9 +8,9 @@ describe "Report", ActiveSupport::TestCase do
 
   context "All Reports" do
 
-    context "Custom Date Range" do
+    context "Date Ranges" do
 
-      specify "start date must be < end date" do
+      specify "Custom: start date must be < end date" do
         report = Report.new(@account, {
           :devices => @devices,
           :range => {
@@ -22,6 +22,42 @@ describe "Report", ActiveSupport::TestCase do
 
         report.should.not.be.valid
         report.errors.should.include "Start date must be earlier or equal to end date"
+      end
+
+      specify "This Week should include all 7 days" do
+        report = Report.new(@account, {
+          :devices => @devices,
+          :range => {
+            :type => 2
+          }
+        })
+
+        report.range.start.should.equal Date.today.beginning_of_week
+        report.range.end.should.equal Date.today.end_of_week
+      end
+
+      specify "This Month should include all days of the month" do
+        report = Report.new(@account, {
+          :devices => @devices,
+          :range => {
+            :type => 4
+          }
+        })
+
+        report.range.start.should.equal Date.today.beginning_of_month
+        report.range.end.should.equal Date.today.end_of_month
+      end
+
+      specify "This Year should include the whole year" do
+        report = Report.new(@account, {
+          :devices => @devices,
+          :range => {
+            :type => 6
+          }
+        })
+
+        report.range.start.should.equal Date.today.beginning_of_year
+        report.range.end.should.equal Date.today.end_of_year
       end
 
     end

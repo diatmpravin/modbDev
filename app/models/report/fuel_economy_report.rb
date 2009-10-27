@@ -53,7 +53,7 @@ class FuelEconomyReport < Report
 
       report << {
         :date => date,
-        :mpg => "%.1f" % (mpg[index] || 0),
+        :mpg => mpg[index] || 0,
         :idle_time => (idle_time[index] || 0).to_i / 60,
         :speed_events => events[[index, Event::SPEED]] || 0,
         :average_rpm => rpm,
