@@ -27,7 +27,7 @@ class ReportsController < ApplicationController
     end
 
     # Get our report object
-    report_id = params[:report].delete(:type).to_i
+    report_id = params[:report][:type].to_i
     @report = REPORTS[report_id].new(current_account, params[:report])
     @report.validate
 

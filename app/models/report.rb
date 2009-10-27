@@ -6,6 +6,7 @@ class Report
   def initialize(account, opts = {})
     @account   = account
     @devices   = opts[:devices] || account.devices
+    @type      = opts[:type].to_i || 0
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})
   end
