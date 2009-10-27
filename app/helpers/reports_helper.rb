@@ -13,7 +13,7 @@ module ReportsHelper
   end
 
   def average(report, col, rows)
-    report.data.sum(col) / rows
+    rows == 0 ? 0 : report.data.sum(col) / rows
   end
 
   def report_type_options
