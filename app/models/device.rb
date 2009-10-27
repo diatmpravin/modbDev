@@ -25,10 +25,14 @@ class Device < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
-
+  validates_format_of :after_hours_start_text, :with => /(\d+):(\d+) ?(\S+)/,
+    :allow_nil => true, :allow_blank => true
+  validates_format_of :after_hours_end_text, :with => /(\d+):(\d+) ?(\S+)/,
+    :allow_nil => true, :allow_blank => true
+  
   validates_numericality_of :odometer, :allow_nil => true
 
-  validate_on_create :validate_number_of_records
+  #validate_on_create :validate_number_of_records
 
   attr_accessible :name, :account, :points, :trips, :phone_devices, :phones,
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
@@ -275,11 +279,11 @@ class Device < ActiveRecord::Base
     end
   end
 
-  def validate_number_of_records
-    if Device.count(:conditions => {:account_id => account_id}) >= 20
-      errors.add_to_base 'Too many devices'
-    end
-  end
+  #def validate_number_of_records
+  #  if Device.count(:conditions => {:account_id => account_id}) >= 20
+  #    errors.add_to_base 'Too many devices'
+  #  end
+  #end
 
   def point_is_after_hours?(point)
     tod = point.occurred_at.in_time_zone(account.zone)
