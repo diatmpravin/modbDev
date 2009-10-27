@@ -1,19 +1,6 @@
 module ReportsHelper
   def report_partial(report)
-    case report.type
-      when 0
-        'vehicle_summary'
-      when 1
-        'daily_summary'
-      when 2
-        'fuel_economy'
-      when 3
-        'trip_detail'
-      when 4
-        'fuel_summary'
-      else
-        nil
-    end
+    report.class.name.underscore
   end
 
   def duration_format(seconds)
@@ -30,13 +17,10 @@ module ReportsHelper
   end
 
   def report_type_options
-    @@report_type_options ||= [
-      ['Vehicle Summary Report', 0],
-      ['Daily Summary Report', 1],
-      ['Fuel Economy Report', 2],
-      ['Trip Detail Report', 3],
-      ['Fuel Summary Report', 4]
-    ].freeze
+    @@report_type_options ||= 
+      @reports.map do |key, value|
+        [value.name.titleize, key]
+      end.freeze
   end
 
   def report_range_options

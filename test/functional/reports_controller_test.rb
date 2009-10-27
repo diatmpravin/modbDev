@@ -13,6 +13,10 @@ describe "Reports Controller", ActionController::TestCase do
       get :index
       
       template.should.be 'index'
+
+      assigns(:devices).should.not.be.nil
+      assigns(:report).should.not.be.nil
+      assigns(:reports).should.not.be.nil
     end
   end
   

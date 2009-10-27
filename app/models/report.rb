@@ -1,51 +1,46 @@
 require 'set'
 
 class Report
-  autoload :DailySummaryReport, 'report/daily_summary_report'
-  autoload :VehicleSummaryReport, 'report/vehicle_summary_report'
-
-  attr_accessor :account, :type, :devices, :range
+  attr_accessor :account, :type, :devices, :range, :errors, :data
 
   def initialize(account, opts = {})
     @account   = account
-    @type      = (opts[:type] || 0).to_i
     @devices   = opts[:devices] || account.devices
-    @generator = generator_for(@type)
     @range     = DateRange.new(self, opts[:range] || {})
+    @errors    = Set.new
   end
 
+  # Get the title of the report
   def title
-    @generator.title
+    raise "Reports must define a title"
   end
 
+  # Implement this method in the individual reports
+  # to handle parameter validation logic
+  def validate
+  end
+
+  # Check if the parameters passed into this report are valid.
+  # Basically, check that the errors set is empty
   def valid?
-    @generator.valid?
+    @errors.empty?
   end
 
-  def errors
-    @generator.errors
+  # Get the start date of the given date range
+  def start
+    @range.start
   end
 
-  def data
-    @generator.data
+  # Get the end date of the given date range
+  def end
+    @range.end
   end
-  alias :run :data
 
-  def generator_for(type)
-    case(type)
-    when 0
-      VehicleSummaryReport.new(self)
-    when 1
-      DailySummaryReport.new(self)
-    when 2
-      FuelEconomyReport.new(self)
-    when 3
-      TripDetailReport.new(self)
-    when 4
-      FuelSummaryReport.new(self)
-    end
+  # Run the report, this needs to populate @data
+  def run
+    raise "Report must define #run which should build the report"
   end
-  
+
   class DateRange
     attr_reader :type, :start, :end
 
@@ -87,46 +82,6 @@ class Report
 
     def today
       @report.account.today
-    end
-  end
-
-  class Generator
-    attr_reader :report
-
-    def initialize(report)
-      @report = report
-    end
-
-    def title
-      ''
-    end
-
-    def valid?
-      true
-    end
-
-    def errors
-      @errors ||= Set.new
-    end
-
-    def data
-      @data ||= run
-    end
-
-    def devices
-      @report.devices
-    end
-
-    def start
-      @report.range.start
-    end
-
-    def end
-      @report.range.end
-    end
-
-    def account
-      @report.account
     end
   end
 end
