@@ -92,6 +92,7 @@
           to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
         </td>
       </tr>
+      <!-- Comment out grouping functionality
       <tr>
         <td>
           <%= help_tooltip :detect_pitstops %>
@@ -102,6 +103,7 @@
           <%= f.select :pitstop_threshold, Device::VALID_PITSTOP_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
         </td>
       </tr>
+      -->
     </table>
   </div>
   

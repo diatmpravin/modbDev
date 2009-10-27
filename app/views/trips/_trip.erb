@@ -2,12 +2,14 @@
 
 <div class="color"><img src="<%= trip.color.filename %>" /></div>
 <div class="detail">
+  <!-- Comment out grouping functionality
   <% unless hide_collapse -%>
     <% form_tag collapse_trip_path(trip), :method => :put do -%>
       <div class="loading"></div>
       <%= link_to '', '#', {:class => 'collapse'} %>
     <% end -%>
   <% end -%>
+  -->
   
   <h4><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></h4>
   <p><%= human_miles(trip.miles) %> over <%= human_duration(trip.duration) %></p>
@@ -21,6 +23,7 @@
       <%= format_tags(trip.tags) %>
       (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
     </p>
+    <!-- Comment out grouping functionality
     <% if trip.legs.length > 1 -%>
       <div class="legs">
         <% form_tag expand_trip_path(trip), :method => :put do -%>
@@ -34,5 +37,6 @@
         </ul>
       </div>
     <% end -%>
+    -->
   </div>
 </div>
