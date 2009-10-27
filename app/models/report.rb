@@ -6,8 +6,8 @@ class Report
   def initialize(account, opts = {})
     @account   = account
     @devices   = opts[:devices] || account.devices
-    @range     = DateRange.new(self, opts[:range] || {})
     @errors    = Set.new
+    @range     = DateRange.new(self, opts[:range] || {})
   end
 
   # Get the title of the report

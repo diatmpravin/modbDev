@@ -2,10 +2,10 @@ class ReportsController < ApplicationController
   layout except_ajax('reports')
 
   REPORTS = {
-#   0 => VehicleSummaryReport,
-#   1 => DailySummaryReport,
-#   2 => FuelEconomyReport,
-#   3 => TripDetailReport,
+    0 => VehicleSummaryReport,
+    1 => DailySummaryReport,
+    2 => FuelEconomyReport,
+    3 => TripDetailReport,
     4 => FuelSummaryReport
   }.freeze unless defined?(REPORTS)
   
@@ -27,7 +27,8 @@ class ReportsController < ApplicationController
     end
 
     # Get our report object
-    @report = REPORTS[params[:report][:type].to_i].new(current_account, params[:report])
+    report_id = params[:report].delete(:type).to_i
+    @report = REPORTS[report_id].new(current_account, params[:report])
     @report.validate
 
     respond_to do |with|
