@@ -25,10 +25,10 @@ class Device < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
-  validates_format_of :after_hours_start_text, :with => /(\d+):(\d+) ?(\S+)/,
-    :allow_nil => true, :allow_blank => true
-  validates_format_of :after_hours_end_text, :with => /(\d+):(\d+) ?(\S+)/,
-    :allow_nil => true, :allow_blank => true
+  #validates_format_of :after_hours_start_text, :with => /(\d+):(\d+) ?(\S+)/,
+  #  :allow_nil => true, :allow_blank => true
+  #validates_format_of :after_hours_end_text, :with => /(\d+):(\d+) ?(\S+)/,
+  #  :allow_nil => true, :allow_blank => true
   
   validates_numericality_of :odometer, :allow_nil => true
 
