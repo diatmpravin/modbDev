@@ -1093,6 +1093,10 @@ td.extra {
 }
 
 /* REPORTS */
+#reports #settingsContent {
+  width: 100%;
+}
+
 .reportResult {
   margin:16px;
 }
@@ -1149,6 +1153,7 @@ td.extra {
 }
 
 .reportSettings .description {
+  padding-left: 1em;
   width: 45%; 
 }
 
