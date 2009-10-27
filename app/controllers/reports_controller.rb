@@ -1,9 +1,18 @@
 class ReportsController < ApplicationController
   layout except_ajax('reports')
+
+  REPORTS = {
+    0 => VehicleSummaryReport,
+    1 => DailySummaryReport,
+    2 => FuelEconomyReport,
+    3 => TripDetailReport,
+    4 => FuelSummaryReport
+  }.freeze unless defined?(REPORTS)
   
   def index
     @devices = current_account.devices.all
     @report = Report.new(current_account)
+    @reports = REPORTS
   end
   
   def create
@@ -17,12 +26,15 @@ class ReportsController < ApplicationController
       params[:report][:devices] = current_account.devices.find(d)
     end
 
-    @report = Report.new(current_account, params[:report])
-    @report.run
+    # Get our report object
+    report_id = params[:report].delete(:type).to_i
+    @report = REPORTS[report_id].new(current_account, params[:report])
+    @report.validate
 
     respond_to do |with|
       with.html do
-        if(@report.valid?)
+        if @report.valid?
+          @report.run
           render :action => 'report', :layout => 'report_blank'
         else
           render :action => 'error', :layout => false
@@ -30,7 +42,11 @@ class ReportsController < ApplicationController
       end
 
       with.csv do
-        render :text => @report.data.to_csv, :layout => false
+        # The export to CSV button is only visible once
+        # the report has been run once already, so we know the values
+        # are valid
+        @report.run
+        render :text => @report.to_csv, :layout => false
       end
     end
   end

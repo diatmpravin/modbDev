@@ -9,15 +9,15 @@ xml.graph(:caption => report.title,
           :formatNumberScale => '0') do
 
   xml.categories do
-    report.data.dates.each do |date|
+    report.dates.each do |date|
       xml.category(:name => date.strftime("%d"))
     end
   end
 
-  report.data.devices.each do |device|
-    xml.dataset :seriesName => device do
-      report.data.data[device].each do |val|
-        xml.set :value => val
+  report.devices.each do |device|
+    xml.dataset :seriesName => device.name do
+      report.mpg[device.name].each do |val|
+        xml.set :value => mpg_format(val) if val > 0.0
       end
     end
   end
