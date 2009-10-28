@@ -25,10 +25,10 @@ class VehicleSummaryReport < Report
     )
 
     devices.each do |device|
-      trips = device.trips.in_range(self.start, self.end, self.account.zone)
+      trips = device.trips.in_range(self.start, self.end, self.user.zone)
 
       # Do event grouping in database
-      events = device.events.in_range(self.start, self.end, self.account.zone).all(
+      events = device.events.in_range(self.start, self.end, self.user.zone).all(
         :select => 'event_type, COUNT(*) AS count_all',
         :group => :event_type
       ).map {|e| [e.event_type, e.count_all.to_i]}

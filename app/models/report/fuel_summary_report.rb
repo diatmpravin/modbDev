@@ -2,7 +2,7 @@ class FuelSummaryReport < Report
 
   attr_accessor :mpg
 
-  def initialize(account, opts = {})
+  def initialize(user, opts = {})
     super
     @dates = []
     @mpg = {}

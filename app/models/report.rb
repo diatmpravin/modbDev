@@ -1,11 +1,11 @@
 require 'set'
 
 class Report
-  attr_accessor :account, :type, :devices, :range, :errors, :data
+  attr_accessor :user, :type, :devices, :range, :errors, :data
 
-  def initialize(account, opts = {})
-    @account   = account
-    @devices   = opts[:devices] || account.devices
+  def initialize(user, opts = {})
+    @user      = user
+    @devices   = opts[:devices] || user.devices
     @type      = opts[:type].to_i || 0
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})
@@ -92,7 +92,7 @@ class Report
     end
 
     def today
-      @report.account.today
+      @report.user.zone.today
     end
   end
 end

@@ -29,7 +29,7 @@ class TripDetailReport < Report
     )
 
     trips = self.device.trips.in_range(
-      self.start, self.end, self.account.zone
+      self.start, self.end, self.user.zone
     ).all(:order => 'start ASC')
 
     trips.each do |trip|
@@ -42,8 +42,8 @@ class TripDetailReport < Report
       end
 
       self.data << {
-        :start => self.account.zone.utc_to_local(trip.start),
-        :finish => self.account.zone.utc_to_local(trip.finish),
+        :start => trip.start.in_time_zone(self.user.zone),
+        :finish => trip.finish.in_time_zone(self.user.zone),
         :miles => trip.miles,
         :mpg => trip.average_mpg,
         :duration => trip.duration,

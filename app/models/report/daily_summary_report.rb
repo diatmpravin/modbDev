@@ -47,7 +47,7 @@ class DailySummaryReport < Report
       :conditions => date_conditions)
     
     # Do event grouping in database
-    events = device.events.in_range(self.start, self.end, self.account.zone).all(
+    events = device.events.in_range(self.start, self.end, self.user.zone).all(
       :select => 'DATE(events.occurred_at) AS date, event_type, COUNT(*) AS count_all',
       :group => 'DATE(events.occurred_at), event_type'
     ).map {|e| [[e.date, e.event_type], e.count_all.to_i]}
