@@ -22,7 +22,7 @@
     <% next if row[:miles] == 0 -%>
     <% row_count += 1 -%>
 
-    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
+    <tr class="<%= cycle('even', 'odd') %>">
       <td><%= row[:date] %></td>
       <td><%= row[:miles] %></td>
       <td><%= mpg_format(row[:mpg]) %></td>
