@@ -18,8 +18,8 @@
     </tr>
   </thead>
   <tbody>
-  <% report.data.each_with_index do |row,i| -%>
-    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
+  <% report.data.each do |row| -%>
+    <tr class="<%= cycle('even', 'odd') %>">
       <td><%= row[:start] %></td>
       <td><%= row[:finish] %></td>
       <td><%= row[:miles] %></td>
