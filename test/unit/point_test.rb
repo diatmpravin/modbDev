@@ -23,6 +23,24 @@ describe "Point", ActiveSupport::TestCase do
     end
   end
   
+  context "Validations" do
+    specify "device must be present" do
+      @point.device = nil
+      @point.should.not.be.valid
+      
+      @point.device_id = devices(:quentin_device).id
+      @point.should.be.valid
+    end
+    
+    specify "occurred_at must be present" do
+      @point.occurred_at = nil
+      @point.should.not.be.valid
+      
+      @point.occurred_at = Time.now      
+      @point.should.be.valid
+    end
+  end
+  
   context "Scopes" do
     context "in_trip scope" do
       specify "works" do

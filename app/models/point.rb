@@ -50,6 +50,9 @@ class Point < ActiveRecord::Base
     ]
   }
   
+  validates_presence_of :device
+  validates_presence_of :occurred_at
+  
   attr_accessible :event, :occurred_at, :latitude, :longitude, :altitude,
     :speed, :accelerating, :decelerating, :rpm, :heading, :satellites,
     :hdop, :miles, :leg, :device, :mpg
