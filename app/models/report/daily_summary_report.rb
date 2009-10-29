@@ -14,6 +14,22 @@ class DailySummaryReport < Report
     "Daily Summary Report for #{self.device.name} - #{self.start} through #{self.end}"
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :date => "Date",
+      :miles => "Miles",
+      :mpg => "MPG",
+      :duration => "Operating Time (s)",
+      :idle_time => "Idle Time (s)",
+      :event_speed => "Speed Events",
+      :event_geofence => "Geofence Events",
+      :event_idle => "Idle Events",
+      :event_aggressive => "Aggressive Events",
+      :event_after_hours => "After Hours Events"
+    )
+    super
+  end
+
   def run
     device = Device.find(self.device)
     report = Ruport::Data::Table(
@@ -28,7 +44,7 @@ class DailySummaryReport < Report
       :event_aggressive,
       :event_after_hours
     )
-    
+
     # Get info for each day, relying on database calc wherever possible
     date_conditions = [
       'DATE(start) BETWEEN ? AND ?', self.start.to_s(:db), self.end.to_s(:db)
@@ -79,7 +95,7 @@ class DailySummaryReport < Report
         :event_after_hours => events[[index, Event::AFTER_HOURS]] || 0
       }
     end
-    
+
     self.data = report
   end
 

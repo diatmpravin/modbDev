@@ -19,11 +19,25 @@ class FuelEconomyReport < Report
     end
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :date => "Date",
+      :mpg => "MPG",
+      :idle_time => "Idle Time (s)",
+      :speed_events => "Speed Events",
+      :average_rpm => "Average RPM"
+    )
+    super
+  end
+
   def run
     device = Device.find(self.device)
     report = Ruport::Data::Table(
       :date,
-      :mpg
+      :mpg,
+      :idle_time,
+      :speed_events,
+      :average_rpm
     )
 
     date_conditions =  ['DATE(start) BETWEEN ? AND ?', self.start.to_s(:db), self.end.to_s(:db)]

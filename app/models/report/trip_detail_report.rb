@@ -14,6 +14,22 @@ class TripDetailReport < Report
     self.devices.first
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :start => "Start Date",
+      :finish => "End Date",
+      :miles => "Miles",
+      :mpg => "MPG",
+      :idle_time => "Idle Time (s)",
+      :event_speed => "Speed Events",
+      :event_geofence => "Geofence Events",
+      :event_idle => "Idle Events",
+      :event_aggressive => "Aggressive Events",
+      :event_after_hours => "After Hours Events"
+    )
+    super
+  end
+
   def run
     self.data = Ruport::Data::Table(
       :start,
