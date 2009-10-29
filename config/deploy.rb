@@ -11,7 +11,7 @@ set :runner, 'root'
 
 # Repository
 set :scm, :git
-set :repository, 'git@git.gomoshi.com:fleet.git'
+set :repository, 'git@git.gomoshi.com:mobd/fleet.git'
 set :git_shallow_clone, 1
 
 # Copy deploy strategy

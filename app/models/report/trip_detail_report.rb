@@ -14,6 +14,22 @@ class TripDetailReport < Report
     self.devices.first
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :start => "Start Date",
+      :finish => "End Date",
+      :miles => "Miles",
+      :mpg => "MPG",
+      :idle_time => "Idle Time (s)",
+      :event_speed => "Speed Events",
+      :event_geofence => "Geofence Events",
+      :event_idle => "Idle Events",
+      :event_aggressive => "Aggressive Events",
+      :event_after_hours => "After Hours Events"
+    )
+    super
+  end
+
   def run
     self.data = Ruport::Data::Table(
       :start,
@@ -29,7 +45,7 @@ class TripDetailReport < Report
     )
 
     trips = self.device.trips.in_range(
-      self.start, self.end, self.account.zone
+      self.start, self.end, self.user.zone
     ).all(:order => 'start ASC')
 
     trips.each do |trip|
@@ -42,8 +58,8 @@ class TripDetailReport < Report
       end
 
       self.data << {
-        :start => self.account.zone.utc_to_local(trip.start),
-        :finish => self.account.zone.utc_to_local(trip.finish),
+        :start => trip.start.in_time_zone(self.user.zone),
+        :finish => trip.finish.in_time_zone(self.user.zone),
         :miles => trip.miles,
         :mpg => trip.average_mpg,
         :duration => trip.duration,

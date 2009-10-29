@@ -2,7 +2,7 @@ class FuelSummaryReport < Report
 
   attr_accessor :mpg
 
-  def initialize(account, opts = {})
+  def initialize(user, opts = {})
     super
     @dates = []
     @mpg = {}
@@ -20,6 +20,15 @@ class FuelSummaryReport < Report
 
   def title
     "Fuel Economy Summary Report - #{self.start} through #{self.end}"
+  end
+
+  def to_csv
+    self.data.rename_columns(
+      :name => "Name",
+      :date => "Date",
+      :mpg => "MPG"
+    )
+    super
   end
 
   def run

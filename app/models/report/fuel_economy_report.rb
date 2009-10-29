@@ -19,11 +19,25 @@ class FuelEconomyReport < Report
     end
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :date => "Date",
+      :mpg => "MPG",
+      :idle_time => "Idle Time (s)",
+      :speed_events => "Speed Events",
+      :average_rpm => "Average RPM"
+    )
+    super
+  end
+
   def run
     device = Device.find(self.device)
     report = Ruport::Data::Table(
       :date,
-      :mpg
+      :mpg,
+      :idle_time,
+      :speed_events,
+      :average_rpm
     )
 
     date_conditions =  ['DATE(start) BETWEEN ? AND ?', self.start.to_s(:db), self.end.to_s(:db)]
@@ -37,7 +51,7 @@ class FuelEconomyReport < Report
       :conditions => date_conditions)
 
     # Do event grouping in database
-    events = device.events.in_range(self.start, self.end, self.account.zone).all(
+    events = device.events.in_range(self.start, self.end, self.user.zone).all(
       :select => 'DATE(events.occurred_at) AS date, event_type, COUNT(*) AS count_all',
       :group => 'DATE(events.occurred_at), event_type'
     ).map {|e| [[e.date, e.event_type], e.count_all.to_i]}

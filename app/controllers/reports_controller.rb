@@ -10,8 +10,8 @@ class ReportsController < ApplicationController
   }.freeze unless defined?(REPORTS)
   
   def index
-    @devices = current_account.devices.all
-    @report = Report.new(current_account)
+    @devices = current_user.devices.all
+    @report = Report.new(current_user)
     @reports = REPORTS
   end
   
@@ -23,12 +23,12 @@ class ReportsController < ApplicationController
     (params[:devices] || []).map do |id, selected|
       selected == '1' ? id : nil
     end.compact.tap do |d|
-      params[:report][:devices] = current_account.devices.find(d)
+      params[:report][:devices] = current_user.devices.find(d)
     end
 
     # Get our report object
     report_id = params[:report][:type].to_i
-    @report = REPORTS[report_id].new(current_account, params[:report])
+    @report = REPORTS[report_id].new(current_user, params[:report])
     @report.validate
 
     respond_to do |with|

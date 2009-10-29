@@ -2,8 +2,8 @@ require 'test_helper'
 
 describe "Report", ActiveSupport::TestCase do
   setup do
-    @account = accounts(:quentin)
-    @devices = @account.devices
+    @user = users(:quentin)
+    @devices = @user.devices
   end
 
   context "All Reports" do
@@ -11,7 +11,7 @@ describe "Report", ActiveSupport::TestCase do
     context "Date Ranges" do
 
       specify "Custom: start date must be < end date" do
-        report = Report.new(@account, {
+        report = Report.new(@user, {
           :devices => @devices,
           :range => {
             :type => 7,
@@ -25,7 +25,7 @@ describe "Report", ActiveSupport::TestCase do
       end
 
       specify "This Week should include all 7 days" do
-        report = Report.new(@account, {
+        report = Report.new(@user, {
           :devices => @devices,
           :range => {
             :type => 2
@@ -37,7 +37,7 @@ describe "Report", ActiveSupport::TestCase do
       end
 
       specify "This Month should include all days of the month" do
-        report = Report.new(@account, {
+        report = Report.new(@user, {
           :devices => @devices,
           :range => {
             :type => 4
@@ -49,7 +49,7 @@ describe "Report", ActiveSupport::TestCase do
       end
 
       specify "This Year should include the whole year" do
-        report = Report.new(@account, {
+        report = Report.new(@user, {
           :devices => @devices,
           :range => {
             :type => 6
@@ -66,7 +66,7 @@ describe "Report", ActiveSupport::TestCase do
   
   context "Vehicle Summary Report" do
     specify "works" do
-      report = VehicleSummaryReport.new(@account, {
+      report = VehicleSummaryReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7,
@@ -82,7 +82,7 @@ describe "Report", ActiveSupport::TestCase do
     end
     
     specify "errors on missing dates" do
-      report = Report.new(@account, {
+      report = Report.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7
@@ -94,7 +94,7 @@ describe "Report", ActiveSupport::TestCase do
     end
     
     specify "requires at least one vehicle" do
-      report = VehicleSummaryReport.new(@account, {
+      report = VehicleSummaryReport.new(@user, {
         :devices => [],
         :range => {
           :type => 7,
@@ -111,7 +111,7 @@ describe "Report", ActiveSupport::TestCase do
   
   context "Daily Summary Report" do
     specify "works" do
-      report = DailySummaryReport.new(@account, {
+      report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7,
@@ -134,7 +134,7 @@ describe "Report", ActiveSupport::TestCase do
     end
     
     specify "errors on missing dates" do
-      report = DailySummaryReport.new(@account, {
+      report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7
@@ -147,7 +147,7 @@ describe "Report", ActiveSupport::TestCase do
     end
     
     specify "errors on broken dates" do
-      report = DailySummaryReport.new(@account, {
+      report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7,
@@ -162,7 +162,7 @@ describe "Report", ActiveSupport::TestCase do
     end
     
     specify "requires only one vehicle" do
-      report = DailySummaryReport.new(@account, {
+      report = DailySummaryReport.new(@user, {
         :devices => [],
         :range => {
           :type => 7,
@@ -180,7 +180,7 @@ describe "Report", ActiveSupport::TestCase do
   context "Fuel Economy Report" do
 
     specify "works" do
-      report = FuelEconomyReport.new(@account, {
+      report = FuelEconomyReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7,
@@ -199,7 +199,7 @@ describe "Report", ActiveSupport::TestCase do
     end
 
     specify "requires only one vehicle" do
-      report = FuelEconomyReport.new(@account, {
+      report = FuelEconomyReport.new(@user, {
         :devices => [],
         :range => {
           :type => 7,
@@ -217,7 +217,7 @@ describe "Report", ActiveSupport::TestCase do
   context "Trip Detail Report" do
 
     specify "works" do
-      report = TripDetailReport.new(@account, {
+      report = TripDetailReport.new(@user, {
         :devices => @devices,
         :range => {
           :type => 7,
@@ -234,7 +234,7 @@ describe "Report", ActiveSupport::TestCase do
     end
 
     specify "requires one vehicle" do
-      report = TripDetailReport.new(@account, {
+      report = TripDetailReport.new(@user, {
         :devices => [],
         :range => {
           :type => 7,

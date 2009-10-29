@@ -18,8 +18,8 @@
     </tr>
   </thead>
   <tbody>
-  <% report.data.each_with_index do |row,i| -%>
-    <tr class="<%= i % 2 == 0 ? 'even' : 'odd' %>">
+  <% report.data.each do |row| -%>
+    <tr class="<%= cycle('even', 'odd') %>">
       <td><%= row[:start] %></td>
       <td><%= row[:finish] %></td>
       <td><%= row[:miles] %></td>
@@ -36,7 +36,7 @@
     <tr class="total">
       <td colspan="2">Total</td>
       <td><%= report.data.sum(:miles) %></td>
-      <td><%= mpg_format(report.data.sum(:mpg)) %></td>
+      <td>-</td>
       <td><%= duration_format(report.data.sum(:duration)) %></td>
       <td><%= duration_format(report.data.sum(:idle_time)) %></td>
       <td><%= report.data.sum(:event_speed) %></td>

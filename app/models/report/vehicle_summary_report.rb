@@ -10,6 +10,22 @@ class VehicleSummaryReport < Report
     "Vehicle Summary Report - #{self.start} through #{self.end}"
   end
 
+  def to_csv
+    self.data.rename_columns(
+      :name => "Name",
+      :miles => "Miles",
+      :mpg => "MPG",
+      :duration => "Operating Time (s)",
+      :idle_time => "Idle Time (s)",
+      :event_speed => "Speed Events",
+      :event_geofence => "Geofence Events",
+      :event_idle => "Idle Events",
+      :event_aggressive => "Aggressive Events",
+      :event_after_hours => "After Hours Events"
+    )
+    super
+  end
+
   def run
     report = Ruport::Data::Table(
       :name,
@@ -25,10 +41,10 @@ class VehicleSummaryReport < Report
     )
 
     devices.each do |device|
-      trips = device.trips.in_range(self.start, self.end, self.account.zone)
+      trips = device.trips.in_range(self.start, self.end, self.user.zone)
 
       # Do event grouping in database
-      events = device.events.in_range(self.start, self.end, self.account.zone).all(
+      events = device.events.in_range(self.start, self.end, self.user.zone).all(
         :select => 'event_type, COUNT(*) AS count_all',
         :group => :event_type
       ).map {|e| [e.event_type, e.count_all.to_i]}

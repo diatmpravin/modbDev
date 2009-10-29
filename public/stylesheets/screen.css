@@ -1123,7 +1123,8 @@ td.extra {
   border-right: 1px solid #888;
 }
 
-.reportResult tr.odd {
+.reportResult tr.odd,
+.reportResult tr.odd td {
   background-color: #DDD;
 }
 
@@ -1141,6 +1142,11 @@ td.extra {
   font-weight:bold;
   text-align:center;
   padding:2px;
+}
+
+
+.reportResult tr.total td {
+  background-color: #BBB;
 }
 
 .reportSettings {
