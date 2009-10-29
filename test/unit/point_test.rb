@@ -2,6 +2,7 @@ require 'test_helper'
 
 describe "Point", ActiveSupport::TestCase do
   setup do
+    @device = devices(:quentin_device)
     @point = points(:quentin_point)
   end
   
@@ -36,12 +37,40 @@ describe "Point", ActiveSupport::TestCase do
       end
     end
     
+    context "after scope" do
+      specify "works" do
+        @device.points.after(Time.parse('02/05/2009 07:59:00 UTC')).count.should.equal 2
+        @device.points.after(Time.parse('02/05/2009 08:00:00 UTC')).count.should.equal 1
+        @device.points.after(Time.parse('02/05/2009 08:15:00 UTC')).count.should.equal 0
+      end
+      
+      specify "is timezone-agnostic" do
+        @device.points.after(Time.parse('02/05/2009 02:59:00 EST')).count.should.equal 2
+        @device.points.after(Time.parse('02/05/2009 03:00:00 EST')).count.should.equal 1
+        @device.points.after(Time.parse('02/05/2009 03:15:00 EST')).count.should.equal 0
+      end
+    end
+    
+    context "before scope" do
+      specify "works" do
+        @device.points.before(Time.parse('02/05/2009 08:16:00 UTC')).count.should.equal 2
+        @device.points.before(Time.parse('02/05/2009 08:15:00 UTC')).count.should.equal 1
+        @device.points.before(Time.parse('02/05/2009 08:00:00 UTC')).count.should.equal 0
+      end
+      
+      specify "is timezone-agnostic" do
+        @device.points.before(Time.parse('02/05/2009 03:16:00 EST')).count.should.equal 2
+        @device.points.before(Time.parse('02/05/2009 03:15:00 EST')).count.should.equal 1
+        @device.points.before(Time.parse('02/05/2009 03:00:00 EST')).count.should.equal 0
+      end
+    end
+    
     context "in_range scope" do
       setup do
-        @point4 = Point.create(:occurred_at => Time.parse('02/04/2009 00:00:00 EST'))
-        @point3 = Point.create(:occurred_at => Time.parse('02/03/2009 23:59:59 EST'))
-        @point2 = Point.create(:occurred_at => Time.parse('02/02/2009 00:00:00 EST'))
-        @point1 = Point.create(:occurred_at => Time.parse('02/01/2009 23:59:59 EST'))
+        @point4 = @device.points.create(:occurred_at => Time.parse('02/04/2009 00:00:00 EST'))
+        @point3 = @device.points.create(:occurred_at => Time.parse('02/03/2009 23:59:59 EST'))
+        @point2 = @device.points.create(:occurred_at => Time.parse('02/02/2009 00:00:00 EST'))
+        @point1 = @device.points.create(:occurred_at => Time.parse('02/01/2009 23:59:59 EST'))
       end
       
       specify "works" do
@@ -71,10 +100,10 @@ describe "Point", ActiveSupport::TestCase do
     
     context "trip markers scope" do
       specify "works" do
-        @point1 = Point.create(:event => Point::PERIODIC_IGNITION_ON)
-        @point2 = Point.create(:event => Point::PERIODIC_IGNITION_OFF)
-        @point3 = Point.create(:event => Point::PERIODIC_HEARTBEAT)
-        @point4 = Point.create(:event => Point::RESET)
+        @point1 = @device.points.create(:event => Point::PERIODIC_IGNITION_ON, :occurred_at => Time.now)
+        @point2 = @device.points.create(:event => Point::PERIODIC_IGNITION_OFF, :occurred_at => Time.now)
+        @point3 = @device.points.create(:event => Point::PERIODIC_HEARTBEAT, :occurred_at => Time.now)
+        @point4 = @device.points.create(:event => Point::RESET, :occurred_at => Time.now)
         
         Point.trip_markers.should.include(@point1)
         Point.trip_markers.should.include(@point2)
@@ -178,16 +207,28 @@ describe "Point", ActiveSupport::TestCase do
     end
   end
   
-  context "Updating associated trip timestamps" do
-    specify "works" do
-      Trip.any_instance.expects(:update_point_data)
+  context "Updating precalc fields" do
+    specify "calls precalc on save" do
+      Point.any_instance.expects(:update_precalc_fields)
       @point.should.save
     end
     
-    specify "skips updates if there is no trip" do
-      Trip.any_instance.expects(:update_point_data).never
+    specify "calls leg precalc, if it exists" do
+      Leg.any_instance.expects(:update_precalc_fields)
+      @point.should.save
+      
+      Leg.any_instance.expects(:update_precalc_fields).never
       @point.leg = nil
       @point.should.save
+    end
+    
+    specify "saves duration" do
+      p1 = points(:quentin_point)
+      p2 = points(:quentin_point2)
+      
+      p1.duration.should.be.nil
+      p2.save
+      p1.reload.duration.should.equal 900
     end
   end
   

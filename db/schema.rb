@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091026183615) do
+ActiveRecord::Schema.define(:version => 20091028150506) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -129,6 +129,11 @@ ActiveRecord::Schema.define(:version => 20091026183615) do
     t.integer  "trip_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "start"
+    t.datetime "finish"
+    t.integer  "miles",                                     :default => 0
+    t.integer  "idle_time",                                 :default => 0
+    t.decimal  "average_mpg", :precision => 4, :scale => 1, :default => 0.0
   end
 
   create_table "phone_devices", :force => true do |t|
@@ -170,6 +175,7 @@ ActiveRecord::Schema.define(:version => 20091026183615) do
     t.decimal  "battery",      :precision => 3, :scale => 1
     t.integer  "signal"
     t.boolean  "locked"
+    t.integer  "duration"
   end
 
   create_table "tags", :force => true do |t|
@@ -201,7 +207,7 @@ ActiveRecord::Schema.define(:version => 20091026183615) do
     t.integer  "device_id"
     t.datetime "start"
     t.datetime "finish"
-    t.integer  "miles"
+    t.integer  "miles",                                     :default => 0
     t.integer  "idle_time",                                 :default => 0
     t.decimal  "average_mpg", :precision => 4, :scale => 1, :default => 0.0
   end
