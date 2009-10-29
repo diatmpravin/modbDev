@@ -2,9 +2,6 @@ require 'test_helper'
 
 describe "Device", ActiveSupport::TestCase do
   setup do
-    # Sort out all the precalc fields that would be filled in
-    points(:quentin_point2).update_precalc_fields
-    
     @account = accounts(:quentin)
     @phone = phones(:quentin_phone)
     @device = devices(:quentin_device)
