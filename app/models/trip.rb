@@ -36,20 +36,6 @@ class Trip < ActiveRecord::Base
     self.tags = device.account.tags.find(list)
   end
   
-  def update_point_data(do_save = true)
-    first_point = points.first
-    last_point = points.last
-    if first_point && last_point
-      self.start = first_point.occurred_at
-      self.finish = last_point.occurred_at
-      self.miles = last_point.miles - first_point.miles
-      self.miles += Device::ROLLOVER_MILES if self.miles < 0
-      self.idle_time = compute_idle_time
-      self.average_mpg = compute_average_mpg
-      self.save if do_save
-    end
-  end
-  
   def color
     device.color
   end
@@ -63,11 +49,7 @@ class Trip < ActiveRecord::Base
   end
   
   def average_speed
-    if duration > 0
-      (miles.to_f * 60 * 60 / duration).to_i
-    else
-      0
-    end
+    legs.map {|leg| leg.average_speed}.sum / legs.length
   end
   
   def average_rpm
@@ -96,7 +78,7 @@ class Trip < ActiveRecord::Base
       Leg.update_all({:trip_id => trip.id}, {:trip_id => self.id})
       trip.tags = (trip.tags + self.tags).uniq
       self.reload.destroy
-      trip.reload.update_point_data
+      trip.reload.update_precalc_fields
     
       trip
     else
@@ -114,10 +96,10 @@ class Trip < ActiveRecord::Base
     trip = device.trips.create
     trip.legs << legs.last
     trip.tags = self.tags
-    trip.update_point_data
+    trip.update_precalc_fields
     
     self.legs.reload
-    self.update_point_data
+    self.update_precalc_fields
     
     trip
   end
@@ -143,26 +125,27 @@ class Trip < ActiveRecord::Base
     ))
   end
   
-  protected
-  def compute_idle_time
-    sum = 0
-    points[0..-2].each_index do |i|
-      if points[i].speed == 0
-        sum += points[i+1].occurred_at - points[i].occurred_at
-      end
-    end
-    
-    sum
+  # Update any precalc fields on this trip
+  def update_precalc_fields(do_save = true)
+    self.start = legs.first.start
+    self.finish = legs.last.finish
+    self.miles = legs.sum(:miles)
+    self.idle_time = legs.sum(:idle_time)
+    self.average_mpg = compute_average_mpg
+    self.save if do_save
   end
   
+  protected
   def compute_average_mpg
-    return points[0].mpg if duration <= 0
+    return legs.first.average_mpg if legs.length < 2
     
     sum = 0
-    points[0..-2].each_index do |i|
-      sum += (points[i+1].occurred_at - points[i].occurred_at) * (points[i+1].mpg + points[i].mpg) / 2
+    in_leg_duration = 0
+    legs.each do |leg|
+      sum += leg.duration * leg.average_mpg
+      in_leg_duration += leg.duration
     end
     
-    sum / duration
+    sum / in_leg_duration
   end
 end

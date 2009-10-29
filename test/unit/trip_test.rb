@@ -2,6 +2,10 @@ require 'test_helper'
 
 describe "Trip", ActiveSupport::TestCase do
   setup do
+    # Sort out all the precalc fields that would be filled in
+    points(:quentin_point2).update_precalc_fields
+    
+    @device = devices(:quentin_device)
     @trip = trips(:quentin_trip)
   end
   
@@ -88,24 +92,6 @@ describe "Trip", ActiveSupport::TestCase do
     trip.device_id.should.equal devices(:quentin_device).id
   end
   
-  specify "calculates total miles for trip" do
-    @trip.legs[0].points.clear
-    @trip.legs[0].points << Point.new(:miles => 30,
-      :occurred_at => Date.parse('02/01/2009'))
-    @trip.legs[0].points << Point.new(:miles => 61,
-      :occurred_at => Date.parse('02/02/2009'))
-    
-    @trip.reload.miles.should.equal 31
-    
-    @trip.legs[0].points.clear
-    @trip.legs[0].points << Point.new(:miles => Device::ROLLOVER_MILES - 1,
-      :occurred_at => Date.parse('02/01/2009'))
-    @trip.legs[0].points << Point.new(:miles => 7,
-      :occurred_at => Date.parse('02/02/2009'))
-    
-    @trip.reload.miles.should.equal 8
-  end
-  
   specify "defaults start and finish to current time on creation" do
     Time.freeze(Time.parse('02/05/2009 12:30:00 UTC')) do |t|
       trip = Trip.new
@@ -119,36 +105,50 @@ describe "Trip", ActiveSupport::TestCase do
     end
   end
   
-  context "Updating data from points" do
+  context "Updating precalc fields" do
+    setup do
+      @point1 = points(:quentin_point)
+      @point2 = points(:quentin_point2)
+    end
+  
     specify "updates start time" do
       time = Time.parse('01/01/1980 04:30:00 UTC')
       @trip.legs[0].points << Point.new(:occurred_at => time,
-        :miles => 30)
-      
+        :miles => 30,
+        :device => @device)
       @trip.reload.start.should.equal time
     end
     
     specify "updates finish time and miles" do
       time = Time.parse('01/01/2010 04:30:00 UTC')
-      
-      @trip.points.first.update_attribute(:miles, 45)
       @trip.legs[0].points << Point.new(:occurred_at => time,
-        :miles => 56)
-      
+        :miles => 30,
+        :device => @device)
       @trip.reload.finish.should.equal time
-      @trip.miles.should.equal 11
+    end
+    
+    specify "updates miles" do
+      @point2.update_attribute(:miles, 80)
+      @trip.reload.miles.should.equal 63
+    end
+    
+    specify "updates miles, handling mile rollover" do
+      @point2.update_attribute(:miles, 7)
+      @trip.reload.miles.should.equal 9990
     end
     
     specify "updates idle time" do
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('01/01/2010 04:30:00 UTC'),
         :miles => 30,
-        :speed => 0
+        :speed => 0,
+        :device => @device
       )
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('01/01/2010 04:35:00 UTC'),
         :miles => 30,
-        :speed => 25
+        :speed => 25,
+        :device => @device
       )
       
       @trip.reload.idle_time.should.equal 300
@@ -159,7 +159,8 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('02/05/2009 08:30:00 UTC'),
         :miles => 50,
-        :mpg => 26
+        :mpg => 26,
+        :device => @device
       )
       @trip.reload.average_mpg.should.equal 22
       
@@ -177,22 +178,26 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('02/05/2009 08:01:00 UTC'),
         :miles => 50,
-        :mpg => 7
+        :mpg => 7,
+        :device => @device
       )
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('02/05/2009 08:01:30 UTC'),
         :miles => 50,
-        :mpg => 9
+        :mpg => 9,
+        :device => @device
       )
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('02/05/2009 08:03:30 UTC'),
         :miles => 50,
-        :mpg => 15
+        :mpg => 15,
+        :device => @device
       )
       @trip.legs[0].points << Point.new(
         :occurred_at => Time.parse('02/05/2009 08:05:30 UTC'),
         :miles => 50,
-        :mpg => 18
+        :mpg => 18,
+        :device => @device
       )
       @trip.reload.average_mpg.should.equal estimated_mpg
     end
@@ -209,9 +214,6 @@ describe "Trip", ActiveSupport::TestCase do
     
     specify "knows average speed" do
       @trip.average_speed.should.equal 24
-      
-      @trip.update_attribute(:finish, @trip.start)
-      @trip.average_speed.should.equal 0
     end
     
     specify "knows average rpm" do
@@ -221,29 +223,27 @@ describe "Trip", ActiveSupport::TestCase do
   
   context "Collapsing a trip" do
     setup do
-      leg = Leg.new
-      leg.points << Point.new(
+      @t = devices(:quentin_device).trips.create
+      leg = @t.legs.create
+      
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 20,
         :miles => 30,
-        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC'),
+        :device => @device
       )
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 22,
         :miles => 35,
-        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
+        :device => @device
       )
-      
-      @t = devices(:quentin_device).trips.new
-      @t.legs << leg
-      @t.save
-      
-      @trip.update_point_data
     end
     
     specify "legs on the trip are moved to the collapsed trip" do
@@ -265,7 +265,7 @@ describe "Trip", ActiveSupport::TestCase do
       @t.collapse.should.equal @trip
       @trip.reload
       
-      @trip.miles.should.equal 18
+      @trip.miles.should.equal 11
       @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       @trip.idle_time.should.equal 0
       @trip.average_mpg.should.equal BigDecimal.new('20.4')
@@ -298,29 +298,27 @@ describe "Trip", ActiveSupport::TestCase do
   context "Expanding a trip" do
     setup do
       # Use the same test data from the collapse tests, but pre-collapse it.
-      @device = devices(:quentin_device)
+      t = @device.trips.create
+      leg = t.legs.create
       
-      leg = Leg.new
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 20,
         :miles => 30,
-        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC'),
+        :device => @device
       )
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 22,
         :miles => 35,
-        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
+        :device => @device
       )
-      
-      t = @device.trips.new
-      t.legs << leg
-      t.save
       
       t.collapse
       @trip.reload
@@ -342,7 +340,7 @@ describe "Trip", ActiveSupport::TestCase do
     
     specify "update data runs correctly on both trips" do
       # Sanity check on the "collapsed" values
-      @trip.miles.should.equal 18
+      @trip.miles.should.equal 11
       @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       @trip.idle_time.should.equal 0
       @trip.average_mpg.should.equal BigDecimal.new('20.4')

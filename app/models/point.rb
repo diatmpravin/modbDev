@@ -128,7 +128,6 @@ class Point < ActiveRecord::Base
       Point.update_all({:duration => post.occurred_at - occurred_at}, {:id => id})
     end
     
-    puts "point.update_precalc_fields calling leg"
     leg.update_precalc_fields if leg
   end
 end

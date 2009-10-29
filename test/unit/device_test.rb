@@ -2,6 +2,9 @@ require 'test_helper'
 
 describe "Device", ActiveSupport::TestCase do
   setup do
+    # Sort out all the precalc fields that would be filled in
+    points(:quentin_point2).update_precalc_fields
+    
     @account = accounts(:quentin)
     @phone = phones(:quentin_phone)
     @device = devices(:quentin_device)
@@ -86,7 +89,7 @@ describe "Device", ActiveSupport::TestCase do
       @device.should.not.be.valid
     end
     
-    xspecify "after hours start must be time-formatted" do
+    xspecify "after hours end must be time-formatted" do
       @device.after_hours_end_text = '1:00 am'
       @device.should.be.valid
       
@@ -132,6 +135,7 @@ describe "Device", ActiveSupport::TestCase do
 
       # Car starts out with ignition off
       @device.points.create(
+        :occurred_at => Time.parse('2009/02/17 09:00:00 UTC'),
         :event => 4002,
         :latitude => 33.64512,
         :longitude => -84.44697
@@ -261,11 +265,11 @@ describe "Device", ActiveSupport::TestCase do
       specify "will create a new leg on an existing trip within the pitstop threshold" do
         @device.update_attributes(:detect_pitstops => true, :pitstop_threshold => 5)
         
-        @device.process(@example_location.merge(:event => '6011', :time => '2:00:00'))
+        @device.process(@example_location.merge(:event => '6011', :time => '14:00:00'))
         point1 = Point.find(:last)
-        @device.process(@example_location.merge(:event => '6012', :time => '2:15:00'))
+        @device.process(@example_location.merge(:event => '6012', :time => '14:15:00'))
         point2 = Point.find(:last)
-        @device.process(@example_location.merge(:event => '6011', :time => '2:19:45'))
+        @device.process(@example_location.merge(:event => '6011', :time => '14:19:45'))
         point3 = Point.find(:last)
         
         point2.leg.should.equal point1.leg
@@ -276,11 +280,11 @@ describe "Device", ActiveSupport::TestCase do
       specify "will not create a new leg on an existing trip outside the pitstop threshold" do
         @device.update_attributes(:detect_pitstops => true, :pitstop_threshold => 5)
         
-        @device.process(@example_location.merge(:event => '6011', :time => '2:00:00'))
+        @device.process(@example_location.merge(:event => '6011', :time => '14:00:00'))
         point1 = Point.find(:last)
-        @device.process(@example_location.merge(:event => '6012', :time => '2:15:00'))
+        @device.process(@example_location.merge(:event => '6012', :time => '14:15:00'))
         point2 = Point.find(:last)
-        @device.process(@example_location.merge(:event => '6011', :time => '2:20:05'))
+        @device.process(@example_location.merge(:event => '6011', :time => '14:20:05'))
         point3 = Point.find(:last)
         
         point2.leg.should.equal point1.leg
@@ -330,7 +334,6 @@ describe "Device", ActiveSupport::TestCase do
       end
     end
 
-
     context "Landmark checking" do
       setup do
         @landmark = landmarks(:quentin)
@@ -360,7 +363,6 @@ describe "Device", ActiveSupport::TestCase do
     end
 
     context "speed alerts" do
-
       setup do
         @device.points.clear
         @device.update_attribute(:speed_threshold, 50)
@@ -389,32 +391,32 @@ describe "Device", ActiveSupport::TestCase do
       specify "only send alerts on points with mph > 5 the previous point" do
         # No alert, no event
         @example_location[:speed] = 45
-        @example_location[:time] = '12:18:54',
+        @example_location[:time] = '12:18:54'
         Event.should.differ(:count).by(0) { @device.process(@example_location) }
 
         # Alert!
         @example_location[:speed] = 51
-        @example_location[:time] = '12:19:10',
+        @example_location[:time] = '12:19:10'
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # No alert
         @example_location[:speed] = 52
-        @example_location[:time] = '12:19:30',
+        @example_location[:time] = '12:19:30'
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # No alert
         @example_location[:speed] = 54
-        @example_location[:time] = '12:20:00',
+        @example_location[:time] = '12:20:00'
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # Alert!
         @example_location[:speed] = 56
-        @example_location[:time] = '12:20:20',
+        @example_location[:time] = '12:20:20'
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         # Alert!
         @example_location[:speed] = 70
-        @example_location[:time] = '12:20:40',
+        @example_location[:time] = '12:20:40'
         Event.should.differ(:count).by(1) { @device.process(@example_location) }
 
         Mailer.deliveries.length.should.equal 3
@@ -471,7 +473,6 @@ describe "Device", ActiveSupport::TestCase do
     end
 
     context "After Hours" do
-
       setup do
         @device.update_attributes(
           :alert_on_after_hours => true,
@@ -578,7 +579,6 @@ describe "Device", ActiveSupport::TestCase do
           assert point.events.exists?(:event_type => Event::AFTER_HOURS)
         end
       end
-
     end
 
     specify "will update odometer" do
@@ -602,7 +602,7 @@ describe "Device", ActiveSupport::TestCase do
       @example_location[:obd_fw_version] = '0011'
       @example_location[:profile] = 'FacDflt'
       @example_location[:vin] = 'Z1ABCD'
-
+      
       @device.process(@example_location)
       @device.fw_version.should.equal 'ABCD'
       @device.obd_fw_version.should.equal '0011'
@@ -700,7 +700,6 @@ describe "Device", ActiveSupport::TestCase do
   end
 
   context "Aggregating for 'Today'" do
-
     setup do
       @device.points.clear
       @device.trips.clear
@@ -718,12 +717,11 @@ describe "Device", ActiveSupport::TestCase do
       l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST").utc, :miles => 300)
-      t.update_point_data
 
       data = @device.data_for(Date.parse("01/01/2009"))
       data.should.not.be.nil
       data.miles.should.equal 200
     end
-
   end
+  
 end
