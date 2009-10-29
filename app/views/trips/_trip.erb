@@ -11,7 +11,8 @@
   <% end -%>
   -->
   
-  <h4><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></h4>
+  <h4><%= h(trip.device.name) %></h4>
+  <strong><%= trip.start.in_time_zone(current_account.zone).to_s(:local) %></strong>
   <p><%= human_miles(trip.miles) %> over <%= human_duration(trip.duration) %></p>
   <div class="additional">
     <p>Max Speed: <%= trip.max_speed %> mph</p>
