@@ -244,9 +244,9 @@ describe "Point", ActiveSupport::TestCase do
       p1 = points(:quentin_point)
       p2 = points(:quentin_point2)
       
-      p1.duration.should.be.nil
+      p2.occurred_at = Time.parse('02/05/2009 08:17:00 UTC')
       p2.save
-      p1.reload.duration.should.equal 900
+      p1.reload.duration.should.equal 1020
     end
   end
   

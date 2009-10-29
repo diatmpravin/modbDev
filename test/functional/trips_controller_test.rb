@@ -141,29 +141,28 @@ describe "Trips Controller", ActionController::TestCase do
   context "Collapsing a trip" do
     setup do
       @trip = trips(:quentin_trip)
+      @trip2 = devices(:quentin_device).trips.create
+      leg = @trip2.legs.create
       
       # Data pulled from trip unit tests.
-      leg = Leg.new
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 20,
         :miles => 30,
-        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC'),
+        :device => @device
       )
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 22,
         :miles => 35,
-        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
+        :device => @device
       )
-      
-      @trip2 = devices(:quentin_device).trips.new
-      @trip2.legs << leg
-      @trip2.save
     end
     
     specify "works" do
@@ -190,16 +189,18 @@ describe "Trips Controller", ActionController::TestCase do
   context "Expanding a trip" do
     setup do
       @trip = trips(:quentin_trip)
+      @trip2 = devices(:quentin_device).trips.create
+      leg = @trip2.legs.create
       
       # Data pulled from trip unit tests.
-      leg = Leg.new
-      leg.points << Point.new(
+      leg.points << Point.create(
         :event => 4001,
         :latitude => 33.68,
         :longitude => -84.40,
         :mpg => 20,
         :miles => 30,
-        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:17:00 UTC'),
+        :device => @device
       )
       leg.points << Point.new(
         :event => 4001,
@@ -207,12 +208,9 @@ describe "Trips Controller", ActionController::TestCase do
         :longitude => -84.40,
         :mpg => 22,
         :miles => 35,
-        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC')
+        :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
+        :device => @device
       )
-      
-      @trip2 = devices(:quentin_device).trips.new
-      @trip2.legs << leg
-      @trip2.save
     end
     
     specify "works" do
