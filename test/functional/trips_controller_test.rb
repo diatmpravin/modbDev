@@ -173,8 +173,9 @@ describe "Trips Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'success'
-      json['view'].should =~ /<h4>03:00 AM EST<\/h4>/
-      json['edit'].should =~ /<h4>03:00 AM EST<\/h4>/
+      json['view'].should =~ /<h4>#{@device.name}<\/h4>/
+      json['view'].should =~ /<strong>03:00 AM EST<\/strong>/
+      json['edit'].should =~ /<strong>03:00 AM EST<\/strong>/
     end
     
     specify "handles errors gracefully" do
@@ -225,10 +226,11 @@ describe "Trips Controller", ActionController::TestCase do
       }
       
       json['status'].should.equal 'success'
-      json['view'].should =~ /<h4>03:00 AM EST<\/h4>/
-      json['edit'].should =~ /<h4>03:00 AM EST<\/h4>/
-      json['new_trip']['view'].should =~ /<h4>03:17 AM EST<\/h4>/
-      json['new_trip']['edit'].should =~ /<h4>03:17 AM EST<\/h4>/
+      json['view'].should =~ /<h4>#{@device.name}<\/h4>/
+      json['view'].should =~ /<strong>03:00 AM EST<\/strong>/
+      json['edit'].should =~ /<strong>03:00 AM EST<\/strong>/
+      json['new_trip']['view'].should =~ /<strong>03:17 AM EST<\/strong>/
+      json['new_trip']['edit'].should =~ /<strong>03:17 AM EST<\/strong>/
     end
     
     specify "handles errors gracefully" do
