@@ -15,6 +15,7 @@ class VehicleSummaryReport < Report
       :name => "Name",
       :miles => "Miles",
       :mpg => "MPG",
+      :duration => "Operating Time (s)",
       :idle_time => "Idle Time (s)",
       :event_speed => "Speed Events",
       :event_geofence => "Geofence Events",
