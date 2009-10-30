@@ -208,10 +208,8 @@ class Device < ActiveRecord::Base
       # Speed alert, if flagged and if a new point is > 5 mph from the previous speed alert point
       if alert_on_speed? && point.speed > speed_threshold
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)
-        if !last_point ||
-          last_point.speed <= speed_threshold ||
-          (last_point.speed > speed_threshold && last_point.speed + 5 <= point.speed)
 
+        if !last_point || last_point.speed <= speed_threshold
           alert_recipients.each do |r|
             r.alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)")
           end
