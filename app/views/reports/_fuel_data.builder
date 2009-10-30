@@ -9,7 +9,8 @@ xml.graph(:caption => report.title,
           :AlternateHGridColor => '323c3e',
           :alternateHGridAlpha => '5',
           :decimalPrecision => '1',
-          :formatNumberScale => '0') do
+          :formatNumberScale => '0',
+          :connectNullData => '1') do
 
   xml.categories do
     report.data.each do |r|
@@ -24,7 +25,8 @@ xml.graph(:caption => report.title,
     :renderAs => 'LINE'
   ) do
     report.data.each do |r|
-      xml.set :value => mpg_format(r[:mpg]), :toolText => "#{r[:mpg]} MPG" if r[:mpg] > 0.0
+      value = r[:mpg] > 0.0 ? mpg_format(r[:mpg]) : nil
+      xml.set :value => value, :toolText => "#{r[:mpg]} MPG"
     end
   end
 
@@ -36,7 +38,8 @@ xml.graph(:caption => report.title,
     :renderAs => 'COLUMN'
   ) do
     report.data.each do |r|
-      xml.set :value => r[against], :toolText => "#{r[against]} #{unit}" if r[:mpg] > 0.0
+      value = r[:mpg] > 0.0 ? r[against] : nil
+      xml.set :value => value, :toolText => "#{r[against]} #{unit}"
     end
   end
 

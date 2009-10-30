@@ -56,8 +56,9 @@ class FuelSummaryReport < Report
 
         @dates << date
 
-        @mpg[device.name] ||= []
-        @mpg[device.name] << mpg
+        @mpg[date] ||= {}
+        @mpg[date][device.name] ||= []
+        @mpg[date][device.name] << mpg
       end
     end
   end
