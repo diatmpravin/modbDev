@@ -286,7 +286,7 @@ class Device < ActiveRecord::Base
   #end
 
   def point_is_after_hours?(point)
-    tod = point.occurred_at.in_time_zone(account.zone)
+    tod = point.occurred_at.in_time_zone(zone)
     tod -= tod.beginning_of_day
 
     if after_hours_start <= after_hours_end

@@ -150,7 +150,8 @@ describe "Alert Recipient", ActiveSupport::TestCase do
         
         @mail.deliveries.length.should.be 1
         @mail.deliveries.first.to.should.equal ['quentin@example.com']
-        @mail.deliveries.first.body.should.equal '02:00 PM EDT, 03-25-2009 abcd'
+        #@mail.deliveries.first.body.should.equal '02:00 PM EDT, 03-25-2009 abcd'
+        @mail.deliveries.first.body.should.equal '06:00 PM UTC, 03-25-2009 abcd'
       end
     end
     
@@ -161,7 +162,8 @@ describe "Alert Recipient", ActiveSupport::TestCase do
         
         @mail.deliveries.length.should.be 1
         @mail.deliveries.first.to.should.equal ['3135551212@messaging.sprintpcs.com']
-        @mail.deliveries.first.body.should.equal '02:00 PM EDT, 03-25-2009 abcd'
+        #@mail.deliveries.first.body.should.equal '02:00 PM EDT, 03-25-2009 abcd'
+        @mail.deliveries.first.body.should.equal '06:00 PM UTC, 03-25-2009 abcd'
       end
     end
   end

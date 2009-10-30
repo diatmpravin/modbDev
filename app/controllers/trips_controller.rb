@@ -9,10 +9,10 @@ class TripsController < ApplicationController
     @date = start_date
     
     if @device
-      @trips = @device.trips.in_range(start_date, end_date, current_account.zone).
+      @trips = @device.trips.in_range(start_date, end_date, current_user.zone).
         all(:include => :device)
     else
-      @trips = Trip.in_range(start_date, end_date, current_account.zone).
+      @trips = Trip.in_range(start_date, end_date, current_user.zone).
         all(:conditions => {:device_id => current_account.device_ids}, :include => :device)
     end
     
@@ -23,8 +23,8 @@ class TripsController < ApplicationController
           {
             :id => trip.id,
             :device_id => trip.device_id,
-            :start => trip.start.to_i + trip.start.in_time_zone(current_account.zone).utc_offset,
-            :finish => trip.finish.to_i + trip.finish.in_time_zone(current_account.zone).utc_offset,
+            :start => trip.start.to_i + trip.start.in_time_zone(current_user.zone).utc_offset,
+            :finish => trip.finish.to_i + trip.finish.in_time_zone(current_user.zone).utc_offset,
             :color => trip.device.color
           }
         }}

@@ -21,10 +21,6 @@ class Account < ActiveRecord::Base
     self.setup_status == 0
   end
   
-  def zone
-    ActiveSupport::TimeZone["Eastern Time (US & Canada)"]
-  end
-  
   def today
     self[:today] || Time.now.to_date
   end

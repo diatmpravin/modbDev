@@ -54,13 +54,16 @@ class AlertRecipient < ActiveRecord::Base
   end
   
   def alert(message)
+    # TODO: How will alerts decide what timezone they are in?
+    # Perhaps alert recipients should be users.
     if email?
       Mailer.deliver_email_alert(self.email,
-        "#{account.zone.now.to_s(:alerts)} #{message}"
+        "#{ActiveSupport::TimeZone['UTC'].now.to_s(:alerts)} #{message}"
+        
       )
     else
       deliver_sms(self.phone_number, self.phone_carrier,
-        "#{account.zone.now.to_s(:alerts)} #{message}"
+        "#{ActiveSupport::TimeZone['UTC'].now.to_s(:alerts)} #{message}"
       )
     end
   end
