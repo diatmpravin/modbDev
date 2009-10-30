@@ -707,13 +707,16 @@ describe "Device", ActiveSupport::TestCase do
       l = t.legs.create
       l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
-        :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST").utc, :miles => 100)
+        :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST"), :miles => 100,
+        :device => @device)
       l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
-        :occurred_at => Time.parse("01/01/2009 11:50:30 AM EST").utc, :miles => 200)
+        :occurred_at => Time.parse("01/01/2009 11:50:30 AM EST"), :miles => 200,
+        :device => @device)
       l.points.create(
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
-        :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST").utc, :miles => 300)
+        :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST"), :miles => 300,
+        :device => @device)
 
       data = @device.data_for(Date.parse("01/01/2009"))
       data.should.not.be.nil
