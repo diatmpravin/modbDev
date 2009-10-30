@@ -18,6 +18,11 @@ class PrecalculatePointLegAndTripData < ActiveRecord::Migration
     Leg.all.each do |leg|
       points = Point.all(:conditions => {:leg_id => leg.id}, :order => 'occurred_at')
       
+      # Validate ALL points. If any have no device, exit.
+      if points.select {|p| p.device_id.nil?}.length > 0
+        next
+      end
+      
       first_point = points.first
       last_point = points.last
       
