@@ -28,7 +28,10 @@
         <% end -%>
         <ul>
           <% trip.legs.each_with_index do |leg, i| -%>
-            <li>Leg <%=i+1%></li>
+            <li>Leg: <%= human_miles(leg.miles) %> over <%= human_duration(leg.duration) %></li>
+            <% if i < trip.legs.length-1 -%>
+              <li class="pitstop">Stop: <%= human_duration(trip.legs[i+1].start - leg.finish) %></li>
+            <% end -%>
           <% end -%>
         </ul>
       </div>
