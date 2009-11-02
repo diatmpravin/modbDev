@@ -25,6 +25,7 @@ set :branch, ENV['TAG'] || ENV['BRANCH'] || 'master'
 
 # Dependencies
 depend(:remote, :gem, 'newrelic_rpm', '>= 2.9.5')
+depend(:remote, :gem, 'ruport', '>= 1.6.1')
 
 # Fix for sudo to properly use the shell
 default_run_options[:pty] = true
