@@ -1,7 +1,7 @@
 class TripDetailReport < Report
 
   def title
-    "Trip Detail Report - #{self.start} through #{self.end}"
+    "Trip Detail Report for #{self.device.name} - #{self.start} through #{self.end}"
   end
 
   def validate
