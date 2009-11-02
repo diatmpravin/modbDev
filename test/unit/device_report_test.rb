@@ -57,7 +57,8 @@ describe "Device Report", ActiveSupport::TestCase do
   end
   
   specify "handles a heartbeat report correctly" do
-    report = DeviceReport.parse('$$12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
+    #report = DeviceReport.parse('$$12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
+    report = DeviceReport.parse('$$12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G##')
     
     report.should.equal({
       :imei => '12345678901234567890',
@@ -79,15 +80,16 @@ describe "Device Report", ActiveSupport::TestCase do
       :battery => '14.3',
       :signal => '12',
       :gps => '1',
-      :fw_version => 'S001-1111A',
-      :obd_fw_version => '0088',
-      :profile => 'FacDflt',
+      #:fw_version => 'S001-1111A',
+      #:obd_fw_version => '0088',
+      #:profile => 'FacDflt',
       :vin => '1G1G1G1G1G1G1G'
     })
   end
   
   specify "handles a reset report correctly" do
-    report = DeviceReport.parse('$$12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
+    #report = DeviceReport.parse('$$12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
+    report = DeviceReport.parse('$$12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G##')
     
     report.should.equal({
       :imei => '12345678901234567890',
@@ -109,9 +111,9 @@ describe "Device Report", ActiveSupport::TestCase do
       :battery => '14.3',
       :signal => '12',
       :gps => '1',
-      :fw_version => 'S001-1111A',
-      :obd_fw_version => '0088',
-      :profile => 'FacDflt',
+      #:fw_version => 'S001-1111A',
+      #:obd_fw_version => '0088',
+      #:profile => 'FacDflt',
       :vin => '1G1G1G1G1G1G1G'
     })
   end

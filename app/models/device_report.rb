@@ -55,9 +55,11 @@ class DeviceReport
     ]
     
     EXTENDED_REPORT = POINT_REPORT + [
-      :fw_version,
-      :obd_fw_version,
-      :profile,
+      # At one point, (pre-1111A), the firmware reported these fields.
+      # Apparently the powers that be at Xirgo deemed them "not useful".
+      #:fw_version,
+      #:obd_fw_version,
+      #:profile,
       :vin
     ]
     
