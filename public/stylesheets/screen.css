@@ -700,7 +700,7 @@ a.add {
   margin:2px 2px 0 0;
   width:16px;
 }
-#sidebar .hover a.collapse, #sidebar .selected a.collapse {
+#sidebar .hover a.collapse {
   display:block;
 }
 #sidebar .trip a.expand {

@@ -500,7 +500,9 @@ Trips = {
     q('.trip:not(.selected)').live('click', Maps.selectTrip);
     
     q('.trip').live('mouseover', function() {
-      q(this).addClass('hover');
+      if (this != q('.trip:first')[0]) {
+        q(this).addClass('hover');
+      }
     }).live('mouseout', function() {
       q(this).removeClass('hover');
     });

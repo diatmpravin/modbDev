@@ -2,14 +2,10 @@
 
 <div class="color"><img src="<%= trip.color.filename %>" /></div>
 <div class="detail">
-  <!-- Comment out grouping functionality
-  <% unless hide_collapse -%>
-    <% form_tag collapse_trip_path(trip), :method => :put do -%>
-      <div class="loading"></div>
-      <%= link_to '', '#', {:class => 'collapse'} %>
-    <% end -%>
+  <% form_tag collapse_trip_path(trip), :method => :put do -%>
+    <div class="loading"></div>
+    <%= link_to '', '#', {:class => 'collapse'} %>
   <% end -%>
-  -->
   
   <h4><%= h(trip.device.name) %></h4>
   <strong><%= trip.start.in_time_zone(current_user.zone).to_s(:local) %></strong>
@@ -24,7 +20,6 @@
       <%= format_tags(trip.tags) %>
       (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
     </p>
-    <!-- Comment out grouping functionality
     <% if trip.legs.length > 1 -%>
       <div class="legs">
         <% form_tag expand_trip_path(trip), :method => :put do -%>
@@ -38,6 +33,5 @@
         </ul>
       </div>
     <% end -%>
-    -->
   </div>
 </div>

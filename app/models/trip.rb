@@ -80,7 +80,8 @@ class Trip < ActiveRecord::Base
       self.reload.destroy
       trip.reload.update_precalc_fields
     
-      trip
+      # Second reload sucks, but need to iron out stuff like mpg "9.xxxxxxxx"
+      trip.reload
     else
       false
     end
