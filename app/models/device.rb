@@ -119,7 +119,7 @@ class Device < ActiveRecord::Base
   #
   # TODO: Too much stuff in this method. Split apart geofence, thresholds, and trip handling
   def process(report)
-    unless report[:event] == DeviceReport::Event::VEHICLE_INFO
+    unless report[:event] == DeviceReport::Event::VEHICLE_INFO.to_s
       # Handle special data
       if report[:vin]
         self.fw_version = report[:fw_version]
@@ -130,6 +130,14 @@ class Device < ActiveRecord::Base
         end
         self.reported_vin_number = report[:vin]
         self.save
+        
+        # VIN Mismatch Alert
+        if report[:event] == DeviceReport::Event::RESET.to_s &&
+            self.vin_number != self.reported_vin_number
+          alert_recipients.each do |r|
+            r.alert("#{self.name} VIN Mismatch")
+          end
+        end
       end
 
       # Last reported point for this device
@@ -165,7 +173,7 @@ class Device < ActiveRecord::Base
 
       point.save
       self.reload # force "points.last" to be the newly added point
-
+      
       # Handle odometer
       if self.odometer && point.miles && last_point.miles
         miles = point.miles - last_point.miles
@@ -174,7 +182,13 @@ class Device < ActiveRecord::Base
           self.update_attribute(:odometer, self.odometer + miles)
         end
       end
-
+      
+      # VIN Mismatch Events
+      if !(self.vin_number.blank? || self.reported_vin_number.blank?) &&
+          self.vin_number != self.reported_vin_number
+        point.events.create(:event_type => Event::VIN_MISMATCH)
+      end
+      
       # Handle boundary testing for geofences
       if last_point
         geofences.each do |fence|

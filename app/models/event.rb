@@ -23,6 +23,7 @@ class Event < ActiveRecord::Base
   IDLE = 7
   AFTER_HOURS = 8
   AT_LANDMARK = 9
+  VIN_MISMATCH = 10
   
   TEXT = {
     ENTER_BOUNDARY => 'Enter Boundary',
@@ -33,7 +34,8 @@ class Event < ActiveRecord::Base
     RAPID_DECEL => 'Decel Exceed',
     IDLE => 'Idle',
     AFTER_HOURS => 'After Hours',
-    AT_LANDMARK => 'At Landmark'
+    AT_LANDMARK => 'At Landmark',
+    VIN_MISMATCH => 'VIN Mismatch'
   }
   
   attr_accessible :event_type, :geofence_name, :speed_threshold, :point,

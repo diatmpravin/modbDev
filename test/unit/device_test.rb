@@ -572,7 +572,43 @@ describe "Device", ActiveSupport::TestCase do
         end
       end
     end
-
+    
+    context "VIN Mismatch Alerts" do
+      setup do
+        @device.update_attribute(:vin_number, '1111')
+        Mailer.deliveries.clear
+      end
+      
+      specify "sends alerts if vin number does not match" do
+        @device.process(@example_location.merge(:event => '6015', :vin => '2222'))
+        
+        Mailer.deliveries.length.should.equal 1
+        Mailer.deliveries.first.body.should =~ /VIN Mismatch/
+      end
+      
+      specify "only sends the alert on power-up, not on heartbeat" do
+        @device.process(@example_location.merge(:event => '4006', :vin => '2222'))
+        
+        Mailer.deliveries.length.should.equal 0
+      end
+      
+      specify "adds vin mismatch events to points" do
+        @device.process(@example_location.merge(:event => '4001', :vin => '2222'))
+        
+        @device.points.last.events.first.event_type.should.equal Event::VIN_MISMATCH
+      end
+      
+      specify "do not add events if vin or reported vin is blank" do
+        @device.update_attribute(:vin_number, nil)
+        @device.process(@example_location.merge(:event => '4001', :vin => '2222'))
+        @device.points.reload.last.events.length.should.equal 0
+        
+        @device.update_attribute(:vin_number, '1111')
+        @device.process(@example_location.merge(:event => '4001', :vin => ''))
+        @device.points.reload.last.events.length.should.equal 0
+      end
+    end
+    
     specify "will update odometer" do
       @device.update_attribute(:odometer, 37000)
 
