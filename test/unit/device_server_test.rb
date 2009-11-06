@@ -41,7 +41,9 @@ describe "Device Server", ActiveSupport::TestCase do
     
     specify "works" do
       Point.should.differ(:count).by(1) do
-        @connection.handle_report('$$123456789012345,4001,2013/03/13,13:13:13,42.78894,-86.10680,172.8,0,0,0,0,0.0,10,1.6,17##')
+        DeviceServer::ReportHandler.new(
+          '$$123456789012345,4001,2013/03/13,13:13:13,42.78894,-86.10680,172.8,0,0,0,0,0.0,10,1.6,17##'
+        ).call
       end
       
       point = @device.points.last
