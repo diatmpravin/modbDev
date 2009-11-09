@@ -2,9 +2,6 @@ require 'test_helper'
 
 describe "Trip", ActiveSupport::TestCase do
   setup do
-    # Sort out all the precalc fields that would be filled in
-    points(:quentin_point2).update_precalc_fields
-    
     @device = devices(:quentin_device)
     @trip = trips(:quentin_trip)
   end

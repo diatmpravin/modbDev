@@ -2,9 +2,6 @@ require 'test_helper'
 
 describe "Leg", ActiveSupport::TestCase do
   setup do
-    # Sort out all the precalc fields that would be filled in
-    #points(:quentin_point2).update_precalc_fields
-    
     @leg = Leg.new
   end
   

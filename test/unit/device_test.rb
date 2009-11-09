@@ -413,7 +413,6 @@ describe "Device", ActiveSupport::TestCase do
 
         Mailer.deliveries.length.should.equal 2
       end
-
     end
 
     context "Rapid acceleration" do
