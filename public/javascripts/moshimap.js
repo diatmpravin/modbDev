@@ -337,20 +337,29 @@ MoshiProxy = {
   /**
    * Event handler called on mousewheel events within the map container.
    */
-  MoshiMap.mapScroll = function(event) {
-    // TODO: Google-style "pause" before zooming, with a zoom reticle.
-    // In the meantime, just zoom in for every "click" of the wheel.
-  
-    var _x = event.pageX - MoshiMap.moshiMap.mapContainer.position().left;
-    var _y = event.pageY - MoshiMap.moshiMap.mapContainer.position().top;
-    var ll = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(_x, _y));
+  MoshiMap.mapScroll = function(event, delta) {
+    // Save the lat/long position the cursor is currently scrolling over, and
+    // adjust the map after zoom so that the cursor is over the same lat/long.
     
-    if (event.detail < 0) {
+    var scrollX = event.pageX - MoshiMap.moshiMap.mapContainer.position().left,
+        scrollY = event.pageY - MoshiMap.moshiMap.mapContainer.position().top,
+        centerX = MoshiMap.moshiMap.mapContainer.width() / 2,
+        centerY = MoshiMap.moshiMap.mapContainer.height() / 2;
+    
+    var ll = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(scrollX, scrollY));
+    
+    if (delta > 0) {
       MoshiMap.moshiMap.map.zoomIn();
-    } else if (event.detail > 0) {
+    } else if (delta < 0) {
       MoshiMap.moshiMap.map.zoomOut();
     }
     
-    MoshiMap.moshiMap.map.setCenter(ll);
+    var offsetPoint = MoshiMap.moshiMap.map.llToPix(ll);
+    offsetPoint.x = centerX + (offsetPoint.x - scrollX);
+    offsetPoint.y = centerY + (offsetPoint.y - scrollY);
+    
+    MoshiMap.moshiMap.map.setCenter(MoshiMap.moshiMap.map.pixToLL(offsetPoint));
+    
+    return false;
   };
 })(jQuery);
