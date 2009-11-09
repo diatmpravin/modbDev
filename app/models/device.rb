@@ -11,8 +11,10 @@ class Device < ActiveRecord::Base
   has_many :device_alert_recipients, :dependent => :delete_all
   has_many :alert_recipients, :through => :device_alert_recipients
   has_many :events, :through => :points
-
-  has_one :position, :class_name => 'Point', :order => 'occurred_at DESC', :readonly => true
+  
+  # Last known position
+  has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
+    :conditions => "latitude <> 0 OR longitude <> 0", :readonly => true
 
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]

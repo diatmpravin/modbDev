@@ -639,20 +639,37 @@ describe "Device", ActiveSupport::TestCase do
   end
 
   specify "knows its last position" do
-    @device.position.should.equal @device.points.last
+    #@device.position.should.equal @device.points.last
+    @device.position.should.equal points(:quentin_point2)
 
     @device.points.delete_all
     @device.reload.position.should.be.nil
   end
 
+  specify "ignores last positions that have zero lat/long" do
+    @device.position.should.equal points(:quentin_point2)
+    
+    points(:quentin_point2).update_attribute(:latitude, 0)
+    @device.reload.position.should.equal points(:quentin_point2)
+    
+    points(:quentin_point2).update_attribute(:longitude, 0)
+    @device.reload.position.should.equal points(:quentin_point)
+    
+    points(:quentin_point).update_attribute(:latitude, 0)
+    points(:quentin_point).update_attribute(:longitude, 0)
+    @device.reload.position.should.be.nil
+  end
+  
   specify "can get current status of device" do
     @device.current_status.should.equal "Moving at 51 mph"
 
-    p = @device.points.create :speed => 0, :event => '4001', :occurred_at => 10.minutes.from_now
+    p = @device.points.create(:speed => 0, :event => '4001', :occurred_at => 10.minutes.from_now,
+      :latitude => '-86', :longitude => '42')
     @device.reload
     @device.current_status.should.equal "Idle"
 
-    @device.points.create :speed => 0, :event => '6012', :occurred_at => 20.minutes.from_now
+    @device.points.create(:speed => 0, :event => '6012', :occurred_at => 20.minutes.from_now,
+      :latitude => '-86', :longitude => '42')
     @device.reload
     @device.current_status.should.equal "Stationary"
 
