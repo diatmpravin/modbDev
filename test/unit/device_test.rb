@@ -639,7 +639,6 @@ describe "Device", ActiveSupport::TestCase do
   end
 
   specify "knows its last position" do
-    #@device.position.should.equal @device.points.last
     @device.position.should.equal points(:quentin_point2)
 
     @device.points.delete_all
