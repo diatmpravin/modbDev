@@ -172,8 +172,8 @@ MoshiProxy = {
     for(var i = 0; i < this.trip.legs.length; i++) {
       var leg = this.trip.legs[i];
       
-      for(var j = 0; j < leg.points.length; j++) {
-        var point = leg.points[j];
+      for(var j = 0; j < leg.displayable_points.length; j++) {
+        var point = leg.displayable_points[j];
         
         var title = point.time_of_day + '  ';
 
@@ -199,7 +199,7 @@ MoshiProxy = {
             title: title,
             description: description
           });
-        } else if (j==leg.points.length-1) {
+        } else if (j==leg.displayable_points.length-1) {
           this.addPoint(point, {
             icon: trip.color.filename.match(/(.*?)\.png/)[1] + '_stop.png',
             size: [21, 21],

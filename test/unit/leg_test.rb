@@ -13,6 +13,14 @@ describe "Leg", ActiveSupport::TestCase do
     specify "has many points" do
       @leg.should.respond_to(:points)
     end
+    
+    specify "has many displayable points" do
+      @leg = legs(:quentin_leg)
+      @leg.displayable_points.should.equal [points(:quentin_point), points(:quentin_point2)]
+      
+      points(:quentin_point2).update_attributes(:latitude => 0, :longitude => 0)
+      @leg.reload.displayable_points.should.equal [points(:quentin_point)]
+    end
   end
   
   context "Updating precalc fields" do

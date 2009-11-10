@@ -111,7 +111,7 @@ class Trip < ActiveRecord::Base
       :include => {
         :legs => {
           :include => {
-            :points => {
+            :displayable_points => {
               :methods => [:time_of_day],
               :include => {
                 :events => {

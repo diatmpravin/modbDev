@@ -14,7 +14,7 @@ class Device < ActiveRecord::Base
   
   # Last known position
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
-    :conditions => "latitude <> 0 OR longitude <> 0", :readonly => true
+    :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
 
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]
