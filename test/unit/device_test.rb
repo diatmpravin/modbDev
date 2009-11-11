@@ -272,7 +272,20 @@ describe "Device", ActiveSupport::TestCase do
         point.device_id.should.equal @device.id
         point.leg.should.be.nil
       end
-      
+     
+      specify "will create a new leg on an existing trip if mileage rolls over" do
+        @device.process(@example_location.merge(:event => '6011', :time => '14:00:00', :miles => '20'))
+        point1 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '4001', :time => '14:02:00', :miles => '21'))
+        point2 = Point.find(:last)
+        @device.process(@example_location.merge(:event => '4001', :time => '14:05:00', :miles => '5'))
+        point3 = Point.find(:last)
+        
+        point2.leg.should.equal point1.leg
+        point3.leg.should.not.equal point2.leg
+        point3.leg.trip.should.equal point2.leg.trip
+      end
+
       specify "will create a new leg on an existing trip within the pitstop threshold" do
         @device.update_attributes(:detect_pitstops => true, :pitstop_threshold => 5)
         

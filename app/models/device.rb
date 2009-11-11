@@ -155,7 +155,11 @@ class Device < ActiveRecord::Base
       if trip_point && trip_point.running? &&
           point.occurred_at < trip_point.occurred_at + TRIP_REPORT_CUTOFF &&
           point.event != Point::IGNITION_ON
-        if !point.trip_marker?
+        if point.miles < trip_point.miles
+          # If the mileage rolled over, create a new leg on the trip.
+          # Not perfect, but eliminates the "9000 mile" problem.
+          point.leg = trip_point.leg.trip.legs.create
+        elsif !point.trip_marker?
           point.leg = trip_point.leg
         elsif point.running?
           point.leg = trip_point.leg
