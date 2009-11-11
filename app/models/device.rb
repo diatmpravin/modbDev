@@ -153,7 +153,8 @@ class Device < ActiveRecord::Base
 
       # Handle trip activity
       if trip_point && trip_point.running? &&
-          point.occurred_at < trip_point.occurred_at + TRIP_REPORT_CUTOFF
+          point.occurred_at < trip_point.occurred_at + TRIP_REPORT_CUTOFF &&
+          point.event != Point::IGNITION_ON
         if !point.trip_marker?
           point.leg = trip_point.leg
         elsif point.running?

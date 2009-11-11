@@ -245,6 +245,20 @@ describe "Device", ActiveSupport::TestCase do
         Point.find(:last).leg.trip.device_id.should.equal @device.id
       end
 
+      specify "creeates a new trip anytime it receives IGNITION_ON" do
+        @device.process(@example_location)
+        @example_location[:time] = '20:18:54'
+        @example_location[:event] = '6011'
+
+        Trip.should.differ(:count).by(1) do
+          Leg.should.differ(:count).by(1) do
+            @device.reload.process(@example_location)
+          end
+        end
+        
+        Point.find(:last).leg.trip.device_id.should.equal @device.id
+      end
+
       specify "will not build trips if car is off" do
         @example_location[:event] = '4002'
 
