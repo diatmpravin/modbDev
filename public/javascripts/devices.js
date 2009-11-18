@@ -15,14 +15,14 @@ Devices = {
       q(this).find('.buttons').hide();
     });
     
-    q('div.device input.edit').live('click', Devices.edit);
-    q('div.device input.delete').live('click', function() { 
-      q("#removeDevice").dialog("open").data('device', q(this)); 
+    q('a.delete').live('click', function() {
+      q('#removeDevice').find('form').attr('action', this.href).end()
+                        .dialog('open');
       return false;
     });
     q('div.device[id!=new] input.save').live('click', Devices.save);
     q('div.device[id!=new] input.cancel').live('click', Devices.cancel);
-
+    
     q("#removeDevice").dialog({
       title: 'Remove Vehicle',
       modal: true,
@@ -159,26 +159,10 @@ Devices = {
   }
   ,
   destroy: function() {
-    var _this = q(this),
-        _view = _this.data("device").closest('div.view'),
-        _edit = _view.siblings('div.edit');
-
-    _edit.find('form').ajaxSubmit({
-      dataType: 'json',
-      type: 'delete',
-      beforeSubmit: function() { _view.find('.loading').show(); },
-      complete: function() { _view.find('.loading').hide(); _this.dialog('close'); },
-      success: function(json) {
-        if (json.status == 'success') {
-          var _device = _view.closest('div.device');
-          _device.hide('normal', function() {
-            _device.remove();
-          });
-        } else {
-          location.reload();
-        }
-      }
-    });
+    var _this = q(this);
+    
+    _this.dialogLoader().show();
+    _this.find('form').submit();
     
     return false;
   }

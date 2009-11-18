@@ -5,16 +5,29 @@
   </div>
   <div class="clear spacer"></div>
   
-  <% @devices.each do |device| -%>
-    <div class="device">
-      <div class="view">
-        <%= render :partial => 'device', :locals => {:device => device} %>
-      </div>
-      <div class="edit">
-        <%= render :partial => 'form', :locals => {:device => device} %>
-      </div>
-    </div>
-  <% end -%>
+  <table class="data">
+    <thead>
+      <tr>
+        <th><%= check_box_tag :devices_all, true, false %></th>
+        <th>Name</th>
+        <th>Tracker ID</th>
+        <th>VIN</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <% @devices.each do |device| -%>
+      <tr>
+        <td><%= check_box_tag :devices, device.id, false, :id => dom_id(device) %></td>
+        <td><%= h(device.name) %></td>
+        <td><%= h(device.imei_number) %></td>
+        <td><%= h(device.vin_number || '-') %></td>
+        <td class="buttons">
+          <%= link_to 'Edit', edit_device_path(device), :class => 'edit', :title => 'Edit' %>
+          <%= link_to 'Delete', device_path(device), :class => 'delete', :title => 'Remove' %>
+        </td>
+      </tr>
+    <% end -%>
+  </table>
 </div>
 
 <div id="newAlertRecipient" class="dialog">
@@ -22,6 +35,8 @@
 </div>
 
 <div id="removeDevice" class="dialog">
+  <% form_tag devices_path, :method => :delete do -%>
+  <% end -%>
   <p>If you remove this vehicle, it will be deleted permanently.</p>
   <p>Any associated vehicle history will be erased.</p>
   <p>Are you sure you want to remove this vehicle?</p>
@@ -35,12 +50,12 @@
     </div>
     
     <div class="field">
-      <%= label_tag :imei, 'IMEI Number* ' %>
+      <%= label_tag :imei, 'Tracker ID* ' %>
       <%= text_field_tag :imei, '' %>
     </div>
 
     <div class="field">
-      <%= label_tag :imei_confirmation, 'Confirm IMEI Number* ' %>
+      <%= label_tag :imei_confirmation, 'Confirm Tracker ID* ' %>
       <%= text_field_tag :imei_confirmation, '' %>
     </div>
     <br/>

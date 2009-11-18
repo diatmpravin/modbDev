@@ -7,9 +7,8 @@
     </div>
     
     <div class="field">
-      <%= f.label :imei_number, 'IMEI Number' %>
-      <%= f.text_field :imei_number %>
-      <%= error_message_on device, :tracker, :prepend_text => '* IMEI Number ' %>
+      <%= f.label :imei_number, 'Tracker ID' %>
+      <%= h(device.imei_number) %>
     </div>
     
     <div class="field">
@@ -110,7 +109,7 @@
   <div class="clear"></div>
   <div class="buttons">
     <div class="loading"></div>
-    <%= button_tag 'Cancel', :class => 'cancel' %>
-    <%= button_tag 'Save', :class => 'save' %>
+    <%= link_to 'Cancel', devices_path, :class => 'button simple' %>
+    <%= submit_tag 'Save', :class => 'button' %>
   </div>
 <% end -%>

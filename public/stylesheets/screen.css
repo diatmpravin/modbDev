@@ -8,6 +8,8 @@ html, body, div, span, iframe, p, form, label, img {
 /* element styles */
 body {
   background-color:#323c3e;
+}
+body, table, input, select {
   font:12px/1.4em helvetica,arial,sans-serif;
 }
 h1 {
@@ -783,16 +785,13 @@ a.add {
 #settings .field {
   margin-bottom:8px;
 }
-#settings .buttons {
+#settings div.buttons {
   margin:0 -8px 0 -8px;
   float:right;
 }
 #settings .buttonsLeft {
   margin:0 -8px 0 -8px;
   float:left;
-}
-#settings .button:hover {
-  background-color:#203439;
 }
 #settings .buttons .loading {
   float:left;
@@ -811,39 +810,38 @@ a.add {
   overflow:hidden;
 }
 
+/* settings for button areas, links, etc. */
+div.buttons {
+  line-height:1.8em;
+}
 .buttons input {
   float:left;
   margin:0 8px 0 8px;
 }
-a.button {
+div.buttons a {
   float:left;
   margin:0 8px 0 8px;
-  border:none;
-  background-position:0 0;
-  background-repeat:no-repeat;
-  height:25px;
 }
-a.button:hover {
-  background-position:0 -26px;
+td.buttons a {
+  float:left;
+  margin:0 4px 0 4px;
 }
-a.button:active {
-  background-position:0 -52px;
+a.edit {
+  background:transparent url(/images/edit.png) no-repeat top left;
+  width:16px;
+  height:16px;
+  display:block;
+  text-indent:-999em;
+  overflow:hidden;
 }
-a.addVehicle { background-image:url(/images/buttons/add_vehicle.gif); width:94px; }
-a.addGeofence { background-image:url(/images/buttons/add_geofence.gif); width:106px; }
-a.downloadPhoneSoftware { background-image:url(/images/buttons/download_phone_software.gif); width:183px; }
-a.activatePhoneSoftware { background-image:url(/images/buttons/activate_phone_software.gif); width:172px; }
-.buttons a.editSettings { background-image:url(/images/buttons/edit_settings.gif); width:100px; }
-.buttons a.delete { background-image:url(/images/buttons/remove.gif); width:73px; }
-.buttons a.cancel { background-image:url(/images/buttons/cancel.gif); width:63px; }
-.buttons a.save { background-image:url(/images/buttons/save_changes.gif); width:107px; }
-.buttons a.createAccount { background-image:url(/images/buttons/create_my_account.gif); width:136px; }
-.buttons a.continue { background-image:url(/images/buttons/continue.gif); width:77px; }
-a.edit { background-image:url(/images/buttons/edit.gif); width:46px; }
-a.addTracker { background-image:url(/images/buttons/add_another_tracker.gif); width:147px; margin:8px 0 0 0; }
-a.back { background-image:url(/images/buttons/back.gif); width:53px; }
-a.login { background-image:url(/images/buttons/login.gif); width:55px; margin:0; }
-a.runReport { background-image:url(/images/buttons/run_report.gif); width:91px; margin:0 8px 0 0; }
+a.delete {
+  background:transparent url(/images/delete.png) no-repeat top left;
+  width:16px;
+  height:16px;
+  display:block;
+  text-indent:-999em;
+  overflow:hidden;
+}
 
 /* phone settings */
 #settings .phones #new {
@@ -1660,33 +1658,31 @@ only slightly modified
 --------------------------------------------------------------------------------
 */
 
-table.styled {
-	border-collapse: collapse;
-	border-left: 1px solid #ccc;
-	border-top: 1px solid #ccc;
-	color: #333;
+table.data {
+	border-collapse:collapse;
+	border-left:1px solid #ccc;
+	border-top:1px solid #ccc;
+	color:#333;
 }
 
-table.styled thead tr th {
-	background: #e2e2e2;
-  text-align: left;
-}
-
-table.styled thead tr th.csv {
-  background: #f6f6f6;
-  text-align: left;
-}
-
-table.styled td,
-table.styled th {
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	padding: 5px;
-	vertical-align: top;
+table.data thead tr th {
+	background:#e2e2e2;
   text-align:left;
 }
 
-table.styled tr.odd th,
-table.styled tr.odd td {
-	background: #efefef;
+table.data thead tr th.csv {
+  background:#f6f6f6;
+  text-align:left;
+}
+
+table.data td, table.data th {
+	border-right:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	padding:5px;
+	vertical-align:top;
+  text-align:left;
+}
+
+table.data tr.odd th, table.data tr.odd td {
+	background:#efefef;
 }
