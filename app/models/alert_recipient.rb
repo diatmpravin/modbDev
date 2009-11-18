@@ -18,6 +18,15 @@ class AlertRecipient < ActiveRecord::Base
     }
   }
   
+  # Return alert recipients that match the given parameters
+  named_scope :matching, lambda { |hash|
+    {
+      :conditions => hash[:recipient_type] == EMAIL ?
+        ["recipient_type = ? AND email = ?", hash[:recipient_type], hash[:email]] :
+        ["recipient_type = ? AND phone_number = ?", hash[:recipient_type], hash[:phone_number]]
+    }
+  }
+  
   class << self
     def valid_carriers
       SMSFu::carriers.map &:first

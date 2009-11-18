@@ -42,5 +42,20 @@ describe "Alert Recipients Controller", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['error'].should.equal ['Email is invalid.']
     end
+    
+    specify "will return an EXISTING recipient if appropriate" do
+      AlertRecipient.should.differ(:count).by(0) do
+        put :create, {
+          :alert_recipient => {
+            :recipient_type => 0,
+            :email => 'quentin@example.com'
+          }
+        }
+      end
+      
+      json['status'].should.equal 'success'
+      json['id'].should.equal alert_recipients(:quentin_recipient).id
+      json['display_string'].should.equal 'quentin@example.com'
+    end
   end
 end

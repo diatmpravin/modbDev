@@ -4,9 +4,14 @@ class AlertRecipientsController < ApplicationController
   end
   
   def create
-    @alert_recipient = current_account.alert_recipients.build(params[:alert_recipient])
+    # If a matching (similar) record already exists, we will simply return it.
+    @alert_recipient = current_account.alert_recipients.matching(params[:alert_recipient]).first
     
-    if @alert_recipient.save
+    if !@alert_recipient
+      @alert_recipient = current_account.alert_recipients.new
+    end
+    
+    if @alert_recipient.update_attributes(params[:alert_recipient])
       render :json => {
         :status => 'success',
         :id => @alert_recipient.id,

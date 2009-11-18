@@ -37,6 +37,18 @@ describe "Alert Recipient", ActiveSupport::TestCase do
         @account.alert_recipients.for(Geofence.new).should.include(@recipient)
       end
     end
+    
+    context "matching()" do
+      specify "matches appropriate emails" do
+        set = AlertRecipient.matching(:recipient_type => 0, :email => 'quentin@example.com')
+        set.should.equal [alert_recipients(:quentin_recipient)]
+      end
+      
+      specify "matches appropriate phone numbers" do
+        set = AlertRecipient.matching(:recipient_type => 1, :phone_number => '3135551212')
+        set.should.equal [alert_recipients(:quentin_sms)]
+      end
+    end
   end
   
   context "Validations" do
