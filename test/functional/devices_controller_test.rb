@@ -36,12 +36,12 @@ describe "Devices Controller", ActionController::TestCase do
       @device = devices(:quentin_device)
     end
     
-    specify "works" do
+    specify "works (shows you the edit form)" do
       get :show, {
         :id => @device.id
       }
       
-      template.should.be 'show'
+      template.should.be 'edit'
       assigns(:device).should.equal @device
     end
     
@@ -56,7 +56,7 @@ describe "Devices Controller", ActionController::TestCase do
     end
   end
   
-  context "Adding devices" do
+  context "Adding devices (json only)" do
     setup do
       Tracker.create(:imei_number => '923456789012345')
     end
@@ -130,22 +130,20 @@ describe "Devices Controller", ActionController::TestCase do
     end
     
     specify "works" do
-      Tracker.create(:imei_number => '101010010101019')
-      
       post :update, {
         :id => @device.id,
         :device => {
           @device.id.to_s => {
-            :name => 'A new name',
-            :imei_number => '101010010101019'
+            :name => 'Updated name',
+            :rpm_threshold => 3017
           }
         }
       }
       
-      json['status'].should.equal 'success'
+      should.redirect_to :action => 'index'
       @device.reload
-      @device.name.should.equal 'A new name'
-      @device.imei_number.should.equal '101010010101019'
+      @device.name.should.equal 'Updated name'
+      @device.rpm_threshold.should.equal 3017
     end
     
     specify "handles user errors" do
@@ -158,8 +156,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       }
       
-      json['status'].should.equal 'failure'
-      json['html'].should =~ /is too long/
+      template.should.equal 'edit'
       assigns(:device).name.should.equal "I'm a name that's 31 characters"
       assigns(:device).errors.on(:name).should.equal "is too long (maximum is 30 characters)"
     end
@@ -177,7 +174,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       end
       
-      json['status'].should.equal 'success'
+      should.redirect_to :action => 'index'
       @account.reload.devices.should.be.empty
     end
   end

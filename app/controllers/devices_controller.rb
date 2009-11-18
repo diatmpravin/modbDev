@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_filter :set_device, :only => [:edit, :update, :destroy, :show, :position]
-  before_filter :set_devices, :except => [:show, :destroy]
+  before_filter :set_devices, :only => [:index]
   
   layout except_ajax('devices')
 
@@ -24,7 +24,9 @@ class DevicesController < ApplicationController
   
   def show
     respond_to do |format|
-      format.html
+      format.html {
+        render :action => 'edit'
+      }
       format.json {
         render :json => [@device].to_json(
           :methods => [:color, :connected],
@@ -68,26 +70,37 @@ class DevicesController < ApplicationController
   end
   
   def edit
+    respond_to do |format|
+      format.html
+      format.json {
+        render :json => { :partial => render_to_string(:partial => 'form', :locals => {:device => @device}) }
+      }
+    end
   end
   
   def update
     params[:device][@device.id.to_s][:alert_recipient_ids] ||= []
-    @device.tracker = Tracker.find_by_imei_number(params[:device][@device.id.to_s][:imei_number])
     
     if @device.update_attributes(params[:device][@device.id.to_s])
-      render :json => {:status => 'success'}
+      # Presumably, this needs to return to index with the CORRECT FILTER
+      # and the CORRECT PAGE.
+      redirect_to :action => 'index'
     else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:action => 'edit')
-      }
+      render :action => 'edit'
     end
   end
   
   def destroy
     @device.destroy
     
-    render :json => {:status => 'success'}
+    respond_to do |format|
+      format.html {
+        redirect_to :action => 'index'
+      }
+      format.json {
+        render :json => {:status => 'success'}
+      }
+    end
   end
   
   def position
