@@ -1,10 +1,34 @@
-@import "default.css";
+/* style reset */
+html, body, div, span, iframe, p, form, label, img {
+  border:none;
+  margin:0;
+  padding:0;
+}
 
 /* element styles */
 body {
   background-color:#323c3e;
   font:12px/1.4em helvetica,arial,sans-serif;
-  padding:0;
+}
+h1 {
+  color:#15191a;
+  font-size:120%;
+  font-weight:bold;
+  margin:0 16px 0 0;
+}
+h2 {
+  font-size:108%;
+  font-weight:bold;
+  margin:0 0 8px 0;
+}
+h3 {
+  font-weight:bold;
+  padding:0.2em 0.6em 0.2em 0.6em;
+  margin:0 0 8px 0;
+}
+h4 {
+  font-weight:bold;
+  margin:0 0 8px 0;
 }
 label {
   float:left;
@@ -297,7 +321,7 @@ a.close {
   background:#e0decc url(/images/navbar_bg_short.gif) repeat-x left top;
 }
 #navbar h1 {
-  margin-right:16px;
+  margin:0 16px 0 0;
 }
 
 /*** LAYOUTS ***/
@@ -462,17 +486,22 @@ a.close {
 #historyScroller {
   float:left;
 }
+#historyScroller ul {
+  margin:0;
+  padding:0;
+}
 #historyScroller li {
   float:left;
   width:24px;
   height:41px;
-  padding-top:4px;
+  padding:4px 0 0 0;
   text-align:center;
   color:#13191d;
   border-left:solid 1px #b7c8cc;
   border-right:solid 1px #b7c8cc;
-  margin-left:-1px;
+  margin:0 0 0 -1px;
   cursor:pointer;
+  list-style-type:none;
 }
 #historyScroller li:hover {
   background:white url(/images/history_bg.gif) repeat-x left -45px;
@@ -525,10 +554,14 @@ a.close {
 #tripSummary ul {
   height: 100%;
   background:transparent url(/images/history_hover_bg.gif) no-repeat left -10px;
+  margin:0;
+  padding:0;
 }
 #tripSummary li {
   border-bottom:solid 1px #7b888b;
   padding:2px 5px 2px 5px;
+  margin:0;
+  list-style-type:none;
 }
 #tripSummary li:last-child, #tripSummary li.last /* IE6-7 */ {
   border-bottom:none;
@@ -571,13 +604,7 @@ a.close {
 }
 #sidebar h3 {
   color:#f9fcfd;
-  font-weight:bold;
-  padding:0.2em 0.6em 0.2em 0.6em;
-  margin-bottom:8px;
   background-color:#283234;
-}
-#sidebar h4 {
-  font-weight:bold;
 }
 #sidebar div.section {
   padding-bottom:4px;
@@ -739,12 +766,6 @@ a.add {
 
 
 /* settings (general) */
-#navbar h1 {
-  font-weight:bold;
-  font-size:120%;
-  color:#15191a;
-  /*color:#7cdefe;*/
-}
 #settingsContainer {
   padding:16px;
 }
@@ -755,7 +776,6 @@ a.add {
 #settings h2 {
   font-weight:bold;
   color:#15191a;
-  margin-bottom:8px;
 }
 #settings div.edit {
   display:none;
@@ -833,8 +853,14 @@ a.runReport { background-image:url(/images/buttons/run_report.gif); width:91px; 
   padding:8px 8px 8px 8px;
   border-top:solid 1px #d2d3d3;
 }
+#settings .phone ul {
+  margin:0 0 0 16px;
+  padding:0;
+}
 #settings .phone li {
-  margin:4px 0 0 16px;
+  list-style-type:none;
+  margin:0;
+  padding:0;
 }
 #settings .phone .buttons {
   margin-top:-26px;
@@ -853,9 +879,6 @@ a.runReport { background-image:url(/images/buttons/run_report.gif); width:91px; 
 /* vehicle settings */
 #devices h3 {
   color:black;
-  font-weight:bold;
-  padding:0.2em 0.6em 0.2em 0;
-  margin-bottom:8px;
   background:transparent;
 }
 #settings .devices {
@@ -935,20 +958,9 @@ td.extra {
   display:none;
 }
 
-/*#settings .phone {
-  padding:8px 8px 8px 8px;
-  border-top:solid 1px #d2d3d3;
-}
-#settings .phone li {
-  margin:4px 0 0 16px;
-}*/
-
 /* geofence settings */
 #geofences #sidebar h3 {
   color:black;
-  font-weight:bold;
-  padding:0.2em 0.6em 0.2em 0;
-  margin-bottom:8px;
   background:transparent;
 }
 #geofences .buttons {
@@ -974,6 +986,15 @@ td.extra {
   border-top:solid 1px #d2d3d3;
   overflow:hidden;
 }
+#settings .geofence ul {
+  margin:0 0 0 16px;
+  padding:0;
+}
+#settings .geofence li {
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
 #settings .geofence h2 {
   float:left;
 }
@@ -987,9 +1008,6 @@ td.extra {
 /* landmark settings */
 #landmarks #sidebar h3 {
   color:black;
-  font-weight:bold;
-  padding:0.2em 0.6em 0.2em 0;
-  margin-bottom:8px;
   background:transparent;
 }
 #landmarks .buttons {
@@ -1455,6 +1473,10 @@ ul.sf-menu li li li.sfHover ul {
   margin:0;
   padding:0;
 }
+.moshiViewControl ul {
+  margin:0;
+  padding:0;
+}
 .moshiViewControl li {
   display:block;
   position:relative;
@@ -1464,6 +1486,7 @@ ul.sf-menu li li li.sfHover ul {
   height:22px;
   margin:0;
   padding:0;
+  list-style-type:none;
 }
 .moshiViewControl li img {
   position:absolute;
@@ -1495,9 +1518,15 @@ ul.sf-menu li li li.sfHover ul {
   position:absolute;
 }
 .moshiZoomControl ul {
-  padding:8px 6px 0 6px;
   z-index:176;
   width:40px;
+  margin:0;
+  padding:8px 6px 0 6px;
+}
+.moshiZoomControl li {
+  margin:0;
+  padding:0;
+  list-style-type:none;
 }
 .compass {
   position:relative;
