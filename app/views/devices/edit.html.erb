@@ -1,2 +1,6 @@
 <%= render :partial => 'form', :locals => {:device => @device} %>
 <div class="clear"></div>
+
+<div id="newAlertRecipient" class="dialog">
+  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
+</div>

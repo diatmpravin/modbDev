@@ -5,22 +5,34 @@
   </div>
   <div class="clear spacer"></div>
   
-  <table class="data">
+  <table class="data" style="width:100%">
     <thead>
       <tr>
         <th><%= check_box_tag :devices_all, true, false %></th>
         <th>Name</th>
         <th>Tracker ID</th>
         <th>VIN</th>
+        <th>Profile</th>
+        <!-- Still questionable! Do we want these columns? -->
+        <th><%= image_tag 'alert.png', :size => '16x16', :alt => 'Alert' %> Speed</th>
+        <th><%= image_tag 'alert.png', :size => '16x16', :alt => 'Alert' %> Idle Time</th>
+        <th><%= image_tag 'alert.png', :size => '16x16', :alt => 'Alert' %> Aggressive</th>
+        <th><%= image_tag 'alert.png', :size => '16x16', :alt => 'Alert' %> After Hours</th>
         <th> </th>
       </tr>
     </thead>
     <% @devices.each do |device| -%>
-      <tr>
+      <tr class="<%=cycle('','odd')%>">
         <td><%= check_box_tag :devices, device.id, false, :id => dom_id(device) %></td>
         <td><%= h(device.name) %></td>
         <td><%= h(device.imei_number) %></td>
         <td><%= h(device.vin_number || '-') %></td>
+        <td>N/A</td>
+        <!-- Still questionable! Do we want these columns? -->
+        <td>On, 70mph</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
         <td class="buttons">
           <%= link_to 'Edit', edit_device_path(device), :class => 'edit', :title => 'Edit' %>
           <%= link_to 'Delete', device_path(device), :class => 'delete', :title => 'Remove' %>
