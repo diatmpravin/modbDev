@@ -49,6 +49,19 @@ class Device < ActiveRecord::Base
   # Get the list of all the NON marked-for-deletion cars
   named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
 
+  ##
+  # Sphinx Index Definitions
+  ##
+  define_index do
+    indexes :name, :sortable => true
+    indexes :obd_fw_version
+    indexes :vin_number
+    indexes :reported_vin_number
+    indexes :time_zone
+
+    has :account_id, :user_id, :created_at, :updated_at
+  end
+
   ROLLOVER_MILES = 10000
   TRIP_REPORT_CUTOFF = 75.minutes
 

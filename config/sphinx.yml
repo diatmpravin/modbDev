@@ -1,0 +1,11 @@
+defaults: 
+  enable_star: true
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
