@@ -2,26 +2,23 @@
  * Devices
  *
  * Constants and functions used on the Device Settings page.
- *
- * Remember: jQuery = q() or $q()!
  */
 Devices = {
   init: function() {
     q('input.addVehicle').live('click', Devices.newDevice);
-    
-    q('.device .view').live('mouseover', function() {
-      q(this).find('.buttons').show();
-    }).live('mouseout', function() {
-      q(this).find('.buttons').hide();
-    });
     
     q('a.delete').live('click', function() {
       q('#removeDevice').find('form').attr('action', this.href).end()
                         .dialog('open');
       return false;
     });
-    q('div.device[id!=new] input.save').live('click', Devices.save);
-    q('div.device[id!=new] input.cancel').live('click', Devices.cancel);
+    
+    q('#devices_all').attr('checked', false).click(function() {
+      q('input[name=devices]').attr('checked', this.checked);
+    });
+    q('input[name=devices]').attr('checked', false).click(function() {
+      q('#devices_all').attr('checked', false);
+    });
     
     q("#removeDevice").dialog({
       title: 'Remove Vehicle',
@@ -47,7 +44,8 @@ Devices = {
       }
     });
     
-    q('td input[type=checkbox]').live("click", function() {
+    /* todo: try to scope this so it only happens on edit page */
+    q('td input[type=checkbox]').live('click', function() {
       q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
 
       Devices.initTimepickr(q(this).parents("div.edit"));
@@ -64,6 +62,7 @@ Devices = {
   ,
   newDevice: function() {
     q("#addDevice").dialog("open");
+    
     return false;
   }
   ,
@@ -120,44 +119,6 @@ Devices = {
     return false;
   }
   ,
-  save: function() {
-    var _this = q(this);
-    var _edit = _this.closest('div.edit');
-    var _view = _edit.siblings('div.view');
-    
-    _edit.find('form').ajaxSubmit({
-      dataType: 'json',
-      beforeSubmit: function() { _edit.find('.loading').show(); },
-      success: function(json) {
-        if (json.status == 'success') {
-          Devices.updateView(_view, function() {
-            _view.show('normal').closest('div.device').siblings().not('#new').show();
-            _edit.hide('normal', function() {
-              Devices.updateEditForm(_edit);
-            });
-          });
-        } else {
-          _edit.html(json.html);
-        }
-      }
-    });
-    
-    return false;
-  }
-  ,
-  cancel: function() {
-    var _this = q(this);
-    var _edit = _this.closest('div.edit');
-    var _view = _edit.siblings('div.view');
-    
-    _view.show('normal').closest('div.device').siblings().not('#new').show();
-    _edit.hide('normal', function() {
-      Devices.updateEditForm(_edit);
-    });
-    
-    return false;
-  }
-  ,
   destroy: function() {
     var _this = q(this);
     
@@ -166,23 +127,7 @@ Devices = {
     
     return false;
   }
-  ,
-  updateView: function(viewElem, callback) {
-    q.get(viewElem.siblings('div.edit').find('form').attr('action'), function(html) {
-      viewElem.html(html);
-      if (typeof callback != 'undefined') {
-        callback();
-      }
-    });
-  }
-  ,
-  updateEditForm: function(editElem) {
-    q.get(editElem.find('form').attr('action') + '/edit', function(html) {
-      editElem.html(html);
-      AlertRecipients.prepare(editElem);
-    });
-  }
-}
+};
 
 /* Initializer */
 jQuery(function() {
