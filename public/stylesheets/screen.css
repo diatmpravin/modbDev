@@ -310,6 +310,10 @@ a.close {
   padding-left:0;
   border-left:none;
 }
+
+#navbar div#filter {
+  border-left: none;
+}
 #navbar div.noLeft {
   padding:0;
   border-left:none;
@@ -323,7 +327,6 @@ a.close {
 }
 #navbar #livelook {
   font-weight:bold;
-  /*padding:0 28px 0 54px;*/
   cursor:pointer;
 }
 #navbar #livelook a {
