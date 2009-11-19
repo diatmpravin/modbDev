@@ -212,9 +212,9 @@ a.close {
   background:black url(/images/header_bg.png) repeat-x top left;
 }
 #logo {
-  float:left;
-  width:195px;
-  height:85px;
+  float: left;
+  width: 195px;
+  height: 60px;
   background: url(/images/logo.png) no-repeat top left;
 }
 #welcome {
