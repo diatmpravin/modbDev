@@ -221,6 +221,9 @@ a.close {
   float:right;
   margin-top:13px;
   color:white;
+  font-size: 9pt;
+  line-height: 23px;
+  vertical-align: center;
 }
 #welcome span {
   float: right;
@@ -236,6 +239,7 @@ a.close {
   margin-left:8px;
   border-left:solid 1px #c8cbcb;
 }
+
 #header a {
   color:#7cdefe;
   font-weight:bold;
@@ -258,6 +262,9 @@ a.close {
   line-height:23px;
   padding:0 8px 0 8px;
   margin-left:6px;
+}
+#welcome li.sfHover,
+#welcome li.sfHover li {
   background-color:#15191a;
 }
 #welcome li li {
