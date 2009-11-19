@@ -1,0 +1,18 @@
+<div class="tags">
+  <h3>Tags</h3>
+  <ul>
+    <% object.tags.each do |tag| -%>
+      <li>
+        <%= link_to '', '#', :class => 'remove' %>
+        <span><%= h(tag.name) %></span>
+        <%= hidden_field_tag "#{object.class.to_s.downcase}[tag_ids][]", tag.id, :class => 'id' %>
+      </li>
+    <% end -%>
+    <li>
+      <%= link_to '', '#', :class => 'add' %>
+      <select>
+        <%= tag_options_for(object) %>
+      </select>
+    </li>
+  </ul>
+</div>

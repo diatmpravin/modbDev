@@ -4,3 +4,7 @@
 <div id="newAlertRecipient" class="dialog">
   <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
 </div>
+
+<div id="tagDialog" class="dialog">
+  <%= render :partial => 'tags/form', :locals => {:tag => current_account.tags.new} %>
+</div>

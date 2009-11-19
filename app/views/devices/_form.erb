@@ -1,5 +1,7 @@
 <% form_for device, :index => device.id, :html => {:autocomplete => "off"} do |f| -%>
   <div class="standardInfo">
+    <h3>Vehicle Details</h3>
+    
     <div class="field">
       <%= f.label :name %>
       <%= f.text_field :name %>
@@ -27,28 +29,13 @@
       <%= f.text_field :odometer, :maxlength => 6, :size => 6 %>
     </div>
     
-    <div class="field alerts">
-      <h3>Alert recipients</h3>
-      <input type="hidden" name="alertFieldName" value="device[<%=device.id%>][alert_recipient_ids][]"/>
-      <ul>
-        <% device.alert_recipients.each do |a| -%>
-          <li>
-            <%= link_to '', '#', :class => "remove" %>
-            <span><%= a.display_string %></span>
-            <%= hidden_field_tag "device[#{device.id}][alert_recipient_ids][]", a.id, :class => 'id' %>
-          </li>
-        <% end -%>
-        <li>
-          <%= link_to '', '#', :class => "add" %>
-          <select class="recipientSelect">
-            <%= alert_options_for(device) %>
-          </select>
-        </li>
-      </ul>
-    </div>
+    
+    <%= render :partial => 'tags/list', :locals => {:object => device} %>
   </div>
   
   <div class="alertInfo">
+    <h3>Alert Settings</h3>
+    
     <table>
       <tr>
         <td>
@@ -104,6 +91,27 @@
       </tr>
       -->
     </table>
+    
+    <div class="alerts">
+      <h3>Alert Recipients</h3>
+      
+      <input type="hidden" name="alertFieldName" value="device[<%=device.id%>][alert_recipient_ids][]"/>
+      <ul>
+        <% device.alert_recipients.each do |a| -%>
+          <li>
+            <%= link_to '', '#', :class => "remove" %>
+            <span><%= a.display_string %></span>
+            <%= hidden_field_tag "device[#{device.id}][alert_recipient_ids][]", a.id, :class => 'id' %>
+          </li>
+        <% end -%>
+        <li>
+          <%= link_to '', '#', :class => "add" %>
+          <select class="recipientSelect">
+            <%= alert_options_for(device) %>
+          </select>
+        </li>
+      </ul>
+    </div>
   </div>
   
   <div class="clear"></div>
