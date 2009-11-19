@@ -36,7 +36,7 @@
 
             <% @devices.each do |device| -%>
               <div class="field">
-                <%= check_box_tag "devices[#{device.id}]", '1', @report.devices.include?(device), :class => 'vehicle_select' %>
+                <%= check_box_tag "devices[#{device.id}]", '1', @report.devices.include?(device.id), :class => 'vehicle_select' %>
                 <%= label_tag "devices[#{device.id}]", device.name, :class => 'checkbox' %>
               </div>
             <% end -%>

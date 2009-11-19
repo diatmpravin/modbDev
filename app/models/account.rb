@@ -24,4 +24,5 @@ class Account < ActiveRecord::Base
   def today
     self[:today] || Time.now.to_date
   end
+
 end

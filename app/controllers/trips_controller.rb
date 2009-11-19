@@ -13,7 +13,7 @@ class TripsController < ApplicationController
         all(:include => :device)
     else
       @trips = Trip.in_range(start_date, end_date, current_user.zone).
-        all(:conditions => {:device_id => current_account.device_ids}, :include => :device)
+        all(:conditions => {:device_id => current_user.device_ids}, :include => :device)
     end
     
     respond_to do |format|
@@ -96,10 +96,10 @@ class TripsController < ApplicationController
   protected
   def set_trip
     @trip = Trip.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless current_account.devices.include?(@trip.device)
+    raise ActiveRecord::RecordNotFound unless current_user.device_ids.include?(@trip.device_id)
   end
   
   def set_device
-    @device = current_account.devices.find(params[:device_id]) if params[:device_id]
+    @device = current_user.devices.find(params[:device_id]) if params[:device_id]
   end
 end

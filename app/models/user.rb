@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   acts_as_tree :order => 'login', :dependent => nil
   
   belongs_to :account
-  has_many :devices
+  has_many :devices, :include => :tracker
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password
@@ -30,6 +30,12 @@ class User < ActiveRecord::Base
   before_save :encrypt_password
   before_create :make_activation_code
   before_destroy :promote_child_records
+
+  # Work around bug:
+  # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
+  def device_ids
+    Device.find_by_sql(["select d.id from devices d where user_id = ?", self.id]).map(&:id)
+  end
   
   class Role
     # Defined as bit positions
