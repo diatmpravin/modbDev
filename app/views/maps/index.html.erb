@@ -15,13 +15,8 @@
     <%= check_box_tag :show_labels, 1, {:checked => false} %>
     <%= label_tag :show_labels, 'Show Labels' %>
   </div>
-  <div class="noRight"></div>
   
-  <div class="float noRight"></div>
-  <div id="livelook" class="float">
-    <%= link_to 'Live Look', '#' %>
-  </div>
-  <div class="float noLeft"></div>
+  <%= render :partial => 'common/livelook' %>
 </div>
 
 <div id="history">

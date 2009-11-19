@@ -4,10 +4,7 @@
 <% inside_layout 'global' do -%>
   <%= render :partial => 'common/header' %>
   <div id="navbar">
-    <div class="noLeft noRight">
-      <h1><%= @title %></h1>
-    </div>
-    
+    <%= render :partial => 'common/filter' %>
     <%= render :partial => 'common/livelook' %>
   </div>
   <%= yield :side %>

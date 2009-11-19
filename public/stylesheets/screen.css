@@ -209,20 +209,23 @@ a.close {
 
 /* header */
 #header {
-  height:85px;
-  padding:0 32px 0 32px;
-  background:black url(/images/header_bg.gif) repeat-x top left;
+  height: 60px;
+  padding: 0 32px;
+  background:black url(/images/header_bg.png) repeat-x top left;
 }
 #logo {
-  float:left;
-  width:195px;
-  height:85px;
-  background:transparent url(/images/logo.png) no-repeat top left;
+  float: left;
+  width: 195px;
+  height: 60px;
+  background: url(/images/logo.png) no-repeat top left;
 }
 #welcome {
   float:right;
   margin-top:13px;
   color:white;
+  font-size: 9pt;
+  line-height: 23px;
+  vertical-align: center;
 }
 #welcome span {
   float: right;
@@ -238,6 +241,7 @@ a.close {
   margin-left:8px;
   border-left:solid 1px #c8cbcb;
 }
+
 #header a {
   color:#7cdefe;
   font-weight:bold;
@@ -260,6 +264,9 @@ a.close {
   line-height:23px;
   padding:0 8px 0 8px;
   margin-left:6px;
+}
+#welcome li.sfHover,
+#welcome li.sfHover li {
   background-color:#15191a;
 }
 #welcome li li {
@@ -305,6 +312,10 @@ a.close {
   padding-left:0;
   border-left:none;
 }
+
+#navbar div#filter {
+  border-left: none;
+}
 #navbar div.noLeft {
   padding:0;
   border-left:none;
@@ -318,7 +329,6 @@ a.close {
 }
 #navbar #livelook {
   font-weight:bold;
-  /*padding:0 28px 0 54px;*/
   cursor:pointer;
 }
 #navbar #livelook a {

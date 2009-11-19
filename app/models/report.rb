@@ -5,7 +5,7 @@ class Report
 
   def initialize(user, opts = {})
     @user      = user
-    @devices   = opts[:devices] || user.devices
+    @devices   = opts[:devices] || user.device_ids
     @type      = opts[:type].to_i || 0
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})

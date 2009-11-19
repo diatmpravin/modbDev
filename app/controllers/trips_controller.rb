@@ -96,7 +96,7 @@ class TripsController < ApplicationController
   protected
   def set_trip
     @trip = Trip.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless current_account.devices.include?(@trip.device)
+    raise ActiveRecord::RecordNotFound unless current_account.device_ids.include?(@trip.device_id)
   end
   
   def set_device
