@@ -13,7 +13,7 @@ class TripsController < ApplicationController
         all(:include => :device)
     else
       @trips = Trip.in_range(start_date, end_date, current_user.zone).
-        all(:conditions => {:device_id => current_account.device_ids}, :include => :device)
+        all(:conditions => {:device_id => current_account.device_ids}, :include => [:device, :tags])
     end
     
     respond_to do |format|

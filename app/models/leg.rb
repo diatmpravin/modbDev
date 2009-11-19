@@ -2,7 +2,7 @@ class Leg < ActiveRecord::Base
   belongs_to :trip
   has_many :points, :order => 'occurred_at ASC'
   has_many :displayable_points, :class_name => 'Point', :order => 'occurred_at ASC',
-    :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
+    :conditions => 'latitude <> 0 OR longitude <> 0', :include => :events, :readonly => true
   
   attr_accessible :trip, :points
   
