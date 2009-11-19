@@ -2,6 +2,8 @@ class Tag < ActiveRecord::Base
   belongs_to :account
   has_many :trip_tags
   has_many :trips, :through => :trip_tags
+  has_many :device_tags
+  has_many :devices, :through => :device_tags
   
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
@@ -18,5 +20,5 @@ class Tag < ActiveRecord::Base
     }
   }
   
-  attr_accessible :name, :account, :trips
+  attr_accessible :name, :account, :trips, :devices
 end

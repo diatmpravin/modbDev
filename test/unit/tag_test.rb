@@ -5,6 +5,7 @@ describe "Tag", ActiveSupport::TestCase do
     @account = accounts(:quentin)
     @tag = tags(:quentin_tag)
     @trip = trips(:quentin_trip)
+    @device = devices(:quentin_device)
   end
   
   context "Associations" do
@@ -14,8 +15,11 @@ describe "Tag", ActiveSupport::TestCase do
     end
     
     specify "has many trips" do
-      @tag.should.respond_to(:trips)
       @tag.trips.should.include @trip
+    end
+    
+    specify "has many devices" do
+      @tag.devices.should.include @device
     end
   end
   
@@ -47,11 +51,14 @@ describe "Tag", ActiveSupport::TestCase do
       specify "excludes tags already on a given object" do
         @account.tags.should.include(@tag)
         @trip.tags.should.include(@tag)
+        
         @account.tags.for(@trip).should.not.include(@tag)
+        @account.tags.for(@device).should.not.include(@tag)
       end
       
       specify "excludes nothing if the object is new" do
         @account.tags.for(Trip.new).should.include(@tag)
+        @account.tags.for(Device.new).should.include(@tag)
       end
     end
   end

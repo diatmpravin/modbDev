@@ -9,12 +9,10 @@ describe "Trip Tag", ActiveSupport::TestCase do
   
   context "Associations" do
     specify "belongs to a trip" do
-      @tt.should.respond_to(:trip)
       @tt.trip.should.equal @trip
     end
     
     specify "belongs to a tag" do
-      @tt.should.respond_to(:tag)
       @tt.tag.should.equal @tag
     end
   end

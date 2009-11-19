@@ -11,6 +11,8 @@ class Device < ActiveRecord::Base
   has_many :device_alert_recipients, :dependent => :delete_all
   has_many :alert_recipients, :through => :device_alert_recipients
   has_many :events, :through => :points
+  has_many :device_tags, :dependent => :delete_all
+  has_many :tags, :through => :device_tags, :order => 'name'
   
   # Last known position
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
