@@ -143,11 +143,10 @@ a.simple:hover {
 }
 a.help {
   float:left;
-  margin-right:4px;
   background:transparent url(/images/help.gif) no-repeat left top;
   width:10px;
   height:12px;
-  margin-top:2px;
+  margin:4px 4px 0 0;
   cursor:default;
 }
 .reminder {
@@ -935,6 +934,9 @@ a.delete {
   border-left:solid 1px #d2d3d3;
   padding-left:16px;
 }
+#settings .alertInfo .field {
+  padding-left:16px;
+}
 #settings .device td {
   padding:4px 8px 8px 0;
   vertical-align:middle;
@@ -950,7 +952,7 @@ a.delete {
 #settings .device .view .buttons {
   display:none;
 }
-td.extra {
+td.extra, span.extra {
   display:none;
 }
 #addDevice .break {

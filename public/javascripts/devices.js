@@ -44,16 +44,18 @@ Devices = {
       }
     });
     
-    /* todo: try to scope this so it only happens on edit page */
-    q('td input[type=checkbox]').live('click', function() {
-      q(this).closest('tr').find('td.extra').toggle(q(this).attr('checked'));
-
-      Devices.initTimepickr(q(this).parents("div.edit"));
+    /* editing alert settings */
+    q('.alertInfo input[type=checkbox]').live('click', function() {
+      q(this).siblings('.extra').toggle(this.checked);
+      
+      Devices.initTimepickr(q(this).parent());
     });
+    
+    Devices.initTimepickr(q('.alertInfo'));
   }
   ,
   initTimepickr: function(edit) {
-    edit.find('td:visible input.timepick').timepickr({
+    edit.find('input.timepick:visible').timepickr({
       convention: 12,
       format12: '{h:02.d}:{m:02.d} {z:s}',
       trigger: 'click'
