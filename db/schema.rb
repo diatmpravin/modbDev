@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091030152521) do
+ActiveRecord::Schema.define(:version => 20091119195813) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.boolean  "reseller",                          :default => false
     t.boolean  "can_assign_reseller",               :default => false
   end
+
+  add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"
 
   create_table "admin_users", :force => true do |t|
     t.string   "login",            :limit => 50
@@ -43,6 +45,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.string   "phone_carrier",  :limit => 30
   end
 
+  add_index "alert_recipients", ["account_id"], :name => "index_alert_recipients_on_account_id"
+
   create_table "device_alert_recipients", :force => true do |t|
     t.integer  "device_id"
     t.integer  "alert_recipient_id"
@@ -56,6 +60,9 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "device_geofences", ["device_id"], :name => "index_device_geofences_on_device_id"
+  add_index "device_geofences", ["geofence_id"], :name => "index_device_geofences_on_geofence_id"
 
   create_table "devices", :force => true do |t|
     t.integer  "account_id"
@@ -86,6 +93,10 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.integer  "pitstop_threshold",                  :default => 10
   end
 
+  add_index "devices", ["account_id"], :name => "index_devices_on_account_id"
+  add_index "devices", ["tracker_id"], :name => "index_devices_on_tracker_id"
+  add_index "devices", ["user_id"], :name => "index_devices_on_user_id"
+
   create_table "events", :force => true do |t|
     t.integer  "point_id"
     t.integer  "event_type"
@@ -95,6 +106,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "updated_at"
     t.datetime "occurred_at"
   end
+
+  add_index "events", ["point_id"], :name => "index_events_on_point_id"
 
   create_table "geofence_alert_recipients", :force => true do |t|
     t.integer  "geofence_id"
@@ -115,6 +128,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.boolean  "alert_on_entry",               :default => false
   end
 
+  add_index "geofences", ["account_id"], :name => "index_geofences_on_account_id"
+
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"
     t.decimal  "latitude",                 :precision => 8, :scale => 5
@@ -124,6 +139,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "landmarks", ["account_id"], :name => "index_landmarks_on_account_id"
 
   create_table "legs", :force => true do |t|
     t.integer  "trip_id"
@@ -135,6 +152,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.integer  "idle_time",                                 :default => 0
     t.decimal  "average_mpg", :precision => 4, :scale => 1, :default => 0.0
   end
+
+  add_index "legs", ["trip_id"], :name => "index_legs_on_trip_id"
 
   create_table "phone_devices", :force => true do |t|
     t.integer  "phone_id"
@@ -152,6 +171,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "updated_at"
     t.string   "activation_code", :limit => 8
   end
+
+  add_index "phones", ["account_id"], :name => "index_phones_on_account_id"
 
   create_table "points", :force => true do |t|
     t.integer  "event"
@@ -178,12 +199,17 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.integer  "duration"
   end
 
+  add_index "points", ["device_id"], :name => "index_points_on_device_id"
+  add_index "points", ["leg_id"], :name => "index_points_on_leg_id"
+
   create_table "tags", :force => true do |t|
     t.integer  "account_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "tags", ["account_id"], :name => "index_tags_on_account_id"
 
   create_table "trackers", :force => true do |t|
     t.string   "imei_number",   :limit => 32
@@ -193,6 +219,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "updated_at"
     t.string   "msisdn_number", :limit => 32
   end
+
+  add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"
 
   create_table "trip_tags", :force => true do |t|
     t.integer  "trip_id"
@@ -212,6 +240,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.decimal  "average_mpg", :precision => 4, :scale => 1, :default => 0.0
   end
 
+  add_index "trips", ["device_id"], :name => "index_trips_on_device_id"
+
   create_table "users", :force => true do |t|
     t.integer  "account_id"
     t.integer  "parent_id"
@@ -230,5 +260,8 @@ ActiveRecord::Schema.define(:version => 20091030152521) do
     t.datetime "remember_token_expires_at"
     t.string   "password_reset_code",       :limit => 48
   end
+
+  add_index "users", ["account_id"], :name => "index_users_on_account_id"
+  add_index "users", ["parent_id"], :name => "index_users_on_parent_id"
 
 end
