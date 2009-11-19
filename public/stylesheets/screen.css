@@ -207,15 +207,15 @@ a.close {
 
 /* header */
 #header {
-  height:85px;
+  height:60px;
   padding:0 32px 0 32px;
-  background:black url(/images/header_bg.gif) repeat-x top left;
+  background:black url(/images/header_bg.png) repeat-x top left;
 }
 #logo {
   float:left;
   width:195px;
   height:85px;
-  background:transparent url(/images/logo.png) no-repeat top left;
+  background: url(/images/logo.png) no-repeat top left;
 }
 #welcome {
   float:right;
