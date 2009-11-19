@@ -7,3 +7,5 @@
 # Local configs
 config/database.yml
 config/payments_server.yml
+
+db/sphinx
