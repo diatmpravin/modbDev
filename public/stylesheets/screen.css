@@ -223,9 +223,18 @@ a.close {
   color:white;
 }
 #welcome span {
+  float: right;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+#welcome span.info {
   padding-right:8px;
-  margin-right:8px;
   border-right:solid 1px #c8cbcb;
+}
+#welcome span.logout {
+  padding-left:8px;
+  margin-left:8px;
+  border-left:solid 1px #c8cbcb;
 }
 #header a {
   color:#7cdefe;
@@ -237,22 +246,24 @@ a.close {
 #header a.failed, #header a.failed_again { color: #ffff00; }
 #header a.cancelled { color: red; }
 
-#topnav {
+#welcome {
   float:right;
-  clear:right;
   margin-top:16px;
 }
-#topnav li {
+#welcome ul {
+  float: right;
+}
+#welcome li {
   height:23px;
   line-height:23px;
   padding:0 8px 0 8px;
   margin-left:6px;
   background-color:#15191a;
 }
-#topnav li li {
+#welcome li li {
   margin-left:0;
 }
-#topnav a.sf-with-ul {
+#welcome a.sf-with-ul {
   padding-right:2em;
   min-width:1px;
 }
