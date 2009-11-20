@@ -8,4 +8,6 @@
 config/database.yml
 config/payments_server.yml
 
+# Sphinx
 db/sphinx
+config/*.sphinx.conf

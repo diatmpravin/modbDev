@@ -462,6 +462,17 @@ a.close {
   height:auto;
 }
 
+/*** FILTER FORM ***/
+#navbar div#filterDetails {
+  border: none;
+  position: absolute;
+  background-color: white;
+  height: auto;
+  float: none;
+  padding-right: 0;
+  display: none;
+}
+
 
 /*** MAPS PAGE ***/
 

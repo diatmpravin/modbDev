@@ -27,7 +27,7 @@ Rails::Initializer.run do |config|
   #config.gem 'mini_magick'
   
   config.gem 'thinking-sphinx',
-    :lib => "thinking_sphinx/0.9.9",
+    :lib => "thinking_sphinx/0.9.8",
     :version => "1.3.4"
   
   # Only load the plugins named here, in the order given. By default, all plugins 
