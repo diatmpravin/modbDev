@@ -1,11 +1,30 @@
 <div id="filter">
-  <%= text_field_tag "filter" %> <%= button_tag "Filter" %> <%= button_tag "Clear" %>
+  <%= text_field_tag "query" %> <%= button_tag "Filter" %> <%= button_tag "Clear" %>
 
   <div id="filterDetails">
-    <p>Name: <%= text_field_tag "name" %></p>
-    <p>Tracker ID: <%= text_field_tag "name" %></p>
-    <p>VIN: <%= text_field_tag "name" %></p>
-    <p>Tag: <%= text_field_tag "name" %></p>
+    <p>
+      <%= label_tag 'name', "Name:" %>
+      <%= text_field_tag "name" %>
+    </p>
+    <!--
+    <p>
+      <%= label_tag 'tracker_id', 'Tracker ID:' %>
+      <%= text_field_tag "tracker_id" %>
+    </p>
+    -->
+    <p>
+      <%= label_tag 'vin', 'VIN:' %>
+      <%= text_field_tag "vin" %>
+    </p>
+    <!--
+    <p>
+      <%= label_tag 'tag', 'Tag' %>
+      <%= text_field_tag "tag" %>
+    </p>
+    -->
+    <p class="buttons">
+    <%= button_tag "Filter" %> or <%= link_to 'Cancel', '#' %>
+    </p>
   </div>
 </div>
 <div class="noRight"></div>

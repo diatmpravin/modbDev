@@ -464,9 +464,10 @@ a.close {
 
 /*** FILTER FORM ***/
 #navbar div#filterDetails {
-  border: none;
+  border: 1px solid rgb(172,170,155);
+  border-top: none;
   position: absolute;
-  background-color: white;
+  background-color: rgb(213, 211, 186);
   height: auto;
   float: none;
   padding-right: 0;
