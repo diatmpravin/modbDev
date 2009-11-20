@@ -29,6 +29,8 @@ Rails::Initializer.run do |config|
   config.gem 'thinking-sphinx',
     :lib => "thinking_sphinx/0.9.8",
     :version => "1.3.4"
+
+  config.gem 'after_commit', :version => '1.0.2'
   
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
