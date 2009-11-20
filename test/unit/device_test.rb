@@ -40,6 +40,11 @@ describe "Device", ActiveSupport::TestCase do
       @device.should.respond_to(:events)
       @device.events.should.include(events(:quentin_event))
     end
+    
+    specify "has many tags" do
+      @device.should.respond_to(:tags)
+      @device.tags.should.include(tags(:quentin_tag))
+    end
   end
 
   specify "protects appropriate attributes" do
@@ -796,5 +801,42 @@ describe "Device", ActiveSupport::TestCase do
       data.miles.should.equal 200
     end
   end
-  
+
+  context "Tag Handling" do
+    specify "can assign a bunch of tag names to a device" do
+      Tag.should.differ(:count).by(3) do
+        @device.update_attributes(:tag_names => ['abc', '123', 'baby, you and me'])
+      end
+      
+      @device.reload.tags.length.should.equal 3
+      @device.tags.map(&:name).should.equal ['123', 'abc', 'baby, you and me']
+    end
+    
+    specify "will re-use tag names, case insensitive, wherever applicable" do
+      Tag.should.differ(:count).by(1) do
+        @device.update_attributes(:tag_names => ['personal', 'financial'])
+      end
+      
+      @device.reload.tags.length.should.equal 2
+      @device.tags.map(&:name).should.equal ['financial', 'Personal']
+    end
+    
+    specify "strips away extra space and throws away blank tags" do
+      Tag.should.differ(:count).by(2) do
+        @device.update_attributes(:tag_names => ['abc', ' 123 ', ' personal ', ' ', '  '])
+      end
+      
+      @device.reload.tags.length.should.equal 3
+      @device.tags.map(&:name).should.equal ['123', 'abc', 'Personal']
+    end
+    
+    specify "handles tag collisions and duplicates" do
+      Tag.should.differ(:count).by(1) do
+        @device.update_attributes(:tag_names => [' abc ', 'abc ', 'abc'])
+      end
+      
+      @device.reload.tags.length.should.equal 1
+      @device.tags.map(&:name).should.equal ['abc']
+    end
+  end
 end

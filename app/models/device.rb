@@ -38,7 +38,8 @@ class Device < ActiveRecord::Base
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients,
     :vin_number, :after_hours_start_text, :after_hours_end_text,
-    :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold
+    :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
+    :tags, :tag_names
 
   after_create :assign_phones
 
@@ -60,10 +61,24 @@ class Device < ActiveRecord::Base
     self.tracker ? tracker.imei_number : nil
   end
 
+  # Save tag names as tags
+  def tag_names=(list)
+    # Throw away extra space and blank tags
+    list = list.map {|x| x.strip}.reject {|x| x.blank?}
+    
+    # Re-use any tags that already exist
+    self.tags = account.tags.all(:conditions => {:name => list})
+    tag_names = self.tags.map(&:name)
+    
+    # Create new tags for any names left in the list
+    list.reject! {|x| tag_names.find {|name| name.casecmp(x) == 0}}
+    self.tags += account.tags.create(list.map {|n| {:name => n}}).select(&:valid? )
+  end
+  
   def zone
     ActiveSupport::TimeZone[self[:time_zone]]
   end
-
+  
   # Connected flag
   def connected
     position && Time.now - position.occurred_at < TRIP_REPORT_CUTOFF
@@ -103,23 +118,5 @@ class Device < ActiveRecord::Base
     if phones.empty?
       phones << account.phones
     end
-  end
-
-  # Can this be simplified or replaced with a standard function somewhere?
-  def seconds_to_text(sec)
-    return '12:00 am' unless sec
-
-    min = ( sec / 60) % 60
-    hr = sec / 3600
-    ampm = (hr >= 12 ? 'pm' : 'am')
-    hr = hr % 12
-    hr = 12 if hr == 0
-    "%02d:%02d %s" % [hr, min, ampm]
-  end
-
-  # Can this be simplified or replaced with a standard function somewhere?
-  def text_to_seconds(text)
-    text =~ /(\d+):(\d+) ?(\S+)/
-    ($1.to_i % 12) * 3600 + $2.to_i * 60 + ($3 == 'pm' ? 43200 : 0)
   end
 end
