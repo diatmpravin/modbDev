@@ -1,5 +1,9 @@
 <div id="filter">
-  <%= text_field_tag "query" %> <%= button_tag "Filter" %> <%= button_tag "Clear" %>
+  <% form_tag filter_path do -%>
+    <%= text_field_tag "query", session[:filter] %>
+    <%= submit_tag "Filter" %>
+    <%= button_tag "Clear", :id => 'filter_clear' %>
+  <% end -%>
 
   <div id="filterDetails">
     <p>
