@@ -1,10 +1,6 @@
 module ApplicationHelper
   def jquery_include_tag
-    if Rails.env == 'development'
-      javascript_include_tag 'jquery/jquery-1.3.1'
-    else
-      javascript_include_tag 'jquery/jquery-1.3.1.min'
-    end
+    javascript_include_tag 'jquery/jquery-1.3.2.min'
   end
 
   def mapquest_include_tags
