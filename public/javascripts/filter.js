@@ -6,8 +6,28 @@ Filter = {
 
   init: function() {
     // q("#query").focus(Filter.showDetails);
+    //q("#filterDetails").css("width", q("#filter").width() - 1);
 
-    q("#filterDetails").css("width", q("#filter").width() - 1);
+    q("form", "#filter")
+      .submit(Filter.submitQuery)
+      .find("#filter_clear")
+      .click(Filter.clearQuery);
+  }
+  ,
+  submitQuery: function() {
+    q(this).ajaxSubmit({
+      beforeSubmit: function() { },
+      complete: function() { location.reload(); }
+    });
+
+    return false;
+  }
+  ,
+  clearQuery: function() {
+    q(this).parents("form").attr("method", "DELETE").ajaxSubmit({
+      beforeSubmit: function() { q("#query").val("") },
+      complete: function() { location.reload(); }
+    });
   }
   ,
   /**
