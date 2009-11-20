@@ -2,7 +2,8 @@
   <h3>Tags</h3>
   <ul>
     <li>
-      <%= text_field_tag "#{object.class.to_s.downcase}[tag_names][]", '', :id => "tag_#{dom_id(object)}", :class => 'tagEntry' %>
+      <%= text_field_tag "#{object.class.to_s.downcase}[tag_names][]", '', 
+        :id => "tag_#{dom_id(object)}", :class => 'tagEntry', :maxlength => 30 %>
     </li>
     <% object.tags.each do |tag| -%>
       <li>

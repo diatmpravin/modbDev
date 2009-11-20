@@ -89,9 +89,9 @@ Tags = {
     var tags = list.find('li:first').siblings().find('input');
     for(var i = 0; i < tags.length; i++) {
       if (tags[i].value == text) {
-        q(tags[i]).closest('li')
+        q(tags[i]).closest('li').find('span')
                   .stop()
-                  .css('background-color', '#ffffaa')
+                  .css('background-color', '#ebfb4b')
                   .animate({backgroundColor: 'transparent'}, 1000);
         return;
       }

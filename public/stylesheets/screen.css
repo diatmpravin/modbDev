@@ -684,6 +684,15 @@ a.add {
 .tags li {
   list-style-type:none;
 }
+.tags li span {
+  display:block;
+  width:204px;
+  overflow:hidden;
+}
+input.tagEntry {
+  margin-left:19px;
+  width:180px;
+}
 
 /* vehicles */
 #sidebar .devices {
@@ -764,7 +773,7 @@ a.add {
   color:#6a6a6a;
 }
 .tagEntry {
-
+  
 }
 #sidebar .trip a.collapse {
   background:transparent url(/images/collapse.png) no-repeat left top;
@@ -1775,6 +1784,7 @@ table.data tr.odd th, table.data tr.odd td {
 }
 
 .ac_over {
-	background-color: #0A246A;
+	//background-color: #0A246A;
+  background-color: #224896;
 	color: white;
 }
