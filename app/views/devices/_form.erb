@@ -29,8 +29,7 @@
       <%= f.text_field :odometer, :maxlength => 6, :size => 6 %>
     </div>
     
-    
-    <%= render :partial => 'tags/list', :locals => {:object => device} %>
+    <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device[#{device.id}]"} %>
   </div>
   
   <div class="alertInfo">
