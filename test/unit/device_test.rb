@@ -832,7 +832,7 @@ describe "Device", ActiveSupport::TestCase do
     
     specify "handles tag collisions and duplicates" do
       Tag.should.differ(:count).by(1) do
-        @device.update_attributes(:tag_names => [' abc ', 'abc ', 'abc'])
+        @device.update_attributes(:tag_names => [' abc ', 'abc ', 'abc', ' ABC '])
       end
       
       @device.reload.tags.length.should.equal 1
