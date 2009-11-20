@@ -4,8 +4,17 @@
  * Used on any page with a tag-selection interface.  This script initializes
  * itself, but if used on a page with multiple tag interfaces you may need to
  * make additional calls to Tags.prepare().
+ *
+ * The loading page should pre-load tags as an array of strings and put them in
+ * Tags.source, for speedy auto-complete. 
+ * 
+ * If the controller chooses not to pre-load the tags (in the case of >1000 tags,
+ * for example), the tag box will auto-complete using json calls to the Tags
+ * controller instead.
  */
 Tags = {
+  source: null,
+  
   init: function() {
     q('.tags a.add').live('click', Tags.displayForm);
     q('.tags a.remove').live('click', Tags.removeTag);
@@ -22,10 +31,14 @@ Tags = {
       close: function() { }
     });
     
-    q('#tagDialog input').live('keypress', function(e) {
+    q('.tagEntry').live('keypress', function(e) {
       // Capture ENTER and submit dialog
       if (e.which == 13) {
-        Tags.createTag.call(q('#tagDialog'), e);
+        Tags.addTag(q(this).closest('ul'), this.value);
+        this.value = '';
+        this.focus();
+        
+        return false;
       }
     });
     
@@ -67,27 +80,37 @@ Tags = {
   /**
    * Helper method that adds a new tag to the tag list.
    */
-  addTag: function(list, id, text) {
-    list.find('li:last').before(
-      '<li><a href="#" class="remove"></a><span>' + text + '</span>' +
-      '<input type="hidden" name="trip[tag_ids][]" value="' +
-      id + '" class="id"/></li>'
-    );
+  addTag: function(list, text) {
+    /* Uses the name of the tag input field to create each new entry. On
+       submit, the controller will see this is an array of tag names. */
+    var field_name = list.find('.tagEntry').attr('name');
+    
+    /* If the tag is already in the list, highlight it. */
+    var tags = list.find('li:first').siblings().find('input');
+    for(var i = 0; i < tags.length; i++) {
+      if (tags[i].value == text) {
+        q(tags[i]).closest('li')
+                  .stop()
+                  .css('background-color', '#ffffaa')
+                  .animate({backgroundColor: 'transparent'}, 1000);
+        return;
+      }
+    }
+    
+    /* If the tag isn't in the list, add it and slide down. */
+    q('<li style="display:none"><a href="#" class="remove"></a><span>' + text + '</span>' +
+      '<input type="hidden" name="' + field_name + '" value="'+ text + '"/></li>')
+      .insertAfter(list.find('li:first'))
+      .show('fast');
   }
   ,
   /**
-   * Remove a tag from the tag list and insert it back into the drop-down.
+   * Remove a tag from the tag list.
    */
   removeTag: function() {
-    var _this = q(this);
-    var _tag = _this.closest('li');
-    var _id = _this.siblings('input.id');
-    if (_id.length >= 1) {
-      _this.closest('ul').find('select.tagSelect').append(
-        '<option value="' + _id.val() + '">' + _tag.find('span').html() + '</option>'
-      );
-    }
-    _tag.hide('normal', function() {
+    var _tag = q(this).closest('li');
+    
+    _tag.hide('fast', function() {
       _tag.remove();
     });
     
@@ -104,7 +127,7 @@ Tags = {
       return;
     }
     
-    var _ul = q(this).closest('ul');    
+    var _ul = q(this).closest('ul');
     Tags.addTag(
       _ul, this.options[this.selectedIndex].value, this.options[this.selectedIndex].text
     );
@@ -114,17 +137,25 @@ Tags = {
   }
   ,
   /**
-   * Prepare non-live event handlers for any select boxes in the given
-   * container. If no argument is passed, will attempt to prepare the entire
-   * page.
+   * Prepare the auto-complete handler for any inputs in the given container.
+   * Defaults to the entire page if no container is passed.
    */
   prepare: function(container) {
-    if (container) {
-      q(container).find('.tags select:not(.tagSelect)').
-        change(Tags.select).addClass('tagSelect').val('');
+    if (Tags.source) {
+      q(container || null).find('.tagEntry').autocomplete(Tags.source, {
+        max: 10
+      });
     } else {
-      q('.tags select:not(.tagSelect)').
-        change(Tags.select).addClass('tagSelect').val('');
+      q(container || null).find('.tagEntry').autocomplete('/tags', {
+        dataType: 'json',
+        max: 10,
+        parse: function(json) {
+          // Convert each json call into the goofy format they expect.
+          return q.map(json, function(item) {
+            return {data: [item, item], value: item, result: item};
+          });
+        }
+      });
     }
   }
 };
