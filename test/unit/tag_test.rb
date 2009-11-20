@@ -44,6 +44,18 @@ describe "Tag", ActiveSupport::TestCase do
       @tag.should.not.be.valid
       @tag.errors.on(:name).should.equal 'is too long (maximum is 30 characters)'
     end
+    
+    specify "enforces uniqueness of name within an account" do
+      tag = @account.tags.create(:name => 'Brand New')
+      tag.should.be.valid
+      
+      tag = @account.tags.create(:name => 'Brand New')
+      tag.should.not.be.valid
+      tag.errors.on(:name).should.equal 'has already been taken'
+      
+      tag = accounts(:aaron).tags.create(:name => 'Brand New')
+      tag.should.be.valid
+    end
   end
   
   context "Scopes" do

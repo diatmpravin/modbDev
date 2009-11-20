@@ -8,6 +8,7 @@ class Tag < ActiveRecord::Base
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_blank => true, :allow_nil => true
+  validates_uniqueness_of :name, :scope => :account_id
   
   # Return all tags NOT attached to the given object
   named_scope :for, lambda { |object|
