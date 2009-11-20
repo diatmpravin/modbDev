@@ -5,10 +5,9 @@
 Filter = {
 
   init: function() {
-    q("#filter").focus(Filter.showDetails);
-    q("#filter").blur(Filter.hideDetails);
+    // q("#query").focus(Filter.showDetails);
 
-    q("#filterDetails").css("width", q("#filter").css("width"));
+    q("#filterDetails").css("width", q("#filter").width() - 1);
   }
   ,
   /**

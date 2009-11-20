@@ -102,4 +102,8 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/billing_tester", billing_tester_path
     assert_equal "/billing_tester/action", billing_tester_path(:action => "action")
   end
+
+  test "filter resource" do
+    assert_equal "/filter", filter_path
+  end
 end

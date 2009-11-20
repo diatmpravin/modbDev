@@ -61,6 +61,9 @@ ActionController::Routing::Routes.draw do |map|
   # Reports
   map.resources :reports
 
+  # Filter
+  map.resource :filter
+
   # Subscriptions
   map.resource :subscription, :controller => "subscription",
     :member => {
