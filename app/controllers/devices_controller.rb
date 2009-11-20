@@ -118,6 +118,11 @@ class DevicesController < ApplicationController
   end
   
   def set_devices
-    @devices = current_account.devices
+    @devices = 
+      if session[:filter]
+        Device.search session[:filter], :with => {:account_id => current_account.id}
+      else
+        current_account.devices
+      end
   end
 end

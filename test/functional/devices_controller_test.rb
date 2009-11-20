@@ -29,6 +29,13 @@ describe "Devices Controller", ActionController::TestCase do
       json[0]['device']['position'].should.not.be.nil    # included method
       json[0]['device']['color'].should.not.be.nil       # included method
     end
+
+    specify "Takes into account filter parameters" do
+      @request.session[:filter] = "testing"
+
+      get :index
+      template.should.be 'index'
+    end
   end
   
   context "Viewing a device" do
