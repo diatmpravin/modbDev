@@ -19,13 +19,6 @@ Users = {
       return false;
     });
     
-    q('div.user').live('mouseover', function() {
-      q('div.view .buttons').hide();
-      q(this).find('.buttons').show();
-    }).live('mouseout', function() {
-      q('div.view .buttons').hide();
-    });
-    
     q('#removeUser').dialog({
       title: 'Remove User',
       modal: true,
