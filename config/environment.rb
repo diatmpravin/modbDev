@@ -26,12 +26,14 @@ Rails::Initializer.run do |config|
   config.gem 'ruport', :version => '>= 1.6.0'
   #config.gem 'mini_magick'
   
+  # Force use of 1.0.2 before ThinkingSphinx is pulled in 
+  # as 1.0.3 breaks tests that use ActiveRecord... aka all of them.
+  config.gem 'after_commit', :version => '1.0.2'
+  
   config.gem 'thinking-sphinx',
     :lib => "thinking_sphinx/0.9.8",
     :version => "1.3.4"
 
-  config.gem 'after_commit', :version => '1.0.2'
-  
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
