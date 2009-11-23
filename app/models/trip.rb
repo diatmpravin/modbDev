@@ -22,7 +22,7 @@ class Trip < ActiveRecord::Base
     }
   }
   
-  attr_accessible :device, :start, :finish, :points, :legs, :tags, :tag_ids
+  attr_accessible :device, :start, :finish, :points, :legs, :tags, :tag_names
   
   default_value_for :start do
     Time.now.utc
@@ -32,8 +32,18 @@ class Trip < ActiveRecord::Base
     Time.now.utc
   end
   
-  def tag_ids=(list)
-    self.tags = device.account.tags.find(list)
+  # Save tag names as tags
+  def tag_names=(list)
+    # Throw away extra space and blank tags
+    list = list.map {|x| x.strip}.reject {|x| x.blank?}
+    
+    # Re-use any tags that already exist
+    self.tags = device.account.tags.all(:conditions => {:name => list})
+    tag_names = self.tags.map(&:name)
+    
+    # Create new tags for any names left in the list
+    list.reject! {|x| tag_names.find {|name| name.casecmp(x) == 0}}
+    self.tags += device.account.tags.create(list.map {|n| {:name => n}}).select(&:valid? )
   end
   
   def color

@@ -385,18 +385,41 @@ describe "Trip", ActiveSupport::TestCase do
     @trip.events.should.include(events(:quentin_event))
   end
   
-  specify "allows tag_ids=, but enforces account ownership" do
-    tag = tags(:quentin_tag)
+  context "Tag Handling" do
+    specify "can assign a bunch of tag names to a device" do
+      Tag.should.differ(:count).by(3) do
+        @trip.update_attributes(:tag_names => ['abc', '123', 'baby, you and me'])
+      end
+      
+      @trip.reload.tags.length.should.equal 3
+      @trip.tags.map(&:name).should.equal ['123', 'abc', 'baby, you and me']
+    end
     
-    @trip.update_attributes(:tag_ids => [])
-    @trip.tags.should.be.empty
+    specify "will re-use tag names, case insensitive, wherever applicable" do
+      Tag.should.differ(:count).by(1) do
+        @trip.update_attributes(:tag_names => ['personal', 'financial'])
+      end
+      
+      @trip.reload.tags.length.should.equal 2
+      @trip.tags.map(&:name).should.equal ['financial', 'Personal']
+    end
     
-    @trip.update_attributes(:tag_ids => [tag.id])
-    @trip.tags.should.include(tag)
+    specify "strips away extra space and throws away blank tags" do
+      Tag.should.differ(:count).by(2) do
+        @trip.update_attributes(:tag_names => ['abc', ' 123 ', ' personal ', ' ', '  '])
+      end
+      
+      @trip.reload.tags.length.should.equal 3
+      @trip.tags.map(&:name).should.equal ['123', 'abc', 'Personal']
+    end
     
-    should.raise(ActiveRecord::RecordNotFound) do
-      bad = tags(:aaron_tag)
-      @trip.update_attributes(:tag_ids => [tag.id, bad.id])
+    specify "handles tag collisions and duplicates" do
+      Tag.should.differ(:count).by(1) do
+        @trip.update_attributes(:tag_names => [' abc ', 'abc ', 'abc', ' ABC '])
+      end
+      
+      @trip.reload.tags.length.should.equal 1
+      @trip.tags.map(&:name).should.equal ['abc']
     end
   end
 end
