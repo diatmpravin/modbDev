@@ -11,14 +11,6 @@ class Mailer < ActionMailer::Base
     subject 'Fleet: Forgotten Password'
     content_type 'text/html'
   end
-
-  def activation(account)
-    recipients account.email
-    from support_address
-    body :url => url_for(:controller => 'accounts', :action => 'activate', :id => account.activation_code)
-    subject 'Fleet: Account Activation'
-    content_type 'text/html'
-  end
   
   #
   # Alerts

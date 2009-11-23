@@ -26,12 +26,4 @@ describe "Mailer", ActiveSupport::TestCase do
     Mailer.deliveries.first.body.should =~ /test alert/
   end
   
-  xspecify "account activation" do
-    @account = accounts(:quentin)
-    Mailer.deliver_activation(@account)
-    
-    Mailer.deliveries.length.should.be 1
-    Mailer.deliveries.first.to.should.equal [@account.email]
-    Mailer.deliveries.first.subject.should.equal 'MOBD: Account Activation'
-  end
 end

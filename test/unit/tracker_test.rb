@@ -43,30 +43,27 @@ describe "Tracker", ActiveSupport::TestCase do
     Tracker.new(:status => 2).status_text.should.equal 'Active'
   end
   
-  # TEMPORARILY disabled until we resolve this whole "some devices report with
-  # the wrong number" deal.
-  xspecify "requires an imei number" do
-    @device.imei_number = nil
-    @device.should.not.be.valid
-    @device.errors.on(:imei_number).should.equal("can't be blank")
+  specify "requires an imei number" do
+    t = Tracker.new
+    t.should.not.be.valid
+    t.errors.on(:imei_number).should.equal("must be 15 digits")
   end
   
-  # TEMPORARILY disabled until we resolve this whole "some devices report with
-  # the wrong number" deal.
-  xspecify "requires a valid imei number" do
-    @device.imei_number = '123456789012345'
-    @device.should.be.valid
+  specify "requires a valid imei number" do
+    t = Tracker.new
+    t.imei_number = '098765432109875'
+    t.should.be.valid
     
-    @device.imei_number = '12345678901234'
-    @device.should.not.be.valid
-    @device.errors.on(:imei_number).should.equal 'must be 15 digits'
+    t.imei_number = '12345678901234'
+    t.should.not.be.valid
+    t.errors.on(:imei_number).should.equal 'must be 15 digits'
     
-    @device.imei_number = '1234567890123456'
-    @device.should.not.be.valid
-    @device.errors.on(:imei_number).should.equal 'must be 15 digits'
+    t.imei_number = '1234567890123456'
+    t.should.not.be.valid
+    t.errors.on(:imei_number).should.equal 'must be 15 digits'
     
-    @device.imei_number = '1234abcd90123456789'
-    @device.should.not.be.valid
-    @device.errors.on(:imei_number).should.equal 'must be 15 digits'
+    t.imei_number = '1234abcd90123456789'
+    t.should.not.be.valid
+    t.errors.on(:imei_number).should.equal 'must be 15 digits'
   end
 end

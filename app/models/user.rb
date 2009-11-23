@@ -131,10 +131,6 @@ class User < ActiveRecord::Base
     save(false)
   end
   
-  def send_activation_email
-    Mailer.deliver_activation(self)
-  end
-  
   def forgot_password
     generate_password_reset_code
     save(false)

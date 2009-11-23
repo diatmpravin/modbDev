@@ -80,46 +80,6 @@ describe "Device", ActiveSupport::TestCase do
       @device.should.be.valid
     end
     
-    xspecify "after hours start must be time-formatted" do
-      @device.after_hours_start_text = '1:00 am'
-      @device.should.be.valid
-      
-      @device.after_hours_start_text = '02:30pm'
-      @device.should.be.valid
-      
-      @device.after_hours_start_text = 'abcd'
-      @device.should.not.be.valid
-    end
-    
-    xspecify "after hours end must be time-formatted" do
-      @device.after_hours_end_text = '1:00 am'
-      @device.should.be.valid
-      
-      @device.after_hours_end_text = '02:30pm'
-      @device.should.be.valid
-      
-      @device.after_hours_end_text = 'abcd'
-      @device.should.not.be.valid
-    end
-    
-    xspecify "enforces number of records" do
-      Device.delete_all
-      20.times do |i|
-        d = @account.devices.new(:name => 'Test')
-        d.tracker = Tracker.create(:imei_number => "0000000000000#{'%02d'%i}")
-        d.should.save
-      end
-      d = @account.devices.new(:name => 'Test')
-      d.tracker = Tracker.create(:imei_number => "000000000000021")
-      d.should.not.be.valid
-      d.errors.on(:base).should.equal 'Too many devices'
-
-      # Make sure we can update
-      d = Device.last
-      d.name = 'New Name'
-      d.should.save
-    end
-
     specify "odometer is numeric" do
       @device.odometer = 'abc'
       @device.should.not.be.valid
