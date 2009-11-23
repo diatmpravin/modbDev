@@ -1,5 +1,8 @@
-defaults: 
+defaults: &defaults
+  # Enable * searches
   enable_star: true
+  # With above, also enable infix, minimum of 3 characters
+  min_infix_len: 3
 
 development:
   <<: *defaults

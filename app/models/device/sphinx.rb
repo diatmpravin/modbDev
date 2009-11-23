@@ -10,7 +10,11 @@ class Device < ActiveRecord::Base
     indexes :reported_vin_number
     indexes :time_zone
 
+    indexes tracker.imei_number, :as => :tracker_id
+
     has :account_id, :user_id, :created_at, :updated_at
+
+    set_property :delta => true
   end
 
 end

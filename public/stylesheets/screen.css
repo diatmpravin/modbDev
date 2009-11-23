@@ -1009,12 +1009,6 @@ td.extra, span.extra {
 #settings .users .hover {
   background-color:#eaeaea;
 }
-#settings .user .buttons {
-  margin-top:-25px;
-}
-#settings .user .view .buttons {
-  display:none;
-}
 
 /* geofence settings */
 #geofences #sidebar h3 {

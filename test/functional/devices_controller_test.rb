@@ -29,6 +29,30 @@ describe "Devices Controller", ActionController::TestCase do
       json[0]['device']['position'].should.not.be.nil    # included method
       json[0]['device']['color'].should.not.be.nil       # included method
     end
+
+    specify "Takes into account filter parameters" do
+      @request.session[:filter] = "testing"
+      ThinkingSphinx.expects(:sphinx_running?).returns(true)
+      Device.expects(:search).with(
+        "testing", :with => {:account_id => accounts(:quentin).id}, 
+        :mode => :extended
+      ).returns(accounts(:quentin).devices)
+
+      get :index
+      template.should.be 'index'
+    end
+
+    specify "Search doesn't die if sphinx isn't running" do
+      @request.session[:filter] = "testing"
+      ThinkingSphinx.expects(:sphinx_running?).returns(false)
+
+      get :index
+      template.should.be 'index'
+
+      flash[:warning].should.match(/filtering is currently unavailable/i)
+      assigns(:devices).length.should.be 1
+      assigns(:devices).first.should.equal devices(:quentin_device)
+    end
   end
   
   context "Viewing a device" do

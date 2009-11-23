@@ -118,6 +118,8 @@ class DevicesController < ApplicationController
   end
   
   def set_devices
-    @devices = current_account.devices
+    @devices = search_on Device do
+      current_account.devices
+    end
   end
 end

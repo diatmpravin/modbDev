@@ -3,6 +3,7 @@
 .DS_Store
 *.swo
 .~*#
+mkmf.log
 
 # Local configs
 config/database.yml
