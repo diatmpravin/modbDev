@@ -53,6 +53,11 @@ class ActiveSupport::TestCase
   def json
     @_json ||= ActiveSupport::JSON.decode(response.body)
   end
+
+  # Take a query string and put a parsed hash in the session
+  def set_filter(query)
+    @request.session[:filter] = FilterQuery.parse(query)
+  end
 end
 
 MapQuest # kickstart autoloader
