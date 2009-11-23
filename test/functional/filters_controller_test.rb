@@ -55,6 +55,12 @@ describe "FiltersController", ActionController::TestCase do
       @response.session[:filter][:name].should.equal 'apples'
     end
 
+    specify "Empty query nils out the field" do
+      @request.session[:filter] = 'apples'
+      xhr :post, :create, :query => ''
+      @response.session[:filter].should.be.nil
+    end
+
   end
 
   context "Destroy" do
