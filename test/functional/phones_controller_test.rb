@@ -16,12 +16,6 @@ describe "PhonesController", ActionController::TestCase do
       assigns(:phones).length.should.be 1
       assigns(:phones).first.should.equal phones(:quentin_phone)
     end
-
-    xspecify "requires working subscription (cancelled)" do
-      @account.subscription.update_attribute(:status, "cancelled")
-      get :index
-      should.redirect_to edit_account_path
-    end
   end
   
   context "Downloading phone software" do

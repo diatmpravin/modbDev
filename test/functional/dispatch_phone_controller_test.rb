@@ -1,5 +1,7 @@
 require 'test_helper'
 
+=begin
+
 module DispatchTestHelper
   attr_accessor :request, :response
   
@@ -66,7 +68,7 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
       @account = accounts(:quentin)
     end
     
-    xspecify "activating by login works" do
+    specify "activating by login works" do
       dispatch({'action' => 'activate_by_login',
         'phone' => @phone.activation_code,
         'username' => 'quentin',
@@ -558,3 +560,5 @@ describe "Dispatch :: Phone Controller", ActionController::TestCase do
     end
   end
 end
+
+=end

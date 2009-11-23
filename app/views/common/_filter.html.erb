@@ -1,5 +1,6 @@
 <div id="filter">
   <% form_tag filter_path do -%>
+    <%= hidden_field_tag :return_to, request.request_uri %>
     <%= text_field_tag "query", filter_query %>
     <%= submit_tag "Filter" %>
     <%= button_tag "Clear", :id => 'filter_clear' %>
@@ -10,12 +11,10 @@
       <%= label_tag 'name', "Name:" %>
       <%= text_field_tag "name" %>
     </p>
-    <!--
     <p>
       <%= label_tag 'tracker_id', 'Tracker ID:' %>
       <%= text_field_tag "tracker_id" %>
     </p>
-    -->
     <p>
       <%= label_tag 'vin', 'VIN:' %>
       <%= text_field_tag "vin" %>
@@ -27,7 +26,7 @@
     </p>
     -->
     <p class="buttons">
-    <%= button_tag "Filter" %> or <%= link_to 'Cancel', '#' %>
+    <%= button_tag "Filter" %> or <%= link_to 'Close', '#' %>
     </p>
   </div>
 </div>
