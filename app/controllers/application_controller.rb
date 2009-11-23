@@ -14,6 +14,11 @@ class ApplicationController < ActionController::Base
   
   # See ActionController::Base for details 
   filter_parameter_logging :password
+
+  def filter_query
+    session[:filter] ? session[:filter][:full] : ""
+  end
+  helper_method :filter_query
   
   protected
 
@@ -26,7 +31,14 @@ class ApplicationController < ActionController::Base
   def search_on(klass, &default)
     if session[:filter] && session[:filter].any?
       if ThinkingSphinx.sphinx_running?
-        return klass.search(session[:filter], :with => {:account_id => current_account.id}, :mode => :extended)
+        filter = session[:filter].dup
+
+        filter.delete(:full)
+        query = filter.delete(:query)
+        conditions = filter
+
+        return klass.search query, :conditions => conditions,
+                            :with => {:account_id => current_account.id}, :mode => :extended
       else
         flash[:warning] = "Filtering is currently unavailable. " + 
                           "We have been informed of this problem and will have it fixed soon."
