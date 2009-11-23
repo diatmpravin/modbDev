@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091119195813) do
+ActiveRecord::Schema.define(:version => 20091123152419) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -98,9 +98,11 @@ ActiveRecord::Schema.define(:version => 20091119195813) do
     t.string   "time_zone",            :limit => 64, :default => "Eastern Time (US & Canada)"
     t.boolean  "detect_pitstops",                    :default => false
     t.integer  "pitstop_threshold",                  :default => 10
+    t.boolean  "delta",                              :default => true,                         :null => false
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"
+  add_index "devices", ["delta"], :name => "index_devices_on_delta"
   add_index "devices", ["tracker_id"], :name => "index_devices_on_tracker_id"
   add_index "devices", ["user_id"], :name => "index_devices_on_user_id"
 
