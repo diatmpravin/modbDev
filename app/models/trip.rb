@@ -69,8 +69,7 @@ class Trip < ActiveRecord::Base
   def events
     Event.find(:all,
       :conditions => ['legs.trip_id=?', self.id],
-      :joins => ' INNER JOIN points ON points.id = events.point_id' +
-                ' INNER JOIN legs ON legs.id = points.leg_id')
+      :joins => {:point => :leg})
   end
   
   # Find the trip immediately before this one in the device's list of trips,
