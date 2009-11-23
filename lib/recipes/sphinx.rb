@@ -9,19 +9,19 @@ namespace :sphinx do
   desc "Start the Sphinx daemon"
   task :start do
     configure
-    rake "thinking_sphinx:start"
+    sudo "monit start fleet-sphinx"
   end
 
   desc "Stop the Sphinx daemon"
   task :stop do
     configure
-    rake "thinking_sphinx:stop"
+    sudo "monit stop fleet-sphinx"
   end
 
   desc "Stop and then start the Sphinx daemon"
   task :restart do
-    stop
-    start
+    configure
+    sudo "monit restart fleet-sphinx"
   end
 
   desc "Generate the Sphinx configuration file"
