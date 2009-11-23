@@ -47,16 +47,21 @@ class TripDetailReport < Report
     trips = self.device.trips.in_range(
       self.start, self.end, self.user.zone
     ).all(:order => 'start ASC')
-
+    
+    # Get event counts from db grouped by trip and event type, then turn the
+    # results into a hash.
+    events = Hash.new {|hash, key| hash[key] = Hash.new(0)}
+    Event.multi_count(
+      :group => ['legs.trip_id', 'event_type'],
+      :joins => {:point => :leg},
+      :conditions => {'legs.trip_id' => trips.map(&:id)}
+    ).each do |r|
+      events[r[0][0].to_i][r[0][1].to_i] = r[1]
+    end
+    
     trips.each do |trip|
-      # Count the number of each events for the trip
-      events = [].tap do |events|
-        trip.events.each do |e|
-          events[e.event_type] ||= 0
-          events[e.event_type] += 1
-        end
-      end
-
+      trip_events = events[trip.id]
+      
       self.data << {
         :start => trip.start.in_time_zone(self.user.zone),
         :finish => trip.finish.in_time_zone(self.user.zone),
@@ -64,18 +69,18 @@ class TripDetailReport < Report
         :mpg => trip.average_mpg,
         :duration => trip.duration,
         :idle_time => trip.idle_time,
-        :event_speed => events[Event::SPEED] || 0,
+        :event_speed => trip_events[Event::SPEED],
         :event_geofence => [
-          events[Event::ENTER_BOUNDARY] || 0,
-          events[Event::EXIT_BOUNDARY] || 0
+          trip_events[Event::ENTER_BOUNDARY],
+          trip_events[Event::EXIT_BOUNDARY]
         ].sum,
-        :event_idle => events[Event::IDLE] || 0,
+        :event_idle => trip_events[Event::IDLE],
         :event_aggressive => [
-          events[Event::RPM] || 0,
-          events[Event::RAPID_ACCEL] || 0,
-          events[Event::RAPID_DECEL] || 0
+          trip_events[Event::RPM],
+          trip_events[Event::RAPID_ACCEL],
+          trip_events[Event::RAPID_DECEL]
         ].sum,
-        :event_after_hours => events[Event::AFTER_HOURS] || 0
+        :event_after_hours => trip_events[Event::AFTER_HOURS]
       }
     end
   end
