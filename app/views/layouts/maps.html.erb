@@ -12,6 +12,8 @@
   <% javascript_tag do -%>
     LandmarksView.landmarks = <%= landmarks_for_json %>;
   <% end -%>
+  <%= javascript_include_tag 'tags' %>
+  <%= preload_tags_json %>
 <% end -%>
 <% inside_layout 'internal' do -%>
   <%= yield %>

@@ -106,7 +106,7 @@ describe "Trips Controller", ActionController::TestCase do
       post :update, {
         :id => @trip.id,
         :trip => {
-          :tag_ids => [@tag.id]
+          :tag_names => [@tag.name]
         }
       }
       
@@ -118,23 +118,12 @@ describe "Trips Controller", ActionController::TestCase do
       post :update, {
         :id => @trip.id,
         :trip => {
-          :tag_ids => [@tag.id]
+          :tag_names => ['blargh']
         }
       }
       
       json['status'].should.equal 'failure'
       json['error'].should.be.nil
-    end
-    
-    specify "errors if a tag is invalid" do
-      should.raise ActiveRecord::RecordNotFound do
-        post :update, {
-          :id => @trip.id,
-          :trip => {
-            :tag_ids => [@tag.id, tags(:aaron_tag).id]
-          }
-        }
-      end
     end
   end
   

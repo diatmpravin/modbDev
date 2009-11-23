@@ -687,12 +687,15 @@ a.add {
 }
 .tags li span {
   display:block;
-  width:204px;
+  width:184px;
   overflow:hidden;
 }
 input.tagEntry {
   margin-left:19px;
-  width:180px;
+  width:160px;
+}
+#sidebar .tags ul {
+  padding-left:4px;
 }
 
 /* vehicles */

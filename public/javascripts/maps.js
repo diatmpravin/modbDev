@@ -275,7 +275,6 @@ Maps = {
       
       Maps.corners();
       Maps.scrollPane(true, '.trips');
-      Trips.prepare();
       
       // Display the first trip on the list. If there isn't one,
       // wipe out the currently displayed trip.
@@ -490,8 +489,6 @@ Trips = {
     q('.trip a.editSettings').live('click', Trips.edit);
     q('.trip a.save').live('click', Trips.save);
     q('.trip a.cancel').live('click', Trips.cancel);
-    q('.trip a.add').live('click', Trips.displayForm);
-    q('.trip a.remove').live('click', Trips.removeTag);
     q('.trip a.collapse').live('click', Trips.collapse);
     q('.trip a.expand').live('click', Trips.expand);
     
@@ -507,30 +504,15 @@ Trips = {
       q(this).removeClass('hover');
     });
     
-    q('#tagDialog input').live('keypress', function(e) {
-      // Capture ENTER and submit dialog
-      if (e.which == 13) {
-        Trips.createTag.call(q('#tagDialog'), e);
-      }
-    });
     
-    q('#tagDialog').dialog({
-      title: 'Enter New Tag',
-      modal: true,
-      autoOpen: false,
-      resizable: false,
-      buttons: {
-        'Add Tag': Trips.createTag,
-        'Cancel': function() { q(this).dialog('close'); }
-      },
-      close: function() { }
-    })
-    .siblings('.ui-dialog-buttonpane').prepend('<div class="loading"></div>');
   }
   ,
   edit: function() {
-    q(this).closest('.view').hide('fast').siblings('.edit').show('fast')
-      .closest('.trip').siblings('.trip').hide('fast');
+    var _trip = q(this).closest('.view').hide('fast')
+                       .siblings('.edit').show('fast')
+                       .closest('.trip').siblings('.trip').hide('fast').end();
+    
+    Tags.prepare(_trip);
     
     return false;
   }
@@ -540,7 +522,6 @@ Trips = {
     _edit.hide('fast', function() {
       q.get(_edit.find('form').attr('action') + '/edit', function(html) {
         _edit.html(html);
-        Trips.prepare(_edit);
       });
     })
     .siblings('.view').show('fast')
@@ -567,23 +548,15 @@ Trips = {
             _edit.hide('normal', function() {
               q.get(_edit.find('form').attr('action') + '/edit', function(html) {
                 _edit.html(html);
-                Trips.prepare(_edit);
               });
             });
           });
         } else {
           _edit.html(json.html);
-          Trips.prepare(_edit);
         }
       }
     });
     
-    return false;
-  }
-  ,
-  displayForm: function() {
-    q('#tagDialog').dialog('open')
-                   .data('tagList', q(this).closest('ul'));
     return false;
   }
   ,
@@ -654,77 +627,6 @@ Trips = {
     
     return false;
   }
-  ,
-  createTag: function() {
-    var _this = q(this);
-    
-    _this.find('form').ajaxSubmit({
-      dataType: 'json',
-      beforeSubmit: function() {
-        _this.siblings('.ui-dialog-buttonpane').find('.loading').show();
-      },
-      success: function(json) {
-        _this.siblings('.ui-dialog-buttonpane').find('.loading').hide();
-        if (json.status == 'success') {
-          Trips.addTag(
-            _this.data('tagList'), json.id, json.name
-          );
-          _this.dialog('close');
-        } else {
-          _this.errors(json.error);
-        }
-      }
-    });
-  }
-  ,
-  addTag: function(list, id, text) {
-    list.find('li:last').before(
-      '<li><a href="#" class="remove"></a><span>' + text + '</span>' +
-      '<input type="hidden" name="trip[tag_ids][]" value="' +
-      id + '" class="id"/></li>'
-    );
-  }
-  ,
-  removeTag: function() {
-    var _this = q(this);
-    var _tag = _this.closest('li');
-    var _id = _this.siblings('input.id');
-    if (_id.length >= 1) {
-      _this.closest('ul').find('select.tagSelect').append(
-        '<option value="' + _id.val() + '">' + _tag.find('span').html() + '</option>'
-      );
-    }
-    _tag.hide('normal', function() {
-      _tag.remove();
-    });
-    
-    return false;
-  }
-  ,
-  prepare: function(container) {
-    if (container) {
-      q(container).find('select.tagSelect:not(.evented)').
-        change(Trips.select).addClass('evented').val('');
-    } else {
-      q('div.trips select.tagSelect:not(.evented)').
-        change(Trips.select).addClass('evented').val('');
-    }
-  }
-  ,
-  select: function() {
-    var _this = q(this);
-    if (_this.val()=='') {
-      return;
-    }
-    
-    var _ul = q(this).closest('ul');    
-    Trips.addTag(
-      _ul, this.options[this.selectedIndex].value, this.options[this.selectedIndex].text
-    );
-    
-    _this.find('option:selected').remove();
-    _this.val('');
-  }
 };
 
 /* Initializer */
@@ -734,7 +636,4 @@ q(function() {
   GeofencesView.init(q('#show_geofences'), q('#device_id'));
   LandmarksView.init(q('#show_landmarks'));
   Trips.init();
-  
-  // keeping this around for a little while in case i have to switch to IE7 opacity style
-  /*q('#pointWalker .background').attr('style', 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'/images/myimage.png\',sizingMethod=\'scale\')');*/
 });

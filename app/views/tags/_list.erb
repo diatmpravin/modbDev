@@ -1,6 +1,5 @@
 <% field_prefix ||= object.class.to_s.downcase -%>
 <div class="tags">
-  <h3>Tags</h3>
   <ul>
     <li>
       <%= text_field_tag "#{field_prefix}[tag_names][]", '', 
