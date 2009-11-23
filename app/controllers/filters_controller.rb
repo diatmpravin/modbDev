@@ -2,12 +2,12 @@ class FiltersController < ApplicationController
 
   def create
     session[:filter] = FilterQuery.parse(params[:query])
-    render :nothing => true
+    redirect_to params[:return_to] || root_path
   end
 
   def destroy
     session[:filter] = nil
-    render :nothing => true
+    redirect_to params[:return_to] || root_path
   end
 
 end

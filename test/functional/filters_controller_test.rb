@@ -15,7 +15,11 @@ describe "FiltersController", ActionController::TestCase do
 
       @response.session[:filter][:full].should.equal 'apples'
       @response.session[:filter][:query].should.equal 'apples'
-      template.should.be nil
+    end
+
+    specify "redirects to the location specified in :return_to" do
+      xhr :post, :create, :query => 'apples', :return_to => "/devices"
+      should.redirect_to "/devices"
     end
 
     specify "can parse out a field" do
@@ -23,7 +27,6 @@ describe "FiltersController", ActionController::TestCase do
 
       @response.session[:filter][:full].should.equal 'name: apples'
       @response.session[:filter][:name].should.equal 'apples'
-      template.should.be nil
     end
 
     specify "can parse out multiple fields" do
@@ -33,7 +36,6 @@ describe "FiltersController", ActionController::TestCase do
       @response.session[:filter][:name].should.equal 'apples'
       @response.session[:filter][:title].should.equal 'This is cool'
       @response.session[:filter][:value].should.equal '1'
-      template.should.be nil
     end
 
     specify "can handle complex queries" do
@@ -43,7 +45,6 @@ describe "FiltersController", ActionController::TestCase do
       @response.session[:filter][:query].should.equal 'all'
       @response.session[:filter][:name].should.equal 'apples | oranges'
       @response.session[:filter][:title].should.equal '4 & (5 | 6)'
-      template.should.be nil
     end
 
     specify "can mix basic query with fields" do
@@ -52,7 +53,6 @@ describe "FiltersController", ActionController::TestCase do
       @response.session[:filter][:full].should.equal "testing name: apples"
       @response.session[:filter][:query].should.equal 'testing'
       @response.session[:filter][:name].should.equal 'apples'
-      template.should.be nil
     end
 
   end
@@ -66,6 +66,11 @@ describe "FiltersController", ActionController::TestCase do
 
       @response.session[:filter].should.be.nil
       template.should.be nil
+    end
+
+    specify "redirects to the location specified in :return_to" do
+      xhr :post, :destroy, :return_to => "/devices"
+      should.redirect_to "/devices"
     end
 
   end
