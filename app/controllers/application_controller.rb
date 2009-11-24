@@ -37,8 +37,8 @@ class ApplicationController < ActionController::Base
         query = filter.delete(:query)
         conditions = filter
 
-        return klass.search query, :conditions => conditions,
-                            :with => {:account_id => current_account.id}, :mode => :extended
+        return klass.search(query, :conditions => conditions,
+                            :with => {:account_id => current_account.id}, :mode => :extended)
       else
         flash[:warning] = "Filtering is currently unavailable. " + 
                           "We have been informed of this problem and will have it fixed soon."
