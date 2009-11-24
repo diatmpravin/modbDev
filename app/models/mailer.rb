@@ -21,6 +21,13 @@ class Mailer < ActionMailer::Base
     body :message => message
     subject 'Fleet Alert'
   end
+
+  def exception_thrown(exception, message = "")
+    from "error@gomoshi.com"
+    recipients %w(dev@crayoninterface.com)
+    subject "[Fleet #{Rails.env.capitalize}] Exception Thrown"
+    body :exception => exception, :message => message
+  end
   
   private
   def support_address

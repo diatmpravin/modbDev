@@ -22,6 +22,9 @@ class ApplicationController < ActionController::Base
   
   protected
 
+  SPHINX_WARNING = "Filtering is currently unavailable. " + 
+                   "We have been informed of this problem and will have it fixed soon."
+
   # Perform a Sphinx search on the given class.
   # Filter is set by FiltersController.
   # The block is the default to return if a search fails
@@ -30,7 +33,7 @@ class ApplicationController < ActionController::Base
   # See DevicesController#set_device for a usage example.
   def search_on(klass, &default)
     if session[:filter] && session[:filter].any?
-      if ThinkingSphinx.sphinx_running?
+      begin
         filter = session[:filter].dup
 
         filter.delete(:full)
@@ -39,10 +42,9 @@ class ApplicationController < ActionController::Base
 
         return klass.search(query, :conditions => conditions,
                             :with => {:account_id => current_account.id}, :mode => :extended)
-      else
-        flash[:warning] = "Filtering is currently unavailable. " + 
-                          "We have been informed of this problem and will have it fixed soon."
-        # TODO Send out an error to dev to inform of failure
+      rescue => ex
+        flash[:warning] = SPHINX_WARNING
+        Mailer.deliver_exception_thrown(ex, "Sphinx Search Error")
       end
     end
 
