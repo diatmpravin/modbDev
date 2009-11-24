@@ -12,6 +12,8 @@ class Device < ActiveRecord::Base
 
     indexes tracker.imei_number,      :as => :tracker_id
 
+    indexes tags(:name),              :as => :tag
+
     has :account_id, :user_id, :created_at, :updated_at
 
     set_property :delta => true
