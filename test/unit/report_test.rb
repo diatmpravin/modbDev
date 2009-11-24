@@ -7,9 +7,7 @@ describe "Report", ActiveSupport::TestCase do
   end
 
   context "All Reports" do
-
     context "Date Ranges" do
-
       specify "Custom: start date must be < end date" do
         report = Report.new(@user, {
           :devices => @devices,
@@ -59,9 +57,7 @@ describe "Report", ActiveSupport::TestCase do
         report.range.start.should.equal Date.today.beginning_of_year
         report.range.end.should.equal Date.today.end_of_year
       end
-
     end
-
   end
   
   context "Vehicle Summary Report" do
@@ -178,7 +174,6 @@ describe "Report", ActiveSupport::TestCase do
   end
 
   context "Fuel Economy Report" do
-
     specify "works" do
       report = FuelEconomyReport.new(@user, {
         :devices => @devices,
@@ -215,7 +210,6 @@ describe "Report", ActiveSupport::TestCase do
   end
 
   context "Trip Detail Report" do
-
     specify "works" do
       report = TripDetailReport.new(@user, {
         :devices => @devices,
@@ -233,7 +227,7 @@ describe "Report", ActiveSupport::TestCase do
       report.data.should.not.be.empty
     end
 
-    specify "requires one vehicle" do
+    specify "requires at least one vehicle" do
       report = TripDetailReport.new(@user, {
         :devices => [],
         :range => {
@@ -245,8 +239,8 @@ describe "Report", ActiveSupport::TestCase do
       report.validate
       
       report.should.not.be.valid
-      report.errors.should.include 'You must choose one vehicle to run this report'
+      report.errors.should.include 'You must choose one or more vehicles to run this report'
     end
-
   end
+  
 end

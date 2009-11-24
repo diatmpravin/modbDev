@@ -1,25 +1,23 @@
 class TripDetailReport < Report
 
   def title
-    "Trip Detail Report for #{self.device.name} - #{self.start} through #{self.end}"
+    "Trip Detail Report - #{self.start} through #{self.end}"
   end
 
   def validate
-    if(devices.blank? || devices.length != 1)
-      self.errors << 'You must choose one vehicle to run this report'
+    if devices.blank?
+      self.errors << 'You must choose one or more vehicles to run this report' 
     end
-  end
-
-  def device
-    self.devices.first
   end
 
   def to_csv
     self.data.rename_columns(
+      :vehicle => "Vehicle",
       :start => "Start Date",
       :finish => "End Date",
       :miles => "Miles",
-      :mpg => "MPG",
+      :mpg => "Average Fuel Economy",
+      :duration => "Operating Time (s)",
       :idle_time => "Idle Time (s)",
       :event_speed => "Speed Events",
       :event_geofence => "Geofence Events",
@@ -32,10 +30,12 @@ class TripDetailReport < Report
 
   def run
     self.data = Ruport::Data::Table(
+      :vehicle,
       :start,
       :finish,
       :miles,
       :mpg,
+      :duration,
       :idle_time,
       :event_speed,
       :event_geofence,
@@ -43,10 +43,14 @@ class TripDetailReport < Report
       :event_aggressive,
       :event_after_hours
     )
-
-    trips = self.device.trips.in_range(
+    
+    trips = Trip.in_range(
       self.start, self.end, self.user.zone
-    ).all(:order => 'start ASC')
+    ).all(
+      :order => 'start ASC',
+      :conditions => {:device_id => self.devices.map(&:id)},
+      :include => :device
+    )
     
     # Get event counts from db grouped by trip and event type, then turn the
     # results into a hash.
@@ -63,6 +67,7 @@ class TripDetailReport < Report
       trip_events = events[trip.id]
       
       self.data << {
+        :vehicle => trip.device.name,
         :start => trip.start.in_time_zone(self.user.zone),
         :finish => trip.finish.in_time_zone(self.user.zone),
         :miles => trip.miles,

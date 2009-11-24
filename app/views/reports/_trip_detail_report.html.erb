@@ -1,6 +1,7 @@
 <table>
   <thead>
     <tr>
+      <th rowspan="2">Vehicle</th>
       <th rowspan="2">Start Time</th>
       <th rowspan="2">End Time</th>
       <th rowspan="2">Miles Driven</th>
@@ -20,6 +21,7 @@
   <tbody>
   <% report.data.each do |row| -%>
     <tr class="<%= cycle('even', 'odd') %>">
+      <td><%= row[:vehicle] %></td>
       <td><%= row[:start] %></td>
       <td><%= row[:finish] %></td>
       <td><%= row[:miles] %></td>
@@ -34,7 +36,7 @@
     </tr>
   <% end -%>
     <tr class="total">
-      <td colspan="2">Total</td>
+      <td colspan="3">Total</td>
       <td><%= report.data.sum(:miles) %></td>
       <td>-</td>
       <td><%= duration_format(report.data.sum(:duration)) %></td>
@@ -46,7 +48,7 @@
       <td><%= report.data.sum(:event_after_hours) %></td>
     </tr>
     <tr class="total">
-      <td colspan="2">Average</td>
+      <td colspan="3">Average</td>
       <td><%= mpg_format(report.data.average(:miles)) %></td>
       <td><%= mpg_format(report.data.average(:mpg)) %></td>
       <td><%= duration_format(report.data.average(:duration)) %></td>
