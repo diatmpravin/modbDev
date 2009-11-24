@@ -463,6 +463,14 @@ a.close {
 }
 
 /*** FILTER FORM ***/
+#navbar #query {
+  width: 20em;
+}
+
+#navbar #filter img {
+  vertical-align: middle;
+}
+
 #navbar div#filterDetails {
   border: 1px solid rgb(172,170,155);
   border-top: none;

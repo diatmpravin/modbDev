@@ -2,6 +2,7 @@
   <% form_tag filter_path do -%>
     <%= hidden_field_tag :return_to, request.request_uri %>
     <%= text_field_tag "query", filter_query %>
+    <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
     <%= submit_tag "Filter" %>
     <%= button_tag "Clear", :id => 'filter_clear' %>
   <% end -%>

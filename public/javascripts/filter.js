@@ -5,7 +5,7 @@
 Filter = {
 
   init: function() {
-    q("#query").focus(Filter.showDetails);
+    q("#filter .advanced").click(Filter.toggleDetails);
     q("#query").blur(Filter.parseQuery);
 
     q("#filterDetails").css("width", q("#filter").css("width"));
@@ -48,8 +48,8 @@ Filter = {
   /**
    * Show the filter details box
    */
-  showDetails: function() {
-    q("#filterDetails").slideDown('slow');
+  toggleDetails: function() {
+    q("#filterDetails").slideToggle('slow');
   }
   ,
   /**
