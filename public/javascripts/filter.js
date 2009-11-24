@@ -19,8 +19,32 @@ Filter = {
     q("input[type=text]", "#filterDetails").blur(Filter.populateQuery);
     q("#filter_clear").click(Filter.clearQuery);
 
+    q(".filterHelp").click(function() { q("#filterHelp").dialog('open'); });
+
+    q(".filterSyntaxShort a", "#filterHelp").live('click', function() {
+      q(this).parent().slideUp();
+      q(".filterSyntax").slideDown();
+    });
+
+    q("#filterHelp").dialog({
+      title: "Filtering",
+      autoOpen: false,
+      resizable: false,
+      modal: false,
+      width: 500,
+      close: Filter.resetHelp,
+      buttons: {
+        'Close': function() { q(this).dialog("close"); }
+      }
+    });
+
     Filter.clearDetails();
     Filter.parseQuery();
+  }
+  ,
+  resetHelp: function(button) {
+    q(".filterSyntaxShort", "#filterHelp").show();
+    q(".filterSyntax", "#filterHelp").hide();
   }
   ,
   clearQuery: function() {
@@ -45,14 +69,14 @@ Filter = {
    * Show the filter details box
    */
   toggleDetails: function() {
-    q("#filterDetails").slideToggle('slow');
+    q("#filterDetails").slideToggle();
   }
   ,
   /**
    * Hide the filter details box
    */
   hideDetails: function() {
-    q("#filterDetails").slideUp('slow');
+    q("#filterDetails").slideUp();
   }
   ,
   /**

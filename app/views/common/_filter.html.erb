@@ -1,5 +1,6 @@
 <div id="filter">
   <% form_tag filter_path do -%>
+    <%= link_to image_tag("filter_help.png"), "#", :class => "filterHelp" %>
     <%= hidden_field_tag :return_to, request.request_uri %>
     <%= text_field_tag "query", filter_query %>
     <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
@@ -21,13 +22,90 @@
         <td><%= label_tag 'vin', 'VIN:' %></td>
         <td><%= text_field_tag "vin" %></td>
       </tr>
-      <!--
       <tr>
         <td><%= label_tag 'tag', 'Tag' %></td>
         <td><%= text_field_tag "tag" %></td>
       </tr>
-      -->
     </table>
   </div>
 </div>
 <div class="noRight"></div>
+
+<div id="filterHelp" class="dialog">
+  <h4><%= image_tag "advanced.png" %> Filter Form</h4>
+
+  <p>
+  Clicking on this icon will open up a form showing the various fields you can use
+  to enter in your filter criteria. Entering in values in any of the fields will
+  autopopulate the query box itself with the appropriate values, following the
+  filter syntax as defined below.
+  </p>
+
+  <p>
+  Click on <%= button_tag "Filter" %> to apply the filter,
+  and <%= button_tag "Clear" %> to reset the page to no longer have a filter.
+  </p>
+
+  <p class="filterSyntaxShort">
+    <%= link_to "Read about the Filter query syntax", "#", :class => "simple" %>
+  </p>
+
+  <div class="filterSyntax">
+    <h4>Filter Syntax</h4>
+
+    <p>
+    Filters are written using a very simple syntax. You can query
+    by a single term or set of terms.  For example, typing in <strong>Van</strong>
+    will filter on that word under Name, Tracker ID, VIN, and any tags on any vehicle.
+    If multiple terms are given, say <strong>Ford Van</strong>, the site will attempt
+    to find vehicles that match both <em>Ford</em> and <em>Van</em>.
+    </p>
+
+    <h5>Filtering by Field</h5>
+
+    <p>
+    You can also write filters to work directly on certain fields using the
+    <strong>field_name: filter values</strong> syntax. For example: typing in the
+    query <strong>name: Van</strong> will find all vehicles with the name
+    <em>Van</em>. Multiple fields can be queried
+    together: <strong>name: Truck tag: Alabama</strong> will filter on all vehicles
+    that match the name <em>Truck</em> and have the tag <em>Alabama</em>.
+    </p>
+
+    <h5>Querying for Partial Terms</h5>
+
+    <p>
+    In the case where you are trying to filter on parts of names / numbers, especially if
+    you are filtering on terms that appear inside of the names of vehicles (say you have
+    a vehicle named "Chevrolet Cobolt" and you want to filter on "Chev"), you need to use
+    the asterisk <strong>*</strong> in your query.
+    </p>
+
+    <p>
+    For the filter query <strong>Chev</strong> to match "Chevrolet Cobalt",
+    it must be written with asterisks: <strong>Chev*</strong>.
+    This can be used with any filter term as described above.
+    Do note that using the asterisk filter requires at least three characters
+    to work correctly. A filter of <strong>Ch*</strong> will not work.
+    </p>
+
+    <h5>Boolean Operators</h5>
+
+    <p>
+    Up until now, anytime multiple filter terms were used for a field, such as
+    <strong>name: Truck Ford</strong> would simply filter on vehicles that had a name
+    matching <em>Truck</em> AND <em>Ford</em>. In order to change this to filter on
+    <em>Truck</em> OR <em>Ford</em>, you use <strong>|</strong> (the bar, typed with Shift-\)
+    as such: <strong>name: Truck | Ford</strong>, or to filter on multiple tags:
+    <strong>tag: Alabama | Mississippi</strong>.
+    </p>
+
+    <p>
+    Note: you cannot currently apply an OR filter across fields. If the filter query contains
+    multiple fields (say, <em>name:</em> and <em>tag:</em>, the system will filter with AND on
+    those terms, though the individual terms for each field can be OR'd.
+    </p>
+
+  </div>
+
+</div>

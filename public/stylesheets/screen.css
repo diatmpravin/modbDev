@@ -491,6 +491,10 @@ a.close {
   padding: 0.5em; 
 }
 
+.filterSyntax {
+  display: none;
+}
+
 /*** MAPS PAGE ***/
 
 /* map container */
