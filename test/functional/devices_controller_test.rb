@@ -33,7 +33,6 @@ describe "Devices Controller", ActionController::TestCase do
     specify "Takes into account filter parameters" do
       set_filter "testing"
 
-      ThinkingSphinx.expects(:sphinx_running?).returns(true)
       Device.expects(:search).with(
         "testing", :conditions => {}, :with => {:account_id => accounts(:quentin).id}, 
         :mode => :extended
@@ -46,7 +45,8 @@ describe "Devices Controller", ActionController::TestCase do
     specify "Search doesn't die if sphinx isn't running" do
       set_filter "testing"
 
-      ThinkingSphinx.expects(:sphinx_running?).returns(false)
+      Device.expects(:search).raises(RuntimeError.new("Oh noes!"))
+      Mailer.expects(:deliver_exception_thrown)
 
       get :index
       template.should.be 'index'

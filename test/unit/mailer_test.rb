@@ -25,5 +25,32 @@ describe "Mailer", ActiveSupport::TestCase do
     Mailer.deliveries.first.subject.should.equal 'Fleet Alert'
     Mailer.deliveries.first.body.should =~ /test alert/
   end
+
+  specify "can send an email on exceptions" do
+    exception = nil
+    # To ensure we have a backtrace
+    begin; raise Exception.new("Danger Will Robinson!"); rescue Exception => ex; exception = ex; end
+
+    Mailer.deliver_exception_thrown(exception)
+    
+    Mailer.deliveries.length.should.be 1
+    Mailer.deliveries.first.to.should.equal ['dev@crayoninterface.com']
+    Mailer.deliveries.first.subject.should.match(/\[Fleet Test\]/)
+    Mailer.deliveries.first.body.should.match(/Danger Will Robinson!/)
+  end
+  
+  specify "can send an email on exceptions with extra message" do
+    exception = nil
+    # To ensure we have a backtrace
+    begin; raise Exception.new("Danger Will Robinson!"); rescue Exception => ex; exception = ex; end
+      
+    Mailer.deliver_exception_thrown(ex, "Running tests!")
+    
+    Mailer.deliveries.length.should.be 1
+    Mailer.deliveries.first.to.should.equal ['dev@crayoninterface.com']
+    Mailer.deliveries.first.subject.should.match(/\[Fleet Test\]/)
+    Mailer.deliveries.first.body.should.match(/Danger Will Robinson!/)
+    Mailer.deliveries.first.body.should.match(/Running tests/)
+  end
   
 end
