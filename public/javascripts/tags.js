@@ -16,7 +16,6 @@ Tags = {
   source: null,
   
   init: function() {
-    q('.tags a.add').live('click', Tags.displayForm);
     q('.tags a.remove').live('click', Tags.removeTag);
     
     q('.tagEntry').live('keypress', function(e) {
