@@ -308,7 +308,7 @@ MoshiProxy = {
       mqPointList.push(this.pointCollection.getAt(i).latLng);
     }
     
-    this.map.bestFitLL(mqPointList, false, 4, 13);
+    this.map.bestFitLL(mqPointList, false, 2, 13);
   };
   
   /**
