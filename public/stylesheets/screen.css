@@ -482,6 +482,14 @@ a.close {
   display: none;
 }
 
+#navbar #filterDetails table {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+#navbar #filterDetails table td {
+  padding: 0.5em; 
+}
 
 /*** MAPS PAGE ***/
 

@@ -8,7 +8,7 @@ Filter = {
     q("#filter .advanced").click(Filter.toggleDetails);
     q("#query").blur(Filter.parseQuery);
 
-    q("#filterDetails").css("width", q("#filter").css("width"));
+    q("#filterDetails").css("width", "" + (q("#filter").width() - 1) + "px");
     q("#filterDetails").keypress(function(event) {
       // Capture ENTER and submit tag
       if (event.which == 13) {
@@ -17,10 +17,6 @@ Filter = {
     });
 
     q("input[type=text]", "#filterDetails").blur(Filter.populateQuery);
-
-    q("input[type=button]", "#filterDetails").click(Filter.populateAndSubmit);
-    q("a", "#filterDetails").click(Filter.hideDetails);
-
     q("#filter_clear").click(Filter.clearQuery);
 
     Filter.clearDetails();
