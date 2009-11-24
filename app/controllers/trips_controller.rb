@@ -10,24 +10,39 @@ class TripsController < ApplicationController
     
     if @device
       @trips = @device.trips.in_range(start_date, end_date, current_user.zone).
-        all(:include => :device)
+        all(:include => [:device, :tags])
     else
       @trips = Trip.in_range(start_date, end_date, current_user.zone).
         all(:conditions => {:device_id => current_account.device_ids}, :include => [:device, :tags])
     end
+  end
+  
+  # Return trip summary information for the given date range, without
+  # deep-loading any trips. Used by the history scroller.
+  def summary
+    start_date = Date.parse(params[:start_date])
+    end_date = Date.parse(params[:end_date])
+    
+    start_range = Trip.in_range(start_date, end_date, current_user.zone).multi_count(
+      :group => ["DATE_FORMAT(TIMESTAMPADD(SECOND,#{start_date.beginning_of_day.in_time_zone(current_user.zone).utc_offset},start),'%m/%d/%Y')", 'device_id'],
+      :conditions => {:device_id => current_account.device_ids}
+    )
+    finish_range = Trip.in_range(start_date, end_date, current_user.zone).multi_count(
+      :group => ["DATE_FORMAT(TIMESTAMPADD(SECOND,#{start_date.beginning_of_day.in_time_zone(current_user.zone).utc_offset},finish),'%m/%d/%Y')", 'device_id'],
+      :conditions => {:device_id => current_account.device_ids}
+    )
+    
+    trip_counts = Hash.new {|hash, key| hash[key] = Hash.new(0)}
+    start_range.each do |r|
+      trip_counts[r[0][0]][r[0][1].to_i] = r[1]
+    end
+    finish_range.each do |r|
+      trip_counts[r[0][0]][r[0][1].to_i] = [trip_counts[r[0][0]][r[0][1].to_i], r[1]].max
+    end
     
     respond_to do |format|
-      format.html
       format.json {
-        render :json => {:trips => @trips.map {|trip|
-          {
-            :id => trip.id,
-            :device_id => trip.device_id,
-            :start => trip.start.to_i + trip.start.in_time_zone(current_user.zone).utc_offset,
-            :finish => trip.finish.to_i + trip.finish.in_time_zone(current_user.zone).utc_offset,
-            :color => trip.device.color
-          }
-        }}
+        render :json => trip_counts
       }
     end
   end

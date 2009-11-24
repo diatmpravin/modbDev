@@ -22,17 +22,6 @@ describe "Trips Controller", ActionController::TestCase do
       template.should.equal 'index'
     end
     
-    specify "works (json)" do
-      get :index, {
-        :device_id => @device.id,
-        :start_date => '02/05/2009',
-        :end_date => '02/05/2009',
-        :format => 'json'
-      }
-      
-      json['trips'][0]['id'].should.equal trips(:quentin_trip).id
-    end
-    
     specify "works without a device" do
       get :index, {
         :start_date => '02/05/2009',
@@ -50,6 +39,18 @@ describe "Trips Controller", ActionController::TestCase do
           :format => 'json'
         }
       end
+    end
+  end
+  
+  context "Trip Summary" do
+    specify "works" do
+      get :summary, {
+        :start_date => '02/05/2009',
+        :end_date => '02/05/2009',
+        :format => 'json'
+      }
+      
+      json.should.equal({'02/05/2009' => {@device.id.to_s => 1}})
     end
   end
   

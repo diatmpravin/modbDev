@@ -32,7 +32,7 @@ Moshi.weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 Maps = {
   // Variables
   devices: [],
-  trips: [],
+  tripSummary: [],
   trip: null,
   tripsByDevice: [],
   tripPoints: 0,
@@ -307,23 +307,14 @@ Maps = {
         continue;
       }
       
-      var trips = Maps.tripsByDevice[Maps.devices[i].device.id];
-      if (trips) {
-        var num = 0;
-        for(var j = 0; j < trips.length; j++) {
-          var trip = trips[j];
-          if ((trip.start >= start && trip.start < end) ||
-            (trip.finish >= start && trip.finish < end) ||
-            (trip.start < start && trip.finish >= end)) {
-            num++;
-          }
-        }
-
-        
+      var data = Maps.tripSummary[q(this).data('date')];
+      if (data) {
+        var num = data['' + Maps.devices[i].device.id];
+      
         if (num > 0) {
           var trips = num > 1 ? 'trips' : 'trip';
 
-          html += '<li><div class="color"><img src="' + trip.color.filename +'" /></div><b>' +
+          html += '<li><div class="color"><img src="' + Maps.devices[i].device.color.filename +'" /></div><b>' +
             Maps.devices[i].device.name + '</b><br/><span>' + num + ' ' + trips + '</span></li>';
         }
       }
@@ -397,17 +388,11 @@ Maps = {
     endRange.setUTCMonth(endRange.getUTCMonth()+1);
     endRange.setUTCDate(endRange.getUTCDate()-1);
     
-    q.getJSON('/trips.json', {
+    q.getJSON('/trips/summary.json', {
       'start_date': Maps.rubyDateFormat(Maps.historyMonth),
       'end_date': Maps.rubyDateFormat(endRange)
     }, function(json) {
-      Maps.trips = json.trips;
-      Maps.tripsByDevice = [];
-      for(var i = 0; i < Maps.trips.length; i++) {
-        var id = Maps.trips[i].device_id;
-        Maps.tripsByDevice[id] = Maps.tripsByDevice[id] || [];
-        Maps.tripsByDevice[id][Maps.tripsByDevice[id].length] = Maps.trips[i];
-      }
+      Maps.tripSummary = json;
     });
   }
   ,
