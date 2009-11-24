@@ -463,6 +463,14 @@ a.close {
 }
 
 /*** FILTER FORM ***/
+#navbar #query {
+  width: 20em;
+}
+
+#navbar #filter img {
+  vertical-align: middle;
+}
+
 #navbar div#filterDetails {
   border: 1px solid rgb(172,170,155);
   border-top: none;
@@ -474,6 +482,14 @@ a.close {
   display: none;
 }
 
+#navbar #filterDetails table {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+#navbar #filterDetails table td {
+  padding: 0.5em; 
+}
 
 /*** MAPS PAGE ***/
 

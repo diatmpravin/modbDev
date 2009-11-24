@@ -2,32 +2,32 @@
   <% form_tag filter_path do -%>
     <%= hidden_field_tag :return_to, request.request_uri %>
     <%= text_field_tag "query", filter_query %>
+    <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
     <%= submit_tag "Filter" %>
     <%= button_tag "Clear", :id => 'filter_clear' %>
   <% end -%>
 
   <div id="filterDetails">
-    <p>
-      <%= label_tag 'name', "Name:" %>
-      <%= text_field_tag "name" %>
-    </p>
-    <p>
-      <%= label_tag 'tracker_id', 'Tracker ID:' %>
-      <%= text_field_tag "tracker_id" %>
-    </p>
-    <p>
-      <%= label_tag 'vin', 'VIN:' %>
-      <%= text_field_tag "vin" %>
-    </p>
-    <!--
-    <p>
-      <%= label_tag 'tag', 'Tag' %>
-      <%= text_field_tag "tag" %>
-    </p>
-    -->
-    <p class="buttons">
-    <%= button_tag "Filter" %> or <%= link_to 'Close', '#' %>
-    </p>
+    <table>
+      <tr>
+        <td><%= label_tag 'name', "Name:" %></td>
+        <td><%= text_field_tag "name" %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag 'tracker_id', 'Tracker ID:' %></td>
+        <td><%= text_field_tag "tracker_id" %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag 'vin', 'VIN:' %></td>
+        <td><%= text_field_tag "vin" %></td>
+      </tr>
+      <!--
+      <tr>
+        <td><%= label_tag 'tag', 'Tag' %></td>
+        <td><%= text_field_tag "tag" %></td>
+      </tr>
+      -->
+    </table>
   </div>
 </div>
 <div class="noRight"></div>
