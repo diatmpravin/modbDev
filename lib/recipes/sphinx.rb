@@ -51,7 +51,7 @@ namespace :sphinx do
     rake = fetch(:rake, "rake")
     tasks.each do |t|
       sudo "echo ''"
-      run "if [ -d #{release_path} ]; then cd #{release_path}; else cd #{current_path}; fi; sudo #{rake} RAILS_ENV=#{rails_env} #{t}"
+      run "if [ -d #{release_path} ]; then cd #{release_path}; else cd #{current_path}; fi; sudo -u www-data #{rake} RAILS_ENV=#{rails_env} #{t}"
     end
   end
 end
