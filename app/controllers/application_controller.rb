@@ -40,8 +40,14 @@ class ApplicationController < ActionController::Base
         query = filter.delete(:query)
         conditions = filter
 
-        return klass.search(query, :conditions => conditions,
-                            :with => {:account_id => current_account.id}, :mode => :extended)
+        query = klass.search(query, :conditions => conditions,
+                  :with => {:account_id => current_account.id}, :mode => :extended)
+
+        # Force the search to happen here so we can catch
+        # any errors that might get thrown
+        query.results
+
+        return query
       rescue => ex
         flash[:warning] = SPHINX_WARNING
         Mailer.deliver_exception_thrown(ex, "Sphinx Search Error")
