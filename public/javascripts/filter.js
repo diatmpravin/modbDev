@@ -99,7 +99,7 @@ Filter = {
     if(query == "") { return; }
 
     var parts = query.split(/\s/),
-        found, key, values = {},
+        found, key = "_base_", values = { "_base_": [] },
         details = q("#filterDetails");
 
     q.each(parts, function(index, word) {
