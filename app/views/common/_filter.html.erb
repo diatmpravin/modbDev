@@ -1,7 +1,7 @@
 <div id="filter">
   <% form_tag filter_path do -%>
     <%= link_to image_tag("filter_help.png"), "#", :class => "filterHelp" %>
-    <%= hidden_field_tag :return_to, request.request_uri %>
+    <%= hidden_field_tag :return_to, request.path %>
     <%= text_field_tag "query", filter_query %>
     <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
     <%= submit_tag "Filter" %>
