@@ -41,7 +41,9 @@ class ApplicationController < ActionController::Base
         conditions = filter
 
         query = klass.search(query, :conditions => conditions,
-                  :with => {:account_id => current_account.id}, :mode => :extended)
+                  :with => {:account_id => current_account.id}, 
+                  :page => params[:page], :per_page => 30,
+                  :mode => :extended)
 
         # Force the search to happen here so we can catch
         # any errors that might get thrown

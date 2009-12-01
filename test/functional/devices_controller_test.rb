@@ -34,7 +34,9 @@ describe "Devices Controller", ActionController::TestCase do
       set_filter "testing"
 
       Device.expects(:search).with(
-        "testing", :conditions => {}, :with => {:account_id => accounts(:quentin).id}, 
+        "testing", :conditions => {}, 
+        :page => nil, :per_page => 30,
+        :with => {:account_id => accounts(:quentin).id}, 
         :mode => :extended
       ).returns(accounts(:quentin).devices)
 

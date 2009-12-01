@@ -4,6 +4,8 @@
     <%= button_tag 'Add Vehicle', :class => 'addVehicle' %>
   </div>
   <div class="clear spacer"></div>
+
+  <%= will_paginate @devices %>
   
   <table class="data" style="width:100%">
     <thead>
@@ -40,6 +42,8 @@
       </tr>
     <% end -%>
   </table>
+
+  <%= will_paginate @devices %>
 </div>
 
 <div id="newAlertRecipient" class="dialog">
