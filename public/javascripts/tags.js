@@ -18,6 +18,14 @@ Tags = {
   init: function() {
     q('.tags a.remove').live('click', Tags.removeTag);
     
+    q('.addTag').live('click', function() {
+      var field = q(this).siblings('.tagEntry');
+      Tags.addTag(q(this).closest('ul'), field.val());
+      field.val('');
+      field.focus();
+      return false; 
+    });
+
     q('.tagEntry').live('keypress', function(e) {
       // Capture ENTER and submit tag
       if (e.which == 13) {

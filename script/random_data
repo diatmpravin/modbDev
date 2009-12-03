@@ -4,10 +4,10 @@
 
 USER = "quentin"
 DEVICE_INDEX = 0
-START_DATE = Date.parse("10/01/2009")
+START_DATE = Date.parse("12/01/2009")
 END_DATE = Date.today
 
-CLEAR_EXISTING = false
+CLEAR_EXISTING = true
 
 START_LAT = BigDecimal.new('42.78938')
 START_LON = BigDecimal.new('-86.10699')
@@ -19,11 +19,6 @@ START_MILES = 10_000
 user = User.find_by_login(USER)
 
 device = user.devices[DEVICE_INDEX]
-
-if CLEAR_EXISTING
-  device.trips.destroy_all
-  device.points.destroy_all
-end
 
 include DeviceReport::Event
 
@@ -50,57 +45,65 @@ end
 
 $current_miles = START_MILES
 
-(START_DATE..END_DATE).each do |date|
-
-  time = date.beginning_of_day
-
-  # x number of trips per day
-  rand(10).times do |i|
-    starts_at = i.hours.from_now(time)
-    point_count = rand(20) + 1
-
-    t = device.trips.create :start => starts_at
-    leg = t.legs.create
-
-    point_count.times do |i|
-      lat = START_LAT + (i * 0.01)
-      lon = START_LON + (i * 0.02) 
-
-      occurred_at = (i*10).minutes.from_now(starts_at)
-
-      accelerating = rand(100) < 50
-      mpg = rand(1000) / 10.0
-
-      event = 
-        if i == 1
-          6011
-        elsif i == point_count
-          6012
-        else
-          random_event
-        end
-
-      $current_miles += rand(100)
-
-      device.points.create(
-        :leg => leg,
-        :latitude => lat,
-        :longitude => lon,
-        :altitude => 1200,
-        :speed => rand(80),
-        :accelerating => val(accelerating),
-        :decelerating => val(!accelerating),
-        :miles => $current_miles,
-        :mpg => mpg,
-        :occurred_at => occurred_at,
-        :event => event,
-        :rpm => rand(10000) + 1000
-      )
-    end
+user.devices[0..100].each do |device|
+  if CLEAR_EXISTING
+    device.trips.destroy_all
+    device.points.destroy_all
   end
 
-end
+  (START_DATE..END_DATE).each do |date|
 
-device.trips.each do |t|
-  t.update_point_data
+    time = date.beginning_of_day
+
+    # x number of trips per day
+    rand(10).times do |i|
+      starts_at = i.hours.from_now(time)
+      point_count = rand(20) + 1
+
+      t = device.trips.create :start => starts_at
+      leg = t.legs.create
+
+      point_count.times do |i|
+        lat = START_LAT + (i * 0.01)
+        lon = START_LON + (i * 0.02) 
+
+        occurred_at = (i*10).minutes.from_now(starts_at)
+
+        accelerating = rand(100) < 50
+        mpg = rand(1000) / 10.0
+
+        event = 
+          if i == 1
+            6011
+          elsif i == point_count
+            6012
+          else
+            random_event
+          end
+
+        $current_miles += rand(100)
+
+        device.points.create(
+          :leg => leg,
+          :latitude => lat,
+          :longitude => lon,
+          :altitude => 1200,
+          :speed => rand(80),
+          :accelerating => val(accelerating),
+          :decelerating => val(!accelerating),
+          :miles => $current_miles,
+          :mpg => mpg,
+          :occurred_at => occurred_at,
+          :duration => 5,
+          :event => event,
+          :rpm => rand(10000) + 1000
+        )
+      end
+    end
+
+  end
+
+  device.trips.each do |t|
+    t.update_precalc_fields
+  end
 end

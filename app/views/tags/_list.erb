@@ -4,6 +4,7 @@
     <li>
       <%= text_field_tag "#{field_prefix}[tag_names][]", '', 
         :id => "tag_#{dom_id(object)}", :class => 'tagEntry', :maxlength => 30 %>
+      <%= button_tag "Add", :class => "addTag" %>
     </li>
     <% object.tags.each do |tag| -%>
       <li>
