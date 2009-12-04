@@ -95,19 +95,4 @@ ActionController::Routing::Routes.draw do |map|
       carriers.resources :phones, :controller => 'phone_finder/carriers/phones'
     end
   end
-  
-  # Admin Site
-  map.admin '/admin', :controller => 'admin/menu', :action => 'show'
-  map.namespace(:admin) do |admin|
-    # Sessions
-    admin.resources :sessions
-      map.admin_login '/admin/login', :controller => 'admin/sessions', :action => 'new',
-      :conditions => { :method => :get }
-    map.connect '/admin/login', :controller => 'admin/sessions', :action => 'create',
-      :conditions => { :method => :post }
-    map.admin_logout '/admin/logout', :controller => 'admin/sessions', :action => 'destroy'
-    
-    # Menu
-    admin.resource :menu, :controller => 'menu'
-  end
 end
