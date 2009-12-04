@@ -1,10 +1,10 @@
 <div class="tracker">
-  <%= render :partial => 'form', :locals => {:tracker => @tracker, :method => 'put', :url => admin_tracker_path(@tracker)} %>
+  <%= render :partial => 'form', :locals => {:tracker => @tracker, :method => 'put'} %>
   <br/>
   <hr/>
   <h2>Web Services</h2>
   <div>
-    <% form_tag(get_info_admin_tracker_path(@tracker)) do -%>
+    <% form_tag(get_info_tracker_path(@tracker)) do -%>
       <%= submit_tag  'Get SIM Info from Jasper' %>
     <% end -%>
     <% if @jasper -%>
@@ -22,7 +22,7 @@
   <h2>Device Configuration</h2>
   <div>
     <p>Type a command (usually starting with +XT:) and click Configure. Will timeout after 30 seconds.</p>
-    <% form_tag(configure_admin_tracker_path(@tracker)) do -%>
+    <% form_tag(configure_tracker_path(@tracker)) do -%>
       Command: <%= text_field_tag :command, '' %>
       <%= submit_tag 'Configure' %>
     <% end -%>
@@ -31,5 +31,5 @@
     <% end -%>
   </div>
   <br/><br/>
-  <%= link_to 'Back to list', admin_trackers_path, :class => 'simple' %>
+  <%= link_to 'Back to list', trackers_path, :class => 'simple' %>
 </div>

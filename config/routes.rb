@@ -58,23 +58,29 @@ ActionController::Routing::Routes.draw do |map|
   # Tags
   map.resources :tags
   
+  # Trackers (Administration)
+  map.resources :trackers, :member => {
+    :configure => :post,
+    :get_info => :post
+  }
+  
   # Reports
   map.resources :reports
 
   # Filter
   map.resource :filter
-
+  
   # Subscriptions
-  map.resource :subscription, :controller => "subscription",
+  map.resource :subscription, :controller => 'subscription',
     :member => {
       :edit_plan => :get
     }
-
+  
   # Payments
   map.resources :payments
 
   # Billing Tester
-  map.billing_tester "/billing_tester/:action", :controller => "billing_tester"
+  map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'
   
   # Phone Finder
   map.resource :phone_finder, :controller => 'phone_finder', :collection => {
@@ -103,11 +109,5 @@ ActionController::Routing::Routes.draw do |map|
     
     # Menu
     admin.resource :menu, :controller => 'menu'
-    
-    # Trackers
-    admin.resources :trackers, :member => {
-      :configure => :post,
-      :get_info => :post
-    }
   end
 end

@@ -1,4 +1,4 @@
-<% form_for tracker, :url => url, :html => {:method => method} do |f| -%>
+<% form_for tracker, :html => {:method => method} do |f| -%>
   <div class="field">
     <%= f.label :imei_number, 'IMEI Number (Tracker ID)' %>
     <%= f.text_field :imei_number, :maxlength => 20, :size => 20 %>

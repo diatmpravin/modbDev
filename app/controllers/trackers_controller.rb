@@ -1,5 +1,7 @@
-class Admin::TrackersController < Admin::AdminController
+class TrackersController < ApplicationController
   before_filter :set_tracker, :only => [:edit, :update, :destroy, :get_info, :configure]
+  
+  layout except_ajax('trackers')
   
   def index
     @trackers = Tracker.all(tracker_options)
