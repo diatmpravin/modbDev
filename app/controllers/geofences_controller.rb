@@ -7,19 +7,12 @@ class GeofencesController < ApplicationController
   layout except_ajax('geofences')
   
   def index
-    @landmarks = current_account.landmarks
-    @devices = current_account.devices
-    
-    if @device
-      @geofences = @device.geofences
-    else
-      @geofences = current_account.geofences
-    end
+    @geofences = current_account.geofences
     
     respond_to do |format|
       format.html
       format.json {
-        render :text => @geofences.to_json(:methods => [:device_ids])
+        render :json => @geofences
       }
     end
   end

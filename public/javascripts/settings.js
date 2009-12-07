@@ -7,7 +7,7 @@
  */
 Settings = {
   init: function() {
-    q('#settings:not(#geofences #settings)').corners('transparent');
+    q('#settings').corners('transparent');
   }
 }
 

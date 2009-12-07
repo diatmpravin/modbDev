@@ -1,45 +1,9 @@
-<% content_for(:javascript) do -%>
-  <%= mapquest_include_tags %>
-  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
-  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
-  <%= javascript_include_tag 'moshimap' %>
+<% @title = 'Vehicle Settings' -%>
+<% content_for 'javascript' do -%>
   <%= javascript_include_tag 'geofences' %>
-  <%= javascript_include_tag 'landmarks_view' %>
-  <%= javascript_include_tag 'vehicles_view' %>
   <%= javascript_include_tag 'alert_recipients' %>
-  <% javascript_tag do -%>
-    LandmarksView.landmarks = <%= landmarks_for_json %>;
-    VehiclesView.vehicles = <%= devices_for_json %>;
-  <% end -%>
+  <%= javascript_include_tag 'filter' %>
 <% end -%>
-<% inside_layout 'global' do -%>
-  <%= render :partial => 'common/header' %>
-  
-  <div id="navbar">
-    <div class="noLeft">
-      <h1>Geofence Settings</h1>
-    </div>
-    <div>
-      <%= check_box_tag :show_landmarks, 1, {:checked => false} %>
-      <%= label_tag :show_landmarks, 'Show Landmarks' %>
-    </div>
-    <div>
-      <%= check_box_tag :show_vehicles, 1, {:checked => false} %>
-      <%= label_tag :show_vehicles, 'Show Vehicles' %>
-    </div>
-    <div>
-      <%= check_box_tag :show_labels, 1, {:checked => false} %>
-      <%= label_tag :show_labels, 'Show Labels' %>
-    </div>
-    <div class="noRight"></div>
-    
-    <%= render :partial => 'common/livelook' %>
-  </div>
-  <div id="settingsContainer">
-    <div id="settings">
-      <div id="settingsContent">
-        <%= yield %>
-      </div>
-    </div>
-  </div>
+<% inside_layout 'settings' do -%>
+  <%= yield %>
 <% end -%>

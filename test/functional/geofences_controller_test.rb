@@ -8,45 +8,55 @@ describe "Geofences Controller", ActionController::TestCase do
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
   end
-  
-  context "Getting a list of geofences" do
-    specify "works" do
-      get :index, :format => 'json'
 
-      json.length.should.be 1
-      json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
-    end
+  context "Index - HTML" do
 
-    specify "returns device-specific geofences if device is specified" do
-      @account.geofences.create(:name => 'Test', :radius => 3)
-      assert @account.geofences.length > 1
-      
-      get :index, :device_id => @device.id, :format => 'json'
-      
-      json.length.should.be 1
-      json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
-    end
+    specify "shows list of geofences" do
+      get :index
+      template.should.be 'index'
 
-    specify "geofences should include list of linked devices" do
-      @account.geofences.create(:name => 'Test', :radius => 3)
-      assert @account.geofences.length > 1
-
-      get :index, :format => 'json'
-
-      json.length.should.be 2
-      json[0]['geofence']['device_ids'].should.equal [@device.id]
-      json[1]['geofence']['device_ids'].should.equal []
-    end
-    
-    specify "errors out if device belongs to a different account" do
-      should.raise ActiveRecord::RecordNotFound do
-        get :index, {
-          :device_id => devices(:aaron_device).id,
-          :format => 'json'
-        }
-      end
+      assigns(:geofences).should.equal [geofences(:quentin_geofence)]
     end
   end
+  
+#  context "Index - JSON" do
+#    specify "get list of geofences" do
+#      get :index, :format => 'json'
+#
+#      json.length.should.be 1
+#      json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
+#    end
+#
+#    specify "returns device-specific geofences if device is specified" do
+#      @account.geofences.create(:name => 'Test', :radius => 3)
+#      assert @account.geofences.length > 1
+#      
+#      get :index, :device_id => @device.id, :format => 'json'
+#      
+#      json.length.should.be 1
+#      json[0]['geofence']['id'].should.equal geofences(:quentin_geofence).id
+#    end
+#
+#    specify "geofences should include list of linked devices" do
+#      @account.geofences.create(:name => 'Test', :radius => 3)
+#      assert @account.geofences.length > 1
+#
+#      get :index, :format => 'json'
+#
+#      json.length.should.be 2
+#      json[0]['geofence']['device_ids'].should.equal [@device.id]
+#      json[1]['geofence']['device_ids'].should.equal []
+#    end
+#    
+#    specify "errors out if device belongs to a different account" do
+#      should.raise ActiveRecord::RecordNotFound do
+#        get :index, {
+#          :device_id => devices(:aaron_device).id,
+#          :format => 'json'
+#        }
+#      end
+#    end
+#  end
   
   context "Creating a geofence" do
     specify "displays new geofence form" do

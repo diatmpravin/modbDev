@@ -703,8 +703,8 @@ Geofences = {
 
 /* Initializer */
 jQuery(function() {
-  q('#mapContainer').moshiMap().init();
-  Geofences.init();
-  LandmarksView.init(q('#show_landmarks'));
-  VehiclesView.init(q('#show_vehicles'), q('#show_labels'));
+//  q('#mapContainer').moshiMap().init();
+//  Geofences.init();
+//  LandmarksView.init(q('#show_landmarks'));
+//  VehiclesView.init(q('#show_vehicles'), q('#show_labels'));
 });

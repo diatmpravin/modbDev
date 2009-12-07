@@ -953,11 +953,6 @@ a.delete {
   color:black;
   background:transparent;
 }
-#settings .devices {
-}
-#settings .devices #new {
-  display:none;
-}
 #settings .device {
   padding:8px 8px 8px 8px;
   border-top:solid 1px #d2d3d3;
@@ -1033,47 +1028,6 @@ td.extra, span.extra {
 #geofences #sidebar h3 {
   color:black;
   background:transparent;
-}
-#geofences .buttons {
-  margin:0;
-}
-#geofences #settingsContainer {
-  padding:0;
-}
-#geofences #settings {
-  padding:0;
-}
-#geofences #sidebarContainer {
-  width:320px;
-}
-#settings .geofences {
-  overflow:auto;
-}
-#settings .geofences #new {
-  display:none;
-}
-#settings .geofence {
-  padding:8px 8px 8px 8px;
-  border-top:solid 1px #d2d3d3;
-  overflow:hidden;
-}
-#settings .geofence ul {
-  margin:0 0 0 16px;
-  padding:0;
-}
-#settings .geofence li {
-  list-style-type:none;
-  margin:0;
-  padding:0;
-}
-#settings .geofence h2 {
-  float:left;
-}
-#settings .geofence .buttons {
-  margin-top:0px;
-}
-#settings .geofence .view .buttons {
-  display:none;
 }
 
 /* landmark settings */
