@@ -17,7 +17,7 @@ end
 
 class ActiveSupport::TestCase
   include AuthenticatedTestHelper
-  
+
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
   # test database remains unchanged so your fixtures don't have to be reloaded
@@ -31,7 +31,7 @@ class ActiveSupport::TestCase
   # don't care one way or the other, switching from MyISAM to InnoDB tables
   # is recommended.
   #
-  # The only drawback to using transactional fixtures is when you actually 
+  # The only drawback to using transactional fixtures is when you actually
   # need to test transactions.  Since your test is bracketed by a transaction,
   # any transactions started in your code will be automatically rolled back.
   self.use_transactional_fixtures = true
@@ -48,15 +48,21 @@ class ActiveSupport::TestCase
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
   fixtures :all
-  
+
   # Helper for JSON actions
   def json
     @_json ||= ActiveSupport::JSON.decode(response.body)
   end
 
   # Take a query string and put a parsed hash in the session
-  def set_filter(query)
-    @request.session[:filter] = FilterQuery.parse(query)
+  def set_filter(klass, query)
+    @request.session[:filter] ||= {}
+    @request.session[:filter][klass.to_s] = FilterQuery.parse(query)
+  end
+
+  # Pull out the filter string for a given class, if it exists
+  def get_filter(klass)
+    @request.session[:filter][klass.to_s]
   end
 end
 
@@ -65,19 +71,19 @@ module MapQuest
   def MapQuest::call(server_type, request_xml)
     raise 'Attempt to contact MapQuest in a test (missing mock or stub!)'
   end
-  
+
   class Session
     protected
     def authenticate(xml)
       xml.Authentication # no need for authentication in tests
     end
   end
-  
+
   # Use fixtures for various tiling tests
   module Tile
     remove_const 'CACHE'
     CACHE = File.join(Rails.root, 'test', 'fixtures', 'tmp', 'cache')
-    
+
     remove_const 'FORMAT'
     FORMAT = MapQuest::ContentType::GIF
   end

@@ -2,6 +2,7 @@
   <% form_tag filter_path do -%>
     <%= link_to image_tag("filter_help.png"), "#", :class => "filterHelp" %>
     <%= hidden_field_tag :return_to, request.path %>
+    <%= hidden_field_tag :class, filter_class %>
     <%= text_field_tag "query", filter_query %>
     <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
     <%= submit_tag "Filter" %>
@@ -9,24 +10,7 @@
   <% end -%>
 
   <div id="filterDetails">
-    <table>
-      <tr>
-        <td><%= label_tag 'name', "Name:" %></td>
-        <td><%= text_field_tag "name" %></td>
-      </tr>
-      <tr>
-        <td><%= label_tag 'tracker_id', 'Tracker ID:' %></td>
-        <td><%= text_field_tag "tracker_id" %></td>
-      </tr>
-      <tr>
-        <td><%= label_tag 'vin', 'VIN:' %></td>
-        <td><%= text_field_tag "vin" %></td>
-      </tr>
-      <tr>
-        <td><%= label_tag 'tag', 'Tag' %></td>
-        <td><%= text_field_tag "tag" %></td>
-      </tr>
-    </table>
+    <%= yield :filter_form %>
   </div>
 </div>
 <div class="noRight"></div>
