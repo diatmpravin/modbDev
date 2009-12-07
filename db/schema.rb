@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091207191837) do
+ActiveRecord::Schema.define(:version => 20091207211128) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20091207191837) do
     t.integer  "pitstop_threshold"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name",                 :limit => 30
   end
 
   create_table "device_tags", :force => true do |t|
