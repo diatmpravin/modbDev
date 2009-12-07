@@ -17,6 +17,22 @@ describe "Geofences Controller", ActionController::TestCase do
 
       assigns(:geofences).should.equal [geofences(:quentin_geofence)]
     end
+
+    specify "handles pagination" do
+      g = geofences(:quentin_geofence)
+      50.times { g.clone.save}
+
+      get :index
+      template.should.be 'index'
+
+      assigns(:geofences).length.should.equal 30
+
+      get :index, :page => 2
+      template.should.be 'index'
+
+      assigns(:geofences).length.should.equal 21
+    end
+
   end
   
 #  context "Index - JSON" do

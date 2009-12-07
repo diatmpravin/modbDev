@@ -55,4 +55,9 @@ module ApplicationHelper
   def button_tag(value, options = {})
     tag 'input', {:type => 'button', :value => value}.merge(options)
   end
+
+  # Central location for pagination options
+  def paginate(collection)
+    will_paginate(collection, :inner_window => 2)
+  end
 end
