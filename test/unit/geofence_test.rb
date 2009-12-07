@@ -45,21 +45,6 @@ describe "Geofence", ActiveSupport::TestCase do
       @geofence.should.be.valid
     end
     
-    specify "enforces number of records" do
-      Geofence.delete_all
-      20.times do |i|
-        g = @account.geofences.new(:name => 'Test')
-        g.should.save
-      end
-      g = @account.geofences.new(:name => 'Test')
-      g.should.not.be.valid
-      g.errors.on(:base).should.equal 'Too many geofences'
-      
-      # Make sure we can update
-      g = Geofence.last
-      g.name = 'New Name'
-      g.should.save
-    end
   end
   
   context "Serialized coordinates" do

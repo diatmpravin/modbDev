@@ -18,7 +18,6 @@ class Geofence < ActiveRecord::Base
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
-  validate_on_create :number_of_records
   
   module Type
     ELLIPSE = 0   # coordinates = [upper-left point, lower-right point]
@@ -122,9 +121,4 @@ class Geofence < ActiveRecord::Base
     inside
   end
   
-  def number_of_records
-    if Geofence.count(:conditions => {:account_id => account_id}) >= 20
-      errors.add_to_base 'Too many geofences'
-    end
-  end
 end
