@@ -2,6 +2,7 @@ class Device < ActiveRecord::Base
   belongs_to :account
   belongs_to :user
   belongs_to :tracker
+  belongs_to :device_profile
   has_many :points, :order => 'occurred_at'
   has_many :trips, :order => 'start'
   has_many :phone_devices, :dependent => :delete_all
@@ -39,7 +40,7 @@ class Device < ActiveRecord::Base
     :after_hours_end, :alert_recipient_ids, :alert_recipients,
     :vin_number, :after_hours_start_text, :after_hours_end_text,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
-    :tags, :tag_names
+    :tags, :tag_names, :device_profile
 
   after_create :assign_phones
 

@@ -13,6 +13,10 @@ describe "Device", ActiveSupport::TestCase do
       @device.account.should.equal @account
     end
 
+    specify "belongs to a profile" do
+      @device.device_profile.should.equal device_profiles(:quentin)
+    end
+    
     specify "has many points" do
       @device.should.respond_to(:points)
     end
