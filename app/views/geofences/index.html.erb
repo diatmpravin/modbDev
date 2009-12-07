@@ -35,3 +35,12 @@
 
   <%= paginate @geofences %>
 </div>
+
+<div id="removeGeofence" class="dialog">
+  <% form_tag geofences_path, :method => :delete do -%>
+  <% end -%>
+  <p>If you remove this geofence, it will be deleted permanently.</p>
+  <p>This will also remove this geofence from any groups and vehicles using it.</p>
+  <p>Are you sure you want to remove this geofence?</p>
+</div>
+

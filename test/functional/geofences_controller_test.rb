@@ -180,12 +180,8 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "works" do
-      delete :destroy, {
-        :id => @geofence.id
-      }
-      
-      json['status'].should.equal 'success'
-      Geofence.find_by_id(@geofence.id).should.be.nil
+      delete :destroy, :id => @geofence.id
+      should.redirect_to geofences_path
     end
   end
 end

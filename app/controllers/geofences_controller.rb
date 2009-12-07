@@ -34,16 +34,11 @@ class GeofencesController < ApplicationController
     save_geofence(params[:geofence])
   end
   
+  # DELETE /geofences/:id
+  # Remove a geofence from the system
   def destroy
-    @geofence.destroy
-    
-    respond_to do |format|
-      format.json {
-        render :json => {
-          :status => 'success'
-        }
-      }
-    end
+    current_account.geofences.destroy(params[:id])
+    redirect_to geofences_path
   end
   
   protected
