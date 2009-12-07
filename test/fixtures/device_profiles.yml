@@ -1,0 +1,14 @@
+quentin:
+  account: quentin
+  alert_on_speed: true
+  speed_threshold: 70
+  alert_on_aggressive: true
+  rpm_threshold: 5000
+  alert_on_idle: true
+  idle_threshold: 5
+  alert_on_after_hours: true
+  after_hours_start: 79200
+  after_hours_end: 21600
+  detect_pitstops: true
+  pitstop_threshold: 10
+  time_zone: Eastern Time (US & Canada)

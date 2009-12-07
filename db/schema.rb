@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091123152419) do
+ActiveRecord::Schema.define(:version => 20091207191837) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -64,6 +64,24 @@ ActiveRecord::Schema.define(:version => 20091123152419) do
   add_index "device_geofences", ["device_id"], :name => "index_device_geofences_on_device_id"
   add_index "device_geofences", ["geofence_id"], :name => "index_device_geofences_on_geofence_id"
 
+  create_table "device_profiles", :force => true do |t|
+    t.integer  "account_id"
+    t.boolean  "alert_on_speed"
+    t.integer  "speed_threshold"
+    t.boolean  "alert_on_aggressive"
+    t.integer  "rpm_threshold"
+    t.boolean  "alert_on_idle"
+    t.integer  "idle_threshold"
+    t.boolean  "alert_on_after_hours"
+    t.integer  "after_hours_start"
+    t.integer  "after_hours_end"
+    t.string   "time_zone"
+    t.boolean  "detect_pitstops"
+    t.integer  "pitstop_threshold"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "device_tags", :force => true do |t|
     t.integer  "device_id"
     t.integer  "tag_id"
@@ -99,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20091123152419) do
     t.boolean  "detect_pitstops",                    :default => false
     t.integer  "pitstop_threshold",                  :default => 10
     t.boolean  "delta",                              :default => true,                         :null => false
+    t.integer  "device_profile_id"
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"
