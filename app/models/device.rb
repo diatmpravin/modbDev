@@ -40,7 +40,7 @@ class Device < ActiveRecord::Base
     :after_hours_end, :alert_recipient_ids, :alert_recipients,
     :vin_number, :after_hours_start_text, :after_hours_end_text,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
-    :tags, :tag_names, :device_profile
+    :tags, :tag_names, :device_profile, :device_profile_id
 
   after_create :assign_phones
 
@@ -61,7 +61,7 @@ class Device < ActiveRecord::Base
   def imei_number
     self.tracker ? tracker.imei_number : nil
   end
-
+  
   # Save tag names as tags
   def tag_names=(list)
     # Throw away extra space and blank tags
@@ -74,6 +74,11 @@ class Device < ActiveRecord::Base
     # Create new tags for any names left in the list
     list.reject! {|x| tag_names.find {|name| name.casecmp(x) == 0}}
     self.tags += account.tags.create(list.map {|n| {:name => n}}).select(&:valid? )
+  end
+  
+  # Safe device_profile_id=
+  def device_profile_id=(value)
+    self.device_profile = value ? account.device_profiles.find(value) : nil
   end
   
   def zone

@@ -13,9 +13,17 @@ describe "DeviceProfile", ActiveSupport::TestCase do
     end
     
     specify "has many devices" do
-      @profile.should.respond_to(:devices)
-      @device.update_attributes(:device_profile => @profile)
-      assert @profile.reload.devices.include?(@device)
+      @profile.devices.all.should.include(@device)
     end
+  end
+  
+  specify "protects appropriate attributes" do
+    profile = DeviceProfile.new(:account_id => 7, :name => 'test')
+    profile.account_id.should.be.nil
+    profile.name.should.equal('test')
+    
+    profile = DeviceProfile.new(:account => @account, :name => 'test')
+    profile.account_id.should.equal(@account.id)
+    profile.name.should.equal('test')
   end
 end

@@ -704,6 +704,18 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
 
+  specify "allows device_profile_id=, but enforces account ownership" do
+    @device.update_attributes(:device_profile_id => nil)
+    @device.device_profile.should.be.nil
+    
+    @device.update_attributes(:device_profile_id => device_profiles(:quentin).id)
+    @device.device_profile.should.equal device_profiles(:quentin)
+    
+    should.raise(ActiveRecord::RecordNotFound) do
+      @device.update_attributes(:device_profile_id => device_profiles(:aaron).id)
+    end
+  end
+  
   specify "assigns any phones on the account automatically" do
     test_phone = Phone.new(:name => 'Delicious Phone')
     @account.phones << test_phone

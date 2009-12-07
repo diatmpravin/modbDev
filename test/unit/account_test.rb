@@ -33,6 +33,10 @@ describe "Account", ActiveSupport::TestCase do
     specify "has many users" do
       @account.users.should.include(users(:quentin))
     end
+    
+    specify "has many device profiles" do
+      @account.device_profiles.should.include(device_profiles(:quentin))
+    end
   end
 
   specify "acts as tree" do

@@ -8,6 +8,7 @@ class Account < ActiveRecord::Base
   has_many :alert_recipients, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
+  has_many :device_profiles, :dependent => :destroy
   
   validates_presence_of :number
   validates_numericality_of :number
@@ -15,7 +16,7 @@ class Account < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
-    :name, :reseller, :can_assign_reseller, :landmarks
+    :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles
 
   # Work around bug:
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
