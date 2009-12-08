@@ -34,6 +34,8 @@ ActionController::Routing::Routes.draw do |map|
     devices.resources :geofences
   end
   
+  map.resources :device_profiles
+  
   # Trips
   map.resources :trips, :member => {:collapse => :put, :expand => :put}, :collection => {:summary => :get}
   

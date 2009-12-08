@@ -1,0 +1,31 @@
+<%= messages %>
+
+<div class="buttonsLeft">
+  <%= button_tag 'Add Profile', :class => 'addProfile' %>
+</div>
+<div class="clear spacer"></div>
+  
+<table class="data" style="width:100%">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <% @profiles.each do |profile| -%>
+    <tr class="<%=cycle('','odd')%>">
+      <td><%= h(profile.name) %></td>
+      <td class="buttons">
+        <%= link_to 'Edit', edit_device_profile_path(profile), :class => 'edit', :title => 'Edit' %>
+        <%= link_to 'Delete', device_profile_path(profile), :class => 'delete', :title => 'Remove' %>
+      </td>
+    </tr>
+  <% end -%>
+</table>
+
+<div id="removeProfile" class="dialog">
+  <% form_tag device_profiles_path, :method => :delete do -%>
+  <% end -%>
+  <p>If you remove this vehicle profile, it will be deleted permanently and any linked vehicles will be unlinked.</p>
+  <p>Are you sure you want to remove this profile?</p>
+</div>
