@@ -51,4 +51,51 @@ describe "Device Profiles Controller", ActionController::TestCase do
       template.should.equal 'new'
     end
   end
+  
+  context "Viewing and editing a device profile" do
+    specify "displays edit form" do
+      get :edit, {
+        :id => @profile.id
+      }
+      
+      template.should.equal 'edit'
+      assigns(:device_profile).should.equal @profile
+    end
+    
+    specify "works" do
+      put :update, {
+        :id => @profile.id,
+        :device_profile => {
+          :name => 'Much Better Name'
+        }
+      }
+      
+      should.redirect_to :action => 'index'
+      @profile.reload.name.should.equal 'Much Better Name'
+    end
+    
+    specify "handles errors gracefully" do
+      put :update, {
+        :id => @profile.id,
+        :device_profile => {
+          :name => ''
+        }
+      }
+      
+      template.should.equal 'edit'
+      assigns(:device_profile).errors.on(:name).should.equal "can't be blank"
+    end
+  end
+  
+  context "Removing a device profile" do
+    specify "works" do
+      DeviceProfile.should.differ(:count).by(-1) do
+        delete :destroy, {
+          :id => @profile.id
+        }
+      end
+      
+      should.redirect_to :action => 'index'
+    end
+  end
 end
