@@ -72,9 +72,15 @@ describe "GroupsController", ActionController::TestCase do
   end
 
   context "Destroy" do
+    setup do
+      @group = groups(:north)
+    end
 
     specify "can remove a group" do
+      delete :destroy, :id => @group.id  
+      should.redirect_to groups_path
 
+      assert !Group.exists?(@group.id)
     end
 
   end

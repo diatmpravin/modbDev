@@ -35,4 +35,11 @@ class GroupsController < ApplicationController
     redirect_to groups_path
   end
 
+  # DELETE /groups/:id
+  # Destroy the given group
+  def destroy
+    current_account.groups.of_devices.destroy(params[:id])
+    redirect_to groups_path
+  end
+
 end

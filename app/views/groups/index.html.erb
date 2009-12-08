@@ -27,6 +27,13 @@
         </td>
       </tr>
     <% end %>
+  </table>
 
   <%# paginate @groups %>
+</div>
+
+<div id="removeGroup" class="dialog">
+  <% form_tag groups_path, :method => :delete do -%>
+  <% end -%>
+  <p>Are you sure you want to remove this group from the system?</p>
 </div>
