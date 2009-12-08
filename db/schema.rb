@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091207192546) do
+ActiveRecord::Schema.define(:version => 20091207220221) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -139,6 +139,19 @@ ActiveRecord::Schema.define(:version => 20091207192546) do
   end
 
   add_index "geofences", ["account_id"], :name => "index_geofences_on_account_id"
+
+  create_table "group_links", :id => false, :force => true do |t|
+    t.integer "group_id"
+    t.integer "link_id"
+  end
+
+  create_table "groups", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "name"
+    t.string   "of"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"

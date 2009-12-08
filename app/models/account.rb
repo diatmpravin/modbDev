@@ -17,6 +17,8 @@ class Account < ActiveRecord::Base
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks
 
+  has_many :groups, :order => "name ASC"
+
   # Work around bug:
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
   def device_ids

@@ -106,4 +106,8 @@ class RoutesTest < ActionController::IntegrationTest
   test "filter resource" do
     assert_equal "/filter", filter_path
   end
+
+  test "groups resource" do
+    assert_equal "/groups", groups_path
+  end
 end

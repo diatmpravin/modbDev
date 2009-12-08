@@ -84,4 +84,3 @@ end
 
 PhonesDatabase.site = "http://crayon:roygbiv64@phones.gomoshi.com"
 TaxesService.site = "http://crayon:roygbiv64@taxes.gomoshi.com"
-

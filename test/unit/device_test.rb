@@ -47,6 +47,24 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
 
+  context "Groups" do
+
+    setup do
+      @group = groups(:north)
+      @group.devices << @device
+      @device.reload
+    end
+
+    specify "belongs to many groups" do
+      @device.groups.should.equal [groups(:north)]
+
+      groups(:south).devices << @device
+      @device.reload
+
+      @device.groups.should.equal [groups(:north), groups(:south)]
+    end
+  end
+
   specify "protects appropriate attributes" do
     device = Device.new(:account_id => 7, :name => "test")
     device.account_id.should.be.nil
