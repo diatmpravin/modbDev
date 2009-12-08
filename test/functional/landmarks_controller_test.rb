@@ -145,16 +145,16 @@ describe "Landmarks Controller", ActionController::TestCase do
     end
     
     specify "prevents access to other accounts" do
-      should.raise(ActiveRecord::RecordNotFound) do
-        put :update, {
-          :id => landmarks(:aaron).id,
-          :landmark => {
-            @landmark.id.to_s => {
-              :name => 'Much Better Name'
-            }
+      put :update, {
+        :id => landmarks(:aaron).id,
+        :landmark => {
+          @landmark.id.to_s => {
+            :name => 'Much Better Name'
           }
         }
-      end
+      }
+
+      should.redirect_to :action => "index"
     end
     
     specify "correctly handles spaces entered in lat/long" do
@@ -187,11 +187,9 @@ describe "Landmarks Controller", ActionController::TestCase do
     
     specify "prevents access to other accounts" do
       Landmark.should.differ(:count).by(0) do
-        should.raise(ActiveRecord::RecordNotFound) do
-          delete :destroy, {
-            :id => landmarks(:aaron).id
-          }
-        end
+        delete :destroy, {
+          :id => landmarks(:aaron).id
+        }
       end
     end
   end

@@ -35,8 +35,14 @@ describe "Group", ActiveSupport::TestCase do
 
   context "Destroy" do
 
-    xspecify "destruction of group only removes group and linking, leaves actual items" do
+    setup do
+      @group = groups(:north)
+      @group.devices << devices(:quentin_device)
+    end
 
+    specify "destruction of group only removes group and linking, leaves actual items" do
+      @group.destroy
+      assert Device.exists?(:name => "Quentin's Device")
     end
 
   end

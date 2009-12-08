@@ -1,9 +1,9 @@
 require 'test_helper'
 
 describe "GroupsController", ActionController::TestCase do
-  use_controller GroupsController
 
   setup do
+    use_controller GroupsController
     login_as :quentin
   end
 
@@ -67,6 +67,16 @@ describe "GroupsController", ActionController::TestCase do
 
       @group.reload
       @group.name.should.equal "Oh yeah"
+    end
+
+    specify "cannot edit a group account doesn't own" do
+      g = accounts(:aaron).groups.create :name => "Aaron"
+
+      put :update, :id => g.id, :group => {:name => "Bad"}
+      should.redirect_to groups_path
+
+      g.reload
+      g.name.should.not.equal "Bad"
     end
 
   end

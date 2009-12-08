@@ -33,12 +33,12 @@ describe "Trips Controller", ActionController::TestCase do
     end
     
     specify "errors if device is not owned by account" do
-      should.raise ActiveRecord::RecordNotFound do
-        get :index, {
-          :device_id => devices(:aaron_device).id,
-          :format => 'json'
-        }
-      end
+      get :index, {
+        :device_id => devices(:aaron_device).id,
+        :format => 'json'
+      }
+
+      should.redirect_to :action => "index"
     end
   end
   
@@ -78,12 +78,12 @@ describe "Trips Controller", ActionController::TestCase do
     end
     
     specify "errors if trip is invalid" do
-      should.raise ActiveRecord::RecordNotFound do
-        get :show, {
-          :id => trips(:aaron_trip),
-          :format => 'json'
-        }
-      end
+      get :show, {
+        :id => trips(:aaron_trip),
+        :format => 'json'
+      }
+
+      should.redirect_to :action => "index"
     end
   end
   
