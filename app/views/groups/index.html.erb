@@ -7,7 +7,26 @@
 
   <%# paginate @groups %>
 
-  <%= render :partial => "group", :collection => @groups %>
+  <table class="data" style="width:100%">
+    <thead>
+      <tr>
+        <th><%= check_box_tag :groups_all, true, false %></th>
+        <th>Name</th>
+        <th>Vehicle Count</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <% @groups.each do |group| -%>
+      <tr class="<%=cycle('','odd')%>">
+        <td><%= check_box_tag :groups, group.id, false, :id => dom_id(group) %></td>
+        <td><%= h(group.name) %></td>
+        <td><%= group.devices.count %></td>
+        <td class="buttons">
+          <%= link_to 'Edit', edit_group_path(group), :class => 'edit', :title => 'Edit' %>
+          <%= link_to 'Delete', group_path(group), :class => 'delete', :title => 'Remove' %>
+        </td>
+      </tr>
+    <% end %>
 
   <%# paginate @groups %>
 </div>
