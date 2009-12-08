@@ -2,6 +2,7 @@
 
 <div class="buttonsLeft">
   <%= button_tag 'Add Profile', :class => 'addProfile' %>
+  <%= link_to 'Add Profile', new_device_profile_path %>
 </div>
 <div class="clear spacer"></div>
   
@@ -12,7 +13,7 @@
       <th> </th>
     </tr>
   </thead>
-  <% @profiles.each do |profile| -%>
+  <% @device_profiles.each do |profile| -%>
     <tr class="<%=cycle('','odd')%>">
       <td><%= h(profile.name) %></td>
       <td class="buttons">
