@@ -1,0 +1,18 @@
+<% form_for group do |f| %>
+  <div>
+    <h3>Group Details</h3>
+    
+    <div class="field">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+      <%= error_message_on group, :name, :prepend_text => '* Name ' %>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <%= link_to 'Cancel', groups_path, :class => 'simple' %>
+    <%= submit_tag 'Save', :class => 'button' %> 
+  </div>
+
+  <div class="clear"></div>
+<% end %>

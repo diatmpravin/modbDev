@@ -18,6 +18,11 @@ class Geofence < ActiveRecord::Base
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
+
+  ##
+  # Concerns
+  ##
+  concerned_with :sphinx
   
   module Type
     ELLIPSE = 0   # coordinates = [upper-left point, lower-right point]

@@ -5,5 +5,27 @@
   <%= javascript_include_tag 'filter' %>
 <% end -%>
 <% inside_layout 'settings' do -%>
+
+  <% content_for :filter_form do %>
+    <table>
+      <tr>
+        <td><%= label_tag 'name', "Name:" %></td>
+        <td><%= text_field_tag "name" %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag 'tracker_id', 'Tracker ID:' %></td>
+        <td><%= text_field_tag "tracker_id" %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag 'vin', 'VIN:' %></td>
+        <td><%= text_field_tag "vin" %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag 'tag', 'Tag' %></td>
+        <td><%= text_field_tag "tag" %></td>
+      </tr>
+    </table>
+  <% end %>
+
   <%= yield %>
 <% end -%>

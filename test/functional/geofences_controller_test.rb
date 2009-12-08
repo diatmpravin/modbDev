@@ -33,6 +33,23 @@ describe "Geofences Controller", ActionController::TestCase do
       assigns(:geofences).length.should.equal 21
     end
 
+    specify "works with Geofence filter criteria" do
+      set_filter Device, "get_vehicle"
+      set_filter Geofence, "geo_find"
+
+      Geofence.expects(:search).with(
+        "geo_find", :conditions => {}, 
+        :page => nil, :per_page => 30,
+        :with => {:account_id => accounts(:quentin).id}, 
+        :mode => :extended
+      ).returns(accounts(:quentin).geofences)
+
+      get :index
+      template.should.be 'index'
+
+      assigns(:geofences).length.should.be 1
+    end
+
   end
   
 #  context "Index - JSON" do

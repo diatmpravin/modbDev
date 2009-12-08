@@ -1,0 +1,39 @@
+<%= messages %>
+<div class="groups">
+  <div class="buttonsLeft">
+    <%= button_to 'Add Group', new_group_path, :method => :get %>
+  </div>
+  <div class="clear spacer"></div>
+
+  <%# paginate @groups %>
+
+  <table class="data" style="width:100%">
+    <thead>
+      <tr>
+        <th><%= check_box_tag :groups_all, true, false %></th>
+        <th>Name</th>
+        <th>Vehicle Count</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <% @groups.each do |group| -%>
+      <tr class="<%=cycle('','odd')%>">
+        <td><%= check_box_tag :groups, group.id, false, :id => dom_id(group) %></td>
+        <td><%= h(group.name) %></td>
+        <td><%= group.devices.count %></td>
+        <td class="buttons">
+          <%= link_to 'Edit', edit_group_path(group), :class => 'edit', :title => 'Edit' %>
+          <%= link_to 'Delete', group_path(group), :class => 'delete', :title => 'Remove' %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <%# paginate @groups %>
+</div>
+
+<div id="removeGroup" class="dialog">
+  <% form_tag groups_path, :method => :delete do -%>
+  <% end -%>
+  <p>Are you sure you want to remove this group from the system?</p>
+</div>

@@ -7,7 +7,9 @@ class GeofencesController < ApplicationController
   layout except_ajax('geofences')
   
   def index
-    @geofences = current_account.geofences.paginate(:page => params[:page], :per_page => 30)
+    @geofences = search_on Geofence do
+      current_account.geofences.paginate(:page => params[:page], :per_page => 30)
+    end
     
     respond_to do |format|
       format.html

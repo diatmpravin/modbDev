@@ -19,6 +19,12 @@ class Device < ActiveRecord::Base
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
     :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
 
+  # Link to groups
+  has_and_belongs_to_many :groups, 
+    :join_table => :group_links, 
+    :foreign_key => :link_id,
+    :order => "name ASC"
+
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]
   VALID_IDLE_THRESHOLDS = [1, 2, 3, 4, 5, 10, 15, 20]

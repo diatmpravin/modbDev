@@ -30,11 +30,12 @@ describe "Devices Controller", ActionController::TestCase do
       json[0]['device']['color'].should.not.be.nil       # included method
     end
 
-    specify "Takes into account filter parameters" do
-      set_filter "testing"
+    specify "Takes into account Device filter parameters" do
+      set_filter Device, "get_vehicle"
+      set_filter Geofence, "go_geo"
 
       Device.expects(:search).with(
-        "testing", :conditions => {}, 
+        "get_vehicle", :conditions => {}, 
         :page => nil, :per_page => 30,
         :with => {:account_id => accounts(:quentin).id}, 
         :mode => :extended
@@ -45,7 +46,7 @@ describe "Devices Controller", ActionController::TestCase do
     end
 
     specify "Search doesn't die if sphinx isn't running" do
-      set_filter "testing"
+      set_filter Device, "testing"
 
       Device.expects(:search).raises(RuntimeError.new("Oh noes!"))
       Mailer.expects(:deliver_exception_thrown)

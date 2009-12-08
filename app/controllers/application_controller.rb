@@ -16,9 +16,20 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password
 
   def filter_query
-    session[:filter] ? session[:filter][:full] : ""
+    logger.info "(Filter Query) Session: #{session.inspect}"
+
+    if session[:filter] && session[:filter][self.filter_class]
+      session[:filter][self.filter_class][:full]
+    else
+      ""
+    end
   end
   helper_method :filter_query
+
+  def filter_class
+    @filter_class
+  end
+  helper_method :filter_class
   
   protected
 
@@ -32,9 +43,14 @@ class ApplicationController < ActionController::Base
   #
   # See DevicesController#set_device for a usage example.
   def search_on(klass, &default)
-    if session[:filter] && session[:filter].any?
+    class_name = klass.to_s
+    
+    # Expose this class to the views
+    @filter_class = class_name
+
+    if session[:filter] && session[:filter][class_name] && session[:filter][class_name].any?
       begin
-        filter = session[:filter].dup
+        filter = session[:filter][class_name].dup
 
         filter.delete(:full)
         query = filter.delete(:query)
