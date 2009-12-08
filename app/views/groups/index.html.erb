@@ -1,3 +1,13 @@
 <%= messages %>
+<div class="groups">
+  <div class="buttonsLeft">
+    <%= button_tag 'Add Group', :class => 'addGroup' %>
+  </div>
+  <div class="clear spacer"></div>
 
-WOOT GROUPS
+  <%# paginate @groups %>
+
+  <%= render :collection => @groups %>
+
+  <%# paginate @groups %>
+</div>
