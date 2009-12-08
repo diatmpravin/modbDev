@@ -1,13 +1,13 @@
 <%= messages %>
 <div class="groups">
   <div class="buttonsLeft">
-    <%= button_tag 'Add Group', :class => 'addGroup' %>
+    <%= button_to 'Add Group', new_group_path, :method => :get %>
   </div>
   <div class="clear spacer"></div>
 
   <%# paginate @groups %>
 
-  <%= render :collection => @groups %>
+  <%= render :partial => "group", :collection => @groups %>
 
   <%# paginate @groups %>
 </div>
