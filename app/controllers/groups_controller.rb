@@ -21,4 +21,18 @@ class GroupsController < ApplicationController
     redirect_to groups_path
   end
 
+  # GET /groups/:id/edit
+  # Show the edit form for this group
+  def edit
+    @group = current_account.groups.of_devices.find(params[:id])
+  end
+
+  # PUT /groups/:id
+  # Update the given group
+  def update
+    @group = current_account.groups.of_devices.find(params[:id])
+    @group.update_attributes(params[:group])
+    redirect_to groups_path
+  end
+
 end

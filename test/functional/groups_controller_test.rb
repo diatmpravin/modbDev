@@ -41,4 +41,42 @@ describe "GroupsController", ActionController::TestCase do
     end
 
   end
+
+  context "Edit" do
+    setup do
+      @group = groups(:north)
+    end
+
+    specify "shows the form" do
+      get :edit, :id => @group.id
+      template.should.equal "edit"
+
+      assigns(:group).should.equal @group
+    end
+
+  end
+
+  context "Update" do
+    setup do
+      @group = groups(:north)
+    end
+
+    specify "updates a group" do
+      put :update, :id => @group.id, :group => {:name => "Oh yeah"}
+      should.redirect_to groups_path
+
+      @group.reload
+      @group.name.should.equal "Oh yeah"
+    end
+
+  end
+
+  context "Destroy" do
+
+    specify "can remove a group" do
+
+    end
+
+  end
+
 end

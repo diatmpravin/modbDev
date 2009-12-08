@@ -33,4 +33,12 @@ describe "Group", ActiveSupport::TestCase do
 
   end
 
+  context "Destroy" do
+
+    xspecify "destruction of group only removes group and linking, leaves actual items" do
+
+    end
+
+  end
+
 end
