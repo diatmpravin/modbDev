@@ -1,6 +1,5 @@
 require 'rubygems'
-require 'action_controller'
-require 'action_controller/test_case'
+require 'multi_rails_init'
 
 $LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 require 'test/spec/rails'
