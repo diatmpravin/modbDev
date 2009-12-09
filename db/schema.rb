@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091207220221) do
+ActiveRecord::Schema.define(:version => 20091209142417) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(:version => 20091207220221) do
     t.string   "of"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "delta",      :default => true
   end
 
   create_table "landmarks", :force => true do |t|

@@ -16,6 +16,37 @@ describe "GroupsController", ActionController::TestCase do
       assigns(:groups).should.equal [ groups(:north), groups(:south) ]
     end
 
+    specify "handles pagination" do
+      g = groups(:north)
+      50.times { g.clone.save}
+
+      get :index
+      template.should.be 'index'
+
+      assigns(:groups).length.should.equal 30
+
+      get :index, :page => 2
+      template.should.be 'index'
+
+      assigns(:groups).length.should.equal 22
+    end
+
+    specify "takes into account Group filter parameters" do
+      set_filter Device, "get_vehicle"
+      set_filter Group, "get_groupin"
+
+      Group.expects(:search).with(
+        "get_groupin", :conditions => {}, 
+        :page => nil, :per_page => 30,
+        :with => {:account_id => accounts(:quentin).id}, 
+        :mode => :extended
+      ).returns(accounts(:quentin).groups)
+
+      get :index
+      template.should.be 'index'
+    end
+
+
   end
 
   context "New" do
