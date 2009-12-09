@@ -656,7 +656,7 @@ a.close {
 /* map sidebar */
 #sidebarContainer {
   float:right;
-  width:250px;
+  width:300px;
   height:100%;
   padding:16px;
   border-left:solid 1px #b4b2a3;
@@ -668,6 +668,11 @@ a.close {
 }
 #sidebarContent {
 }
+
+#sidebarContent li {
+  list-style-type: none;
+}
+
 #sidebar h3 {
   color:#f9fcfd;
   background-color:#283234;

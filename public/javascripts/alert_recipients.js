@@ -16,6 +16,7 @@ AlertRecipients = {
       title: 'New Alert Recipient',
       modal: true,
       autoOpen: false,
+      width: 350,
       buttons: {
         'Save': AlertRecipients.create,
         'Cancel': AlertRecipients.cancel

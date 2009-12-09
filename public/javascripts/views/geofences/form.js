@@ -13,5 +13,6 @@ jQuery(function() {
   });
 
   // Initialize the geofences view, telling it about the 
+  // sidebar for proper resizing calculations
   Geofence.view.init(q("#sidebarContainer"));
 });
