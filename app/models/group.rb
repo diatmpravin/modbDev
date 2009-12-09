@@ -14,6 +14,11 @@
 class Group < ActiveRecord::Base
   belongs_to :account
 
+  ##
+  # Concerns
+  ##
+  concerned_with :sphinx
+
   # Every group linkage possible needs to have a declaration
   # here. This is as simple as adding to the list
   [

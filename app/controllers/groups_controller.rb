@@ -5,7 +5,9 @@ class GroupsController < ApplicationController
   # GET /groups
   # Show the list of device groups
   def index
-    @groups = current_account.groups.of_devices
+    @groups = search_on Group do
+      current_account.groups.of_devices.paginate :page => params[:page], :per_page => 30
+    end
   end
 
   # GET /groups/new
