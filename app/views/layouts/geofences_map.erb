@@ -1,5 +1,6 @@
 <% @title = 'Geofence Settings' -%>
 <% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'models/geofence' %>
   <%= javascript_include_tag 'alert_recipients' %>
   <%= javascript_include_tag 'filter' %>
 <% end -%>
