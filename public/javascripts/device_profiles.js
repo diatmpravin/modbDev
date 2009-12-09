@@ -5,20 +5,18 @@
  */
 DeviceProfiles = {
   init: function() {
-    //q('input.addVehicle').live('click', Devices.newDevice);
-    
     q('a.delete').live('click', function() {
       q('#removeProfile').find('form').attr('action', this.href).end()
                          .dialog('open');
       return false;
     });
     
-    /*q('#devices_all').attr('checked', false).click(function() {
-      q('input[name=devices]').attr('checked', this.checked);
+    q('#profiles_all').attr('checked', false).click(function() {
+      q('input[name=profiles]').attr('checked', this.checked);
     });
-    q('input[name=devices]').attr('checked', false).click(function() {
-      q('#devices_all').attr('checked', false);
-    });*/
+    q('input[name=profiles]').attr('checked', false).click(function() {
+      q('#profiles_all').attr('checked', false);
+    });
     
     q("#removeProfile").dialog({
       title: 'Remove Vehicle Profile',
