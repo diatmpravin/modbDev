@@ -96,10 +96,11 @@ describe "Geofences Controller", ActionController::TestCase do
       get :new
       
       template.should.be 'new'
-      assigns(:devices).should.equal @account.devices
+
+      has :geofence
     end
     
-    specify "works" do
+    xspecify "works" do
       Geofence.should.differ(:count).by(1) do
         post :create, {
           :geofence => {
@@ -128,7 +129,7 @@ describe "Geofences Controller", ActionController::TestCase do
       ]
     end
     
-    specify "handles errors gracefully" do
+    xspecify "handles errors gracefully" do
       post :create, {
         :geofence => {
           :type => 0,
@@ -153,15 +154,14 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "displays edit geofence form" do
-      get :edit, {
-        :id => @geofence.id
-      }
+      get :edit, :id => @geofence.id
       
       template.should.be 'edit'
-      assigns(:devices).should.equal accounts(:quentin).devices
+      
+      assigns(:geofence).should.equal @geofence
     end
     
-    specify "works" do
+    xspecify "works" do
       @geofence.update_attribute(:name, 'test 1')
       put :update, {
         :id => @geofence.id,
@@ -178,7 +178,7 @@ describe "Geofences Controller", ActionController::TestCase do
       @geofence.reload.name.should.equal 'test 2'
     end
     
-    specify "handles errors gracefully" do
+    xspecify "handles errors gracefully" do
       put :update, {
         :id => @geofence.id,
         :geofence => {

@@ -1,10 +1,6 @@
 class GeofencesController < ApplicationController
-  before_filter :new_geofence, :only => [:new, :create]
-  before_filter :set_geofence, :only => [:show, :edit, :update, :destroy]
-  before_filter :set_device
-  before_filter :set_devices
-  
-  layout except_ajax('geofences')
+
+  layout :set_layout
   
   def index
     @geofences = search_on Geofence do
@@ -20,9 +16,11 @@ class GeofencesController < ApplicationController
   end
   
   def new
+    @geofence = Geofence.new
   end
   
   def create
+    @geofence = current_account.geofences.build
     save_geofence(params[:geofence])
   end
   
@@ -30,9 +28,11 @@ class GeofencesController < ApplicationController
   end
   
   def edit
+    @geofence = current_account.geofences.find(params[:id])
   end
   
   def update
+    @geofence = current_account.geofences.find(params[:id])
     save_geofence(params[:geofence])
   end
   
@@ -44,20 +44,11 @@ class GeofencesController < ApplicationController
   end
   
   protected
-  def new_geofence
-    @geofence = current_account.geofences.new
-  end
-  
-  def set_geofence
-    @geofence = current_account.geofences.find(params[:id])
-  end
-  
-  def set_device
-    @device = current_account.devices.find(params[:device_id]) if params[:device_id]
-  end
-  
-  def set_devices
-    @devices = current_account.devices
+
+  def set_layout
+    return nil if request.xhr?
+    return "geofences_map" if [:edit, :new].include?(action_name.to_sym)
+    "geofences"
   end
   
   def save_geofence(record)

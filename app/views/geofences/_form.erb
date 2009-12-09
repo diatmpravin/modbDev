@@ -19,19 +19,6 @@
     <%= f.hidden_field :geofence_type %>
   </div>
   
-  <div class="field">
-    <h3>Apply to these vehicles</h3>
-    <ul>
-      <% devices.each do |device| -%>
-        <li>
-          <%= check_box_tag 'geofence[device_ids][]', device.id, geofence.devices.include?(device),
-            {:id => dom_id(device, dom_id(geofence))} %>
-          <%= label_tag dom_id(device, dom_id(geofence)), h(device.name) %>
-        </li>
-      <% end -%>
-    </ul>
-  </div>
-  
   <h3>Boundary settings</h3>
   <div class="field">
     <ul>
@@ -50,6 +37,12 @@
     <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>
     <h3>Alert recipients</h3>
     <ul>
+      <li>
+        <%= link_to '', '#', :class => "add" %>
+        <select class="recipientSelect">
+          <%= alert_options_for(geofence) %>
+        </select>
+      </li>
       <% geofence.alert_recipients.each do |a| -%>
         <li>
           <%= link_to '', '#', :class => "remove" %>
@@ -57,12 +50,6 @@
           <%= hidden_field_tag 'geofences[alert_recipient_ids][]', a.id, :class => 'id' %>
         </li>
       <% end -%>
-      <li>
-        <%= link_to '', '#', :class => "add" %>
-        <select class="recipientSelect">
-          <%= alert_options_for(geofence) %>
-        </select>
-      </li>
     </ul>
   </div>
   
@@ -73,11 +60,15 @@
     <% end -%>
   </div>
   
-  <div class="clear spacer"></div>
-  <div class="spacer"></div>
   <div class="buttons">
     <div class="loading"></div>
-    <%= button_tag 'Cancel', :class => 'cancel' %>
-    <%= button_tag 'Save', :class => 'save' %>
+    <%= link_to 'Cancel', geofences_path, :class => 'simple' %>
+    <%= submit_tag 'Save' %>
   </div>
+
+  <div class="clear spacer"></div>
 <% end -%>
+
+<div id="newAlertRecipient" class="dialog">
+  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
+</div>
