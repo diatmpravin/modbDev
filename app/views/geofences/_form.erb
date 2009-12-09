@@ -1,3 +1,7 @@
+<% content_for :javascript do %>
+  <%= javascript_include_tag "views/geofences/form" %>
+<% end %>
+
 <% form_for geofence do |f| -%>
   <div class="field">
     <%= f.label :name %>
