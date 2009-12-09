@@ -1708,6 +1708,10 @@ table.data td, table.data th {
 table.data tr.odd th, table.data tr.odd td {
 	background:#efefef;
 }
+table.data th.checkbox, table.data td.checkbox {
+  text-align:center;
+  width:2em;
+}
 
 /* Auto-complete drop-down styles */
 .ac_results {
