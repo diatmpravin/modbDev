@@ -11,4 +11,7 @@ jQuery(function() {
     q('#sidebar').height(newHeight - 32 - 16);
     q('#sidebarContent').height(newHeight - 32 - 32);
   });
+
+  // Initialize the geofences view, telling it about the 
+  Geofence.view.init(q("#sidebarContainer"));
 });

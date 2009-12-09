@@ -152,4 +152,7 @@ jQuery.fn.fitWindow = function(callback) {
       q(window).width()
     );
   });
+
+  // And run once to ensure a good start case
+  q(window).resize();
 }
