@@ -5,7 +5,7 @@ jQuery(function() {
   q("#map").moshiMap().init();
   q("#sidebar").corners("transparent");
 
-  q("#sidebar").fitWindow(function(newHeight, newWidth) {
+  q("#sidebarContainer").fitWindow(function(newWidth, newHeight) {
     newHeight = Math.max(350, newHeight);
     q('#sidebarContainer').height(newHeight - 32);
     q('#sidebar').height(newHeight - 32 - 16);

@@ -132,14 +132,14 @@ jQuery.fn.dialogLoader = function() {
 }
 
 /**
- * .fitWindow(function)
+ * .fitWindow(function(width, height))
  *
  * Register an element as being resizable, aka hooking into the
  * 'resize' event, allowing elements on the page to update
  * to fit the browser window size.
  *
- * function should take two parameters: height and width. These will
- * be the new height and new width of the window.
+ * function should take two parameters: width and height. Use this
+ * callback to do the actual resizing of elements as necessary.
  *
  * I was going to go with .resizable, but jquery UI has that taken.
  */
@@ -148,8 +148,8 @@ jQuery.fn.fitWindow = function(callback) {
   q(window).resize(function(event) {
     callback.call(
       _self,
-      q(window).height() - _self.position().top - 1,
-      q(window).width()
+      q(window).width(),
+      q(window).height() - _self.position().top - 1
     );
   });
 
