@@ -161,33 +161,29 @@ describe "Geofences Controller", ActionController::TestCase do
       assigns(:geofence).should.equal @geofence
     end
     
-    xspecify "works" do
+    specify "works" do
       @geofence.update_attribute(:name, 'test 1')
       put :update, {
         :id => @geofence.id,
         :geofence => {
           :name => 'test 2'
-        },
-        :format => 'json'
+        }
       }
-      
-      json['status'].should.equal 'success'
-      json['view'].should =~ /<h2>test 2<\/h2>/
-      json['edit'].should =~ /value="test 2"/
-      
+
+      should.redirect_to geofences_path
       @geofence.reload.name.should.equal 'test 2'
     end
     
-    xspecify "handles errors gracefully" do
+    specify "handles errors gracefully" do
       put :update, {
         :id => @geofence.id,
         :geofence => {
           :name => ''
         }
       }
-      
-      json['status'].should.equal 'failure'
-      json['html'].should =~ /can't be blank/
+
+      template.should.be "edit"
+      @geofence.reload.name.should.not.equal ''
     end
   end
   
