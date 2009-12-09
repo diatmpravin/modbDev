@@ -20,6 +20,11 @@ Devices = {
       q('#devices_all').attr('checked', false);
     });
     
+    q('#mass_apply').val('').change(Devices.openMassApplyForm);
+    q('.massApplyForm input.cancel').click(function() {
+      q(this).closest('div').hide('fast');
+    });
+    
     q("#removeDevice").dialog({
       title: 'Remove Vehicle',
       modal: true,
@@ -128,6 +133,21 @@ Devices = {
     _this.find('form').submit();
     
     return false;
+  }
+  ,
+  openMassApplyForm: function() {
+    var _this = q(this);
+    if (_this.val() == '') {
+      return;
+    }
+    
+    var val = _this.val();
+    _this.val('');
+    
+    if (val == 'profile') {
+      q('.massApplyForm').hide('fast');
+      q('#massApplyProfileForm').show('fast');
+    }
   }
 };
 

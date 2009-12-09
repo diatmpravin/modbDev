@@ -29,7 +29,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :profile, :controller => 'profile'
   
   # Devices
-  map.resources :devices, :member => {:position => :get} do |devices|
+  map.resources :devices, :member => {:position => :get}, :collection => {
+    :apply_profile => :post
+  } do |devices|
     devices.resources :trips
     devices.resources :geofences
   end

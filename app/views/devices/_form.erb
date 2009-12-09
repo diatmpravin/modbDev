@@ -29,11 +29,24 @@
       <%= f.text_field :odometer, :maxlength => 6, :size => 6 %>
     </div>
     
+    <div class="field">
+      <%= f.label :time_zone %>
+      <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s %>
+      <%= error_message_on :device, :time_zone, :prepend_text => '* Time zone ' %>
+    </div>
+    
     <h3>Tags</h3>
     <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device[#{device.id}]"} %>
   </div>
   
   <div class="alertInfo">
+    <h3>Vehicle Profile</h3>
+    
+    <div class="field">
+      <%= f.label :device_profile_id, 'Profile' %>
+      <%= f.select :device_profile_id, current_account.device_profiles.map {|p| [p.name, p.id]}, :include_blank => 'N/A' %>
+    </div>
+    
     <h3>Alert Settings</h3>
     
     <div class="field">

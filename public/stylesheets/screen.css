@@ -1007,6 +1007,17 @@ td.extra, span.extra {
   padding-bottom: 1em;
 }
 
+.massApplyForm {
+  border:solid 1px #606060;
+  clear:both;
+  display:none;
+  float:right;
+  padding:8px;
+  margin-top:8px;
+}
+#massApplyProfileForm {
+}
+
 /* user settings */
 #settings .users #new {
   display:none;

@@ -1,11 +1,30 @@
 <%= messages %>
 <div class="devices">
+  <% form_tag devices_path do -%>
+  
+  <div style="float:right">
+    <%= select_tag 'mass_apply', options_for_select([
+          ['Apply to Selected...', ''],
+          ['Set Profile', 'profile']]
+        )
+    %>
+  </div>
+    
   <div class="buttonsLeft">
     <%= button_tag 'Add Vehicle', :class => 'addVehicle' %>
     <%= button_tag 'Vehicle Profiles', :class => 'vehicleProfiles', :onclick => "location.href = '#{device_profiles_path}';" %>
   </div>
+  
+  <div id="massApplyProfileForm" class="massApplyForm">
+    <p>Set the following profile on all selected vehicles.</p>
+    <br/>
+    <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
+    <%= submit_tag 'Apply' %>
+    <%= button_tag 'Cancel', :class => 'cancel' %>
+  </div>
+  
   <div class="clear spacer"></div>
-
+  
   <%= paginate @devices %>
   
   <table class="data" style="width:100%">
@@ -25,7 +44,7 @@
         <td><%= h(device.name) %></td>
         <td><%= h(device.imei_number) %></td>
         <td><%= h(device.vin_number || '-') %></td>
-        <td><%= device.device_profile ? h(device.device_profile.name) : 'N/A' %></td>
+        <td><%= device.device_profile ? h(device.device_profile.name) : 'None' %></td>
         <td class="buttons">
           <%= link_to 'Edit', edit_device_path(device), :class => 'edit', :title => 'Edit' %>
           <%= link_to 'Delete', device_path(device), :class => 'delete', :title => 'Remove' %>
@@ -35,6 +54,7 @@
   </table>
 
   <%= paginate @devices %>
+  <% end -%>
 </div>
 
 <div id="newAlertRecipient" class="dialog">

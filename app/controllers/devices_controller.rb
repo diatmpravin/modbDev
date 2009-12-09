@@ -112,6 +112,11 @@ class DevicesController < ApplicationController
     end
   end
   
+  def apply_profile
+    # Mass apply a given profile id to the given list of devices
+    redirect_to :action => 'index'
+  end
+  
   protected
   def set_device
     @device = current_account.devices.find(params[:id])
