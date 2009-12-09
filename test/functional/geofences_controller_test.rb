@@ -100,7 +100,7 @@ describe "Geofences Controller", ActionController::TestCase do
       has :geofence
     end
     
-    xspecify "works" do
+    specify "works" do
       Geofence.should.differ(:count).by(1) do
         post :create, {
           :geofence => {
@@ -112,14 +112,11 @@ describe "Geofences Controller", ActionController::TestCase do
               {:latitude => 100, :longitude => 100},
               {:latitude => 0, :longitude => 0}
             ]
-          },
-          :format => 'json'
+          }
         }
       end
-      
-      json['status'].should.equal 'success'
-      json['view'].should =~ /<h2>Test<\/h2>/
-      json['edit'].should =~ /value="Test"/
+
+      should.redirect_to geofences_path
       
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
@@ -129,22 +126,23 @@ describe "Geofences Controller", ActionController::TestCase do
       ]
     end
     
-    xspecify "handles errors gracefully" do
-      post :create, {
-        :geofence => {
-          :type => 0,
-          :radius => 15,
-          :coordinates => [
-            {:latitude => 50, :longitude => 50},
-            {:latitude => 100, :longitude => 100},
-            {:latitude => 0, :longitude => 0}
-          ]
-        },
-        :format => 'json'
-      }
-      
-      json['status'].should.equal 'failure'
-      json['html'].should =~ /can't be blank/
+    specify "handles errors gracefully" do
+      Geofence.should.differ(:count).by(0) do
+        post :create, {
+          :geofence => {
+            :type => 0,
+            :radius => 15,
+            :coordinates => [
+              {:latitude => 50, :longitude => 50},
+              {:latitude => 100, :longitude => 100},
+              {:latitude => 0, :longitude => 0}
+            ]
+          }
+        }
+      end
+
+      template.should.equal "new"
+      @account.reload.geofences.length.should.be 1
     end
   end
   
