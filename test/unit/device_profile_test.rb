@@ -49,8 +49,46 @@ describe "DeviceProfile", ActiveSupport::TestCase do
       @profile.errors.on(:time_zone).should.equal 'is not included in the list'
     end
     
-    xspecify "allows blank time zone" do
+    specify "allows blank time zone" do
+      @profile.time_zone = nil
+      @profile.should.save
       
+      @profile.time_zone = ''
+      @profile.should.save
+    end
+  end
+
+  context "Automatic Device Updates" do
+    specify "will update fields on linked devices when saved" do
+      @profile.update_attributes(:alert_on_idle => true, :idle_threshold => 20)
+      @device.reload
+      @device.alert_on_idle.should.equal true
+      @device.idle_threshold.should.equal 20
+
+      @profile.update_attributes(:alert_on_idle => false, :idle_threshold => 5)
+      @device.reload
+      @device.alert_on_idle.should.equal false
+      @device.idle_threshold.should.equal 5
+    end
+
+    specify "will NOT update nil fields on linked devices" do
+      @device.update_attributes(:alert_on_speed => false, :speed_threshold => 55)
+      @profile.update_attributes(:alert_on_speed => nil, :speed_threshold => 75)
+      @device.reload
+      @device.alert_on_speed.should.equal false
+      @device.speed_threshold.should.equal 55
+    end
+
+    specify "will NOT update time zone if nil or blank" do
+      @device.update_attributes(:time_zone => 'Eastern Time (US & Canada)')
+      @profile.update_attributes(:time_zone => nil)
+      @device.reload.time_zone.should.equal 'Eastern Time (US & Canada)'
+
+      @profile.update_attributes(:time_zone => '')
+      @device.reload.time_zone.should.equal 'Eastern Time (US & Canada)'
+
+      @profile.update_attributes(:time_zone => 'Central Time (US & Canada)')
+      @device.reload.time_zone.should.equal 'Central Time (US & Canada)'
     end
   end
   
