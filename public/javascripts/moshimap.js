@@ -157,6 +157,21 @@ MoshiProxy = {
   };
 
   /**
+   * Turn on map dragging.
+   */
+  MoshiMap.prototype.enableDragging = function() {
+    this.map.enableDragging(true);
+  };
+
+  /**
+   * Disable map dragging, used when trying to drag something
+   * on the map (say a geofence) and not the map itself.
+   */
+  MoshiMap.prototype.disableDragging = function() {
+    this.map.enableDragging(false);
+  };
+
+  /**
    * Resize the map to the given width and height.
    *
    * @param width the width to resize to, pixels

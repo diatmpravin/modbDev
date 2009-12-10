@@ -29,6 +29,7 @@ Geofence.View.prototype = {
     MoshiMap.moshiMap.geofenceCollection.removeItem(this.shape);
 
     this.build();
+
     this.bestFit();
   }
   ,
@@ -49,12 +50,6 @@ Geofence.View.prototype = {
   /**
    * Build up the geofence in question according to what's in
    * the model.
-   * Coordinates are expected to be in the form:
-   *
-   *   [ [lat, long], [lat, long], [lat, long], ...]
-   *
-   * Geofence is built with these coordinates according to the
-   * type of geofence selected.
    */
   build: function() {
     this.shape = this._getShape(this.model.getType());
@@ -66,6 +61,10 @@ Geofence.View.prototype = {
 
     // TODO pull more into moshimap?
     MoshiMap.moshiMap.geofenceCollection.add(this.shape);
+
+    // Hook up event handling
+    var self = this;
+    MQA.EventManager.addListener(this.shape, "mousedown", function(e) { self.dragStart(e); });
   }
   ,
   /**
@@ -85,6 +84,60 @@ Geofence.View.prototype = {
     if (MoshiMap.moshiMap) {
       MoshiMap.moshiMap.resizeTo(newWidth, newHeight);
     }
+  }
+  ,
+  /**
+   * Do any pre-handling of the geofence for proper dragging
+   */
+  dragStart: function(mqEvent) {
+    var self = this;
+    MoshiMap.moshiMap.disableDragging();
+    this._map.bind('mousemove.geofence', function(e) { self.drag(e); });
+    this._map.bind('mouseup.geofence', function(e) { self.dragEnd(e); });
+
+    this._dragOffset = [];
+    var xy;
+
+    var clientX = mqEvent.domEvent.clientX - this._map.position().left - q('#mqtiledmap').position().left,
+        clientY = mqEvent.domEvent.clientY - this._map.position().top - q('#mqtiledmap').position().top;
+
+    for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
+      xy = MoshiMap.moshiMap.map.llToPix(this.shape.shapePoints.getAt(i));
+      this._dragOffset[this._dragOffset.length] = [
+        xy.x - clientX, xy.y - clientY
+      ];
+    }
+
+    //for(var i = 0; i < Geofences.fence.pois.length; i++) {
+      //Geofences.fence.pois[i].setValue('visible', false);
+    //}
+  }
+  ,
+  drag: function(event) {
+    var clientX = event.clientX - this._map.position().left - q('#mqtiledmap').position().left,
+        clientY = event.clientY - this._map.position().top - q('#mqtiledmap').position().top;
+
+    var coll = new MQA.LatLngCollection();
+
+    for(var i = 0; i < this._dragOffset.length; i++) {
+      coll.add(MoshiMap.moshiMap.map.pixToLL(new MQA.Point(
+        this._dragOffset[i][0] + clientX,
+        this._dragOffset[i][1] + clientY
+      )));
+    }
+
+    this.shape.setShapePoints(coll);
+  }
+  ,
+  dragEnd: function(event) {
+    // One more drag, then unset everything
+    this.drag(event);
+
+    this._dragOffset = undefined;
+
+    MoshiMap.moshiMap.enableDragging();
+    this._map.unbind('mousemove.geofence');
+    this._map.unbind('mouseup.geofence');
   }
   ,
   /**
