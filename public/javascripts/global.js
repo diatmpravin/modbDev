@@ -63,6 +63,21 @@ if (!Array.prototype.indexOf) {
   };
 }
 
+/**
+ * Inject from http://katesgasis.com/2009/08/13/ruby-like-syntax-for-javascript-array-functions/
+ */
+if(!Array.prototype.inject) {
+  Array.inject = function(a, init, fn){
+    a.each(function(e){
+      init = fn(init, e); 
+    });
+    return init;
+  };
+
+  Array.prototype.inject = function(init, fn){
+    return Array.inject(this, init, fn);
+  };
+}
 
 /* Initializer */
 jQuery(function() {
@@ -146,8 +161,7 @@ jQuery.fn.dialogLoader = function() {
 jQuery.fn.fitWindow = function(callback) {
   var _self = q(this);
   q(window).resize(function(event) {
-    callback.call(
-      _self,
+    callback(
       q(window).width(),
       q(window).height() - _self.position().top - 1
     );

@@ -10,15 +10,15 @@
   </div>
   
   <h3>Geofence Shape</h3>
-  <div class="shapeChooser">
+  <div id="shapeChooser">
     <%= link_to '', "##{Geofence::Type::ELLIPSE}",
-      :class => (geofence.geofence_type==Geofence::Type::ELLIPSE ? 'ellipse selected' : 'ellipse'),
+      :class => (geofence.geofence_type == Geofence::Type::ELLIPSE ? 'ellipse selected' : 'ellipse'),
       :title => 'Ellipse' %>
     <%= link_to '', "##{Geofence::Type::RECTANGLE}",
-      :class => (geofence.geofence_type==Geofence::Type::RECTANGLE ? 'rectangle selected' : 'rectangle'),
+      :class => (geofence.geofence_type == Geofence::Type::RECTANGLE ? 'rectangle selected' : 'rectangle'),
       :title => 'Rectangle' %>
     <%= link_to '', "##{Geofence::Type::POLYGON}",
-      :class => (geofence.geofence_type==Geofence::Type::POLYGON ? 'polygon selected' : 'polygon'),
+      :class => (geofence.geofence_type == Geofence::Type::POLYGON ? 'polygon selected' : 'polygon'),
       :title => 'Polygon' %>
     <%= f.hidden_field :geofence_type %>
   </div>
@@ -57,10 +57,10 @@
     </ul>
   </div>
   
-  <div class="coordinates" id="coord_<%=dom_id(geofence)%>">
+  <div class="coordinates">
     <% geofence.coordinates.each do |coord| -%>
-      <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude] %>
-      <%= hidden_field_tag 'geofence[coordinates][][longitude]', coord[:longitude] %>
+      <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude], :class => "latitude" %>
+      <%= hidden_field_tag 'geofence[coordinates][][longitude]', coord[:longitude], :class => "longitude" %>
     <% end -%>
   </div>
   
