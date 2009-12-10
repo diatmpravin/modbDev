@@ -90,6 +90,20 @@ describe "DeviceProfile", ActiveSupport::TestCase do
       @profile.update_attributes(:time_zone => 'Central Time (US & Canada)')
       @device.reload.time_zone.should.equal 'Central Time (US & Canada)'
     end
+
+    specify "prevents accidental updates of devices on other accounts" do
+      # Yeah, this should never happen, but better safe than sorry
+      device = devices(:aaron_device)
+      device.update_attributes(:alert_on_speed => true, :speed_threshold => 55)
+
+      # Intentionally assign an illegal profile id
+      Device.update_all({:device_profile_id => @profile.id}, {:id => device.id})
+      @profile.update_attributes(:alert_on_speed => false, :speed_threshold => 70)
+
+      device.reload
+      device.alert_on_speed.should.equal true
+      device.speed_threshold.should.equal 55 
+    end
   end
   
   specify "protects appropriate attributes" do
