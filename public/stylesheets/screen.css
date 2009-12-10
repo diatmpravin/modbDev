@@ -499,17 +499,23 @@ a.close {
 
 /* map container */
 #mapContainer {
+  padding: 0;
+  margin: 0;
+  background-color: white;
+}
+
+#map {
   width:600px;
   height:350px;
   overflow:hidden;
 }
-#mapContainer.crosshair #mqOverlayDiv,
-    #mapContainer.crosshair #mqmaptilediv,
-    #mapContainer.crosshair #mqtiledmap,
-    #mapContainer.crosshair #mqPoiLineDiv,
-    #mapContainer.crosshair #map\.div1,
-    #mapContainer.crosshair #map\.div\.ldiv,
-    #mapContainer.crosshair #mqCanvasDiv {
+#map.crosshair #mqOverlayDiv,
+    #map.crosshair #mqmaptilediv,
+    #map.crosshair #mqtiledmap,
+    #map.crosshair #mqPoiLineDiv,
+    #map.crosshair #map\.div1,
+    #map.crosshair #map\.div\.ldiv,
+    #map.crosshair #mqCanvasDiv {
   cursor:crosshair;
 }
 
@@ -650,7 +656,7 @@ a.close {
 /* map sidebar */
 #sidebarContainer {
   float:right;
-  width:250px;
+  width:300px;
   height:100%;
   padding:16px;
   border-left:solid 1px #b4b2a3;
@@ -662,6 +668,11 @@ a.close {
 }
 #sidebarContent {
 }
+
+#sidebarContent li {
+  list-style-type: none;
+}
+
 #sidebar h3 {
   color:#f9fcfd;
   background-color:#283234;
@@ -1093,7 +1104,6 @@ td.extra, span.extra {
   float:right;
 }
 .alerts select {
-  width:250px;
 }
 #geofences #sidebar li {
   margin-left:8px;

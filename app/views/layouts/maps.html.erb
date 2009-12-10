@@ -3,18 +3,28 @@
   <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
   <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
   <%= javascript_include_tag 'moshimap' %>
-  <%= javascript_include_tag 'maps' %>
-  <%= javascript_include_tag 'geofences_view' %>
-  <% javascript_tag do -%>
-    GeofencesView.fences = <%= geofences_for_json %>;
-  <% end -%>
-  <%= javascript_include_tag 'landmarks_view' %>
-  <% javascript_tag do -%>
-    LandmarksView.landmarks = <%= landmarks_for_json %>;
-  <% end -%>
-  <%= javascript_include_tag 'tags' %>
-  <%= preload_tags_json %>
-<% end -%>
-<% inside_layout 'internal' do -%>
-  <%= yield %>
+<% end %>
+
+<% inside_layout 'global' do -%>
+  <%= render :partial => 'common/header' %>
+  <div id="navbar">
+    <%= render :partial => 'common/filter' %>
+  </div>
+
+  <div id="mapContainer">
+    <div id="sidebarContainer">
+      <div id="sidebar">
+        <div id="sidebarContent">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+
+    <div id="map">
+      <div style="text-align:center;font-style:italic;padding-top:50px">
+        Please wait, loading...
+      </div>
+    </div>
+  </div>
+
 <% end -%>

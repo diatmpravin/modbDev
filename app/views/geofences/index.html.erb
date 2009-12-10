@@ -1,3 +1,7 @@
+<% content_for :javascript do %>
+  <%= javascript_include_tag "views/geofences/index" %>
+<% end %>
+
 <%= messages %>
 <div class="geofences">
   <div class="buttonsLeft">
@@ -36,7 +40,7 @@
   <%= paginate @geofences %>
 </div>
 
-<div id="removeGeofence" class="dialog">
+<div id="removeGeofence" class="dialog deleteDialog">
   <% form_tag geofences_path, :method => :delete do -%>
   <% end -%>
   <p>If you remove this geofence, it will be deleted permanently.</p>

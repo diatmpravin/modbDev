@@ -155,7 +155,24 @@ MoshiProxy = {
       q('.moshiZoomControl').stop(true, false).animate({left:-64,opacity:0}, 'slow');
     });
   };
-  
+
+  /**
+   * Resize the map to the given width and height.
+   *
+   * @param width the width to resize to, pixels
+   * @param height the height to resize to, pixels
+   */
+  MoshiMap.prototype.resizeTo = function(width, height) {
+    // Introduce an artificial delay to avoid MapQuest resize bugs
+    if (this.__mapResizeTimer) { 
+      clearTimeout(this.__mapResizeTimer); 
+    }
+    var self = this;
+    this.__mapResizeTimer = setTimeout(function() {
+      self.map.setSize(new MQA.Size(width, height));
+    }, 500);
+  };
+   
   /**
    * Clear any existing points and then display the points from the given
    * trip. The map will be panned and zoomed to fit the entire trip on

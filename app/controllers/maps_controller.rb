@@ -1,7 +1,7 @@
 class MapsController < ApplicationController
   before_filter :set_device
   
-  layout except_ajax('maps')
+  layout except_ajax('orig_maps')
   
   def index
     @devices = current_account.devices

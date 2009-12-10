@@ -96,7 +96,8 @@ describe "Geofences Controller", ActionController::TestCase do
       get :new
       
       template.should.be 'new'
-      assigns(:devices).should.equal @account.devices
+
+      has :geofence
     end
     
     specify "works" do
@@ -111,14 +112,11 @@ describe "Geofences Controller", ActionController::TestCase do
               {:latitude => 100, :longitude => 100},
               {:latitude => 0, :longitude => 0}
             ]
-          },
-          :format => 'json'
+          }
         }
       end
-      
-      json['status'].should.equal 'success'
-      json['view'].should =~ /<h2>Test<\/h2>/
-      json['edit'].should =~ /value="Test"/
+
+      should.redirect_to geofences_path
       
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
@@ -129,21 +127,22 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "handles errors gracefully" do
-      post :create, {
-        :geofence => {
-          :type => 0,
-          :radius => 15,
-          :coordinates => [
-            {:latitude => 50, :longitude => 50},
-            {:latitude => 100, :longitude => 100},
-            {:latitude => 0, :longitude => 0}
-          ]
-        },
-        :format => 'json'
-      }
-      
-      json['status'].should.equal 'failure'
-      json['html'].should =~ /can't be blank/
+      Geofence.should.differ(:count).by(0) do
+        post :create, {
+          :geofence => {
+            :type => 0,
+            :radius => 15,
+            :coordinates => [
+              {:latitude => 50, :longitude => 50},
+              {:latitude => 100, :longitude => 100},
+              {:latitude => 0, :longitude => 0}
+            ]
+          }
+        }
+      end
+
+      template.should.equal "new"
+      @account.reload.geofences.length.should.be 1
     end
   end
   
@@ -153,12 +152,11 @@ describe "Geofences Controller", ActionController::TestCase do
     end
     
     specify "displays edit geofence form" do
-      get :edit, {
-        :id => @geofence.id
-      }
+      get :edit, :id => @geofence.id
       
       template.should.be 'edit'
-      assigns(:devices).should.equal accounts(:quentin).devices
+      
+      assigns(:geofence).should.equal @geofence
     end
     
     specify "works" do
@@ -167,14 +165,10 @@ describe "Geofences Controller", ActionController::TestCase do
         :id => @geofence.id,
         :geofence => {
           :name => 'test 2'
-        },
-        :format => 'json'
+        }
       }
-      
-      json['status'].should.equal 'success'
-      json['view'].should =~ /<h2>test 2<\/h2>/
-      json['edit'].should =~ /value="test 2"/
-      
+
+      should.redirect_to geofences_path
       @geofence.reload.name.should.equal 'test 2'
     end
     
@@ -185,9 +179,9 @@ describe "Geofences Controller", ActionController::TestCase do
           :name => ''
         }
       }
-      
-      json['status'].should.equal 'failure'
-      json['html'].should =~ /can't be blank/
+
+      template.should.be "edit"
+      @geofence.reload.name.should.not.equal ''
     end
   end
   

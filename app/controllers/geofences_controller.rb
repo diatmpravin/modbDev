@@ -1,16 +1,12 @@
 class GeofencesController < ApplicationController
-  before_filter :new_geofence, :only => [:new, :create]
-  before_filter :set_geofence, :only => [:show, :edit, :update, :destroy]
-  before_filter :set_device
-  before_filter :set_devices
-  
-  layout except_ajax('geofences')
-  
+
+  layout :set_layout
+
   def index
     @geofences = search_on Geofence do
       current_account.geofences.paginate(:page => params[:page], :per_page => 30)
     end
-    
+
     respond_to do |format|
       format.html
       format.json {
@@ -18,73 +14,56 @@ class GeofencesController < ApplicationController
       }
     end
   end
-  
+
   def new
+    @geofence = Geofence.new
   end
-  
+
   def create
-    save_geofence(params[:geofence])
+    @geofence = current_account.geofences.build
+
+    # If device ids or alert_recipient ids are missing, blank them out
+    record = {:device_ids => [], :alert_recipient_ids => []}.merge(params[:geofence])
+
+    if @geofence.update_attributes(record)
+      redirect_to geofences_path
+    else
+      render :action => "new"
+    end
   end
-  
+
   def show
   end
-  
+
   def edit
+    @geofence = current_account.geofences.find(params[:id])
   end
-  
+
   def update
-    save_geofence(params[:geofence])
+    @geofence = current_account.geofences.find(params[:id])
+
+    # If device ids or alert_recipient ids are missing, blank them out
+    record = {:device_ids => [], :alert_recipient_ids => []}.merge(params[:geofence])
+
+    if @geofence.update_attributes(record)
+      redirect_to geofences_path
+    else
+      render :action => "edit"
+    end
   end
-  
+
   # DELETE /geofences/:id
   # Remove a geofence from the system
   def destroy
     current_account.geofences.destroy(params[:id])
     redirect_to geofences_path
   end
-  
+
   protected
-  def new_geofence
-    @geofence = current_account.geofences.new
-  end
-  
-  def set_geofence
-    @geofence = current_account.geofences.find(params[:id])
-  end
-  
-  def set_device
-    @device = current_account.devices.find(params[:device_id]) if params[:device_id]
-  end
-  
-  def set_devices
-    @devices = current_account.devices
-  end
-  
-  def save_geofence(record)
-    # If device ids or alert_recipient ids are missing, blank them out
-    record = {:device_ids => [], :alert_recipient_ids => []}.merge(record)
-    
-    if @geofence.update_attributes(record)
-      respond_to do |format|
-        format.json {
-          render :json => {
-            :status => 'success',
-            :view => render_to_string(:action => 'show'),
-            :edit => render_to_string(:action => 'edit')
-          }
-        }
-      end
-    else
-      respond_to do |format|
-        format.json {
-          render :json => {
-            :status => 'failure',
-            :html => render_to_string(
-              :action => @geofence.new_record? ? 'new' : 'edit'
-            )
-          }
-        }
-      end
-    end
+
+  def set_layout
+    return nil if request.xhr?
+    return "geofences_map" if [:edit, :new, :update, :create].include?(action_name.to_sym)
+    "geofences"
   end
 end
