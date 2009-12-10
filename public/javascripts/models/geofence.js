@@ -23,7 +23,9 @@ Geofence.Model.prototype = {
   setType: function(type) { this.type = type; }
   ,
   /**
-   * Get the coordinates list
+   * Get / Set the coordinates list
    */
   getCoordinates: function() { return this.coordinates; }
+  ,
+  setCoordinates: function(coords) { this.coordinates = coords; }
 };

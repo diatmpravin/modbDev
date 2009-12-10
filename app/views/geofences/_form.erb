@@ -57,7 +57,7 @@
     </ul>
   </div>
   
-  <div class="coordinates">
+  <div id="coordinates">
     <% geofence.coordinates.each do |coord| -%>
       <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude], :class => "latitude" %>
       <%= hidden_field_tag 'geofence[coordinates][][longitude]', coord[:longitude], :class => "longitude" %>

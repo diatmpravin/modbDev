@@ -31,9 +31,11 @@ Geofence.Form.prototype = {
    */
   changeShape: function(link) {
     q(link).addClass('selected').siblings('a').removeClass('selected');
-    var newType = this._getGeofenceType()
+    var newType = this._getGeofenceType();
 
     if(this.geofence.getType() != newType) {
+      this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
+
       this.geofence.setType(newType);
       this.view.geofenceTypeChanged();
     }
@@ -48,7 +50,7 @@ Geofence.Form.prototype = {
     this._container.height(newHeight - 32);
     this._container.find('#sidebar').height(newHeight - 32 - 16);
     this._container.find('#sidebarContent').height(newHeight - 32 - 32);
-  }  
+  }
   ,
   /**
    * What's the width of this form in pixels?
@@ -62,6 +64,25 @@ Geofence.Form.prototype = {
    */
   getGeofenceType: function() {
     return this.geofence.getType();
+  }
+  ,
+  /**
+   * Given an array of [lat, lng] points, update
+   * the model to use these new coordinates and update
+   * our form for saving
+   */
+  updateModel: function(coords) {
+    this.geofence.setCoordinates(coords);
+    var coordsDiv = this._form.find("#coordinates");
+    coordsDiv.empty();
+
+    for(var i = 0; i < coords.length; i++) {
+      coordsDiv.append(
+        '<input type="hidden" name="geofence[coordinates][][latitude]" value="' + coords[i][0] + '"/>'
+      ).append(
+        '<input type="hidden" name="geofence[coordinates][][longitude]" value="' + coords[i][1] + '"/>'
+      );
+    }
   }
   ,
 
@@ -80,7 +101,7 @@ Geofence.Form.prototype = {
    * Read the array of coordinates from the form.
    */
   _getCoordinates: function() {
-    var coords = [], coordsDiv = this._form.find(".coordinates"), i = 0;
+    var coords = [], coordsDiv = this._form.find("#coordinates"), i = 0;
 
     coordsDiv.find('input[name=\'geofence[coordinates][][latitude]\']').each(function() {
       coords[coords.length] = [this.value];

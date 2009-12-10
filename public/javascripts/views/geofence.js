@@ -138,6 +138,10 @@ Geofence.View.prototype = {
     MoshiMap.moshiMap.enableDragging();
     this._map.unbind('mousemove.geofence');
     this._map.unbind('mouseup.geofence');
+
+    if(this.form) {
+      this.updateModel();
+    }
   }
   ,
   /**
@@ -148,6 +152,23 @@ Geofence.View.prototype = {
     this.shape.setColorAlpha(0.5);
     this.shape.setFillColor(color);
     this.shape.setFillColorAlpha(0.3);
+  }
+  ,
+  /**
+   * Tell the form that it needs to update it's knowledge of the
+   * geofence. For now, that means sending up new points.
+   * Data is sent as:
+   *
+   *   [ [lat, lon], [lat, lon], ...]
+   */
+  updateModel: function() {
+    var coords = [], p;
+    for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
+      p = this.shape.shapePoints.get(i);
+     coords.push([p.lat, p.lng]);
+    }
+
+    this.form.updateModel(coords);
   }
   ,
 
