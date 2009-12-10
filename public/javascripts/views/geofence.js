@@ -23,10 +23,13 @@ Geofence.View = function(model, form) {
 
 Geofence.View.prototype = {
   /**
-   * Change which shape the geofence is
+   * Should be called when the type of geofence needs to be changed.
    */
-  changeShape: function() {
-    // TODO
+  geofenceTypeChanged: function() {
+    MoshiMap.moshiMap.geofenceCollection.removeItem(this.shape);
+
+    this.build();
+    this.bestFit();
   }
   ,
   /**

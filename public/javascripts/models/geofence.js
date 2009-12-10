@@ -16,9 +16,11 @@ Geofence.Model = function(type, coordinates) {
 
 Geofence.Model.prototype = {
   /**
-   * Get the type of geofence
+   * Get / Set the type of geofence
    */
   getType: function() { return this.type; }
+  ,
+  setType: function(type) { this.type = type; }
   ,
   /**
    * Get the coordinates list

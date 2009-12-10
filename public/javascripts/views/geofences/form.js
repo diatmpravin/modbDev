@@ -25,10 +25,18 @@ Geofence.Form = function(container) {
 
 Geofence.Form.prototype = {
   /**
-   * Change the shape of the geofence we're working with
+   * Change the shape of the geofence we're working with.
+   * This updates the model, then informs the view to rebuild it's knowledge
+   * of the geofence.
    */
-  changeShape: function(to) {
+  changeShape: function(link) {
+    q(link).addClass('selected').siblings('a').removeClass('selected');
+    var newType = this._getGeofenceType()
 
+    if(this.geofence.getType() != newType) {
+      this.geofence.setType(newType);
+      this.view.geofenceTypeChanged();
+    }
   }
   ,
   /**
