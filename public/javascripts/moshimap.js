@@ -177,7 +177,7 @@ MoshiProxy = {
    * @param width the width to resize to, pixels
    * @param height the height to resize to, pixels
    */
-  MoshiMap.prototype.resizeTo = function(width, height) {
+  MoshiMap.prototype.resizeTo = function(width, height, onFinish) {
     // Introduce an artificial delay to avoid MapQuest resize bugs
     if (this.__mapResizeTimer) {
       clearTimeout(this.__mapResizeTimer);
@@ -185,6 +185,9 @@ MoshiProxy = {
     var self = this;
     this.__mapResizeTimer = setTimeout(function() {
       self.map.setSize(new MQA.Size(width, height));
+      if(onFinish) {
+        onFinish();
+      }
     }, 500);
   };
 

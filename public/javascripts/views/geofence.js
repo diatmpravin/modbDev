@@ -16,6 +16,11 @@ Geofence.View = function(model, form) {
   this._map.moshiMap().init();
   this._map.fitWindow(function(width, height) { self.resize(width, height); });
 
+  this.handleManager = new HandleManager(this);
+  this.handleManager.onDragEnd = function(handles, index, ll, poi) {
+    self.updateCurrentShape(handles, index, ll, poi);
+  }
+
   this.build();
 
   this.bestFit();
@@ -65,6 +70,15 @@ Geofence.View.prototype = {
     // Hook up event handling
     var self = this;
     MQA.EventManager.addListener(this.shape, "mousedown", function(e) { self.dragStart(e); });
+
+    this.buildHandles();
+  }
+  ,
+  buildHandles: function() {
+    // Show handles
+    if(this.form) {
+      this.handleManager.createHandlesOn(this.shape, this.model.getType());
+    }
   }
   ,
   /**
@@ -82,7 +96,38 @@ Geofence.View.prototype = {
     this._map.height(newHeight);
 
     if (MoshiMap.moshiMap) {
-      MoshiMap.moshiMap.resizeTo(newWidth, newHeight);
+      var self = this;
+      MoshiMap.moshiMap.resizeTo(newWidth, newHeight, function() {
+        self.buildHandles(); 
+      });
+    }
+  }
+  ,
+  /**
+   * Called when a handle has been dragged from the HandleManager.
+   * Given a point index, and a new LL, reconstruct the shape
+   * as necessary
+   */
+  updateCurrentShape: function(handles, index, ll, poi) {
+    var newPoints;
+
+    switch(this.model.getType()) {
+      case Geofence.ELLIPSE:
+        newPoints = this._updateEllipse(handles, index, ll);
+        break;
+      case Geofence.RECTANGLE:
+        newPoints = this._updateRectangle(handles, index, ll);
+        break;
+      case Geofence.POLYGON:
+        newPoints = this._updatePolygon(handles, index, ll, poi);
+        break;
+    }
+
+    this.shape.setShapePoints(newPoints);
+    this.buildHandles();
+
+    if(this.form) {
+      this.updateModel();
     }
   }
   ,
@@ -141,6 +186,7 @@ Geofence.View.prototype = {
 
     if(this.form) {
       this.updateModel();
+      this.buildHandles();
     }
   }
   ,
@@ -201,5 +247,211 @@ Geofence.View.prototype = {
     }
 
     return points;
+  }
+  ,
+  _updateEllipse: function(handles, index, ll) {
+    var points = new MQLatLngCollection(),
+        otherPoi = handles[(index + 2) % 4],
+
+        xy1 = MoshiMap.moshiMap.map.llToPix(ll),
+        xy2 = MoshiMap.moshiMap.map.llToPix(otherPoi.getLatLng()),
+
+        newxy1 = new MQA.Point((42 * xy1.x - 7 * xy2.x)/35, (42 * xy1.y - 7 * xy2.y)/35),
+        newxy2 = new MQA.Point((42 * xy2.x - 7 * xy1.x)/35, (42 * xy2.y - 7 * xy1.y)/35);
+
+    points.add(MoshiMap.moshiMap.map.pixToLL(newxy1));
+    points.add(MoshiMap.moshiMap.map.pixToLL(newxy2));
+
+    return points;
+  }
+  ,
+  _updateRectangle: function(handles, index, ll) {
+    var points = new MQLatLngCollection(),
+        otherPoi = handles[(index + 2) % 4];
+
+    points.add(ll);
+    points.add(otherPoi.getLatLng());
+
+    return points;
+  }
+  ,
+  _updatePolygon: function(handles, index, ll, poi) {
+    var points = new MQLatLngCollection();
+
+    for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
+      if (i == index) {
+        if (poi.coordNew) {
+          points.add(this.shape.shapePoints.getAt(i));
+        }
+        if (!poi.deleting) {
+          points.add(poi.getLatLng());
+        }
+      } else {
+        points.add(this.shape.shapePoints.getAt(i));
+      }
+    }
+
+    return points;
+  }
+};
+
+HandleManager = function(view) {
+  this.view = view;
+  this.map = view._map;
+  this.shape = null;
+  this.handles = [];
+
+  // Callback for handling rebuilding of shapes as needed
+  // due to handle changes
+  this.onDragEnd = function(handles, index, ll) { };
+}
+
+HandleManager.prototype = {
+  /**
+   * Clear out any old handles from a previous shape
+   */
+  clearOldHandles: function() {
+    for(var i = 0; i < this.handles.length; i++) {
+      MoshiMap.moshiMap.tempCollection.removeItem(this.handles[i]);
+    }
+
+    this.handles = [];
+  }
+  ,
+  /**
+   * Given a new shape, build handles to manipulate the shape
+   */
+  createHandlesOn: function(shape, type) {
+    this.clearOldHandles();
+
+    this.shape = shape;
+    this.shapeType = type;
+    
+    switch(this.shapeType) {
+      case Geofence.ELLIPSE:
+        this.buildEllipseHandles(shape);
+        break;
+      case Geofence.RECTANGLE:
+        this.buildRectangleHandles(shape);
+        break;
+      case Geofence.POLYGON:
+        this.buildPolygonHandles(shape);
+        break;
+    }
+  }
+  ,
+  buildEllipseHandles: function(shape) {
+    var c = [
+      MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(0)),
+      MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(1))
+    ];
+    var xy = [
+      new MQA.Point((6 * c[0].x + 1 * c[1].x)/7, (6 * c[0].y + 1 * c[1].y)/7),
+      new MQA.Point((6 * c[1].x + 1 * c[0].x)/7, (6 * c[0].y + 1 * c[1].y)/7),
+      new MQA.Point((6 * c[1].x + 1 * c[0].x)/7, (6 * c[1].y + 1 * c[0].y)/7),
+      new MQA.Point((6 * c[0].x + 1 * c[1].x)/7, (6 * c[1].y + 1 * c[0].y)/7),
+    ]
+    this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy[0]), true).coordIndex = 0;
+    this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy[1]), true).coordIndex = 1;
+    this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy[2]), true).coordIndex = 2;
+    this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy[3]), true).coordIndex = 3;
+  }
+  ,
+  buildRectangleHandles: function(shape) {
+    var c = [
+      shape.shapePoints.getAt(0),
+      shape.shapePoints.getAt(1)
+    ];
+    this._createHandle(new MQA.LatLng(c[0].lat, c[0].lng), true).coordIndex = 0;
+    this._createHandle(new MQA.LatLng(c[0].lat, c[1].lng), true).coordIndex = 1;
+    this._createHandle(new MQA.LatLng(c[1].lat, c[1].lng), true).coordIndex = 2;
+    this._createHandle(new MQA.LatLng(c[1].lat, c[0].lng), true).coordIndex = 3;
+  }
+  ,
+  buildPolygonHandles: function(shape) {
+    for(var i = 0; i < shape.shapePoints.getSize(); i++) {
+      var mqPoi = this._createHandle(shape.shapePoints.getAt(i), true);
+      mqPoi.coordIndex = i;
+      mqPoi.coordNew = false;
+      
+      var j = (i+1) % shape.shapePoints.getSize();
+      var xy1 = MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(i));
+      var xy2 = MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(j));
+      var xy3 = new MQA.Point((xy1.x + xy2.x)/2, (xy1.y + xy2.y)/2);
+      
+      mqPoi = this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy3), false);
+      mqPoi.coordIndex = i;
+      mqPoi.coordNew = true;
+    }
+  }
+  ,
+
+  /**********
+   * Private
+   **********/
+
+  /**
+   * Create a handle at the given lat/long, and specify if it's a corner
+   * handle or not.
+   */
+  _createHandle: function(ll, isCorner) {
+    var self = this, mqPoi = new MQA.Poi(ll);
+    if (isCorner) {
+      mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_corner.png', 9, 9));
+    } else {
+      mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_edge.png', 9, 9));
+    }
+    mqPoi.setValue('iconOffset', new MQA.Point(-4, -4));
+    mqPoi.setValue('draggable', true);
+    mqPoi.setValue('shadow', null);
+    MoshiMap.moshiMap.tempCollection.add(mqPoi);
+    this.handles[this.handles.length] = mqPoi;
+
+    MQA.EventManager.addListener(mqPoi, 'mousedown', function(e) { self._dragStart(this, e); });
+    MQA.EventManager.addListener(mqPoi, 'mouseup', function(e) { self._dragEnd(e); });
+    
+    return mqPoi;
+  }
+  ,
+  /**
+   * Start dragging a handle
+   */
+  _dragStart: function(handle, mqEvent) {
+    var self = this;
+    this._nowDragging = handle;
+    this.map.bind("mousemove.handle", function(e) { self._drag(e); });
+  }
+  ,
+  /**
+   * Dragging a handle
+   */
+  _drag: function(event) {
+    var clientX = event.clientX - this.map.position().left - q('#mqtiledmap').position().left;
+    var clientY = event.clientY - this.map.position().top - q('#mqtiledmap').position().top;
+    var mqPoi = this._nowDragging;
+    
+    for(var i = 0; i < this.handles.length; i++) {
+      var otherPoi = this.handles[i];
+      mqPoi.deleting = false;
+      if (otherPoi.coordIndex != mqPoi.coordIndex && !otherPoi.coordNew) {
+        var xy = MoshiMap.moshiMap.map.llToPix(otherPoi.getLatLng());
+        if (Math.abs(xy.x-clientX) < 6 && Math.abs(xy.y-clientY) < 6) {
+          mqPoi.deleting = true;
+          break;
+        }
+      }
+    }
+  }
+  ,
+  /**
+   * Done dragging a handle, update the shape
+   */
+  _dragEnd: function(event) {
+    var mqPoi = this._nowDragging;
+    this.map.unbind("mousemove.handle");
+
+    this.onDragEnd(this.handles, mqPoi.coordIndex, mqPoi.getLatLng(), mqPoi);
+
+    this._nowDragging = null;
   }
 };
