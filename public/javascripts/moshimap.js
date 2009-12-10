@@ -115,7 +115,7 @@ MoshiProxy = {
       new MQA.LatLng(this.focus.lat, this.focus.lng)
     );
     
-    this.map.setBestFitMargin(75);
+    this.map.setBestFitMargin(30);
 
     // Update the Rollover/Info Window to our custom specifications
     this.map.getInfoWindow().setMaxWidth(200);

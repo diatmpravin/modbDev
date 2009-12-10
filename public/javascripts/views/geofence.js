@@ -31,7 +31,7 @@ Geofence.View.prototype = {
   ,
   /**
    * Given a now build geofence, draw it and
-   * have the map zoom to the appropriate zoom and location
+   * have the map zoom to the appropriate zoom and location.
    */
   bestFit: function() {
     var tmp = new MQA.ShapeCollection();
@@ -39,7 +39,7 @@ Geofence.View.prototype = {
     var bounds = tmp.getBoundingRect();
 
     if(bounds) {
-      MoshiMap.moshiMap.map.bestFitLL([bounds.ul, bounds.lr]);
+      MoshiMap.moshiMap.map.bestFitLL([bounds.getUpperLeft(), bounds.getLowerRight()], false, 3);
     }
   }
   ,
