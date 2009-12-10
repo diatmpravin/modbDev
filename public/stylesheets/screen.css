@@ -1661,31 +1661,32 @@ ul.sf-menu li li li.sfHover ul {
 }
 
 /* Shape Chooser */
-.shapeChooser {
+#shapeChooser {
   width:111px;
   height:33px;
   margin-left:8px;
 }
-.shapeChooser a {
+#shapeChooser a {
   float:left;
   width:37px;
   height:33px;
   background-position:0 0;
   background-repeat:no-repeat;
 }
-.shapeChooser a:hover {
+#shapeChooser a:hover {
   background-position:0 -34px;
 }
-.shapeChooser a.selected, .shapeChooser a.selected:hover {
+#shapeChooser a.selected, 
+#shapeChooser a.selected:hover {
   background-position:0 -68px;
 }
-.shapeChooser .ellipse {
+#shapeChooser .ellipse {
   background-image:url(/images/shape_select_ellipse.gif);
 }
-.shapeChooser .rectangle {
+#shapeChooser .rectangle {
   background-image:url(/images/shape_select_rectangle.gif);
 }
-.shapeChooser .polygon {
+#shapeChooser .polygon {
   background-image:url(/images/shape_select_polygon.gif);
 }
 
