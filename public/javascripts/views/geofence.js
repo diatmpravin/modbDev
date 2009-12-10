@@ -30,11 +30,12 @@ Geofence.View.prototype = {
   /**
    * Should be called when the type of geofence needs to be changed.
    */
-  geofenceTypeChanged: function() {
+  geofenceTypeChanged: function(oldType, newType) {
     MoshiMap.moshiMap.geofenceCollection.removeItem(this.shape);
 
-    this.build();
+    this.convertShape(oldType, newType);
 
+    this.build();
     this.bestFit();
   }
   ,
@@ -79,6 +80,41 @@ Geofence.View.prototype = {
     if(this.form) {
       this.handleManager.createHandlesOn(this.shape, this.model.getType());
     }
+  }
+  ,
+  /**
+   * When geofence type is changed, recalculate the points to be
+   * in the area of the old shape so the user isn't surprised by a
+   * sudden area change
+   */
+  convertShape: function(oldType, newType) {
+    var corners = [360, 360, -360, -360], newCoords = [];
+
+    for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
+      var p = this.shape.shapePoints.getAt(i);
+      if (p.lat < corners[0]) { corners[0] = p.lat; }
+      if (p.lng < corners[1]) { corners[1] = p.lng; }
+      if (p.lat > corners[2]) { corners[2] = p.lat; }
+      if (p.lng > corners[3]) { corners[3] = p.lng; }
+    }
+
+    if (newType == Geofence.ELLIPSE || newType == Geofence.RECTANGLE) {
+      newCoords = [
+        // Lat     , Long
+        [corners[0], corners[1]],
+        [corners[2], corners[3]]
+      ];
+    } else {
+      newCoords = [
+        // Lat     , Long
+        [corners[0], corners[1]],
+        [corners[2], corners[1]],
+        [corners[2], corners[3]],
+        [corners[0], corners[3]]
+      ];
+    }
+
+    this.model.setCoordinates(newCoords);
   }
   ,
   /**

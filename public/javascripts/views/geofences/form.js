@@ -30,6 +30,8 @@ Geofence.Form.prototype = {
    * of the geofence.
    */
   changeShape: function(link) {
+    var oldType = this.geofence.getType();
+
     q(link).addClass('selected').siblings('a').removeClass('selected');
     var newType = this._getGeofenceType();
 
@@ -37,7 +39,7 @@ Geofence.Form.prototype = {
       this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
 
       this.geofence.setType(newType);
-      this.view.geofenceTypeChanged();
+      this.view.geofenceTypeChanged(oldType, newType);
     }
   }
   ,
