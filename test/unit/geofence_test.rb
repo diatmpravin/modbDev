@@ -6,6 +6,11 @@ describe "Geofence", ActiveSupport::TestCase do
     @device = devices(:quentin_device)
     @geofence = geofences(:quentin_geofence)
   end
+
+  specify "new geofences are defaulted to Ellipse" do
+    g = Geofence.new
+    g.geofence_type.should.equal Geofence::Type::ELLIPSE
+  end
   
   context "Associations" do
     specify "belongs to an account" do
