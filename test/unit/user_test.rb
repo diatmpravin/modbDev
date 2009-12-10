@@ -4,7 +4,6 @@ describe "User", ActiveSupport::TestCase do
   setup do
     @account = accounts(:quentin)
     @user = users(:quentin)
-    @child = users(:child)
   end
   
   context "Associations" do
@@ -15,14 +14,6 @@ describe "User", ActiveSupport::TestCase do
     specify "has many devices" do
       @user.devices.should.equal [devices(:quentin_device)]
     end
-  end
-  
-  specify "acts as tree" do
-    @user.parent.should.be.nil
-    @user.children.should.equal [@child]
-    
-    @child.parent.should.equal @user
-    @child.children.should.equal []
   end
   
   context "Validations" do
@@ -185,34 +176,5 @@ describe "User", ActiveSupport::TestCase do
       @user.zone.name.should.equal 'Eastern Time (US & Canada)'
     end
   end
-  
-  specify "will promote users when destroyed" do
-    new_user = @user.children.build(
-      :account => @account,
-      :login => 'guybrush',
-      :name => 'Guybrush Threepwood',
-      :email => 'guy@guy.com',
-      :password => 'password',
-      :password_confirmation => 'password'
-    )
-    new_user.should.save
-    
-    child_user = new_user.children.build(
-      :account => @account,
-      :login => 'oranges',
-      :name => 'Oswald Orange',
-      :email => 'oswald@orange.com',
-      :password => 'password',
-      :password_confirmation => 'password'
-    )
-    child_user.should.save
-    
-    child_user.parent.should.equal new_user
-    new_user.parent.should.equal @user
-    
-    new_user.destroy
-    
-    child_user.reload.parent.should.equal @user
-    @user.children.should.include(child_user)
-  end
 end
+

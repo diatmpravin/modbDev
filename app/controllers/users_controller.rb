@@ -7,15 +7,15 @@ class UsersController < ApplicationController
   layout except_ajax('users')
   
   def index
-    @user = current_user.children.new
+    @user = current_account.users.new
   end
   
   def new
-    @user = current_user.children.new
+    @user = current_account.users.new
   end
   
   def create
-    @user = current_user.children.build(params[:user].first)
+    @user = current_account.users.build(params[:user].first)
     @user.account = current_account
     
     @user.password = 'password'
@@ -106,10 +106,10 @@ class UsersController < ApplicationController
   
   protected
   def set_user
-    @user = current_user.children.find(params[:id])
+    @user = current_account.users.find(params[:id])
   end
   
   def set_users
-    @users = current_user.children
+    @users = current_account.users
   end
 end

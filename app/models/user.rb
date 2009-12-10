@@ -1,7 +1,5 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  acts_as_tree :order => 'login', :dependent => nil
-  
   belongs_to :account
   has_many :devices, :include => :tracker
   
@@ -29,7 +27,6 @@ class User < ActiveRecord::Base
   
   before_save :encrypt_password
   before_create :make_activation_code
-  before_destroy :promote_child_records
 
   # Work around bug:
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
@@ -177,13 +174,5 @@ class User < ActiveRecord::Base
   
   def make_activation_code
     self.activation_code = random_digest
-  end
-  
-  def promote_child_records
-    # Take any users or devices that were children of this user, and "promote"
-    # them up the tree.
-    User.update_all({:parent_id => self.parent_id}, {:parent_id => self.id})
-    Device.update_all({:user_id => self.parent_id}, {:user_id => self.id})
-    self.reload
   end
 end
