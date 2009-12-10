@@ -1,3 +1,9 @@
+//
+// OLD AND DEPRECATED
+// 
+// Will remove when I know all the logic is taken care of in the
+// refactoring
+//
 /**
  * Geofences
  *
