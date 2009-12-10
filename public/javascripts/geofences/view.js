@@ -30,13 +30,15 @@ Geofence.View.prototype = {
   /**
    * Should be called when the type of geofence needs to be changed.
    */
-  geofenceTypeChanged: function(oldType, newType) {
+  geofenceTypeChanged: function(newType) {
     MoshiMap.moshiMap.geofenceCollection.removeItem(this.shape);
 
-    this.convertShape(oldType, newType);
+    this.convertShape(newType);
 
     this.build();
     this.bestFit();
+
+    this.updateModel();
   }
   ,
   /**
@@ -87,7 +89,7 @@ Geofence.View.prototype = {
    * in the area of the old shape so the user isn't surprised by a
    * sudden area change
    */
-  convertShape: function(oldType, newType) {
+  convertShape: function(newType) {
     var corners = [360, 360, -360, -360], newCoords = [];
 
     for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
@@ -162,9 +164,7 @@ Geofence.View.prototype = {
     this.shape.setShapePoints(newPoints);
     this.buildHandles();
 
-    if(this.form) {
-      this.updateModel();
-    }
+    this.updateModel();
   }
   ,
   /**
@@ -220,10 +220,8 @@ Geofence.View.prototype = {
     this._map.unbind('mousemove.geofence');
     this._map.unbind('mouseup.geofence');
 
-    if(this.form) {
-      this.updateModel();
-      this.buildHandles();
-    }
+    this.updateModel();
+    this.buildHandles();
   }
   ,
   /**
@@ -244,6 +242,8 @@ Geofence.View.prototype = {
    *   [ [lat, lon], [lat, lon], ...]
    */
   updateModel: function() {
+    if(this.form == undefined) { return; }
+
     var coords = [], p;
     for(var i = 0; i < this.shape.shapePoints.getSize(); i++) {
       p = this.shape.shapePoints.get(i);
