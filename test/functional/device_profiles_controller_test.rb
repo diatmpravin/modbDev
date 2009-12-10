@@ -28,7 +28,7 @@ describe "Device Profiles Controller", ActionController::TestCase do
     
     specify "works" do
       DeviceProfile.should.differ(:count).by(1) do
-        post :create, {
+        put :create, {
           :device_profile => {
             :name => 'My Profile'
           }

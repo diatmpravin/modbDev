@@ -59,7 +59,9 @@ class DeviceProfile < ActiveRecord::Base
       }
     ].inject {|hash, x| hash.merge(x)}
 
-    account.devices.update_all(updates, {:device_profile_id => self.id})
+    if updates.any?
+      account.devices.update_all(updates, {:device_profile_id => self.id})
+    end
   end
 
   protected
