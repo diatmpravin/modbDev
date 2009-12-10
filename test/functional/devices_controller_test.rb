@@ -225,4 +225,33 @@ describe "Devices Controller", ActionController::TestCase do
       position['point']['speed'].should.equal @point.speed
     end
   end
+
+  context "Applying a profile to devices" do
+    setup do
+      @device = devices(:quentin_device)
+      @profile = device_profiles(:quentin)
+    end
+
+    specify "applies a profile and immediately updates settings" do
+      @device.update_attributes(:alert_on_speed => false, :device_profile_id => nil)
+
+      post :apply_profile, {
+        :devices => [@device.id.to_s],
+        :profile_id => @profile.id.to_s
+      }
+
+      @device.reload
+      @device.device_profile.should.equal @profile
+      @device.alert_on_speed.should.equal true
+    end
+
+    specify "will clear the profile if no profile id specified" do
+      post :apply_profile, {
+        :devices => [@device.id.to_s]
+      }
+
+      @device.reload
+      @device.device_profile.should.equal nil
+    end
+  end
 end

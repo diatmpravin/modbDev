@@ -111,9 +111,21 @@ class DevicesController < ApplicationController
       }
     end
   end
-  
+ 
+  # I wish this method was on the DeviceProfile model, but then how do you
+  # clear the profile?  DeviceProfile.new.apply(device)?  Seems a kluge.  -EN
   def apply_profile
-    # Mass apply a given profile id to the given list of devices
+    profile = current_account.device_profiles.find_by_id(params[:profile_id])
+
+    # Apply the new profile to the selected devices 
+    current_account.devices.update_all(
+      {:device_profile_id => profile ? profile.id : nil},
+      {:id => params[:devices]}
+    )
+    
+    # If the user wasn't clearing the profile, update all linked devices
+    profile.update_devices unless profile.nil?
+  
     redirect_to :action => 'index'
   end
   
