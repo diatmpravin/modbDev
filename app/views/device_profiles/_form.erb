@@ -10,6 +10,12 @@
   <div class="alertInfo">
     <h3>Alert Settings</h3>
     
+      <div class="field">
+        <%= f.label :time_zone %>
+        <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s %>
+        <%= error_message_on :device_profile, :time_zone, :prepend_text => '* Time zone ' %>
+      </div>
+    
     <div class="field">
       <%= help_tooltip :speed_alert %>
       <%= f.label :alert_on_speed, 'Speed Alerts' %>

@@ -29,66 +29,75 @@
       <%= f.text_field :odometer, :maxlength => 6, :size => 6 %>
     </div>
     
-    <div class="field">
-      <%= f.label :time_zone %>
-      <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s %>
-      <%= error_message_on :device, :time_zone, :prepend_text => '* Time zone ' %>
-    </div>
-    
     <h3>Tags</h3>
     <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device[#{device.id}]"} %>
   </div>
   
   <div class="alertInfo">
-    <h3>Vehicle Profile</h3>
+    <h3>Vehicle Settings</h3>
     
     <div class="field">
+      <div class="loading" style="float:right"></div>
       <%= f.label :device_profile_id, 'Profile' %>
-      <%= f.select :device_profile_id, current_account.device_profiles.map {|p| [p.name, p.id]}, :include_blank => 'N/A' %>
+      <%= f.select :device_profile_id, current_account.device_profiles.map {|p| [p.name, p.id]},
+        {:include_blank => 'None'}, {:class => 'profile'} %>
     </div>
     
-    <h3>Alert Settings</h3>
-    
-    <div class="field">
-      <%= help_tooltip :speed_alert %>
-      <%= f.label :alert_on_speed, 'Speed Alerts' %>
-      <%= f.check_box :alert_on_speed %>
-      <span class="extra" <%= device.alert_on_speed ? 'style="display:inline"' : '' %>>
-        <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]} %> mph
-      </span>
-    </div>
-    <div class="field">
-      <%= help_tooltip :aggressive_driving_alert %>
-      <%= f.label :alert_on_aggressive, 'Aggressive Driving Alerts' %>
-      <%= f.check_box :alert_on_aggressive %>
-      <span class="extra" <%= device.alert_on_aggressive ? 'style="display:inline"' : '' %>>
-        <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]} %> rpm
-      </span>
-    </div>
-    <div class="field">
-      <%= help_tooltip :idle_alert %>
-      <%= f.label :alert_on_idle, 'Idle Time Alerts' %>
-      <%= f.check_box :alert_on_idle %>
-      <span class="extra" <%= device.alert_on_idle ? 'style="display:inline"' : '' %>>
-        <%= f.select :idle_threshold, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
-      </span>
-    </div>
-    <div class="field">
-      <%= help_tooltip :after_hours_alert %>
-      <%= f.label :alert_on_after_hours, 'After Hours Alerts' %>
-      <%= f.check_box :alert_on_after_hours %>
-      <span class="extra" <%= device.alert_on_after_hours ? 'style="display:inline"' : '' %>>
-        From <%= f.text_field :after_hours_start_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
-        to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
-      </span>
-    </div>
-    <div class="field">
-      <%= help_tooltip :detect_pitstops %>
-      <%= f.label :detect_pitstops, 'Detect Pitstops' %>
-      <%= f.check_box :detect_pitstops %>
-      <span class="extra" <%= device.detect_pitstops ? 'style="display:inline"' : '' %>>
-        <%= f.select :pitstop_threshold, Device::VALID_PITSTOP_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
-      </span>
+    <div class="<%= device.device_profile ? 'profileSettings profileLocked' : 'profileSettings' %>">
+      <div class="field note">
+        These settings are controlled by your profile. Select "None" to change these settings.
+      </div>
+      <div class="field">
+        <%= f.label :time_zone %>
+        <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s, {}, {:disabled => !device.device_profile} %>
+        <%= error_message_on :device, :time_zone, :prepend_text => '* Time zone ' %>
+      </div>
+      
+      <div class="field">
+        <%= help_tooltip :speed_alert %>
+        <%= f.label :alert_on_speed, 'Speed Alerts' %>
+        <%= f.check_box :alert_on_speed, {}, {:disabled => !device.device_profile} %>
+        <span class="extra" <%= device.alert_on_speed ? 'style="display:inline"' : '' %>>
+          <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]} %> mph
+        </span>
+      </div>
+      
+      <div class="field">
+        <%= help_tooltip :aggressive_driving_alert %>
+        <%= f.label :alert_on_aggressive, 'Aggressive Driving Alerts' %>
+        <%= f.check_box :alert_on_aggressive %>
+        <span class="extra" <%= device.alert_on_aggressive ? 'style="display:inline"' : '' %>>
+          <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]} %> rpm
+        </span>
+      </div>
+      
+      <div class="field">
+        <%= help_tooltip :idle_alert %>
+        <%= f.label :alert_on_idle, 'Idle Time Alerts' %>
+        <%= f.check_box :alert_on_idle %>
+        <span class="extra" <%= device.alert_on_idle ? 'style="display:inline"' : '' %>>
+          <%= f.select :idle_threshold, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+        </span>
+      </div>
+      
+      <div class="field">
+        <%= help_tooltip :after_hours_alert %>
+        <%= f.label :alert_on_after_hours, 'After Hours Alerts' %>
+        <%= f.check_box :alert_on_after_hours %>
+        <span class="extra" <%= device.alert_on_after_hours ? 'style="display:inline"' : '' %>>
+          From <%= f.text_field :after_hours_start_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
+          to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
+        </span>
+      </div>
+      
+      <div class="field">
+        <%= help_tooltip :detect_pitstops %>
+        <%= f.label :detect_pitstops, 'Detect Pitstops' %>
+        <%= f.check_box :detect_pitstops %>
+        <span class="extra" <%= device.detect_pitstops ? 'style="display:inline"' : '' %>>
+          <%= f.select :pitstop_threshold, Device::VALID_PITSTOP_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+        </span>
+      </div>
     </div>
     
     <div class="alerts">
