@@ -3,8 +3,9 @@
   <div style="float:right">  
     <%= select_tag 'mass_apply', options_for_select([
           ['Apply to Selected...', ''],
-          ['Set Profile', 'profile']]
-        )
+          ['Set Profile', 'profile'],
+          ['Add To Group', 'add_group']
+        ])
     %>
   </div>
   
@@ -18,9 +19,21 @@
     <% form_tag apply_profile_devices_path do -%>
       <p>Set the following profile on all selected vehicles.</p>
       <br/>
-      <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
+      <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + 
+        options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
       <%= hidden_field_tag 'devices', '' %>
       <%= submit_tag 'Apply' %>
+      <%= button_tag 'Cancel', :class => 'cancel' %>
+    <% end -%>
+  </div>
+
+  <div id="addToGroupForm", class="massApplyForm">
+    <% form_tag apply_group_devices_path do -%>
+      <p>Add the selected vehicles to a group.</p>
+      <br/>
+      <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %>
+      <%= hidden_field_tag 'devices', '' %>
+      <%= submit_tag 'Add' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>
     <% end -%>
   </div>
@@ -37,6 +50,7 @@
         <th>Tracker ID</th>
         <th>VIN</th>
         <th>Profile</th>
+        <th>Groups</th>
         <th> </th>
       </tr>
     </thead>
@@ -47,6 +61,7 @@
         <td><%= h(device.imei_number) %></td>
         <td><%= h(device.vin_number || '-') %></td>
         <td><%= device.device_profile ? h(device.device_profile.name) : 'None' %></td>
+        <td><%= device.group_names.join(", ") -%></td>
         <td class="buttons">
           <%= link_to 'Edit', edit_device_path(device), :class => 'edit', :title => 'Edit' %>
           <%= link_to 'Delete', device_path(device), :class => 'delete', :title => 'Remove' %>

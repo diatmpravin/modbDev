@@ -53,6 +53,9 @@ class RoutesTest < ActionController::IntegrationTest
     
     assert_equal "/devices/1/trips/2", device_trip_path(1, 2)
     assert_equal "/devices/1/geofences/2", device_geofence_path(1, 2)
+
+    assert_equal "/devices/apply_profile", apply_profile_devices_path
+    assert_equal "/devices/apply_group", apply_group_devices_path
   end
   
   test "trips resource" do

@@ -28,7 +28,8 @@ class Group < ActiveRecord::Base
     # Link up
     has_and_belongs_to_many link, 
       :join_table => :group_links, 
-      :association_foreign_key => :link_id
+      :association_foreign_key => :link_id,
+      :uniq => true
 
     # And scope out
     named_scope "of_#{link}", 

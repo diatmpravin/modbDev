@@ -67,6 +67,13 @@ describe "Device", ActiveSupport::TestCase do
 
       @device.groups.should.equal [groups(:north), groups(:south)]
     end
+
+    specify "can get a list of group names" do
+      groups(:south).devices << @device
+      @device.reload
+
+      @device.group_names.should.equal ["North", "South"]
+    end
   end
 
   specify "protects appropriate attributes" do

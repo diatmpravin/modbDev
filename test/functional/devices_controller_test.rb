@@ -240,6 +240,8 @@ describe "Devices Controller", ActionController::TestCase do
         :profile_id => @profile.id.to_s
       }
 
+      should.redirect_to devices_path
+
       @device.reload
       @device.device_profile.should.equal @profile
       @device.alert_on_speed.should.equal true
@@ -252,6 +254,44 @@ describe "Devices Controller", ActionController::TestCase do
 
       @device.reload
       @device.device_profile.should.equal nil
+    end
+  end
+
+  context "Applying a group to devices" do
+    setup do
+      @device = devices(:quentin_device)
+      @group = groups(:north)
+    end
+
+    specify "applies a profile and immediately updates settings" do
+      post :apply_group, {
+        :devices => @device.id.to_s,
+        :group_id => @group.id.to_s
+      }
+      should.redirect_to devices_path
+
+      @device.reload
+      @device.groups.should.equal [@group]
+    end
+
+    specify "doesn't reapply if device already in group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      @group.devices << @device
+      @group.save; @group.reload
+
+      post :apply_group, {
+        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :group_id => @group.id.to_s
+      }
+
+      @group.reload; @device.reload
+      @group.devices.length.should.equal 4
+      @group.devices.should.equal [@device, d1, d2, d3]
+
+      @device.groups.should.equal [@group]
     end
   end
 end
