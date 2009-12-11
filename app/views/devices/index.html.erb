@@ -1,15 +1,13 @@
 <%= messages %>
 <div class="devices">
-  <% form_tag devices_path do -%>
-  
-  <div style="float:right">
+  <div style="float:right">  
     <%= select_tag 'mass_apply', options_for_select([
           ['Apply to Selected...', ''],
           ['Set Profile', 'profile']]
         )
     %>
   </div>
-    
+  
   <div class="buttonsLeft">
     <%= button_tag 'Add Vehicle', :class => 'addVehicle' %>
     <%= button_tag 'Vehicle Profiles', :class => 'vehicleProfiles', :onclick => "location.href = '#{device_profiles_path}';" %>
@@ -17,11 +15,14 @@
   </div>
   
   <div id="massApplyProfileForm" class="massApplyForm">
-    <p>Set the following profile on all selected vehicles.</p>
-    <br/>
-    <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
-    <%= submit_tag 'Apply' %>
-    <%= button_tag 'Cancel', :class => 'cancel' %>
+    <% form_tag apply_profile_devices_path do -%>
+      <p>Set the following profile on all selected vehicles.</p>
+      <br/>
+      <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
+      <%= hidden_field_tag 'devices', '' %>
+      <%= submit_tag 'Apply' %>
+      <%= button_tag 'Cancel', :class => 'cancel' %>
+    <% end -%>
   </div>
   
   <div class="clear spacer"></div>
@@ -55,7 +56,6 @@
   </table>
 
   <%= paginate @devices %>
-  <% end -%>
 </div>
 
 <div id="newAlertRecipient" class="dialog">

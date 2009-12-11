@@ -8,7 +8,7 @@ class Account < ActiveRecord::Base
   has_many :alert_recipients, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
-  has_many :device_profiles, :dependent => :destroy
+  has_many :device_profiles, :order => 'name', :dependent => :destroy
   
   validates_presence_of :number
   validates_numericality_of :number

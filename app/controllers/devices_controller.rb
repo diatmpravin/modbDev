@@ -120,12 +120,12 @@ class DevicesController < ApplicationController
     # Apply the new profile to the selected devices 
     current_account.devices.update_all(
       {:device_profile_id => profile ? profile.id : nil},
-      {:id => params[:devices]}
+      {:id => params[:devices].split(',')}
     )
     
     # If the user wasn't clearing the profile, update all linked devices
     profile.update_devices unless profile.nil?
-  
+    
     redirect_to :action => 'index'
   end
   

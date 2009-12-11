@@ -1,6 +1,6 @@
 class DeviceProfile < ActiveRecord::Base
   belongs_to :account
-  has_many :devices
+  has_many :devices, :dependent => :nullify
   
   attr_accessible :account, :devices, :speed_threshold, :rpm_threshold,
     :alert_on_speed, :alert_on_aggressive, :alert_on_idle, :idle_threshold,

@@ -236,7 +236,7 @@ describe "Devices Controller", ActionController::TestCase do
       @device.update_attributes(:alert_on_speed => false, :device_profile_id => nil)
 
       post :apply_profile, {
-        :devices => [@device.id.to_s],
+        :devices => @device.id.to_s,
         :profile_id => @profile.id.to_s
       }
 
@@ -247,7 +247,7 @@ describe "Devices Controller", ActionController::TestCase do
 
     specify "will clear the profile if no profile id specified" do
       post :apply_profile, {
-        :devices => [@device.id.to_s]
+        :devices => @device.id.to_s
       }
 
       @device.reload

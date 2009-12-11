@@ -16,13 +16,18 @@ Devices = {
     q('#devices_all').attr('checked', false).click(function() {
       q('input[name=devices]').attr('checked', this.checked);
     });
-    q('input[name=devices]').attr('checked', false).click(function() {
+    q('table input[name=devices]').attr('checked', false).click(function() {
       q('#devices_all').attr('checked', false);
     });
     
     q('#mass_apply').val('').change(Devices.openMassApplyForm);
     q('.massApplyForm input.cancel').click(function() {
       q(this).closest('div').hide('fast');
+    });
+    q('.massApplyForm form').submit(function() {
+      // When a mass apply form is submitted, copy the devices list into the form
+      q(this).find('input[name=devices]').val(q('table input[name=devices]').fieldValue().join(','));
+      return true;
     });
     
     q("#removeDevice").dialog({
