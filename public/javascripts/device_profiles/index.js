@@ -1,9 +1,10 @@
 /**
- * Device Profiles
- *
- * Constants and functions used on the Device Profiles page.
+ * Device Profiles - Index
  */
-DeviceProfiles = {
+if (typeof DeviceProfiles == 'undefined') {
+  DeviceProfiles = {};
+};
+DeviceProfiles.Index = {
   init: function() {
     q('a.delete').live('click', function() {
       q('#removeProfile').find('form').attr('action', this.href).end()
@@ -25,35 +26,15 @@ DeviceProfiles = {
       resizable: false,
       width: 450,
       buttons: {
-        'Yes, remove this profile': DeviceProfiles.destroy,
+        'Yes, remove this profile': DeviceProfiles.Index.destroy,
         'No, do not remove': function() { q(this).dialog('close'); }
       }
     });
-    
-    /* editing alert settings */
-    q('.alertInfo input[type=checkbox]').live('click', function() {
-      q(this).siblings('.extra').toggle(this.checked);
-      
-      DeviceProfiles.initTimepickr(q(this).parent());
-    });
-    
-    DeviceProfiles.initTimepickr(q('.alertInfo'));
   }
   ,
-  initTimepickr: function(edit) {
-    edit.find('input.timepick:visible').timepickr({
-      convention: 12,
-      format12: '{h:02.d}:{m:02.d} {z:s}',
-      trigger: 'click'
-    });
-  }
-  ,
-  newDevice: function() {
-    q("#addDevice").dialog("open");
-    
-    return false;
-  }
-  ,
+  /**
+   * Submit the "Remove Profile" form.
+   */
   destroy: function() {
     var _this = q(this);
     
@@ -65,6 +46,4 @@ DeviceProfiles = {
 };
 
 /* Initializer */
-jQuery(function() {
-  DeviceProfiles.init();
-});
+jQuery(DeviceProfiles.Index.init);
