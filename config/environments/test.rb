@@ -16,6 +16,8 @@ config.action_controller.perform_caching             = false
 # Disable request forgery protection in test environment
 config.action_controller.allow_forgery_protection    = false
 
+config.gem "factory_girl"
+
 # ActionMailer test settings
 config.action_mailer.delivery_method = :test
 

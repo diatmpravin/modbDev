@@ -5,6 +5,9 @@ require 'test/spec/rails'
 require 'freeze_time'
 require 'mocha'
 
+require 'factory_girl'
+require 'factory_girl/syntax/generate'
+
 # Request Forgery Protection hack
 # form_authenticity_token causes an error in test mode because protect_against_forgery is turned off.
 module ActionController
