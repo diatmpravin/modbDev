@@ -43,18 +43,12 @@ describe "DeviceProfile", ActiveSupport::TestCase do
     specify "validates time zone" do
       @profile.time_zone = 'Central Time (US & Canada)'
       @profile.should.save
-
-      @profile.time_zone = 'Not a real time zone'
-      @profile.should.not.save
-      @profile.errors.on(:time_zone).should.equal 'is not included in the list'
-    end
-    
-    specify "allows blank time zone" do
-      @profile.time_zone = nil
-      @profile.should.save
       
-      @profile.time_zone = ''
-      @profile.should.save
+      [nil, '', 'Not a real time zone'].each do |wrong|
+        @profile.time_zone = wrong
+        @profile.should.not.save
+        @profile.errors.on(:time_zone).should.equal 'is not included in the list'
+      end
     end
   end
 

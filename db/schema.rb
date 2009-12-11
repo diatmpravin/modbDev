@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091210195745) do
+ActiveRecord::Schema.define(:version => 20091211183402) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -66,18 +66,18 @@ ActiveRecord::Schema.define(:version => 20091210195745) do
 
   create_table "device_profiles", :force => true do |t|
     t.integer  "account_id"
-    t.boolean  "alert_on_speed"
-    t.integer  "speed_threshold"
-    t.boolean  "alert_on_aggressive"
-    t.integer  "rpm_threshold"
-    t.boolean  "alert_on_idle"
-    t.integer  "idle_threshold"
-    t.boolean  "alert_on_after_hours"
-    t.integer  "after_hours_start"
-    t.integer  "after_hours_end"
-    t.string   "time_zone"
-    t.boolean  "detect_pitstops"
-    t.integer  "pitstop_threshold"
+    t.boolean  "alert_on_speed",                     :default => false
+    t.integer  "speed_threshold",                    :default => 70
+    t.boolean  "alert_on_aggressive",                :default => false
+    t.integer  "rpm_threshold",                      :default => 5000
+    t.boolean  "alert_on_idle",                      :default => false
+    t.integer  "idle_threshold",                     :default => 5
+    t.boolean  "alert_on_after_hours",               :default => false
+    t.integer  "after_hours_start",                  :default => 79200
+    t.integer  "after_hours_end",                    :default => 21600
+    t.string   "time_zone",            :limit => 64, :default => "Eastern Time (US & Canada)"
+    t.boolean  "detect_pitstops",                    :default => false
+    t.integer  "pitstop_threshold",                  :default => 10
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name",                 :limit => 30

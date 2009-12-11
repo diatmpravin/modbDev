@@ -10,8 +10,7 @@ class DeviceProfile < ActiveRecord::Base
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
-  validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name},
-    :allow_nil => true, :allow_blank => true
+  validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
 
   after_save :update_devices
   
