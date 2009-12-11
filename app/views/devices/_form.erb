@@ -1,3 +1,7 @@
+<% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'device_profiles/form' %>
+<% end -%>
+
 <% form_for device, :index => device.id, :html => {:autocomplete => "off"} do |f| -%>
   <div class="standardInfo">
     <h3>Vehicle Details</h3>
@@ -49,14 +53,14 @@
       </div>
       <div class="field">
         <%= f.label :time_zone %>
-        <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s, {}, {:disabled => !device.device_profile} %>
+        <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s, {}, {:disabled => !!device.device_profile} %>
         <%= error_message_on :device, :time_zone, :prepend_text => '* Time zone ' %>
       </div>
       
       <div class="field">
         <%= help_tooltip :speed_alert %>
         <%= f.label :alert_on_speed, 'Speed Alerts' %>
-        <%= f.check_box :alert_on_speed, {}, {:disabled => !device.device_profile} %>
+        <%= f.check_box :alert_on_speed, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_speed ? 'style="display:inline"' : '' %>>
           <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]} %> mph
         </span>
@@ -65,7 +69,7 @@
       <div class="field">
         <%= help_tooltip :aggressive_driving_alert %>
         <%= f.label :alert_on_aggressive, 'Aggressive Driving Alerts' %>
-        <%= f.check_box :alert_on_aggressive %>
+        <%= f.check_box :alert_on_aggressive, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_aggressive ? 'style="display:inline"' : '' %>>
           <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]} %> rpm
         </span>
@@ -74,28 +78,28 @@
       <div class="field">
         <%= help_tooltip :idle_alert %>
         <%= f.label :alert_on_idle, 'Idle Time Alerts' %>
-        <%= f.check_box :alert_on_idle %>
+        <%= f.check_box :alert_on_idle, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_idle ? 'style="display:inline"' : '' %>>
-          <%= f.select :idle_threshold, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+          <%= f.select :idle_threshold, Device::VALID_IDLE_THRESHOLDS.map {|k| [k.to_s, k]}, {}, {:disabled => !!device.device_profile} %> minutes
         </span>
       </div>
       
       <div class="field">
         <%= help_tooltip :after_hours_alert %>
         <%= f.label :alert_on_after_hours, 'After Hours Alerts' %>
-        <%= f.check_box :alert_on_after_hours %>
+        <%= f.check_box :alert_on_after_hours, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_after_hours ? 'style="display:inline"' : '' %>>
-          From <%= f.text_field :after_hours_start_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
-          to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick' %>
+          From <%= f.text_field :after_hours_start_text, :size => 8, :maxlength => 8, :class => 'timepick', :disabled => !!device.device_profile %>
+          to <%= f.text_field :after_hours_end_text, :size => 8, :maxlength => 8, :class => 'timepick', :disabled => !!device.device_profile %>
         </span>
       </div>
       
       <div class="field">
         <%= help_tooltip :detect_pitstops %>
         <%= f.label :detect_pitstops, 'Detect Pitstops' %>
-        <%= f.check_box :detect_pitstops %>
+        <%= f.check_box :detect_pitstops, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.detect_pitstops ? 'style="display:inline"' : '' %>>
-          <%= f.select :pitstop_threshold, Device::VALID_PITSTOP_THRESHOLDS.map {|k| [k.to_s, k]} %> minutes
+          <%= f.select :pitstop_threshold, Device::VALID_PITSTOP_THRESHOLDS.map {|k| [k.to_s, k]}, {}, {:disabled => !!device.device_profile} %> minutes
         </span>
       </div>
     </div>

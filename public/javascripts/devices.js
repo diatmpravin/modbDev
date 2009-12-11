@@ -55,23 +55,6 @@ Devices = {
         'Cancel': function() { q(this).dialog('close').clearRailsForm(); }
       }
     });
-    
-    /* editing alert settings */
-    q('.alertInfo input[type=checkbox]').live('click', function() {
-      q(this).siblings('.extra').toggle(this.checked);
-      
-      Devices.initTimepickr(q(this).parent());
-    });
-    
-    Devices.initTimepickr(q('.alertInfo'));
-  }
-  ,
-  initTimepickr: function(edit) {
-    edit.find('input.timepick:visible').timepickr({
-      convention: 12,
-      format12: '{h:02.d}:{m:02.d} {z:s}',
-      trigger: 'click'
-    });
   }
   ,
   newDevice: function() {
