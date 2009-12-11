@@ -62,7 +62,7 @@
         <%= f.label :alert_on_speed, 'Speed Alerts' %>
         <%= f.check_box :alert_on_speed, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_speed ? 'style="display:inline"' : '' %>>
-          <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]} %> mph
+          <%= f.select :speed_threshold, Device::VALID_SPEED_THRESHOLDS.map {|k| [k.to_s, k]}, {}, {:disabled => !!device.device_profile} %> mph
         </span>
       </div>
       
@@ -71,7 +71,7 @@
         <%= f.label :alert_on_aggressive, 'Aggressive Driving Alerts' %>
         <%= f.check_box :alert_on_aggressive, :class => 'alert', :disabled => !!device.device_profile %>
         <span class="extra" <%= device.alert_on_aggressive ? 'style="display:inline"' : '' %>>
-          <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]} %> rpm
+          <%= f.select :rpm_threshold, Device::VALID_RPM_THRESHOLDS.map {|k| [k.to_s, k]}, {}, {:disabled => !!device.device_profile} %> rpm
         </span>
       </div>
       

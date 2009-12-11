@@ -11,6 +11,21 @@ class DeviceProfile < ActiveRecord::Base
     :alert_on_after_hours, :after_hours_end, :after_hours_start, :detect_pitstops,
     :pitstop_threshold, :idle_threshold, :time_zone, :name
   
+  PROFILE_ATTRIBUTES = [
+    :alert_on_speed,
+    :speed_threshold,
+    :alert_on_aggressive,
+    :rpm_threshold,
+    :alert_on_idle,
+    :idle_threshold,
+    :alert_on_after_hours,
+    :after_hours_start,
+    :after_hours_end,
+    :detect_pitstops,
+    :pitstop_threshold,
+    :time_zone
+  ]
+  
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
@@ -18,39 +33,18 @@ class DeviceProfile < ActiveRecord::Base
 
   after_save :update_devices
   
-  
-  def update_devices
-    updates = [
-      alert_on_speed.nil? ? {} : {
-        :alert_on_speed => alert_on_speed,
-        :speed_threshold => speed_threshold
-      },
-      alert_on_aggressive.nil? ? {} : {
-        :alert_on_aggressive => alert_on_aggressive,
-        :rpm_threshold => rpm_threshold
-      },
-      alert_on_idle.nil? ? {} : {
-        :alert_on_idle => alert_on_idle,
-        :idle_threshold => idle_threshold 
-      },
-      alert_on_after_hours.nil? ? {} : {
-        :alert_on_after_hours => alert_on_after_hours,
-        :after_hours_start => after_hours_start,
-        :after_hours_end => after_hours_end
-      },
-      detect_pitstops.nil? ? {} : {
-        :detect_pitstops => detect_pitstops,
-        :pitstop_threshold => pitstop_threshold
-      },
-      time_zone.blank? ? {} : {
-        :time_zone => time_zone
-      }
-    ].inject {|hash, x| hash.merge(x)}
-
-    if updates.any?
-      account.devices.update_all(updates, {:device_profile_id => self.id})
-    end
+  def updates_for_device
+    PROFILE_ATTRIBUTES.inject({}) {|hash, x| hash.merge(x => self[x])}
   end
   
+  def update_devices
+    account.devices.update_all(updates_for_device, {:device_profile_id => self.id})
+  end
+  
+  def to_json(options = {})
+    super(options.merge(
+      :methods => [:after_hours_start_text, :after_hours_end_text]
+    ))
+  end
 end
 

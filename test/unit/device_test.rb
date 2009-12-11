@@ -14,7 +14,7 @@ describe "Device", ActiveSupport::TestCase do
     end
 
     specify "belongs to a profile" do
-      @device.device_profile.should.equal device_profiles(:quentin)
+      @device.should.respond_to(:device_profile)
     end
     
     specify "has many points" do
@@ -831,6 +831,19 @@ describe "Device", ActiveSupport::TestCase do
       
       @device.reload.tags.length.should.equal 1
       @device.tags.map(&:name).should.equal ['abc']
+    end
+  end
+  
+  context "Handling Device Profile" do
+    specify "device prefills fields from profile when saved" do
+      # Device has a profile, so I shouldn't be able to change profile fields
+      @device.update_attributes(:device_profile => device_profiles(:quentin))
+      @device.update_attributes(:name => 'XYZ', :alert_on_speed => false)
+      @device.reload.alert_on_speed.should.equal true
+      @device.name.should.equal 'XYZ'
+      
+      @device.update_attributes(:device_profile => nil, :alert_on_speed => false)
+      @device.reload.alert_on_speed.should.equal false
     end
   end
 end

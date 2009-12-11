@@ -3,7 +3,6 @@ quentin_device:
   user: quentin
   name: "Quentin's Device"
   tracker: quentin_tracker
-  device_profile: quentin
 aaron_device:
   account: aaron
   name: "Aaron's Device"

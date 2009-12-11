@@ -39,7 +39,7 @@ module TimeAsText
       attr_accessible text_symbol
       
       define_method(text_symbol.to_s) do
-        instance_variable_get("@#{text_symbol}") || TimeAsText::seconds_to_text(send(symbol))
+        TimeAsText::seconds_to_text(send(symbol))
       end
       
       define_method("#{text_symbol}=") do |value|

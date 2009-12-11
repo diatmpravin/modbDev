@@ -5,6 +5,8 @@ describe "DeviceProfile", ActiveSupport::TestCase do
     @account = accounts(:quentin)
     @profile = device_profiles(:quentin)
     @device = devices(:quentin_device)
+    
+    @device.update_attributes(:device_profile => @profile)
   end
   
   context "Associations" do
@@ -65,26 +67,6 @@ describe "DeviceProfile", ActiveSupport::TestCase do
       @device.idle_threshold.should.equal 5
     end
 
-    specify "will NOT update nil fields on linked devices" do
-      @device.update_attributes(:alert_on_speed => false, :speed_threshold => 55)
-      @profile.update_attributes(:alert_on_speed => nil, :speed_threshold => 75)
-      @device.reload
-      @device.alert_on_speed.should.equal false
-      @device.speed_threshold.should.equal 55
-    end
-
-    specify "will NOT update time zone if nil or blank" do
-      @device.update_attributes(:time_zone => 'Eastern Time (US & Canada)')
-      @profile.update_attributes(:time_zone => nil)
-      @device.reload.time_zone.should.equal 'Eastern Time (US & Canada)'
-
-      @profile.update_attributes(:time_zone => '')
-      @device.reload.time_zone.should.equal 'Eastern Time (US & Canada)'
-
-      @profile.update_attributes(:time_zone => 'Central Time (US & Canada)')
-      @device.reload.time_zone.should.equal 'Central Time (US & Canada)'
-    end
-
     specify "prevents accidental updates of devices on other accounts" do
       # Yeah, this should never happen, but better safe than sorry
       device = devices(:aaron_device)
@@ -98,6 +80,23 @@ describe "DeviceProfile", ActiveSupport::TestCase do
       device.alert_on_speed.should.equal true
       device.speed_threshold.should.equal 55 
     end
+  end
+  
+  specify "has a helper method that returns the profile fields as a hash" do
+    @profile.updates_for_device.should.equal({
+      :alert_on_speed => true,
+      :speed_threshold => 70,
+      :alert_on_aggressive => true,
+      :rpm_threshold => 5000,
+      :alert_on_idle => true,
+      :idle_threshold => 5,
+      :alert_on_after_hours => true,
+      :after_hours_start => 79200,
+      :after_hours_end => 21600,
+      :detect_pitstops => true,
+      :pitstop_threshold => 10,
+      :time_zone => 'Eastern Time (US & Canada)'
+    })
   end
   
   specify "protects appropriate attributes" do
