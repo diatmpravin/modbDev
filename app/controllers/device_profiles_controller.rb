@@ -1,6 +1,6 @@
 class DeviceProfilesController < ApplicationController
   before_filter :new_profile, :only => [:new, :create]
-  before_filter :set_profile, :only => [:edit, :update, :destroy]
+  before_filter :set_profile, :only => [:show, :edit, :update, :destroy]
   
   layout except_ajax('device_profiles')
   
@@ -16,6 +16,14 @@ class DeviceProfilesController < ApplicationController
       redirect_to :action => 'index'
     else
       render :action => 'new'
+    end
+  end
+  
+  def show
+    respond_to do |format|
+      format.json {
+        render :json => @device_profile
+      }
     end
   end
   

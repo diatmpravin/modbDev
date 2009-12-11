@@ -52,7 +52,18 @@ describe "Device Profiles Controller", ActionController::TestCase do
     end
   end
   
-  context "Viewing and editing a device profile" do
+  context "Displaying a device profile" do
+    specify "works (json)" do
+      get :show, {
+        :id => @profile.id,
+        :format => 'json'
+      }
+      
+      json['device_profile']['name'].should.equal 'Quentin Default'
+    end
+  end
+  
+  context "Editing and updating a device profile" do
     specify "displays edit form" do
       get :edit, {
         :id => @profile.id
