@@ -131,7 +131,12 @@ class DevicesController < ApplicationController
 
   # Given a group and list of device ids, add those devices to that group
   def apply_group
-    group = current_account.groups.of_devices.find(params[:group_id])
+    group = 
+      if params[:group_name] && params[:group_name].any?
+        current_account.groups.of_devices.create :name => params[:group_name]
+      else
+        current_account.groups.of_devices.find(params[:group_id])
+      end
 
     group.devices << Device.find(params[:devices].split(","))
 

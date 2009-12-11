@@ -266,12 +266,35 @@ describe "Devices Controller", ActionController::TestCase do
     specify "adds the list of vehicles to the group" do
       post :apply_group, {
         :devices => @device.id.to_s,
-        :group_id => @group.id.to_s
+        :group_id => @group.id.to_s,
+        :group_name => ""
       }
       should.redirect_to devices_path
 
       @device.reload
       @device.groups.should.equal [@group]
+    end
+    
+    specify "can specify a name and create a new group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      Group.should.differ(:count).by(1) do
+        post :apply_group, {
+          :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+          :group_id => @group.id.to_s,
+          :group_name => "Testr"
+        }
+      end
+
+      g = d1.reload.groups[0]
+
+      g.name.should.equal "Testr"
+      g.of.should.equal "Device"
+      g.devices.should.equal [@device, d1, d2, d3]
+
+      @group.devices.should.equal []
     end
 
     specify "doesn't re-add if device already in group" do
@@ -284,7 +307,8 @@ describe "Devices Controller", ActionController::TestCase do
 
       post :apply_group, {
         :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
-        :group_id => @group.id.to_s
+        :group_id => @group.id.to_s,
+        :group_name => ""
       }
 
       @group.reload; @device.reload
