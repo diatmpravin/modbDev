@@ -126,7 +126,31 @@ class DevicesController < ApplicationController
     # If the user wasn't clearing the profile, update all linked devices
     profile.update_devices unless profile.nil?
     
-    redirect_to :action => 'index'
+    redirect_to devices_path
+  end
+
+  # Given a group and list of device ids, add those devices to that group
+  def apply_group
+    group = 
+      if params[:group_name] && params[:group_name].any?
+        current_account.groups.of_devices.create :name => params[:group_name]
+      else
+        current_account.groups.of_devices.find(params[:group_id])
+      end
+
+    group.devices << Device.find(params[:devices].split(","))
+
+    redirect_to devices_path
+  end
+
+  # Given a gropu and a list of device ids, remove those devices from
+  # the given group if those devices are in that group
+  def remove_group
+    group = current_account.groups.of_devices.find(params[:group_id])
+
+    group.devices.delete(Device.find(params[:devices].split(",")))
+
+    redirect_to devices_path
   end
   
   protected

@@ -22,7 +22,7 @@ Devices = {
     
     q('#mass_apply').val('').change(Devices.openMassApplyForm);
     q('.massApplyForm input.cancel').click(function() {
-      q(this).closest('div').hide('fast');
+      q(this).closest('div').slideUp('fast');
     });
     q('.massApplyForm form').submit(function() {
       // When a mass apply form is submitted, copy the devices list into the form
@@ -134,9 +134,19 @@ Devices = {
     var val = _this.val();
     _this.val('');
     
-    if (val == 'profile') {
-      q('.massApplyForm').hide('fast');
-      q('#massApplyProfileForm').show('fast');
+    switch(val) {
+      case 'profile':
+        q('.massApplyForm').slideUp('fast');
+        q('#massApplyProfileForm').slideDown('fast');
+        break;
+      case 'add_group':
+        q('.massApplyForm').slideUp('fast');
+        q('#addToGroupForm').slideDown('fast');
+        break;
+      case 'remove_group':
+        q('.massApplyForm').slideUp('fast');
+        q('#removeFromGroupForm').slideDown('fast');
+        break;
     }
   }
   ,

@@ -240,6 +240,8 @@ describe "Devices Controller", ActionController::TestCase do
         :profile_id => @profile.id.to_s
       }
 
+      should.redirect_to devices_path
+
       @device.reload
       @device.device_profile.should.equal @profile
       @device.alert_on_speed.should.equal true
@@ -252,6 +254,107 @@ describe "Devices Controller", ActionController::TestCase do
 
       @device.reload
       @device.device_profile.should.equal nil
+    end
+  end
+
+  context "Applying a group to devices" do
+    setup do
+      @device = devices(:quentin_device)
+      @group = groups(:north)
+    end
+
+    specify "adds the list of vehicles to the group" do
+      post :apply_group, {
+        :devices => @device.id.to_s,
+        :group_id => @group.id.to_s,
+        :group_name => ""
+      }
+      should.redirect_to devices_path
+
+      @device.reload
+      @device.groups.should.equal [@group]
+    end
+    
+    specify "can specify a name and create a new group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      Group.should.differ(:count).by(1) do
+        post :apply_group, {
+          :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+          :group_id => @group.id.to_s,
+          :group_name => "Testr"
+        }
+      end
+
+      g = d1.reload.groups[0]
+
+      g.name.should.equal "Testr"
+      g.of.should.equal "Device"
+      g.devices.should.equal [@device, d1, d2, d3]
+
+      @group.devices.should.equal []
+    end
+
+    specify "doesn't re-add if device already in group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      @group.devices << @device
+      @group.save; @group.reload
+
+      post :apply_group, {
+        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :group_id => @group.id.to_s,
+        :group_name => ""
+      }
+
+      @group.reload; @device.reload
+      @group.devices.length.should.equal 4
+      @group.devices.should.equal [@device, d1, d2, d3]
+
+      @device.groups.should.equal [@group]
+    end
+  end
+
+  context "Removing vehicles from a group" do
+    setup do
+      @device = devices(:quentin_device)
+      @group = groups(:north)
+      @group.devices << @device
+      @group.reload
+    end
+
+    specify "removes vehicles from the given group" do
+      post :remove_group, {
+        :devices => @device.id.to_s,
+        :group_id => @group.id.to_s
+      }
+      should.redirect_to devices_path
+
+      @device.reload
+      @device.groups.should.equal []
+    end
+
+    specify "doesn't care of a vehicle isn't in the given group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      @group.devices << @device
+      @group.devices << d1
+      @group.save; @group.reload
+
+      post :remove_group, {
+        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :group_id => @group.id.to_s
+      }
+
+      @group.reload; @device.reload
+      @group.devices.should.equal []
+      @device.groups.should.equal []
     end
   end
 end

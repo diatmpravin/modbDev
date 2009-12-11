@@ -27,7 +27,8 @@ class Device < ActiveRecord::Base
   has_and_belongs_to_many :groups, 
     :join_table => :group_links, 
     :foreign_key => :link_id,
-    :order => "name ASC"
+    :order => "name ASC",
+    :uniq => true
 
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]
@@ -66,6 +67,11 @@ class Device < ActiveRecord::Base
 
   ROLLOVER_MILES = 10000
   TRIP_REPORT_CUTOFF = 75.minutes
+
+  # Build an array that contains all group names this device is a part of
+  def group_names
+    self.groups.map {|g| g.name }
+  end
 
   # Shortcut for IMEI number
   def imei_number
