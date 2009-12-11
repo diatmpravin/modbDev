@@ -31,7 +31,8 @@ ActionController::Routing::Routes.draw do |map|
   # Devices
   map.resources :devices, :member => {:position => :get}, :collection => {
     :apply_profile => :post,
-    :apply_group => :post
+    :apply_group => :post,
+    :remove_group => :post
   } do |devices|
     devices.resources :trips
     devices.resources :geofences

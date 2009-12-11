@@ -263,7 +263,7 @@ describe "Devices Controller", ActionController::TestCase do
       @group = groups(:north)
     end
 
-    specify "applies a profile and immediately updates settings" do
+    specify "adds the list of vehicles to the group" do
       post :apply_group, {
         :devices => @device.id.to_s,
         :group_id => @group.id.to_s
@@ -274,7 +274,7 @@ describe "Devices Controller", ActionController::TestCase do
       @device.groups.should.equal [@group]
     end
 
-    specify "doesn't reapply if device already in group" do
+    specify "doesn't re-add if device already in group" do
       d1 = Device.generate!
       d2 = Device.generate!
       d3 = Device.generate!
@@ -292,6 +292,45 @@ describe "Devices Controller", ActionController::TestCase do
       @group.devices.should.equal [@device, d1, d2, d3]
 
       @device.groups.should.equal [@group]
+    end
+  end
+
+  context "Removing vehicles from a group" do
+    setup do
+      @device = devices(:quentin_device)
+      @group = groups(:north)
+      @group.devices << @device
+      @group.reload
+    end
+
+    specify "removes vehicles from the given group" do
+      post :remove_group, {
+        :devices => @device.id.to_s,
+        :group_id => @group.id.to_s
+      }
+      should.redirect_to devices_path
+
+      @device.reload
+      @device.groups.should.equal []
+    end
+
+    specify "doesn't care of a vehicle isn't in the given group" do
+      d1 = Device.generate!
+      d2 = Device.generate!
+      d3 = Device.generate!
+
+      @group.devices << @device
+      @group.devices << d1
+      @group.save; @group.reload
+
+      post :remove_group, {
+        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :group_id => @group.id.to_s
+      }
+
+      @group.reload; @device.reload
+      @group.devices.should.equal []
+      @device.groups.should.equal []
     end
   end
 end

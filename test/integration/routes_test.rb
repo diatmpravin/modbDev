@@ -56,6 +56,7 @@ class RoutesTest < ActionController::IntegrationTest
 
     assert_equal "/devices/apply_profile", apply_profile_devices_path
     assert_equal "/devices/apply_group", apply_group_devices_path
+    assert_equal "/devices/remove_group", remove_group_devices_path
   end
   
   test "trips resource" do

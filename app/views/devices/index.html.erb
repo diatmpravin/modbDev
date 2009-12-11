@@ -4,7 +4,8 @@
     <%= select_tag 'mass_apply', options_for_select([
           ['Apply to Selected...', ''],
           ['Set Profile', 'profile'],
-          ['Add To Group', 'add_group']
+          ['Add To Group', 'add_group'],
+          ['Remove From Group', 'remove_group'],
         ])
     %>
   </div>
@@ -34,6 +35,17 @@
       <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %>
       <%= hidden_field_tag 'devices', '' %>
       <%= submit_tag 'Add' %>
+      <%= button_tag 'Cancel', :class => 'cancel' %>
+    <% end -%>
+  </div>
+  
+  <div id="removeFromGroupForm", class="massApplyForm">
+    <% form_tag remove_group_devices_path do -%>
+      <p>Remove each selected vehicle from a given group.</p>
+      <br/>
+      <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %>
+      <%= hidden_field_tag 'devices', '' %>
+      <%= submit_tag 'Remove' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>
     <% end -%>
   </div>

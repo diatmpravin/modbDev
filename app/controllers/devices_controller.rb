@@ -137,6 +137,16 @@ class DevicesController < ApplicationController
 
     redirect_to devices_path
   end
+
+  # Given a gropu and a list of device ids, remove those devices from
+  # the given group if those devices are in that group
+  def remove_group
+    group = current_account.groups.of_devices.find(params[:group_id])
+
+    group.devices.delete(Device.find(params[:devices].split(",")))
+
+    redirect_to devices_path
+  end
   
   protected
   def set_device

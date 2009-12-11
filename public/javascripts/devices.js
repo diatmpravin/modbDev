@@ -143,6 +143,10 @@ Devices = {
         q('.massApplyForm').slideUp('fast');
         q('#addToGroupForm').slideDown('fast');
         break;
+      case 'remove_group':
+        q('.massApplyForm').slideUp('fast');
+        q('#removeFromGroupForm').slideDown('fast');
+        break;
     }
   }
   ,
