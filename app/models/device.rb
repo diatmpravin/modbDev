@@ -15,6 +15,10 @@ class Device < ActiveRecord::Base
   has_many :device_tags, :dependent => :delete_all
   has_many :tags, :through => :device_tags, :order => 'name'
   
+  include TimeAsText
+  time_as_text :after_hours_start
+  time_as_text :after_hours_end
+  
   # Last known position
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
     :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
@@ -43,8 +47,7 @@ class Device < ActiveRecord::Base
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
     :alert_on_aggressive, :alert_recipients, :alert_on_idle,
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
-    :after_hours_end, :alert_recipient_ids, :alert_recipients,
-    :vin_number, :after_hours_start_text, :after_hours_end_text,
+    :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
     :tags, :tag_names, :device_profile, :device_profile_id
 
@@ -84,7 +87,7 @@ class Device < ActiveRecord::Base
   
   # Safe device_profile_id=
   def device_profile_id=(value)
-    self.device_profile = value ? account.device_profiles.find(value) : nil
+    self.device_profile = value.blank? ? nil : account.device_profiles.find(value)
   end
   
   def zone
