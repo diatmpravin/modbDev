@@ -43,15 +43,14 @@ Geofence.Form.prototype = {
    * of the geofence.
    */
   changeShape: function(link) {
-    // If there isn't a geofence yet, build one with the
-    // selected type and get it displayed on the map
-
     q(link).addClass('selected').siblings('a').removeClass('selected');
     var newType = this._getGeofenceType();
 
-    if(this.geofence.getType() != newType) {
-      this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
+    this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
 
+    if(!this.geofence) { 
+      this.buildGeofence(); 
+    } else if(this.geofence.getType() != newType) {
       this.geofence.setType(newType);
       this.view.geofenceTypeChanged(newType);
     }
@@ -62,7 +61,7 @@ Geofence.Form.prototype = {
    * in proper proportion
    */
   resize: function(newWidth, newHeight) {
-    newHeight = Math.max(350, newHeight);
+    newHeight = Math.max(425, newHeight);
     this._container.height(newHeight - 32);
     this._container.find('#sidebar').height(newHeight - 32 - 16);
     this._container.find('#sidebarContent').height(newHeight - 32 - 32);

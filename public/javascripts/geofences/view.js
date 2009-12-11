@@ -6,9 +6,12 @@ if(typeof Geofence == 'undefined') {
 }
 
 Geofence.View = function(map, model, form) {
-  var self = this;
+  var self = this,
+      runBestFit = model.getCoordinates().length > 0;
 
   this.map = map;
+  this._map = map.getMapElement();
+
   this.model = model;
   this.form = form;
 
@@ -21,7 +24,10 @@ Geofence.View = function(map, model, form) {
 
   this.build();
 
-  this.bestFit();
+  // Don't best-fit when adding a new geofence to the view
+  if(runBestFit) {
+    this.bestFit();
+  }
 }
 
 Geofence.View.prototype = {
@@ -34,7 +40,6 @@ Geofence.View.prototype = {
     this.convertShape(newType);
 
     this.build();
-    this.bestFit();
 
     this.updateModel();
   }
@@ -57,7 +62,7 @@ Geofence.View.prototype = {
     var bounds = tmp.getBoundingRect();
 
     if(bounds) {
-      MoshiMap.moshiMap.map.bestFitLL([bounds.getUpperLeft(), bounds.getLowerRight()], false, 3);
+      MoshiMap.moshiMap.map.bestFitLL([bounds.getUpperLeft(), bounds.getLowerRight()], false, 2);
     }
   }
   ,
@@ -260,6 +265,12 @@ Geofence.View.prototype = {
   }
   ,
   _buildPoints: function(coordinates) {
+    if(coordinates.length == 0) {
+      // We need to populate the model with some generated
+      // points that fit the view we're on
+      coordinates = this._newGeofenceCoordinates();
+    }
+
     var points = new MQLatLngCollection();
 
     for(var i = 0; i < coordinates.length; i++) {
@@ -267,6 +278,36 @@ Geofence.View.prototype = {
     }
 
     return points;
+  }
+  ,
+  /**
+   * When dealing with a new geofence, take the current type and
+   * build up a new set of points that fits nicely w/ the current view
+   * of the map. Returns an array of the new coords:
+   *
+   *   [ [lat, lng], [lat, lng], ... ]
+   */
+  _newGeofenceCoordinates: function() {
+    var coords = [],
+        centerX = this.map.width() / 2,
+        centerY = this.map.height() / 2,
+        tl = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX-100, centerY-100)),
+        br = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX+100, centerY+100));
+
+    coords = [
+      [tl.lat, tl.lng],
+      [br.lat, br.lng]
+    ];
+
+    if(this.model.getType() == Geofence.POLYGON) {
+      var tr = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX+100, centerY-100)),
+          bl = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX-100, centerY+100));
+
+      coords.splice(1, 0, [tr.lat, tr.lng]);
+      coords.push([bl.lat, bl.lng]);
+    }
+
+    return coords;
   }
   ,
   _updateEllipse: function(handles, index, ll) {
@@ -346,7 +387,7 @@ HandleManager.prototype = {
 
     this.shape = shape;
     this.shapeType = type;
-    
+
     switch(this.shapeType) {
       case Geofence.ELLIPSE:
         this.buildEllipseHandles(shape);
@@ -393,12 +434,12 @@ HandleManager.prototype = {
       var mqPoi = this._createHandle(shape.shapePoints.getAt(i), true);
       mqPoi.coordIndex = i;
       mqPoi.coordNew = false;
-      
+
       var j = (i+1) % shape.shapePoints.getSize();
       var xy1 = MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(i));
       var xy2 = MoshiMap.moshiMap.map.llToPix(shape.shapePoints.getAt(j));
       var xy3 = new MQA.Point((xy1.x + xy2.x)/2, (xy1.y + xy2.y)/2);
-      
+
       mqPoi = this._createHandle(MoshiMap.moshiMap.map.pixToLL(xy3), false);
       mqPoi.coordIndex = i;
       mqPoi.coordNew = true;
@@ -429,7 +470,7 @@ HandleManager.prototype = {
 
     MQA.EventManager.addListener(mqPoi, 'mousedown', function(e) { self._dragStart(this, e); });
     MQA.EventManager.addListener(mqPoi, 'mouseup', function(e) { self._dragEnd(e); });
-    
+
     return mqPoi;
   }
   ,
@@ -449,7 +490,7 @@ HandleManager.prototype = {
     var clientX = event.clientX - this.map.position().left - q('#mqtiledmap').position().left;
     var clientY = event.clientY - this.map.position().top - q('#mqtiledmap').position().top;
     var mqPoi = this._nowDragging;
-    
+
     for(var i = 0; i < this.handles.length; i++) {
       var otherPoi = this.handles[i];
       mqPoi.deleting = false;
