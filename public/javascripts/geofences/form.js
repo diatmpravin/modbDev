@@ -19,11 +19,24 @@ Geofence.Form = function(container) {
     self.resize(newWidth, newHeight);
   });
 
-  this.geofence = new Geofence.Model(this._getGeofenceType(), this._getCoordinates());
-  this.view = new Geofence.View(this.geofence, this);
+  // Initialize our map
+  this._map = new Map.View(q("#map"), this._container);
+
+  // Handle new, where there isn't a shape yet
+  if(this._getGeofenceType()) {
+    this.buildGeofence();
+  }
 }
 
 Geofence.Form.prototype = {
+  /**
+   * Construct a new Geofence and View and hook them together
+   */
+  buildGeofence: function() {
+    this.geofence = new Geofence.Model(this._getGeofenceType(), this._getCoordinates());
+    this.view = new Geofence.View(this._map, this.geofence, this);
+  }
+  ,
   /**
    * Change the shape of the geofence we're working with.
    * This updates the model, then informs the view to rebuild it's knowledge
@@ -33,9 +46,11 @@ Geofence.Form.prototype = {
     q(link).addClass('selected').siblings('a').removeClass('selected');
     var newType = this._getGeofenceType();
 
-    if(this.geofence.getType() != newType) {
-      this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
+    this._form.find('input[name=\'geofence[geofence_type]\']').val(newType);
 
+    if(!this.geofence) { 
+      this.buildGeofence(); 
+    } else if(this.geofence.getType() != newType) {
       this.geofence.setType(newType);
       this.view.geofenceTypeChanged(newType);
     }
@@ -46,7 +61,7 @@ Geofence.Form.prototype = {
    * in proper proportion
    */
   resize: function(newWidth, newHeight) {
-    newHeight = Math.max(350, newHeight);
+    newHeight = Math.max(425, newHeight);
     this._container.height(newHeight - 32);
     this._container.find('#sidebar').height(newHeight - 32 - 16);
     this._container.find('#sidebarContent').height(newHeight - 32 - 32);
@@ -94,7 +109,13 @@ Geofence.Form.prototype = {
    * Read the geofence type from the form
    */
   _getGeofenceType: function() {
-    return parseInt(this._form.find("#shapeChooser a.selected").attr("href").substring(1));
+    var selected = this._form.find("#shapeChooser a.selected");
+
+    if(selected.length > 0) {
+      return parseInt(selected.attr("href").substring(1));
+    } else {
+      return null;
+    }
   }
   ,
   /**
