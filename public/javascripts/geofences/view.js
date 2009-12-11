@@ -5,16 +5,14 @@ if(typeof Geofence == 'undefined') {
   Geofence = {};
 }
 
-Geofence.View = function(model, form) {
+Geofence.View = function(map, model, form) {
   var self = this;
 
+  this.map = map;
   this.model = model;
   this.form = form;
 
-  // TODO This might be something to pull out elsewhere
-  this._map = q("#map");
-  this._map.moshiMap().init();
-  this._map.fitWindow(function(width, height) { self.resize(width, height); });
+  this.map.registerResizeHandler(function() { self.mapResized(); });
 
   this.handleManager = new HandleManager(this);
   this.handleManager.onDragEnd = function(handles, index, ll, poi) {
@@ -39,6 +37,14 @@ Geofence.View.prototype = {
     this.bestFit();
 
     this.updateModel();
+  }
+  ,
+  /**
+   * When a map is resized, we need to rebuild the handles for this view
+   * or they will be way off.
+   */
+  mapResized: function() {
+    this.buildHandles();
   }
   ,
   /**
@@ -117,28 +123,6 @@ Geofence.View.prototype = {
     }
 
     this.model.setCoordinates(newCoords);
-  }
-  ,
-  /**
-   * Resize ourselves to fit the new window,
-   * and inform MapQuest to also do resizing as necessary
-   */
-  resize: function(newWidth, newHeight) {
-    if(this.form != undefined) {
-      newWidth = newWidth - this.form.width();
-    }
-
-    newHeight = Math.max(350, newHeight);
-
-    this._map.width(newWidth);
-    this._map.height(newHeight);
-
-    if (MoshiMap.moshiMap) {
-      var self = this;
-      MoshiMap.moshiMap.resizeTo(newWidth, newHeight, function() {
-        self.buildHandles(); 
-      });
-    }
   }
   ,
   /**

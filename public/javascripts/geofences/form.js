@@ -19,17 +19,33 @@ Geofence.Form = function(container) {
     self.resize(newWidth, newHeight);
   });
 
-  this.geofence = new Geofence.Model(this._getGeofenceType(), this._getCoordinates());
-  this.view = new Geofence.View(this.geofence, this);
+  // Initialize our map
+  this._map = new Map.View(q("#map"), this._container);
+
+  // Handle new, where there isn't a shape yet
+  if(this._getGeofenceType()) {
+    this.buildGeofence();
+  }
 }
 
 Geofence.Form.prototype = {
+  /**
+   * Construct a new Geofence and View and hook them together
+   */
+  buildGeofence: function() {
+    this.geofence = new Geofence.Model(this._getGeofenceType(), this._getCoordinates());
+    this.view = new Geofence.View(this._map, this.geofence, this);
+  }
+  ,
   /**
    * Change the shape of the geofence we're working with.
    * This updates the model, then informs the view to rebuild it's knowledge
    * of the geofence.
    */
   changeShape: function(link) {
+    // If there isn't a geofence yet, build one with the
+    // selected type and get it displayed on the map
+
     q(link).addClass('selected').siblings('a').removeClass('selected');
     var newType = this._getGeofenceType();
 
@@ -94,7 +110,13 @@ Geofence.Form.prototype = {
    * Read the geofence type from the form
    */
   _getGeofenceType: function() {
-    return parseInt(this._form.find("#shapeChooser a.selected").attr("href").substring(1));
+    var selected = this._form.find("#shapeChooser a.selected");
+
+    if(selected.length > 0) {
+      return parseInt(selected.attr("href").substring(1));
+    } else {
+      return null;
+    }
   }
   ,
   /**
