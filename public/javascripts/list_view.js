@@ -14,13 +14,13 @@ ListView = function(element) {
   this.allSelected = false;
   this.selected = {};
 
-  q(".pagination a").live("click", function() { 
+  q(".pagination a").live("click", function() {
     self.changePage(q(this));
     return false;
   });
 
-  q("input[name=apply_to]").live("click", function() { 
-    self._elementSelected(this); 
+  q("input[name=apply_to]").live("click", function() {
+    self.elementSelected(this);
   });
 
   q("#select_all").live("click", function() {
@@ -55,17 +55,30 @@ ListView.prototype = {
   /**
    * Retrive a comma-delimited list of all selected ids
    * across all pages.
-   * Can return 'all' to designate to use all of whatever is being listed
    */
   getSelected: function() {
-    return "all";
+    var ids = [];
+
+    q.each(this.selected, function(key, value) {
+      if(key.indexOf("apply_to_") == 0) {
+        ids.push(value);
+      }
+    });
+
+    return ids.join(",");
   }
   /**
    * Mark an element locally as checked or unchecked
    */
   ,
   markElement: function(element) {
-    this.selected[element.attr("id")] = element.attr("checked");
+    var key = element.attr("id");
+
+    if(element.attr("checked")) {
+      this.selected[key] = element.val();
+    } else {
+      delete this.selected[key];
+    }
   }
   ,
   selectAllChecked: function(selectAll) {
