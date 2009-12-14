@@ -8,9 +8,30 @@
  *
  */
 ListView = function(element) {
-  this.element = element;
+  var self = this;
 
-  this._processLinks();
+  this.element = element;
+  this.allSelected = false;
+  this.selected = {};
+
+  q(".pagination a").live("click", function() { 
+    self.changePage(q(this));
+    return false;
+  });
+
+  q("input[name=apply_to]").live("click", function() { 
+    self._elementSelected(this); 
+  });
+
+  q("#select_all").live("click", function() {
+    self.selectAllChecked(this);
+  });
+
+  // New page, start out with everything unchecked so
+  // as to prevent browser caching from confusing people
+  q("input[name=apply_to]").attr('checked', false);
+
+  this.rebuildHandlers();
 }
 
 ListView.prototype = {
@@ -26,23 +47,63 @@ ListView.prototype = {
       url: link.attr("href"),
       success: function(response) {
         self.element.html(response);
-        self._processLinks();
+        self.rebuildHandlers();
       }
     });
   }
   ,
   /**
-   * Go through each paginator links and turn them into ajax links
+   * Retrive a comma-delimited list of all selected ids
+   * across all pages.
+   * Can return 'all' to designate to use all of whatever is being listed
    */
-  _processLinks: function() {
+  getSelected: function() {
+    return "all";
+  }
+  /**
+   * Mark an element locally as checked or unchecked
+   */
+  ,
+  markElement: function(element) {
+    this.selected[element.attr("id")] = element.attr("checked");
+  }
+  ,
+  selectAllChecked: function(selectAll) {
     var self = this;
-
-    this.table = q("table", this.element);
-    this.paginator = q(".pagination", this.element);
-
-    this.paginator.find("a").click(function() {
-      self.changePage(q(this));
-      return false;
+    q("input[name=apply_to]", this.table).each(function(idx, element) {
+      q(element).attr("checked", q(selectAll).attr("checked"));
+      self.markElement(q(element));
     });
+  }
+  ,
+ /**
+  * See if the Select All checkbox on the current page of the list
+  * needs to be selected or not.
+  */
+  updateSelectAll: function() {
+    var all = this.table.find("input[name=apply_to]");
+    this.selectAll.attr("checked", all.length == all.filter(":checked").length);
+  }
+  ,
+  elementSelected: function(element) {
+    this.markElement(q(element));
+    this.updateSelectAll();
+  }
+  ,
+  /**
+   * Go through each paginator links and turn them into ajax links.
+   * Also, run through the available checkboxes and compare to the selected list
+   */
+  rebuildHandlers: function() {
+    this.table = q("table", this.element);
+    this.selectAll = q("#select_all", this.table);
+
+    // Update all boxes on this page to be checked, or not
+    q.each(this.selected, function(key, value) {
+      q("input#" + key).attr('checked', value);
+    });
+
+    // Update the Select All box
+    this.updateSelectAll();
   }
 };

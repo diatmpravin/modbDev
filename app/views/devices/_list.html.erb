@@ -3,7 +3,7 @@
 <table class="data" style="width:100%">
   <thead>
     <tr>
-      <th class="checkbox"><%= check_box_tag :devices_all, true, false %></th>
+      <th class="checkbox"><%= check_box_tag :select_all, true, false %></th>
       <th>Name</th>
       <th>Tracker ID</th>
       <th>VIN</th>
@@ -14,7 +14,7 @@
   </thead>
   <% devices.each do |device| -%>
     <tr class="<%=cycle('','odd')%>">
-      <td class="checkbox"><%= check_box_tag :devices, device.id, false, :id => dom_id(device) %></td>
+      <td class="checkbox"><%= check_box_tag :apply_to, device.id, false, :id => dom_id(device) %></td>
       <td><%= h(device.name) %></td>
       <td><%= h(device.imei_number) %></td>
       <td><%= h(device.vin_number || '-') %></td>
