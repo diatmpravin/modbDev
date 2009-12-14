@@ -236,7 +236,7 @@ describe "Devices Controller", ActionController::TestCase do
       @device.update_attributes(:alert_on_speed => false, :device_profile_id => nil)
 
       post :apply_profile, {
-        :devices => @device.id.to_s,
+        :apply_ids => @device.id.to_s,
         :profile_id => @profile.id.to_s
       }
 
@@ -249,7 +249,7 @@ describe "Devices Controller", ActionController::TestCase do
 
     specify "will clear the profile if no profile id specified" do
       post :apply_profile, {
-        :devices => @device.id.to_s
+        :apply_ids => @device.id.to_s
       }
 
       @device.reload
@@ -265,7 +265,7 @@ describe "Devices Controller", ActionController::TestCase do
 
     specify "adds the list of vehicles to the group" do
       post :apply_group, {
-        :devices => @device.id.to_s,
+        :apply_ids => @device.id.to_s,
         :group_id => @group.id.to_s,
         :group_name => ""
       }
@@ -282,7 +282,7 @@ describe "Devices Controller", ActionController::TestCase do
 
       Group.should.differ(:count).by(1) do
         post :apply_group, {
-          :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+          :apply_ids => [@device.id, d1.id, d2.id, d3.id].join(","),
           :group_id => @group.id.to_s,
           :group_name => "Testr"
         }
@@ -306,7 +306,7 @@ describe "Devices Controller", ActionController::TestCase do
       @group.save; @group.reload
 
       post :apply_group, {
-        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :apply_ids => [@device.id, d1.id, d2.id, d3.id].join(","),
         :group_id => @group.id.to_s,
         :group_name => ""
       }
@@ -329,7 +329,7 @@ describe "Devices Controller", ActionController::TestCase do
 
     specify "removes vehicles from the given group" do
       post :remove_group, {
-        :devices => @device.id.to_s,
+        :apply_ids => @device.id.to_s,
         :group_id => @group.id.to_s
       }
       should.redirect_to devices_path
@@ -348,7 +348,7 @@ describe "Devices Controller", ActionController::TestCase do
       @group.save; @group.reload
 
       post :remove_group, {
-        :devices => [@device.id, d1.id, d2.id, d3.id].join(","),
+        :apply_ids => [@device.id, d1.id, d2.id, d3.id].join(","),
         :group_id => @group.id.to_s
       }
 
