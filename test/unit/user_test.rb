@@ -14,6 +14,18 @@ describe "User", ActiveSupport::TestCase do
     specify "has many devices" do
       @user.devices.should.equal [devices(:quentin_device)]
     end
+    
+    specify "has many device groups" do
+      @user.device_groups << groups(:north)
+      @user.device_groups << groups(:south)
+      @user.reload.device_groups.should.equal [groups(:north), groups(:south)]
+      
+      # Device Groups can't contain non-device groups!
+      # Note: unfortunately, I think this DOES create an orphan record, it just
+      # doesn't show up in the list when model is reloaded.
+      @user.device_groups << groups(:west)
+      @user.reload.device_groups.should.equal [groups(:north), groups(:south)]
+    end
   end
   
   context "Validations" do
@@ -174,6 +186,24 @@ describe "User", ActiveSupport::TestCase do
     specify "has a shortcut for its zone object" do
       @user.time_zone = 'Eastern Time (US & Canada)'
       @user.zone.name.should.equal 'Eastern Time (US & Canada)'
+    end
+  end
+  
+  specify "allows device_group_ids=, but enforces account ownership and group type" do
+    @user.update_attributes(:device_group_ids => [])
+    @user.device_groups.should.be.empty
+    
+    # Wrong group type
+    should.raise(ActiveRecord::RecordNotFound) do
+      @user.update_attributes(:device_group_ids => [
+        groups(:north).id, groups(:south).id, groups(:west).id
+      ])
+    end
+    
+    # Wrong account
+    bad = accounts(:aaron).groups.of_devices.create!(:name => 'Aaron Group')
+    should.raise(ActiveRecord::RecordNotFound) do
+      @user.update_attributes(:device_group_ids => [bad.id])
     end
   end
 end

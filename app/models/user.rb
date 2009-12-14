@@ -3,6 +3,19 @@ class User < ActiveRecord::Base
   belongs_to :account
   has_many :devices, :include => :tracker
   
+  # This is a link from a User to their list of Device Groups, which controls
+  # which vehicles they are allowed to see.
+  #
+  # This is not the same as a list of "User Groups", which doesn't exist
+  # yet but will probably be added at some point.
+  has_and_belongs_to_many :device_groups,
+    :class_name => 'Group',
+    :join_table => :user_device_groups,
+    :association_foreign_key => 'group_id',
+    :conditions => {:of => 'Device'},
+    :order => 'name ASC',
+    :uniq => true
+  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
   
@@ -23,7 +36,8 @@ class User < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :login, :email, :password, :password_confirmation,
-    :account, :current_password, :roles, :name, :time_zone, :devices
+    :account, :current_password, :roles, :name, :time_zone, :devices,
+    :device_groups, :device_group_ids
   
   before_save :encrypt_password
   before_create :make_activation_code
@@ -32,6 +46,13 @@ class User < ActiveRecord::Base
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
   def device_ids
     Device.find_by_sql(["select d.id from devices d where user_id = ?", self.id]).map(&:id)
+  end
+  
+  # Allow device_group_ids=, but enforce account ownership and group type
+  def device_group_ids=(list)
+    self.device_groups = account.groups.of_devices.find(
+      list.reject {|a| a.blank?}
+    )
   end
   
   class Role

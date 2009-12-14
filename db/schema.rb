@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091211183402) do
+ActiveRecord::Schema.define(:version => 20091214150021) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -285,6 +285,11 @@ ActiveRecord::Schema.define(:version => 20091211183402) do
   end
 
   add_index "trips", ["device_id"], :name => "index_trips_on_device_id"
+
+  create_table "user_device_groups", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "group_id"
+  end
 
   create_table "users", :force => true do |t|
     t.integer  "account_id"
