@@ -6,6 +6,8 @@ if(typeof Devices == "undefined") {
 }
 
 Devices.Index = {
+  listView: null
+  ,
   init: function() {
     q('input.addVehicle').live('click', function() {
       q("#addDevice").dialog("open"); 
@@ -48,6 +50,8 @@ Devices.Index = {
       }
     });
 
+    Devices.Index.listView = new ListView(q("#devicesList"));
+
     new MassApply({
       select: q("#mass_apply"),
       mapping: {
@@ -56,7 +60,7 @@ Devices.Index = {
         'remove_group': '#removeFromGroupForm'
       },
       getSelection: function() {
-        return q('table input[name=devices]').fieldValue().join(',');
+        return Devices.Index.listView.getSelected();
       }
     });
   }
