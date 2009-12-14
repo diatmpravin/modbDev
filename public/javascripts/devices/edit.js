@@ -6,6 +6,10 @@ if(typeof Devices == "undefined") {
 }
 
 Devices.Edit = {
+  init: function() {
+    q('select.profile').change(Devices.Edit.setProfile);
+  }
+  ,
   /**
    * "Lock" the profile settings area and fill in the settings with an ajax
    * call. If the user has removed the profile, unlock the profile settings
@@ -44,6 +48,4 @@ Devices.Edit = {
   }
 };
 
-jQuery(function() {
-  q('select.profile').change(Devices.Edit.setProfile);
-});
+jQuery(Devices.Edit.init);

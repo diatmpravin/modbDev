@@ -1,4 +1,5 @@
 <% content_for :javascript do -%>
+  <%= javascript_include_tag "mass_apply" -%>
   <%= javascript_include_tag "devices/index" -%>
 <% end -%>
 
@@ -26,7 +27,7 @@
       <br/>
       <%= select_tag 'profile_id', '<option value="">None (Clear Profile)</option>' + 
         options_from_collection_for_select(current_account.device_profiles, :id, :name) %>
-      <%= hidden_field_tag 'devices', '' %>
+      <%= hidden_field_tag 'apply_ids', '' %>
       <%= submit_tag 'Apply' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>
     <% end -%>
@@ -38,7 +39,7 @@
       <br/>
       <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %> 
       or new: <%= text_field_tag "group_name" -%>
-      <%= hidden_field_tag 'devices', '' %>
+      <%= hidden_field_tag 'apply_ids', '' %>
       <div style='text-align: right'>
         <%= submit_tag 'Add' %>
         <%= button_tag 'Cancel', :class => 'cancel' %>
@@ -51,7 +52,7 @@
       <p>Remove each selected vehicle from a given group.</p>
       <br/>
       <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %>
-      <%= hidden_field_tag 'devices', '' %>
+      <%= hidden_field_tag 'apply_ids', '' %>
       <%= submit_tag 'Remove' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>
     <% end -%>
