@@ -2,11 +2,13 @@
   <%= javascript_include_tag "mass_apply" -%>
   <%= javascript_include_tag "list_view" -%>
   <%= javascript_include_tag "devices/index" -%>
+  <%= javascript_include_tag "reports/form" -%>
 <% end -%>
 
 <%= messages %>
 <div class="devices">
-  <div style="float:right">  
+  <div style="float:right">
+    <%= button_tag 'Run Report', :class => 'runReport' %>
     <%= select_tag 'mass_apply', options_for_select([
           ['Apply to Selected...', ''],
           ['Set Profile', 'profile'],
@@ -34,7 +36,7 @@
     <% end -%>
   </div>
 
-  <div id="addToGroupForm", class="massApplyForm">
+  <div id="addToGroupForm" class="massApplyForm">
     <% form_tag apply_group_devices_path do -%>
       <p>Add the selected vehicles to a group.</p>
       <br/>
@@ -48,7 +50,7 @@
     <% end -%>
   </div>
   
-  <div id="removeFromGroupForm", class="massApplyForm">
+  <div id="removeFromGroupForm" class="massApplyForm">
     <% form_tag remove_group_devices_path do -%>
       <p>Remove each selected vehicle from a given group.</p>
       <br/>
@@ -57,6 +59,10 @@
       <%= submit_tag 'Remove' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>
     <% end -%>
+  </div>
+  
+  <div id="runReportForm" class="massApplyForm reportSettings">
+    <%= render :partial => 'reports/form', :locals => {:report => Report.new(current_user)} %>
   </div>
   
   <div class="clear spacer"></div>

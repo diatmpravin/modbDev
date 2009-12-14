@@ -1,4 +1,14 @@
 module ReportsHelper
+  # TEMPORARY
+  REPORTS = {
+    0 => VehicleSummaryReport,
+    1 => DailySummaryReport,
+    2 => FuelEconomyReport,
+    3 => TripDetailReport,
+    4 => FuelSummaryReport
+  }.freeze unless defined?(REPORTS)
+  # TEMPORARY
+  
   def report_partial(report)
     report.class.name.underscore
   end
@@ -17,6 +27,10 @@ module ReportsHelper
   end
 
   def report_type_options
+    # TEMPORARY
+    @reports = REPORTS
+    # TEMPORARY
+    
     @@report_type_options ||= 
       @reports.map do |key, value|
         [value.name.titleize, key]

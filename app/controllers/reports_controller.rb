@@ -48,6 +48,18 @@ class ReportsController < ApplicationController
         @report.run
         render :text => @report.to_csv, :layout => false
       end
+      
+      with.json {
+        if @report.valid?
+          @report.run
+          render :json => {:status => 'success'}
+        else
+          render :json => {
+            :status => 'failure',
+            :html => render_to_string(:partial => 'form', :locals => {:report => @report})
+          }
+        end
+      }
     end
   end
   
