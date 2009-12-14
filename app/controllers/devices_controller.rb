@@ -8,6 +8,10 @@ class DevicesController < ApplicationController
     respond_to do |format|
       format.html {
         @device = Device.new
+
+        if request.xhr? && params[:page]
+          render :partial => "list", :locals => {:devices => @devices}
+        end
       }
       format.json {
         render :json => @devices.to_json(

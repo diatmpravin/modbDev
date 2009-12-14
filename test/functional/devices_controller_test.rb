@@ -18,6 +18,22 @@ describe "Devices Controller", ActionController::TestCase do
 
       assigns(:device).should.not.be.nil
     end
+
+    specify "handles paging" do
+      get :index, :page => 2
+      
+      template.should.be 'index'
+      assigns(:devices).length.should.be 0
+      assigns(:device).should.not.be.nil
+    end
+    
+    specify "xhr: renders new table view if page given" do
+      xhr :get, :index, :page => 2
+      
+      template.should.be '_list'
+      assigns(:devices).length.should.be 0
+      assigns(:device).should.not.be.nil
+    end
     
     specify "has a json view" do
       get :index, {
