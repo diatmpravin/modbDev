@@ -11,7 +11,7 @@ MassApply = function(opts) {
   this.getSelection = opts.getSelection || function() { };
 
   q(".massApplyForm input.cancel").click(function() { 
-    q(this).parents('.massApplyForm').slideUp('fast'); 
+    self.close();
   });
 
   // When a mass apply form is submitted, copy the selection list into the form
@@ -35,5 +35,13 @@ MassApply.prototype = {
     if(toOpen) {
       q(toOpen).slideDown('fast');
     }
+  }
+  ,
+  /**
+   * Close all apply forms and reset the drop down selection
+   */
+  close: function() {
+    q('.massApplyForm').slideUp('fast');
+    this.select.val('');
   }
 };
