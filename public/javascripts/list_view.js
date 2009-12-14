@@ -31,6 +31,8 @@ ListView = function(element) {
   // as to prevent browser caching from confusing people
   q("input[name=apply_to]").attr('checked', false);
 
+  q.blockUI.defaults.message = "<h1>Please wait ... <img src='/images/spinner.gif'/></h1>";
+
   this.rebuildHandlers();
 }
 
@@ -45,6 +47,8 @@ ListView.prototype = {
     q.ajax({
       type: "GET",
       url: link.attr("href"),
+      beforeSend: function() { self.table.block(); },
+      complete: function() { self.table.unblock(); },
       success: function(response) {
         self.element.html(response);
         self.rebuildHandlers();
