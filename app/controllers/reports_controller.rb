@@ -1,18 +1,8 @@
 class ReportsController < ApplicationController
   layout except_ajax('reports')
-
-  REPORTS = {
-    0 => VehicleSummaryReport,
-    1 => DailySummaryReport,
-    2 => FuelEconomyReport,
-    3 => TripDetailReport,
-    4 => FuelSummaryReport
-  }.freeze unless defined?(REPORTS)
   
   def index
-    @devices = current_user.devices.all
     @report = Report.new(current_user)
-    @reports = REPORTS
   end
   
   def create
@@ -23,8 +13,11 @@ class ReportsController < ApplicationController
     )
     
     # Get our report object
-    report_id = params[:report][:type].to_i
-    @report = REPORTS[report_id].new(current_user, params[:report])
+    report_type = params[:report][:type].to_i
+    @report = Report::REPORTS[report_type].new(current_user, params[:report])
+    
+    #@report = Report.of_type(report_type)
+    #@report = @report.new(current_user, params[:report])
     @report.validate
     
     respond_to do |with|

@@ -1,14 +1,4 @@
 module ReportsHelper
-  # TEMPORARY
-  REPORTS = {
-    0 => VehicleSummaryReport,
-    1 => DailySummaryReport,
-    2 => FuelEconomyReport,
-    3 => TripDetailReport,
-    4 => FuelSummaryReport
-  }.freeze unless defined?(REPORTS)
-  # TEMPORARY
-  
   def report_partial(report)
     report.class.name.underscore
   end
@@ -25,28 +15,24 @@ module ReportsHelper
   def average(report, col, rows)
     rows == 0 ? 0 : report.data.sum(col) / rows
   end
-
-  def report_type_options
-    # TEMPORARY
-    @reports = REPORTS
-    # TEMPORARY
-    
-    @@report_type_options ||= 
-      @reports.map do |key, value|
-        [value.name.titleize, key]
-      end.freeze
+  
+  def report_options
+    @@report_options ||= Report::REPORTS.enum_with_index.map {|clazz, i|
+      [clazz.name.titleize, i]
+    }.freeze
   end
-
-  def report_range_options
-    @@range_type_options ||= [
-      ['Today',      0],
-      ['Yesterday',  1],
-      ['This Week',  2],
-      ['Last Week',  3],
-      ['This Month', 4],
-      ['Last Month', 5],
-      ['This Year',  6],
-      ['Custom',     7]
+  
+  def range_options
+    @@range_options ||= [
+      ['Today',      Report::DateRange::TODAY],
+      ['Yesterday',  Report::DateRange::YESTERDAY],
+      ['This Week',  Report::DateRange::THIS_WEEK],
+      ['Last Week',  Report::DateRange::LAST_WEEK],
+      ['This Month', Report::DateRange::THIS_MONTH],
+      ['Last Month', Report::DateRange::LAST_MONTH],
+      ['This Year',  Report::DateRange::THIS_YEAR],
+      ['Custom',     Report::DateRange::CUSTOM]
     ].freeze
   end
+  
 end

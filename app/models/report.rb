@@ -2,7 +2,7 @@ require 'set'
 
 class Report
   attr_accessor :user, :type, :devices, :range, :errors, :data
-
+  
   def initialize(user, opts = {})
     @user      = user
     @devices   = opts[:devices] || user.device_ids
@@ -10,7 +10,16 @@ class Report
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})
   end
-
+  
+  REPORTS = [
+    VehicleSummaryReport,
+    DailySummaryReport,
+    FuelEconomyReport,
+    TripDetailReport,
+    FuelSummaryReport
+  ]
+  
+  
   # Get the title of the report
   def title
     raise "Reports must define a title"
@@ -54,32 +63,41 @@ class Report
 
   class DateRange
     attr_reader :type, :start, :end
-
+    
+    TODAY      = 0
+    YESTERDAY  = 1
+    THIS_WEEK  = 2
+    LAST_WEEK  = 3
+    THIS_MONTH = 4
+    LAST_MONTH = 5
+    THIS_YEAR  = 6
+    CUSTOM     = 7
+    
     def initialize(report, opts = {})
       @report = report
       @type = (opts[:type] || 0).to_i
 
       case @type
-      when 0 # Today
+      when TODAY
         @start = @end = today
-      when 1 # Yesterday
+      when YESTERDAY
         @start = @end = today - 1.day
-      when 2 # This Week
+      when THIS_WEEK
         @start = today.beginning_of_week
         @end = today.end_of_week
-      when 3 # Last Week
+      when LAST_WEEK
         @start = 1.week.ago(today).beginning_of_week
         @end = @start.end_of_week
-      when 4 # This Month
+      when THIS_MONTH
         @start = today.beginning_of_month
         @end = today.end_of_month
-      when 5 # Last Month
+      when LAST_MONTH
         @start = 1.month.ago(today).beginning_of_month
         @end = @start.end_of_month
-      when 6 # This Year
+      when THIS_YEAR
         @start = today.beginning_of_year
         @end = today.end_of_year
-      when 7 # Custom
+      when CUSTOM
         @start = Date.parse(opts[:start] || '')
         @end = Date.parse(opts[:end] || '')
 
