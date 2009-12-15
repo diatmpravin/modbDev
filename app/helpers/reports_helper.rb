@@ -17,7 +17,7 @@ module ReportsHelper
   end
   
   def report_options
-    @@report_options ||= Report::REPORTS.enum_with_index.map {|clazz, i|
+    @@report_options ||= Report.valid_reports.enum_with_index.map {|clazz, i|
       [clazz.name.titleize, i]
     }.freeze
   end

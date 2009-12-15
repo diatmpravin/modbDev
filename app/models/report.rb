@@ -3,6 +3,16 @@ require 'set'
 class Report
   attr_accessor :user, :type, :devices, :range, :errors, :data
   
+  def self.valid_reports
+    [
+      VehicleSummaryReport,
+      DailySummaryReport,
+      FuelEconomyReport,
+      TripDetailReport,
+      FuelSummaryReport
+    ].freeze
+  end
+  
   def initialize(user, opts = {})
     @user      = user
     @devices   = opts[:devices] || user.device_ids
@@ -10,15 +20,6 @@ class Report
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})
   end
-  
-  REPORTS = [
-    VehicleSummaryReport,
-    DailySummaryReport,
-    FuelEconomyReport,
-    TripDetailReport,
-    FuelSummaryReport
-  ]
-  
   
   # Get the title of the report
   def title
@@ -60,7 +61,7 @@ class Report
   def run
     raise "Report must define #run which should build the report"
   end
-
+  
   class DateRange
     attr_reader :type, :start, :end
     
