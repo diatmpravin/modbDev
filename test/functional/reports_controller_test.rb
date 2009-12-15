@@ -21,7 +21,8 @@ describe "Reports Controller", ActionController::TestCase do
             :start => '02/01/2009',
             :end => '02/10/2009'
           }
-        }
+        },
+        :format => 'json'
       }
     end
 
