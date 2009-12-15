@@ -7,6 +7,7 @@
   <%= javascript_include_tag 'filter' %>
 <% end -%>
 <% inside_layout 'maps' do -%>
+  <% @with_sidebar = true -%>
   <%= render :partial => "geofences/filter_form" %>
   <%= yield %>
 <% end -%>

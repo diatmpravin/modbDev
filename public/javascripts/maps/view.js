@@ -43,6 +43,11 @@ Map.View.prototype = {
   height: function() { return this._map.height(); }
   ,
   /**
+   * Force a best-fit calculation of the map
+   */
+  bestFit: function() { MoshiMap.moshiMap.bestFit(); }
+  ,
+  /**
    * Resize ourselves to fit the new window,
    * and inform MapQuest to also do resizing as necessary
    */
@@ -65,5 +70,16 @@ Map.View.prototype = {
         });
       });
     }
+  }
+  ,
+  /**
+   * Add a point to the map.
+   * Takes 
+   *  - position: lat / long
+   *  - options: 
+   *
+   */
+  addPoint: function(point, options) {
+    MoshiMap.moshiMap.addPoint(point, options);
   }
 }
