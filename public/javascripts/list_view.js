@@ -14,6 +14,8 @@ ListView = function(element) {
   this.allSelected = false;
   this.selected = {};
 
+  this.counterDiv = q("#selectedCount");
+
   q(".pagination a").live("click", function() {
     self.changePage(q(this));
     return false;
@@ -85,12 +87,32 @@ ListView.prototype = {
     }
   }
   ,
+  /**
+   * Update the counter, if one exists, with how many items are selected
+   */
+  updateCounter: function() {
+    if(this.counterDiv.length == 0) { return; }
+
+    var len = 0, key, msg = "";
+    for(key in this.selected) {
+      if(this.selected.hasOwnProperty(key)) len++;
+    }
+
+    if (len > 0) {
+      msg = len + " currently selected";
+    }
+
+    this.counterDiv.html(msg);
+  }
+  ,
   selectAllChecked: function(selectAll) {
     var self = this;
     q("input[name=apply_to]", this.table).each(function(idx, element) {
       q(element).attr("checked", q(selectAll).attr("checked"));
       self.markElement(q(element));
     });
+
+    this.updateCounter();
   }
   ,
  /**
@@ -100,6 +122,8 @@ ListView.prototype = {
   updateSelectAll: function() {
     var all = this.table.find("input[name=apply_to]");
     this.selectAll.attr("checked", all.length == all.filter(":checked").length);
+
+    this.updateCounter();
   }
   ,
   elementSelected: function(element) {

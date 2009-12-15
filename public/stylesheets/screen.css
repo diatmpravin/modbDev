@@ -1034,6 +1034,11 @@ td.extra, span.extra {
   padding-bottom: 1em;
 }
 
+#selectedCount {
+  padding-right: 1em;
+  font-size: 110%;
+}
+
 .massApplyForm {
   border:solid 1px #606060;
   clear:both;

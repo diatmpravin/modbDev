@@ -8,7 +8,11 @@
 <%= messages %>
 <div class="devices">
   <div style="float:right">
+    <span id="selectedCount">
+    </span>
+
     <%= button_tag 'Run Report', :class => 'runReport' %>
+
     <%= select_tag 'mass_apply', options_for_select([
           ['Apply to Selected...', ''],
           ['Set Profile', 'profile'],
