@@ -161,7 +161,14 @@ class DevicesController < ApplicationController
   # Given a list of device ids (comma seperated list)
   # show them on a live look map
   def live_look
-    @devices = current_account.devices.find(params[:device_ids].split(','))
+    ids = params[:device_ids].split(',')
+    if ids.empty?
+      flash[:warning] = "Please select at least one vehicle to view on the map."
+      redirect_to devices_path
+      return
+    end
+
+    @devices = current_account.devices.find(ids)
 
     respond_to do |format|
       format.html { 

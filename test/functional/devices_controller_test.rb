@@ -397,5 +397,10 @@ describe "Devices Controller", ActionController::TestCase do
       json[0]['device']['id'].should.equal @d1.id
     end
 
+    specify "return to list of no devices selected to view" do
+      get :live_look, :device_ids => ""
+      should.redirect_to devices_path
+    end
+
   end
 end
