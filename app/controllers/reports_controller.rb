@@ -46,6 +46,10 @@ class ReportsController < ApplicationController
         # the report has been run once already, so we know the values
         # are valid
         @report.run
+
+        # Force the proper content type
+        response.headers['Content-Type'] = 'text/csv'
+
         render :text => @report.to_csv, :layout => false
       end
     end
