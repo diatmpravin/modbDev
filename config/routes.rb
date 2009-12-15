@@ -91,6 +91,9 @@ ActionController::Routing::Routes.draw do |map|
 
   # Billing Tester
   map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'
+
+  # Static Pages
+  map.resource :contact
   
   # Phone Finder
   map.resource :phone_finder, :controller => 'phone_finder', :collection => {

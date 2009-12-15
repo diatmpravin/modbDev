@@ -1,0 +1,13 @@
+<%= messages %>
+
+<% form_for :contacts do |_| %>
+  <%= label_tag(:subject, 'Subject') %>
+  <%= text_field_tag(:subject, @subject, :id => 'contacts_subject') %>
+
+  <%= label_tag(:body, 'Body') %>
+  <%= text_area_tag(:body, @body, :id => 'contacts_body', :rows => 12)%>
+
+  <div class="buttons">
+    <button>Send</button>
+  </div>
+<% end -%>
