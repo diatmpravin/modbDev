@@ -156,6 +156,29 @@ class DevicesController < ApplicationController
 
     redirect_to devices_path
   end
+
+  # GET /devices/live_look?device_ids=
+  # Given a list of device ids (comma seperated list)
+  # show them on a live look map
+  def live_look
+    @devices = current_account.devices.find(params[:device_ids].split(','))
+
+    respond_to do |format|
+      format.html { 
+        render :layout => "maps"
+      }
+      format.json {
+        render :json => @devices.to_json(
+          :methods => [:color, :connected],
+          :include => {
+            :position => {
+              :methods => :time_of_day
+            }            
+          }
+        )
+      }
+    end
+  end
   
   protected
   def set_device

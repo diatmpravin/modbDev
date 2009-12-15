@@ -50,6 +50,8 @@ Devices.Index = {
       }
     });
 
+    q(".showOnMap").click(Devices.Index.showOnMap);
+
     Devices.Index.listView = new ListView(q("#devicesList"));
 
     new MassApply({
@@ -66,6 +68,17 @@ Devices.Index = {
       container: q('#runReportForm'),
       getSelection: function() { return Devices.Index.listView.getSelected(); }
     });
+  }
+  ,
+  /**
+   * Get the selected vehicles and show them on live look map
+   *
+   * TODO Make this more integrated into the page. Paths in
+   * javascript just aren't right.
+   */
+  showOnMap: function() {
+    var selected = Devices.Index.listView.getSelected();
+    location.href = "/devices/live_look?device_ids=" + selected;
   }
   ,
   /**
