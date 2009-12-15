@@ -18,33 +18,30 @@ class ReportsController < ApplicationController
     if @report.valid?
       @report.run
       
-      report_id = ActiveSupport::SecureRandom.hex(16)
-      @filename = "#{current_user.id}_#{report_id}"
+      @report_id = ActiveSupport::SecureRandom.hex(16)
       
-      # TODO: Cache HTML and CSV reports in Redis
-      File.open(File.join(Rails.root, 'tmp', 'cache', "#{@filename}.html"), 'w') do |f|
-        f.write(render_to_string(:action => 'report'))
-      end
-      File.open(File.join(Rails.root, 'tmp', 'cache', "#{@filename}.csv"), 'w') do |f|
-        f.write(render_to_string(:text => @report.to_csv, :layout => false))
-      end
+      redis = Redis.new
+      redis["#{@report_id}.html"] = render_to_string(:action => 'report')
+      redis["#{@report_id}.csv"] = render_to_string(:text => @report.to_csv, :layout => false)
       
-      render :json => {:status => 'success', :report_id => @filename}
+      render :json => {:status => 'success', :report_id => @report_id}
     else
       render :json => {:status => 'failure', :errors => @report.errors}
     end
   end
   
   def show
-    @filename = params[:id]
+    @report_id = params[:id]
     
-    # TODO: Pull HTML or CSV report out of Redis
+    redis = Redis.new
+    
     respond_to do |format|
       format.html {
-        render :file => File.join(Rails.root, 'tmp', 'cache', "#{@filename}.html"), :layout => 'report_blank'
+        @content = redis["#{@report_id}.html"]
+        render :action => 'show', :layout => 'report_blank'
       }
       format.csv {
-        render :file => File.join(Rails.root, 'tmp', 'cache', "#{@filename}.csv"), :layout => false
+        render :text => redis["#{@report_id}.csv"], :layout => false
       }
     end
   end

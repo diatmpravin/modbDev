@@ -24,6 +24,7 @@ Rails::Initializer.run do |config|
   config.gem 'eventmachine'
   config.gem 'newrelic_rpm'
   config.gem 'ruport', :version => '>= 1.6.0'
+  config.gem 'redis'
   #config.gem 'mini_magick'
   
   # Force use of 1.0.2 before ThinkingSphinx is pulled in 
