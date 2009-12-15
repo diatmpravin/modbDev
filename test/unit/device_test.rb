@@ -782,6 +782,8 @@ describe "Device", ActiveSupport::TestCase do
     end
 
     specify "can get a data aggregator for a given day, giving it the points that fit in the given day" do
+      user = users(:quentin)
+
       t = @device.trips.create
       l = t.legs.create
       l.points.create(
@@ -797,7 +799,7 @@ describe "Device", ActiveSupport::TestCase do
         :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST"), :miles => 300,
         :device => @device)
 
-      data = @device.data_for(Date.parse("01/01/2009"))
+      data = @device.data_for(Date.parse("01/01/2009"), user.zone)
       data.should.not.be.nil
       data.miles.should.equal 200
     end

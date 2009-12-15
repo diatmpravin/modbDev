@@ -98,7 +98,7 @@ class Device < ActiveRecord::Base
   end
   
   def zone
-    ActiveSupport::TimeZone[self[:time_zone]]
+    ActiveSupport::TimeZone[self[:time_zone] || "Eastern Time (US & Canada)"]
   end
   
   # Connected flag
@@ -111,9 +111,9 @@ class Device < ActiveRecord::Base
   end
 
   # Get a DataAggregate object containing trip and point data for a given day
-  def data_for(day = self.user.zone.today)
+  def data_for(day, zone)
     DataAggregator.new.tap do |da|
-      da.trips = self.trips.in_range(day, day, self.user.zone).all
+      da.trips = self.trips.in_range(day, day, zone).all
     end
   end
 
