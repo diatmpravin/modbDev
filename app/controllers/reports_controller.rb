@@ -1,10 +1,6 @@
 class ReportsController < ApplicationController
   layout except_ajax('reports')
   
-  def index
-    @report = Report.new(current_user)
-  end
-  
   def create
     params[:report] ||= {}
     
