@@ -17,20 +17,16 @@ class ReportsController < ApplicationController
   
   def create
     params[:report] ||= {}
-
-    # Devices come in as devices[id] = (1|0) so we need to get the actual device
-    # objects from the database.
-    (params[:devices] || []).map do |id, selected|
-      selected == '1' ? id : nil
-    end.compact.tap do |d|
-      params[:report][:devices] = current_user.devices.find(d)
-    end
-
+    
+    params[:report][:devices] = current_account.devices.find(
+      params[:apply_ids].split(',')
+    )
+    
     # Get our report object
     report_id = params[:report][:type].to_i
     @report = REPORTS[report_id].new(current_user, params[:report])
     @report.validate
-
+    
     respond_to do |with|
       with.html do
         if @report.valid?
@@ -52,13 +48,35 @@ class ReportsController < ApplicationController
       with.json {
         if @report.valid?
           @report.run
-          render :json => {:status => 'success'}
+          
+          report_id = "#{current_user.id}_#{ActiveSupport::SecureRandom.hex(16)}"
+          File.open(File.join(Rails.root, 'tmp', 'cache', "#{report_id}.html"), 'w') do |f|
+            f.write(render_to_string(:action => 'report'))
+          end
+          File.open(File.join(Rails.root, 'tmp', 'cache', "#{report_id}.csv"), 'w') do |f|
+            f.write(render_to_string(:text => @report.to_csv, :layout => false))
+          end
+          
+          render :json => {:status => 'success', :report_id => report_id}
         else
           render :json => {
             :status => 'failure',
             :html => render_to_string(:partial => 'form', :locals => {:report => @report})
           }
         end
+      }
+    end
+  end
+  
+  def show
+    report_id = params[:id]
+    
+    respond_to do |format|
+      format.html {
+        render :file => File.join(Rails.root, 'tmp', 'cache', "#{report_id}.html"), :layout => 'report_blank'
+      }
+      format.csv {
+        render :file => File.join(Rails.root, 'tmp', 'cache', "#{report_id}.csv"), :layout => false
       }
     end
   end
