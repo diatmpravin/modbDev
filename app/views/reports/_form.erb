@@ -1,4 +1,4 @@
-<% form_for report, :url => reports_path, :html => { :class => 'multiSubmit', :method => :post } do |f| -%>
+<% form_for :report, report, :url => reports_path, :html => { :class => 'multiSubmit', :method => :post } do |f| -%>
   <% report.errors.each do |error| -%>
     <div class="error"><%= error %></div>
   <% end -%>
