@@ -28,6 +28,20 @@ class Mailer < ActionMailer::Base
     subject "[Fleet #{Rails.env.capitalize}] Exception Thrown"
     body :exception => exception, :message => message
   end
+
+  def contact_us(user, sub, message)
+    recipients support_address
+    from user.email
+    body(:message => message, :user => user)
+    subject("Contact Page: #{sub}")
+  end
+
+  def contact_us_confirmation(user, sub, message)
+    recipients user.email
+    from support_address
+    body(:message => message)
+    subject("Contact Confirmation: #{sub}")
+  end
   
   private
   def support_address

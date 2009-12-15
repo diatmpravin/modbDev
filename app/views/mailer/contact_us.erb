@@ -1,0 +1,18 @@
+Account:
+<% if(@user.account) %>
+  id:     <%= @user.account.id %>
+  name:   <%= @user.account.name %>
+  number: <%= @user.account.number %>
+<% else -%>
+  NONE
+<% end -%>
+
+User:
+  id:       <%= @user.id %>
+  name:     <%= @user.name %>
+  email:    <%= @user.email %>
+  timezone: <%= @user.time_zone %>
+
+================================================================================
+
+<%= h(@message) %>

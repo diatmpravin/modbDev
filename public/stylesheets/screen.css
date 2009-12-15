@@ -51,7 +51,7 @@ ul label {
   float:none;
   padding:0;
 }
-input[type=text], select {
+input[type=text], select, textarea {
   border:1px solid #bbb;
   margin:1px 0;
   padding:1px 1px;
@@ -1227,7 +1227,6 @@ td.extra, span.extra {
   padding:2px;
 }
 
-
 .reportResult tr.total td {
   background-color: #BBB;
 }
@@ -1469,6 +1468,48 @@ ul.summary li.summary7 { background-position:0 -150px; }
   border:1px solid #DFDEDE;
   background:#f1f5fa;
   color:#393939;
+}
+
+/* Contacts page */
+#contacts #settingsContainer {
+  margin: auto;
+  width: 650px;
+}
+
+#contacts #settings label {
+  display: block;
+  float: none;
+}
+
+#contacts #settings #contacts_subject,
+#contacts #settings #contacts_body {
+  display: block;
+  float: none;
+  width: 100%;
+}
+
+#contacts #contacts_subject {
+  font-size: 14pt;
+}
+
+#contacts #contacts_body {
+  font-size: 12pt;
+  overflow: auto;
+}
+
+#contacts #settings .buttons {
+  margin: 6px 0 -6px 0;
+  padding: 0;
+  height: 24px;
+  float: none;
+  width: 100%;
+  text-align: right;
+}
+
+#contacts #settings .buttons button {
+  height: 24px;
+  padding: 0 2em;
+  margin: 0 -4px 0 0;
 }
 
 /* TODO: Needs serious cleanup and should possibly be in separate file, just like jScrollPane.css */
