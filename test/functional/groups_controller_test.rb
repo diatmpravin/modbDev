@@ -36,9 +36,9 @@ describe "GroupsController", ActionController::TestCase do
       set_filter Group, "get_groupin"
 
       Group.expects(:search).with(
-        "get_groupin", :conditions => {}, 
+        "get_groupin", :conditions => {},
         :page => nil, :per_page => 30,
-        :with => {:account_id => accounts(:quentin).id}, 
+        :with => {:account_id => accounts(:quentin).id},
         :mode => :extended
       ).returns(accounts(:quentin).groups)
 
@@ -118,10 +118,34 @@ describe "GroupsController", ActionController::TestCase do
     end
 
     specify "can remove a group" do
-      delete :destroy, :id => @group.id  
+      delete :destroy, :id => @group.id
       should.redirect_to groups_path
 
       assert !Group.exists?(@group.id)
+    end
+
+  end
+
+  context "Live Look" do
+    setup do
+      @group = groups(:north)
+    end
+
+    specify "gather up device ids for this group and forward to live look" do
+      d = devices(:quentin_device)
+      d2 = Device.generate!
+      @group.devices << d
+      @group.devices << d2
+
+      get :live_look, :id => @group.id
+      should.redirect_to live_look_devices_path(:device_ids => "#{d.id},#{d2.id}")
+    end
+
+    specify "if group is empty, redirect w/ message" do
+      get :live_look, :id => @group.id
+      should.redirect_to groups_path
+
+      flash[:warning].should.not.be.nil
     end
 
   end

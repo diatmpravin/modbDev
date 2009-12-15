@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
 
+  before_filter :set_group, :only => [:edit, :update, :live_look]
+
   layout except_ajax('groups')
 
   # GET /groups
@@ -26,13 +28,11 @@ class GroupsController < ApplicationController
   # GET /groups/:id/edit
   # Show the edit form for this group
   def edit
-    @group = current_account.groups.of_devices.find(params[:id])
   end
 
   # PUT /groups/:id
   # Update the given group
   def update
-    @group = current_account.groups.of_devices.find(params[:id])
     @group.update_attributes(params[:group])
     redirect_to groups_path
   end
@@ -42,6 +42,24 @@ class GroupsController < ApplicationController
   def destroy
     current_account.groups.of_devices.destroy(params[:id])
     redirect_to groups_path
+  end
+
+  # GET /groups/:id/live_look
+  # Show all vehicles in this group on live look
+  def live_look
+    ids = @group.device_ids
+    if ids.empty?
+      flash[:warning] = "Group must have at least one vehicle to view it in live look"
+      redirect_to groups_path
+    else
+      redirect_to live_look_devices_path(:device_ids => ids.join(","))
+    end
+  end
+
+  protected
+
+  def set_group
+    @group = current_account.groups.of_devices.find(params[:id])
   end
 
 end

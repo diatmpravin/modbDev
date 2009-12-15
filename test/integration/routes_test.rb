@@ -114,5 +114,6 @@ class RoutesTest < ActionController::IntegrationTest
 
   test "groups resource" do
     assert_equal "/groups", groups_path
+    assert_equal "/groups/3/live_look", live_look_group_path(3)
   end
 end

@@ -78,7 +78,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :filter
 
   # Groups
-  map.resources :groups
+  map.resources :groups, 
+    :member => {
+      :live_look => :get
+    }
   
   # Subscriptions
   map.resource :subscription, :controller => 'subscription',
