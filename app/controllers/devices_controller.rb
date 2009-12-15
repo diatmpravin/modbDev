@@ -169,6 +169,7 @@ class DevicesController < ApplicationController
     end
 
     @devices = current_account.devices.find(ids)
+    @device_ids = params[:device_ids]
 
     respond_to do |format|
       format.html { 
