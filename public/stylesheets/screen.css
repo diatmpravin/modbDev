@@ -1495,6 +1495,7 @@ ul.summary li.summary7 { background-position:0 -150px; }
 #contacts #contacts_body {
   font-size: 12pt;
   overflow: auto;
+  resize: vertical;
 }
 
 #contacts #settings .buttons {
