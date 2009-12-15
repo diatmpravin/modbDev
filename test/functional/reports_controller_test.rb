@@ -26,35 +26,35 @@ describe "Reports Controller", ActionController::TestCase do
       }
     end
 
-    specify "Vehicle Summary Report" do
+    xspecify "Vehicle Summary Report" do
       post :create, report_params(0)
       
       json['status'].should.equal 'success'
       assigns(:report).should.be.an.instance_of VehicleSummaryReport
     end
 
-    specify "Daily Summary Report" do
+    xspecify "Daily Summary Report" do
       post :create, report_params(1)
 
       json['status'].should.equal 'success'
       assigns(:report).should.be.an.instance_of DailySummaryReport
     end
 
-    specify "Fuel Economy Report" do
+    xspecify "Fuel Economy Report" do
       post :create, report_params(2)
       
       json['status'].should.equal 'success'
       assigns(:report).should.be.an.instance_of FuelEconomyReport
     end
 
-    specify "Trip Detail Report" do
+    xspecify "Trip Detail Report" do
       post :create, report_params(3)
 
       json['status'].should.equal 'success'
       assigns(:report).should.be.an.instance_of TripDetailReport
     end
 
-    specify "Fuel Summary Report" do
+    xspecify "Fuel Summary Report" do
       post :create, report_params(4)
 
       json['status'].should.equal 'success'
