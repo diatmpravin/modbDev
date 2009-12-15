@@ -1,41 +1,67 @@
 /**
  * Reports - Form
+ *
+ * Reports.Form is a component object instantiated by the page's main
+ * javascript. See devices/index.js for example use.
  */
 if (typeof Reports == 'undefined') {
   Reports = {};
 }
 
-Reports.Form = {
-  init: function() {
-    q('input.runReport').live('click', function() {
-      q('.massApplyForm').slideUp('fast');
-      q('#runReportForm').slideDown('fast');
-    });
+/**
+ * Create a new Reports.Form object. As currently written, should only be
+ * instantiated once per page.
+ *
+ * Options:
+ *   container - div or other HTML object containing the report form
+ *   getSelection - a function that returns an array of device ids
+ *
+ * Example:
+ *   new Reports.Form({
+ *     container: q('#runReportForm'),
+ *     getSelection: function() { return [1,2,3]; }
+ *   });
+ *
+ */
+Reports.Form = function(opts) {
+  var self = this;
   
-    q('#report_type').live('click', function() {
-      Reports.Form.showCurrentDescription();
-    });
-    
-    q('#report_range_type').live('click', function() {
-      if (q(this).val() == 7) {
-        q('#date_select').slideDown('fast');
-      } else {
-        q('#date_select').slideUp('fast');
-      }
-    });
-    
-    q('#report_range_start,#report_range_end').datepicker({
-      duration: 'fast',
-      maxDate: new Date(MoshiTime.serverTime),
-      constrainInput: true
-    });
-    
-    // Prevent normal submit of report form
-    q('#runReportForm input[type=submit]').live('click', Reports.Form.createReport);
-    
-    Reports.Form.showCurrentDescription();
-  }
-  ,
+  this.container = q(opts.form || '#runReportForm');
+  this.getSelection = opts.getSelection || function() { return []; };
+  
+  // Save a reference to this Reports.Form object in the form
+  this.container.find('form').data('report_form', this);
+  
+  q('input.runReport').live('click', function() {
+    q('.massApplyForm').slideUp('fast');
+    self.container.slideDown('fast');
+  });
+
+  q('#report_type').live('click', function() {
+    self.showCurrentDescription();
+  });
+  
+  q('#report_range_type').live('click', function() {
+    if (q(this).val() == 7) {
+      q('#date_select').slideDown('fast');
+    } else {
+      q('#date_select').slideUp('fast');
+    }
+  });
+  
+  q('#report_range_start,#report_range_end').datepicker({
+    duration: 'fast',
+    maxDate: new Date(MoshiTime.serverTime),
+    constrainInput: true
+  });
+  
+  // Prevent normal submit of report form
+  q('#' + this.container[0].id + ' input[type=submit]').live('click', this.createReport);
+  
+  this.showCurrentDescription();
+};
+
+Reports.Form.prototype = {
   /**
    * Display the description for the selected report type.
    */
@@ -50,6 +76,10 @@ Reports.Form = {
    */
   createReport: function() {
     var _form = q(this).closest('form');
+    var _report = _form.data('report_form');
+    
+    // Copy the selection list into the form
+    _form.find('input[name=apply_ids]').val(_report.getSelection());
     
     _form.ajaxSubmit({
       dataType: 'json',
@@ -59,8 +89,8 @@ Reports.Form = {
         if (json.status == 'success') {
           alert('Hooray!');
         } else {
-          q('#runReportForm').html(json.html);
-          Reports.Form.showCurrentDescription();
+          _report.container.html(json.html);
+          _report.showCurrentDescription();
         }
       }
     });
@@ -68,5 +98,3 @@ Reports.Form = {
     return false;
   }
 };
-
-jQuery(Reports.Form.init);

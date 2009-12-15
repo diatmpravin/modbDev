@@ -59,9 +59,12 @@ Devices.Index = {
         'add_group': '#addToGroupForm',
         'remove_group': '#removeFromGroupForm'
       },
-      getSelection: function() {
-        return Devices.Index.listView.getSelected();
-      }
+      getSelection: function() { return Devices.Index.listView.getSelected(); }
+    });
+    
+    new Reports.Form({
+      container: q('#runReportForm'),
+      getSelection: function() { return Devices.Index.listView.getSelected(); }
     });
   }
   ,
