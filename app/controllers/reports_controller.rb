@@ -23,36 +23,32 @@ class ReportsController < ApplicationController
       @report.run
       
       report_id = ActiveSupport::SecureRandom.hex(16)
-      filename = "#{current_user.id}_#{report_id}"
+      @filename = "#{current_user.id}_#{report_id}"
       
       # TODO: Cache HTML and CSV reports in Redis
-      File.open(File.join(Rails.root, 'tmp', 'cache', "#{filename}.html"), 'w') do |f|
+      File.open(File.join(Rails.root, 'tmp', 'cache', "#{@filename}.html"), 'w') do |f|
         f.write(render_to_string(:action => 'report'))
       end
-      File.open(File.join(Rails.root, 'tmp', 'cache', "#{filename}.csv"), 'w') do |f|
+      File.open(File.join(Rails.root, 'tmp', 'cache', "#{@filename}.csv"), 'w') do |f|
         f.write(render_to_string(:text => @report.to_csv, :layout => false))
       end
       
-      render :json => {:status => 'success', :report_id => report_id}
+      render :json => {:status => 'success', :report_id => @filename}
     else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:partial => 'form', :locals => {:report => @report})
-      }
+      render :json => {:status => 'failure', :errors => @report.errors}
     end
   end
   
   def show
-    report_id = params[:id]
-    filename = "#{current_user.id}_#{report_id}"
+    @filename = params[:id]
     
     # TODO: Pull HTML or CSV report out of Redis
     respond_to do |format|
       format.html {
-        render :file => File.join(Rails.root, 'tmp', 'cache', "#{filename}.html"), :layout => 'report_blank'
+        render :file => File.join(Rails.root, 'tmp', 'cache', "#{@filename}.html"), :layout => 'report_blank'
       }
       format.csv {
-        render :file => File.join(Rails.root, 'tmp', 'cache', "#{filename}.csv"), :layout => false
+        render :file => File.join(Rails.root, 'tmp', 'cache', "#{@filename}.csv"), :layout => false
       }
     end
   end

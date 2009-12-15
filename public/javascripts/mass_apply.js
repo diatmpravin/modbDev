@@ -10,7 +10,7 @@ MassApply = function(opts) {
   this.mapping = opts.mapping || {};
   this.getSelection = opts.getSelection || function() { };
 
-  q(".massApplyForm input.cancel").click(function() { 
+  q('.massApplyForm input.cancel').click(function() {
     self.close();
   });
 
@@ -41,7 +41,7 @@ MassApply.prototype = {
    * Close all apply forms and reset the drop down selection
    */
   close: function() {
-    q('.massApplyForm').slideUp('fast');
+    q('.massApplyForm').errors().slideUp('fast');
     this.select.val('');
   }
 };

@@ -80,6 +80,7 @@ Reports.Form.prototype = {
     
     // Copy the selection list into the form
     _form.find('input[name=apply_ids]').val(_report.getSelection());
+    _report.container.errors();
     
     _form.ajaxSubmit({
       dataType: 'json',
@@ -87,10 +88,9 @@ Reports.Form.prototype = {
       complete: function() { _form.find('.loading').hide(); },
       success: function(json) {
         if (json.status == 'success') {
-          alert('Hooray!');
+          location.href = '/reports/' + json.report_id + '.html';
         } else {
-          _report.container.html(json.html);
-          _report.showCurrentDescription();
+          _report.container.errors(json.errors);
         }
       }
     });
