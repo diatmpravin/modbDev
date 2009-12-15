@@ -16,15 +16,19 @@ LiveLook = {
     LiveLook.updatePath = "/devices/live_look?device_ids=" + q("#device_ids").val();
     LiveLook.devices = q("#device_ids").val().split(",");
 
-    LiveLook.updateDevices();
+    LiveLook.updateDevices(function() {
+      LiveLook.map.bestFit();
+    });
   }
   ,
   /**
    * Run json request for current position of tracking devices
    */
-  updateDevices: function() {
+  updateDevices: function(callback) {
     q.getJSON(LiveLook.updatePath, function(devices) {
       var device, options, i;
+
+      LiveLook.map.removePoints();
 
       for(i = 0; i < devices.length; i++) {
         device = devices[i].device;
@@ -44,8 +48,12 @@ LiveLook = {
           LiveLook.map.addPoint(device.position, options);
         }
       }
-      
-      LiveLook.map.bestFit();
+
+      if(q.isFunction(callback)) {
+        callback();
+      }
+
+      setTimeout(LiveLook.updateDevices, 60000);
     });
   }
 

@@ -82,4 +82,11 @@ Map.View.prototype = {
   addPoint: function(point, options) {
     MoshiMap.moshiMap.addPoint(point, options);
   }
+  ,
+  /**
+   * Remove all points from the map
+   */
+  removePoints: function() {
+    MoshiMap.moshiMap.clearPoints();
+  }
 }
