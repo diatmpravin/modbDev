@@ -18,7 +18,7 @@ describe "Reports Controller", ActionController::TestCase do
     
     def report_params(report_type)
       {
-        :apply_ids => [
+        :device_ids => [
           devices(:quentin_device).id
         ],
         :report => {
