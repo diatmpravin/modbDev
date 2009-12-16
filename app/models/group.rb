@@ -12,6 +12,8 @@
 # See Device for how to hook up the other side of this.
 #
 class Group < ActiveRecord::Base
+  acts_as_nested_set :scope => :account
+
   belongs_to :account
 
   ##
