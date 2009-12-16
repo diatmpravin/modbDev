@@ -21,7 +21,7 @@ class ReportsController < ApplicationController
       @report_id = ActiveSupport::SecureRandom.hex(16)
       
       redis = Redis.build
-      redis["#{@report_id}.html"] = render_to_string(:action => 'report')
+      redis["#{@report_id}.html"] = render_to_string(:action => 'report', :layout => 'report_blank')
       redis["#{@report_id}.csv"] = render_to_string(:text => @report.to_csv, :layout => false)
       
       # TODO: If necessary, a background worker will create the report
@@ -39,7 +39,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html {
         @content = redis["#{@report_id}.html"]
-        render :action => 'show', :layout => 'report_blank'
+        render :action => 'show', :layout => false
       }
       format.csv {
         render :text => redis["#{@report_id}.csv"], :layout => false
