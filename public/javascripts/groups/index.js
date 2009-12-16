@@ -25,6 +25,37 @@ Groups = {
       }
     });
 
+    q(".viewDetails").live('click', Groups.toggleDetails);
+  }
+  ,
+  /**
+   * View details of a given group
+   */
+  toggleDetails: function() {
+    var href = q(this).attr('href'), 
+        group = q(this).parent().parent().parent(),
+        details = group.find(".details"); 
+
+    if(group.find(".details:visible").length > 0) {
+      details.slideUp("fast");
+    } else {
+
+      group.find(".loading").show(); 
+
+      q.ajax({
+        type: 'GET',
+        url: href,
+        complete: function() {
+          group.find(".loading").hide();
+        },
+        success: function(body) {
+          details.html(body).slideDown("fast");
+        }
+      });
+
+    }
+
+    return false;
   }
   ,
   /**
@@ -38,9 +69,7 @@ Groups = {
     
     return false;
   }
-}
+};
 
 /* Initializer */
-jQuery(function() {
-  Groups.init();
-});
+jQuery(Groups.init);

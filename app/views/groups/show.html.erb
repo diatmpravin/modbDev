@@ -1,0 +1,7 @@
+<div class="groups">
+  <%= render :partial => "group", :collection => @group.children -%> 
+</div>
+
+<div class="links">
+  <%= render :partial => "devices/list", :locals => {:devices => @devices} -%>
+</div>

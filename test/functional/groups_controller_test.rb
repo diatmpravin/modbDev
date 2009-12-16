@@ -46,6 +46,23 @@ describe "GroupsController", ActionController::TestCase do
       template.should.be 'index'
     end
 
+  end
+
+  context "Show" do
+
+    setup do
+      @group = groups(:north)
+    end
+
+    specify "shows vehicles in the group" do
+      @group.devices << devices(:quentin_device)
+
+      xhr :get, :show, :id => groups(:north).id
+      template.should.be "show"
+
+      assigns(:group).should.equal groups(:north)
+      assigns(:devices).should.equal [devices(:quentin_device)]
+    end
 
   end
 
