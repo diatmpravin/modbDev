@@ -4,7 +4,7 @@
       <%= group.devices.count -%> vehicles in this group
     </div>
 
-    <h1><%= group.name -%></h1>
+    <h1><%= check_box_tag :apply_to, group.id, false, :id => "apply_to_#{group.id}" -%>&nbsp;&nbsp;<%= group.name -%></h1>
 
     <div class="actions">
       <%= link_to 'Live Look', live_look_group_path(group), :class => 'liveLook', :title => 'Live Look' %>

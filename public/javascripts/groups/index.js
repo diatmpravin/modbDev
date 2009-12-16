@@ -82,7 +82,7 @@ Groups = {
    * TODO: Replace with Jason's ListView component?
    */
   getSelected: function() {
-    return q('input[name=apply_to][checked=true]').fieldValue().join();
+    return q('input[name=apply_to]:checked').fieldValue().join();
   }
 };
 
