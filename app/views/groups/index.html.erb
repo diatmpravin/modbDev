@@ -1,4 +1,6 @@
 <% content_for :javascript do -%>
+  <%= javascript_include_tag 'list_view' -%>
+  <%= javascript_include_tag 'groups/index' -%>
   <%= javascript_include_tag 'reports/form' -%>
 <% end -%>
 
@@ -18,8 +20,8 @@
   
   <div class="clear spacer"></div>
 
-  <div id="groupsList">
-    <%= render :partial => "list", :locals => {:groups => @groups} -%>
+  <div id="groupsWrapper">
+    <%= render :partial => "group", :collection => @groups -%>
   </div>
 
 </div>

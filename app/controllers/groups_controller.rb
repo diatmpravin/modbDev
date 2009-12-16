@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
 
-  before_filter :set_group, :only => [:edit, :update, :live_look]
+  before_filter :set_group, :only => [:show, :edit, :update, :live_look]
 
   layout except_ajax('groups')
 
@@ -10,6 +10,12 @@ class GroupsController < ApplicationController
     @groups = search_on Group do
       current_account.groups.of_devices.paginate :page => params[:page], :per_page => 30
     end
+  end
+
+  # GET /groups/:id
+  # Show all vehicles in this gropu
+  def show
+    @devices = @group.devices.paginate :page => params[:page], :per_page => 30
   end
 
   # GET /groups/new

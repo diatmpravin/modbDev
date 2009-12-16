@@ -25,11 +25,43 @@ Groups = {
       }
     });
 
+    q(".viewDetails").live('click', Groups.toggleDetails);
+    
     new Reports.Form({
       container: '#runReportForm',
       deviceField: 'input[name=group_ids]',
       getSelection: function() { return Groups.getSelected(); }
     });
+  }
+  ,
+  /**
+   * View details of a given group
+   */
+  toggleDetails: function() {
+    var href = q(this).attr('href'), 
+        group = q(this).parent().parent().parent(),
+        details = group.find(".details"); 
+
+    if(group.find(".details:visible").length > 0) {
+      details.slideUp("fast");
+    } else {
+
+      group.find(".loading").show(); 
+
+      q.ajax({
+        type: 'GET',
+        url: href,
+        complete: function() {
+          group.find(".loading").hide();
+        },
+        success: function(body) {
+          details.html(body).slideDown("fast");
+        }
+      });
+
+    }
+
+    return false;
   }
   ,
   /**
@@ -47,14 +79,12 @@ Groups = {
   /**
    * Return a list of currently selected groups.
    *
-   * TODO: Replace with Jason's ListView construct?
+   * TODO: Replace with Jason's ListView component?
    */
   getSelected: function() {
     return q('input[name=apply_to][checked=true]').fieldValue().join();
   }
-}
+};
 
 /* Initializer */
-jQuery(function() {
-  Groups.init();
-});
+jQuery(Groups.init);
