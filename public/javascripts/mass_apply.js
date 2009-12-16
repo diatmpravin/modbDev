@@ -41,7 +41,7 @@ MassApply.prototype = {
    * Close all apply forms and reset the drop down selection
    */
   close: function() {
-    q('.massApplyForm').errors().slideUp('fast');
+    q('.massApplyForm').slideUp('fast');
     this.select.val('');
   }
 };

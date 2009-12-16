@@ -6,7 +6,7 @@
   <div class="col">
     <div class="field">
       <%= f.label :type %>
-      <%= f.select :type, vehicle_report_options %>
+      <%= f.select :type, group_report_options %>
     </div>
 
     <% f.fields_for :range, report.range do |f_r| -%>
@@ -23,7 +23,7 @@
       </div>
     <% end -%>
     
-    <%= hidden_field_tag 'device_ids', '' %>
+    <%= hidden_field_tag 'group_ids', '' %>
   </div>
 
   <div class="col description">

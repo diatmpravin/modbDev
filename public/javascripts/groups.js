@@ -25,6 +25,11 @@ Groups = {
       }
     });
 
+    new Reports.Form({
+      container: '#runReportForm',
+      deviceField: 'input[name=group_ids]',
+      getSelection: function() { return Groups.getSelected(); }
+    });
   }
   ,
   /**
@@ -37,6 +42,15 @@ Groups = {
     _this.find('form').submit();
     
     return false;
+  }
+  ,
+  /**
+   * Return a list of currently selected groups.
+   *
+   * TODO: Replace with Jason's ListView construct?
+   */
+  getSelected: function() {
+    return q('input[name=apply_to][checked=true]').fieldValue().join();
   }
 }
 

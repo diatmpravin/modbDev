@@ -1,5 +1,5 @@
 /**
- * Reports - Form
+ * Reports Form
  *
  * Reports.Form is a component object instantiated by the page's main
  * javascript. See devices/index.js for example use.
@@ -13,13 +13,14 @@ if (typeof Reports == 'undefined') {
  * instantiated once per page.
  *
  * Options:
- *   container - div or other HTML object containing the report form
- *   getSelection - a function that returns an array of device ids
- *   deviceField - a selector string defining which field will store device ids
+ *   container    selector string defining the form container
+ *   getSelection function that returns an array of device ids
+ *   deviceField  selector string defining which field within the form will
+ *                store device ids
  *
  * Example:
  *   new Reports.Form({
- *     container: q('#runReportForm'),
+ *     container: '#runReportForm',
  *     getSelection: function() { return [1,2,3]; },
  *     deviceField: 'input[name=apply_ids]'
  *   });
@@ -56,6 +57,10 @@ Reports.Form = function(opts) {
     duration: 'fast',
     maxDate: new Date(MoshiTime.serverTime),
     constrainInput: true
+  });
+  
+  q('#' + this.container[0].id + ' input.cancel').live('click', function() {
+    self.container.errors().slideUp('fast');
   });
   
   // Prevent normal submit of report form

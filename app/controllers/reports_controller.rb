@@ -5,9 +5,16 @@ class ReportsController < ApplicationController
     params[:report] ||= {}
     
     # Get our list of devices
-    params[:report][:devices] = current_account.devices.find(
-      params[:device_ids].split(',')
-    )
+    if params[:device_ids]
+      params[:report][:devices] = current_account.devices.find(
+        params[:device_ids].split(',')
+      )
+    elsif params[:group_ids]
+      params[:report][:devices] = current_account.devices.all(
+        :joins => :groups,
+        :conditions => {:groups => {:id => params[:group_ids].split(',')}}
+      )
+    end
     
     # Get our report object
     report_type = params[:report][:type].to_i

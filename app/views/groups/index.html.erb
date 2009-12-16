@@ -1,8 +1,21 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag 'reports/form' -%>
+<% end -%>
+
 <%= messages %>
 <div class="groups">
+  <div style="float:right">
+    <%= button_tag 'Run Report', :class => 'runReport' %>
+  </div>
+
   <div class="buttonsLeft">
     <%= button_to 'Add Group', new_group_path, :method => :get %>
   </div>
+  
+  <div id="runReportForm" class="massApplyForm reportSettings">
+    <%= render :partial => 'reports/group_form', :locals => {:report => Report.new(current_user)} %>
+  </div>
+  
   <div class="clear spacer"></div>
 
   <div id="groupsList">

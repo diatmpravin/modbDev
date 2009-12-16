@@ -16,11 +16,19 @@ module ReportsHelper
     rows == 0 ? 0 : report.data.sum(col) / rows
   end
   
-  def report_options
-    @@report_options ||= [
+  def vehicle_report_options
+    @@vehicle_report_options ||= [
       ['Vehicle Summary Report', Report::VEHICLE_SUMMARY_REPORT],
       ['Daily Summary Report', Report::DAILY_SUMMARY_REPORT],
       ['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
+      ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
+      ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
+    ].freeze
+  end
+  
+  def group_report_options
+    @@group_report_options ||= [
+      ['Vehicle Summary Report', Report::VEHICLE_SUMMARY_REPORT],
       ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
       ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
     ].freeze
