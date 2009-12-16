@@ -11,7 +11,7 @@ class ReportsController < ApplicationController
     
     # Get our report object
     report_type = params[:report][:type].to_i
-    @report = Report.valid_reports[report_type].new(current_user, params[:report])
+    @report = Report::REPORTS[report_type].new(current_user, params[:report])
     @report.validate
     
     # Return a JSON response
@@ -20,10 +20,11 @@ class ReportsController < ApplicationController
       
       @report_id = ActiveSupport::SecureRandom.hex(16)
       
-      redis = Redis.new
+      redis = Redis.build
       redis["#{@report_id}.html"] = render_to_string(:action => 'report')
       redis["#{@report_id}.csv"] = render_to_string(:text => @report.to_csv, :layout => false)
       
+      # TODO: If necessary, a background worker will create the report
       render :json => {:status => 'success', :report_id => @report_id}
     else
       render :json => {:status => 'failure', :errors => @report.errors}
@@ -33,7 +34,7 @@ class ReportsController < ApplicationController
   def show
     @report_id = params[:id]
     
-    redis = Redis.new
+    redis = Redis.build
     
     respond_to do |format|
       format.html {

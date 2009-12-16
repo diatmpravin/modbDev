@@ -12,7 +12,7 @@ describe "Report", ActiveSupport::TestCase do
         report = Report.new(@user, {
           :devices => @devices,
           :range => {
-            :type => 7,
+            :type => Report::DateRange::CUSTOM,
             :start => '02/10/2009',
             :end => '02/01/2009',
           }
@@ -26,7 +26,7 @@ describe "Report", ActiveSupport::TestCase do
         report = Report.new(@user, {
           :devices => @devices,
           :range => {
-            :type => 2
+            :type => Report::DateRange::THIS_WEEK
           }
         })
 
@@ -38,7 +38,7 @@ describe "Report", ActiveSupport::TestCase do
         report = Report.new(@user, {
           :devices => @devices,
           :range => {
-            :type => 4
+            :type => Report::DateRange::THIS_MONTH
           }
         })
 
@@ -50,7 +50,7 @@ describe "Report", ActiveSupport::TestCase do
         report = Report.new(@user, {
           :devices => @devices,
           :range => {
-            :type => 6
+            :type => Report::DateRange::THIS_YEAR
           }
         })
 
@@ -65,7 +65,7 @@ describe "Report", ActiveSupport::TestCase do
       report = VehicleSummaryReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009',
         }
@@ -81,7 +81,7 @@ describe "Report", ActiveSupport::TestCase do
       report = Report.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7
+          :type => Report::DateRange::CUSTOM
         }
       })
       
@@ -93,7 +93,7 @@ describe "Report", ActiveSupport::TestCase do
       report = VehicleSummaryReport.new(@user, {
         :devices => [],
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -110,7 +110,7 @@ describe "Report", ActiveSupport::TestCase do
       report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -133,7 +133,7 @@ describe "Report", ActiveSupport::TestCase do
       report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7
+          :type => Report::DateRange::CUSTOM
         }
       })
       report.validate
@@ -146,7 +146,7 @@ describe "Report", ActiveSupport::TestCase do
       report = DailySummaryReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => 'blargh',
           :end => '02/30/what'
         }
@@ -161,7 +161,7 @@ describe "Report", ActiveSupport::TestCase do
       report = DailySummaryReport.new(@user, {
         :devices => [],
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -178,7 +178,7 @@ describe "Report", ActiveSupport::TestCase do
       report = FuelEconomyReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -197,7 +197,7 @@ describe "Report", ActiveSupport::TestCase do
       report = FuelEconomyReport.new(@user, {
         :devices => [],
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -214,7 +214,7 @@ describe "Report", ActiveSupport::TestCase do
       report = TripDetailReport.new(@user, {
         :devices => @devices,
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }
@@ -231,7 +231,7 @@ describe "Report", ActiveSupport::TestCase do
       report = TripDetailReport.new(@user, {
         :devices => [],
         :range => {
-          :type => 7,
+          :type => Report::DateRange::CUSTOM,
           :start => '02/01/2009',
           :end => '02/10/2009'
         }

@@ -3,16 +3,6 @@ require 'set'
 class Report
   attr_accessor :user, :type, :devices, :range, :errors, :data
   
-  def self.valid_reports
-    [
-      VehicleSummaryReport,
-      DailySummaryReport,
-      FuelEconomyReport,
-      TripDetailReport,
-      FuelSummaryReport
-    ].freeze
-  end
-  
   def initialize(user, opts = {})
     @user      = user
     @devices   = opts[:devices] || user.device_ids
@@ -113,5 +103,26 @@ class Report
     def today
       @report.user.zone.today
     end
+  end
+end
+
+# Ensure the Report class is defined before referring to our subclasses.
+VehicleSummaryReport
+DailySummaryReport
+FuelEconomyReport
+TripDetailReport
+FuelSummaryReport
+
+class Report
+  REPORTS = [
+    VehicleSummaryReport,
+    DailySummaryReport,
+    FuelEconomyReport,
+    TripDetailReport,
+    FuelSummaryReport
+  ]
+  
+  REPORTS.each_with_index do |report, i|
+    const_set report.name.underscore.upcase, i
   end
 end

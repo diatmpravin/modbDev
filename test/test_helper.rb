@@ -55,6 +55,8 @@ class ActiveSupport::TestCase
   # Helper for JSON actions
   def json
     @_json ||= ActiveSupport::JSON.decode(response.body)
+  rescue StandardError
+    raise StandardError.new("Expected JSON response, got #{response.body.inspect} instead.")
   end
 
   # Take a query string and put a parsed hash in the session
