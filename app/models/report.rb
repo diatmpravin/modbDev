@@ -107,22 +107,16 @@ class Report
 end
 
 # Ensure the Report class is defined before referring to our subclasses.
-VehicleSummaryReport
-DailySummaryReport
-FuelEconomyReport
-TripDetailReport
-FuelSummaryReport
-
-class Report
-  REPORTS = [
-    VehicleSummaryReport,
-    DailySummaryReport,
-    FuelEconomyReport,
-    TripDetailReport,
-    FuelSummaryReport
-  ]
+[
+  VehicleSummaryReport,
+  DailySummaryReport,
+  FuelEconomyReport,
+  TripDetailReport,
+  FuelSummaryReport
+].tap do |reports|
+  Report::REPORTS = reports.freeze
   
-  REPORTS.each_with_index do |report, i|
-    const_set report.name.underscore.upcase, i
+  reports.each_with_index do |report, i|
+    Report.const_set report.name.underscore.upcase, i
   end
 end
