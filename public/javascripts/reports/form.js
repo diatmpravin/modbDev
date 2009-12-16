@@ -15,11 +15,13 @@ if (typeof Reports == 'undefined') {
  * Options:
  *   container - div or other HTML object containing the report form
  *   getSelection - a function that returns an array of device ids
+ *   deviceField - a selector string defining which field will store device ids
  *
  * Example:
  *   new Reports.Form({
  *     container: q('#runReportForm'),
- *     getSelection: function() { return [1,2,3]; }
+ *     getSelection: function() { return [1,2,3]; },
+ *     deviceField: 'input[name=apply_ids]'
  *   });
  *
  */
@@ -28,6 +30,7 @@ Reports.Form = function(opts) {
   
   this.container = q(opts.form || '#runReportForm');
   this.getSelection = opts.getSelection || function() { return []; };
+  this.deviceField = opts.deviceField || 'input[name=apply_ids]';
   
   // Save a reference to this Reports.Form object in the form
   this.container.find('form').data('report_form', this);
@@ -79,7 +82,7 @@ Reports.Form.prototype = {
     var _report = _form.data('report_form');
     
     // Copy the selection list into the form
-    _form.find('input[name=apply_ids]').val(_report.getSelection());
+    _form.find(_report.deviceField).val(_report.getSelection());
     _report.container.errors();
     
     _form.ajaxSubmit({
@@ -88,7 +91,7 @@ Reports.Form.prototype = {
       complete: function() { _form.find('.loading').hide(); },
       success: function(json) {
         if (json.status == 'success') {
-          location.href = '/reports/' + json.report_id + '.html';
+          window.open('/reports/' + json.report_id + '.html');
         } else {
           _report.container.errors(json.errors);
         }

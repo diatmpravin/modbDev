@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
     
     # Get our list of devices
     params[:report][:devices] = current_account.devices.find(
-      params[:apply_ids].split(',')
+      params[:device_ids].split(',')
     )
     
     # Get our report object

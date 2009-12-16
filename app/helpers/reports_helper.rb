@@ -17,9 +17,13 @@ module ReportsHelper
   end
   
   def report_options
-    @@report_options ||= Report.valid_reports.enum_with_index.map {|clazz, i|
-      [clazz.name.titleize, i]
-    }.freeze
+    @@report_options ||= [
+      ['Vehicle Summary Report', Report::VEHICLE_SUMMARY_REPORT],
+      ['Daily Summary Report', Report::DAILY_SUMMARY_REPORT],
+      ['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
+      ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
+      ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
+    ].freeze
   end
   
   def range_options

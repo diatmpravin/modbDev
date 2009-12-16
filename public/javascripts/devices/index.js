@@ -65,7 +65,8 @@ Devices.Index = {
     });
     
     new Reports.Form({
-      container: q('#runReportForm'),
+      container: '#runReportForm',
+      deviceField: 'input[name=device_ids]',
       getSelection: function() { return Devices.Index.listView.getSelected(); }
     });
   }
