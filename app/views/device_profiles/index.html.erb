@@ -3,7 +3,6 @@
 <% end -%>
 
 <%= messages %>
-
 <div class="buttonsLeft">
   <%= button_tag 'Add Profile', :class => 'addProfile', :onclick => "location.href = '#{new_device_profile_path}';" %>
 </div>
@@ -12,14 +11,14 @@
 <table class="data" style="width:100%">
   <thead>
     <tr>
-      <th class="checkbox"><%= check_box_tag :profiles_all, true, false %></th>
+      <!-- <th class="checkbox"><%= check_box_tag :profiles_all, true, false %></th> -->
       <th>Name</th>
       <th> </th>
     </tr>
   </thead>
   <% @device_profiles.each do |profile| -%>
     <tr class="<%=cycle('','odd')%>">
-      <td class="checkbox"><%= check_box_tag :profiles, profile.id, false, :id => dom_id(profile) %></td>
+      <!-- <td class="checkbox"><%= check_box_tag :profiles, profile.id, false, :id => dom_id(profile) %></td> -->
       <td><%= h(profile.name) %></td>
       <td class="buttons">
         <%= link_to 'Edit', edit_device_profile_path(profile), :class => 'edit', :title => 'Edit' %>
