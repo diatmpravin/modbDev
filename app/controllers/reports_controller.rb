@@ -31,7 +31,7 @@ class ReportsController < ApplicationController
       redis["#{@report_id}.html"] = render_to_string(:action => 'report', :layout => 'report_blank')
       redis["#{@report_id}.csv"] = render_to_string(:text => @report.to_csv, :layout => false)
       
-      # TODO: If necessary, a background worker will create the report
+      # TODO: If necessary, a background worker which will create the report
       render :json => {:status => 'success', :report_id => @report_id}
     else
       render :json => {:status => 'failure', :errors => @report.errors}
