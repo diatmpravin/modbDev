@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091216160854) do
+ActiveRecord::Schema.define(:version => 20091217152352) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -26,14 +26,6 @@ ActiveRecord::Schema.define(:version => 20091216160854) do
   end
 
   add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"
-
-  create_table "admin_users", :force => true do |t|
-    t.string   "login",            :limit => 50
-    t.string   "crypted_password", :limit => 40
-    t.string   "salt",             :limit => 40
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "alert_recipients", :force => true do |t|
     t.integer  "account_id"
