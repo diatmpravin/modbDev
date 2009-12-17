@@ -1038,12 +1038,8 @@ a.liveLook {
 #settings .standardInfo .field {
   padding-left:16px;
 }
-#settings .standardInfo .deleteOn {
-  padding-top: 1em;
-  display: none;
-}
-#settings .standardInfo .deleteOn .date {
-  font-weight: bold;
+#settings .standardInfo li {
+  list-style-type:none;
 }
 #settings .alertInfo {
   float:left;

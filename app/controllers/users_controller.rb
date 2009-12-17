@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :set_user, :only => [:edit, :update, :destroy, :show]
-  before_filter :set_users, :except => [:show, :destroy, :forgot_password, :reset_password]
+  before_filter :require_role, :except => [:forgot_password, :reset_password]
+  before_filter :new_user,     :only => [:new, :create]
+  before_filter :set_user,     :only => [:edit, :update, :destroy]
   before_filter :filter_roles, :only => [:create, :update]
   
   skip_before_filter :login_required, :only => [:forgot_password, :reset_password]
@@ -8,52 +9,40 @@ class UsersController < ApplicationController
   layout except_ajax('users')
   
   def index
-    @user = current_account.users.new
+    @users = current_account.users
   end
   
   def new
-    @user = current_account.users.new
   end
   
   def create
-    @user = current_account.users.build(params[:user].first)
-    @user.account = current_account
-    
+    @user.attributes = params[:user]
     @user.password = 'password'
     @user.password_confirmation = 'password'
     @user.activated_at = Time.now
     
     if @user.save
-      render :json => {:status => 'success'}
+      redirect_to :action => 'index'
     else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:action => 'new')
-      }
+      render :action => 'new'
     end
-  end
-  
-  def show
   end
   
   def edit
   end
   
   def update
-    if @user.update_attributes(params[:user][@user.id.to_s])
-      render :json => {:status => 'success'}
+    if @user.update_attributes(params[:user])
+      redirect_to :action => 'index'
     else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:action => 'edit')
-      }
+      render :action => 'edit'
     end
   end
   
   def destroy
     @user.destroy
     
-    render :json => {:status => 'success'}
+    redirect_to :action => 'index'
   end
   
   def forgot_password
@@ -106,16 +95,22 @@ class UsersController < ApplicationController
   end
   
   protected
+  def require_role
+    redirect_to root_path unless current_user.has_role?(User::Role::USERS)
+  end
+  
+  def new_user
+    @user = current_account.users.new
+  end
+  
   def set_user
     @user = current_account.users.find(params[:id])
   end
   
-  def set_users
-    @users = current_account.users
-  end
-  
+  # Prevent the current user from assigning roles they aren't allowed to
   def filter_roles
-    # Users cannot assign roles they do not have themselves
-    # TODO: Filter
+    if params[:user] && params[:user][:roles]
+      params[:user][:roles] = params[:user][:roles].map(&:to_i) & current_user.assignable_roles
+    end
   end
 end

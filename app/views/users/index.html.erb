@@ -1,5 +1,8 @@
-<%= messages %>
+<% content_for 'javascript' do -%>
+  <%= javascript_include_tag 'users/index' %>
+<% end -%>
 
+<%= messages %>
 <div class="users">
   <div class="buttonsLeft">
     <%= button_to 'Add User', new_user_path, :method => :get %>
@@ -13,6 +16,8 @@
 <div class="clear"></div>
 
 <div id="removeUser" class="dialog">
+  <% form_tag users_path, :method => :delete do -%>
+  <% end -%>
   <p>If you remove this user, they will be deleted permanently and will no longer have access to the site.</p>
   <p>If this user manages any users or vehicles, they will be "moved up" one level and managed by you.</p>
   <p>Are you sure you want to remove this user?</p>

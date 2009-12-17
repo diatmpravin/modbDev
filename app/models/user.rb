@@ -71,22 +71,31 @@ class User < ActiveRecord::Base
   def roles
     list = self[:roles] || 0
     
-    Role::ROLES.select {|r|
-      (list >> r) & 1 == 1
-    }
+    if (list >> Role::ADMIN) & 1 == 1
+      Role::ROLES
+    else
+      Role::ROLES.select {|r|
+        (list >> r) & 1 == 1
+      }
+    end
   end
   
-  def roles=(list)
-    a = Role::ROLES & list.map(&:to_i)
-    if a.include?(Role::ADMIN)
-      a = Role::ROLES
-    end
-    
-    self[:roles] = a.map {|r| 1 << r}.inject(&:|)
+  def roles=(array)
+    list = Role::ROLES & array.map(&:to_i)
+    self[:roles] = list.map {|r| 1 << r}.inject(&:|)
   end
   
   def has_role?(role)
     roles.include?(role)
+  end
+  
+  # These are the roles this user is allowed to assign to others
+  def assignable_roles
+    if account.reseller?
+      roles - [User::Role::ADMIN]
+    else
+      roles - [User::Role::ADMIN, User::Role::RESELLER]
+    end
   end
   
   # Is this user allowed to edit/modify another user on the Users page?

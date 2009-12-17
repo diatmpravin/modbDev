@@ -1,10 +1,6 @@
 module UsersHelper
   def role_options
-    list = current_user.roles.dup
-    list.delete(User::Role::ADMIN)
-    list.delete(User::Role::RESELLER) unless current_account.reseller?
-    
-    list
+    current_user.assignable_roles
   end
   
   def role_descriptions
