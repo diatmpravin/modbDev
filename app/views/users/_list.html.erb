@@ -1,0 +1,31 @@
+<% # paginate users %>
+
+<table class="data" style="width:100%">
+  <thead>
+    <tr>
+      <!-- <th class="checkbox"><%= check_box_tag :select_all, true, false %></th> -->
+      <th>Username</th>
+      <th>Name</th>
+      <th>Email Address</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <% users.each do |user| -%>
+    <tr class="<%=cycle('','odd')%>">
+      <!-- <td class="checkbox"><%= check_box_tag :apply_to, user.id, false, :id => "apply_to_#{user.id}" %></td> -->
+      <td><%= h(user.login) %></td>
+      <td><%= h(user.name) %></td>
+      <td><%= h(user.email) %></td>
+      <td class="buttons">
+        <% requires_role(User::Role::USERS) do -%>
+          <% if current_user.can_edit?(user) -%>
+            <%= link_to 'Edit', edit_user_path(user), :class => 'edit', :title => 'Edit' %>
+            <%= link_to 'Delete', user_path(user), :class => 'delete', :title => 'Remove' %>
+          <% end -%>
+        <% end -%>
+      </td>
+    </tr>
+  <% end -%>
+</table>
+
+<% # paginate users %>

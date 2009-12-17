@@ -32,8 +32,7 @@
   <p class="reminder">* Asterisks indicate required fields.</p>
   <div class="clear"></div>
   <div class="buttons">
-    <div class="loading"></div>
-    <%= button_tag 'Cancel', :class => 'cancel' %>
-    <%= button_tag 'Save Changes', :class => 'save' %>
+    <%= link_to 'Cancel', users_path, :class => 'simple' %>
+    <%= submit_tag 'Save', :class => 'button' %>
   </div>
 <% end -%>

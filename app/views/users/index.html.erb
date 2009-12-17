@@ -2,23 +2,12 @@
 
 <div class="users">
   <div class="buttonsLeft">
-    <%= button_tag 'Add User', :class => 'addUser' %>
+    <%= button_to 'Add User', new_user_path, :method => :get %>
   </div>
+  
   <div class="clear spacer"></div>
-
-  <div class="user" id="new">
-    <%= render :partial => 'form', :locals => {:user => @user} %>
-  </div>
-  <% @users.each do |user| -%>
-    <div class="<%= cycle('user', 'user odd') %>">
-      <div class="view">
-        <%= render :partial => 'user', :locals => {:user => user} %>
-      </div>
-      <div class="edit">
-        <%= render :partial => 'form', :locals => {:user => user} %>
-      </div>
-    </div>
-  <% end -%>
+  
+  <%= render :partial => 'list', :locals => {:users => @users} %>
 </div>
 
 <div class="clear"></div>

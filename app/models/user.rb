@@ -89,6 +89,11 @@ class User < ActiveRecord::Base
     roles.include?(role)
   end
   
+  # Is this user allowed to edit/modify another user on the Users page?
+  def can_edit?(user)
+    self != user
+  end
+  
   def zone
     ActiveSupport::TimeZone[self[:time_zone]]
   end

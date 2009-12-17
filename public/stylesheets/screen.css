@@ -1111,9 +1111,6 @@ td.extra, span.extra {
 #settings .users #new {
   display:none;
 }
-#settings .users .buttonsLeft {
-  padding-left:16px;
-}
 #settings .user {
   border-top:solid 1px #c6c6c6;
   border-bottom:solid 1px #c6c6c6;
