@@ -8,25 +8,25 @@
     <span class="logout"><%= link_to "Logout", logout_path %></span>
 
     <ul class="sf-menu">
-      <% requires_role(User::Role::REPORTS) do -%>
-        <li>
-          <%= link_to 'Reports', reports_path %>
-        </li>
-      <% end -%>
-        <li>
-          <%= link_to 'Profile', profile_path %>
-        </li>
+      <li>
+        <%= link_to 'Reports', reports_path %>
+      </li>
+      <li>
+        <%= link_to 'Profile', profile_path %>
+      </li>
       <li>
         <%= link_to 'Settings', '#' %>
         <ul>
-          <% requires_role(User::Role::FLEET) do -%>
-            <li><%= link_to 'Vehicles', devices_path %></li>
-            <li><%= link_to 'Landmarks', landmarks_path %></li>
-            <li><%= link_to 'Geofences', geofences_path %></li>
-          <% end -%>
+          <li><%= link_to 'Vehicles', devices_path %></li>
+          <li><%= link_to 'Landmarks', landmarks_path %></li>
+          <li><%= link_to 'Geofences', geofences_path %></li>
           <% requires_role(User::Role::USERS) do -%>
-            <li><%= link_to 'Phones', phones_path %></li>
             <li><%= link_to 'Users', users_path %></li>
+          <% end -%>
+          <% requires_role(User::Role::RESELLER) do -%>
+            <% if current_account.reseller? -%>
+              <li><%= link_to 'Trackers', trackers_path %></li>
+            <% end -%>
           <% end -%>
           <li><%= link_to 'Contact Us', contact_path %></li>
         </ul>

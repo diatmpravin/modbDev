@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :set_user, :only => [:edit, :update, :destroy, :show]
   before_filter :set_users, :except => [:show, :destroy, :forgot_password, :reset_password]
+  before_filter :filter_roles, :only => [:create, :update]
   
   skip_before_filter :login_required, :only => [:forgot_password, :reset_password]
   
@@ -111,5 +112,10 @@ class UsersController < ApplicationController
   
   def set_users
     @users = current_account.users
+  end
+  
+  def filter_roles
+    # Users cannot assign roles they do not have themselves
+    # TODO: Filter
   end
 end

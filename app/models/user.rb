@@ -57,42 +57,32 @@ class User < ActiveRecord::Base
   
   class Role
     # Defined as bit positions
-    SUPERUSER = 1
-    USERS = 2
-    FLEET = 3
-    DISPATCH = 4
-    REPORTS = 5
+    ADMIN    = 0
+    RESELLER = 1
+    BILLING  = 2
+    USERS    = 3
+    FLEET    = 4
     
-    LIST = [SUPERUSER, USERS, FLEET, DISPATCH, REPORTS]
-    
-    OPTIONS = {
-      SUPERUSER => 'Account Administrator',
-      USERS => 'User Management',
-      FLEET => 'Fleet Management',
-      DISPATCH => 'Dispatch',
-      REPORTS => 'Reports'
-    }
+    ROLES = [
+      ADMIN, RESELLER, BILLING, USERS, FLEET
+    ].freeze
   end
   
-  # Return the user's roles in an array.
-  # Return ALL roles if the user is a superuser.
   def roles
-    return [] unless self[:roles]
+    list = self[:roles] || 0
     
-    if (self[:roles] >> (Role::SUPERUSER-1)) & 0x01 == 0x01
-      Role::LIST
-    else
-      Role::LIST.select { |r|
-        (self[:roles] >> (r-1)) & 0x01 == 0x01
-      }
-    end
+    Role::ROLES.select {|r|
+      (list >> r) & 1 == 1
+    }
   end
   
-  def roles=(array)
-    array = array.map {|r| r.to_i}
-    self[:roles] = (Role::LIST & array).inject(0) { |mask, r|
-      mask |= (1 << (r-1))
-    }
+  def roles=(list)
+    a = Role::ROLES & list.map(&:to_i)
+    if a.include?(Role::ADMIN)
+      a = Role::ROLES
+    end
+    
+    self[:roles] = a.map {|r| 1 << r}.inject(&:|)
   end
   
   def has_role?(role)
