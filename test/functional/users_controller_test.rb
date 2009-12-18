@@ -94,7 +94,7 @@ describe "UsersController", ActionController::TestCase do
     end
   end
   
-  context "List users" do
+  context "Listing users" do
     setup do
       @user = users(:quentin)
       login_as :quentin
@@ -104,6 +104,180 @@ describe "UsersController", ActionController::TestCase do
       get :index
       
       template.should.equal 'index'
+    end
+    
+    specify "requires USER role" do
+      @user.update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      get :index
+      
+      should.redirect_to root_path
+    end
+  end
+  
+  context "Creating a user" do
+    setup do
+      @user = users(:quentin)
+      login_as :quentin
+    end
+    
+    specify "displays the new user form" do
+      get :new
+      
+      template.should.equal 'new'
+      assigns(:user).account.should.equal accounts(:quentin)
+    end
+    
+    specify "works" do
+      User.should.differ(:count).by(1) do
+        post :create, {
+          :user => {
+            :login => 'wumpus',
+            :name => 'Hunt The Wumpus',
+            :email => 'wumpus@wumpus.com'
+          }
+        }
+      end
+      
+      should.redirect_to :action => 'index'
+    end
+    
+    specify "handles errors gracefully" do
+      post :create, {
+        :user => {
+          :name => 'Hunt The Wumpus',
+          :email => 'wumpus@wumpus.com'
+        }
+      }
+      
+      template.should.equal 'new'
+      assigns(:user).errors.on(:login).should.equal "can't be blank"
+    end
+
+    specify "requires USER role" do
+      @user.update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      get :new
+      
+      should.redirect_to root_path
+      
+      post :create, {
+        :user => {
+          :name => 'Hunt The Wumpus',
+          :email => 'wumpus@wumpus.com'
+        }
+      }
+      
+      should.redirect_to root_path
+    end
+  end
+  
+  context "Viewing and editing a user" do
+    setup do
+      @user = users(:quentin)
+      login_as :quentin
+    end
+    
+    specify "displays user edit form" do
+      get :edit, {
+        :id => @user.id
+      }
+      
+      template.should.equal 'edit'
+      assigns(:user).should.equal @user
+    end
+    
+    specify "works" do
+      put :update, {
+        :id => @user.id,
+        :user => {
+          :name => 'Much Better Name'
+        }
+      }
+      
+      should.redirect_to :action => 'index'
+      @user.reload.name.should.equal 'Much Better Name'
+    end
+    
+    specify "handles errors gracefully" do
+      put :update, {
+        :id => @user.id,
+        :user => {
+          :login => ''
+        }
+      }
+      
+      template.should.equal 'edit'
+      assigns(:user).errors.on(:login).should.equal "can't be blank"
+    end
+    
+    specify "prevents access to other accounts" do
+      put :update, {
+        :id => users(:aaron).id,
+        :user => {
+          :name => 'Much Better Name'
+        }
+      }
+
+      should.redirect_to :action => 'index'
+    end
+    
+    specify "requires USER role" do
+      @user.update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      get :edit, {
+        :id => @user.id
+      }
+      
+      should.redirect_to root_path
+      
+      put :update, {
+        :id => @user.id,
+        :user => {
+          :name => 'Much Better Name'
+        }
+      }
+      
+      should.redirect_to root_path
+    end
+  end
+  
+  context "Removing a user" do
+    setup do
+      @user = users(:quentin)
+      login_as :quentin
+    end
+    
+    specify "works" do
+      User.should.differ(:count).by(-1) do
+        delete :destroy, {
+          :id => @user.id
+        }
+      end
+      
+      should.redirect_to :action => 'index'
+    end
+    
+    specify "prevents access to other accounts" do
+      User.should.differ(:count).by(0) do
+        delete :destroy, {
+          :id => users(:aaron).id
+        }
+      end
+    end
+    
+    specify "requires USER role" do
+      @user.update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      delete :destroy, {
+        :id => @user.id
+      }
+      
+      should.redirect_to root_path
     end
   end
 end
