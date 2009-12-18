@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
   def roles
     list = self[:roles] || 0
     
+    # If the user has ADMIN role, they have ALL roles
     if (list >> Role::ADMIN) & 1 == 1
       Role::ROLES
     else

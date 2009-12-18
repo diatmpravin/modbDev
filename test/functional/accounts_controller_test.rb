@@ -23,7 +23,7 @@ describe "Accounts Controller", ActionController::TestCase do
     end
     
     specify "redirects if user is not a superuser" do
-      users(:quentin).update_attribute(:roles, [User::Role::DISPATCH])
+      users(:quentin).update_attribute(:roles, [User::Role::FLEET])
       get :index
       
       should.redirect_to root_path

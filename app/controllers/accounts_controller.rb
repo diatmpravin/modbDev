@@ -23,7 +23,7 @@ class AccountsController < ApplicationController
   
   def require_role
     # Is it better to have all these guys return 403 Forbidden?
-    redirect_to root_path unless current_user.has_role?(User::Role::SUPERUSER)
+    redirect_to root_path unless current_user.has_role?(User::Role::RESELLER)
   end
   
   def require_password

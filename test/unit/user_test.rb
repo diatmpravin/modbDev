@@ -206,5 +206,50 @@ describe "User", ActiveSupport::TestCase do
       @user.update_attributes(:device_group_ids => [bad.id])
     end
   end
+  
+  context "User Roles" do
+    specify "can assign and access user roles as an array" do
+      @user.roles = [User::Role::USERS, User::Role::FLEET]
+      @user.roles.should.equal [User::Role::USERS, User::Role::FLEET].sort
+    
+      @user.update_attributes(:roles => [User::Role::USERS, User::Role::FLEET])
+      @user.reload.roles.should.equal [User::Role::USERS, User::Role::FLEET].sort
+    end
+    
+    specify "if a user has ADMIN role, they have ALL roles" do
+      @user.roles = [User::Role::ADMIN]
+      
+      assert @user.roles.include?(User::Role::ADMIN)
+      assert @user.roles.include?(User::Role::RESELLER)
+      assert @user.roles.include?(User::Role::BILLING)
+      assert @user.roles.include?(User::Role::USERS)
+      assert @user.roles.include?(User::Role::FLEET)
+      
+      assert @user.has_role?(User::Role::ADMIN)
+      assert @user.has_role?(User::Role::RESELLER)
+      assert @user.has_role?(User::Role::BILLING)
+      assert @user.has_role?(User::Role::USERS)
+      assert @user.has_role?(User::Role::FLEET)
+    end
+    
+    specify "a user's assignble roles should never include admin" do
+      @user.roles = [User::Role::ADMIN]
+      
+      assert !@user.assignable_roles.include?(User::Role::ADMIN)
+      assert @user.assignable_roles.include?(User::Role::FLEET)
+    end
+    
+    specify "a user's assignable roles should include reseller ONLY if account is a reseller" do
+      @user.roles = [User::Role::ADMIN]
+      assert @user.assignable_roles.include?(User::Role::RESELLER)
+      
+      @account.update_attribute(:reseller, false)
+      assert !@user.reload.assignable_roles.include?(User::Role::RESELLER)
+    end
+  end
+  
+  specify "a user can not edit him/herself" do
+    assert !@user.can_edit?(@user)
+  end
 end
 
