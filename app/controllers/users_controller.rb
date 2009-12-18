@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :require_role, :except => [:forgot_password, :reset_password]
   before_filter :new_user,     :only => [:new, :create]
   before_filter :set_user,     :only => [:edit, :update, :destroy]
+  before_filter :set_users,    :only => :index
   before_filter :filter_roles, :only => [:create, :update]
   
   skip_before_filter :login_required, :only => [:forgot_password, :reset_password]
@@ -9,7 +10,6 @@ class UsersController < ApplicationController
   layout except_ajax('users')
   
   def index
-    @users = current_account.users
   end
   
   def new
@@ -105,6 +105,12 @@ class UsersController < ApplicationController
   
   def set_user
     @user = current_account.users.find(params[:id])
+  end
+  
+  def set_users
+    @users = search_on User do
+      current_account.users.paginate :page => params[:page], :per_page => 30
+    end
   end
   
   # Prevent the current user from assigning roles they aren't allowed to

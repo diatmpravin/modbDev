@@ -16,6 +16,11 @@ class User < ActiveRecord::Base
     :order => 'name ASC',
     :uniq => true
   
+  ##
+  # Concerns
+  ##
+  concerned_with :sphinx  
+  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
   
@@ -28,8 +33,10 @@ class User < ActiveRecord::Base
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
-  validates_length_of       :login,    :within => 3..30
-  validates_length_of       :email,    :within => 3..50
+  validates_length_of       :login,    :within => 3..30,
+    :allow_nil => true, :allow_blank => true
+  validates_length_of       :email,    :within => 3..50,
+    :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :login, :case_sensitive => false, :scope => :account_id
   validate_on_update :current_password_matches
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
