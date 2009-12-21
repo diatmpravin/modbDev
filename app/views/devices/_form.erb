@@ -19,11 +19,11 @@
     
     <div class="field">
       <%= f.label :vin_number, 'VIN Number' %>
-      <%= f.text_field :vin_number %>
+      <%= f.text_field :vin_number, :class => "vinNumber" %>
       <%= error_message_on device, :vin_number, :prepend_text => '* VIN Number ' %>
     </div>
 
-    <div class="field">
+    <div class="field lockVIN">
       <label></label>
       <%= f.check_box :lock_vin -%> <%= f.label :lock_vin, "Lock VIN?", :class => "lockVin" -%>
     </div>

@@ -8,6 +8,19 @@ if(typeof Devices == "undefined") {
 Devices.Edit = {
   init: function() {
     q('select.profile').change(Devices.Edit.setProfile);
+
+    q('input.vinNumber').change(Devices.Edit.updateVIN).change();
+  }
+  ,
+  /**
+   * Show / hide the Lock VIN field if there's something in the vin text field
+   */
+  updateVIN: function() {
+    if(q(this).val() == "") {
+      q(".lockVIN").hide().find("input").attr('checked', false);
+    } else {
+      q(".lockVIN").show();
+    }
   }
   ,
   /**
