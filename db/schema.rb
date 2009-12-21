@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091221144322) do
+ActiveRecord::Schema.define(:version => 20091221154934) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -281,11 +281,6 @@ ActiveRecord::Schema.define(:version => 20091221144322) do
 
   add_index "trips", ["device_id"], :name => "index_trips_on_device_id"
 
-  create_table "user_device_groups", :id => false, :force => true do |t|
-    t.integer "user_id"
-    t.integer "group_id"
-  end
-
   create_table "users", :force => true do |t|
     t.integer  "account_id"
     t.string   "login",                     :limit => 30
@@ -303,6 +298,7 @@ ActiveRecord::Schema.define(:version => 20091221144322) do
     t.datetime "remember_token_expires_at"
     t.string   "password_reset_code",       :limit => 48
     t.boolean  "delta",                                   :default => true
+    t.integer  "device_group_id"
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"

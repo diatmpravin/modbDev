@@ -15,16 +15,9 @@ describe "User", ActiveSupport::TestCase do
       @user.devices.should.equal [devices(:quentin_device)]
     end
     
-    specify "has many device groups" do
-      @user.device_groups << groups(:north)
-      @user.device_groups << groups(:south)
-      @user.reload.device_groups.should.equal [groups(:north), groups(:south)]
-      
-      # Device Groups can't contain non-device groups!
-      # Note: unfortunately, I think this DOES create an orphan record, it just
-      # doesn't show up in the list when model is reloaded.
-      @user.device_groups << groups(:west)
-      @user.reload.device_groups.should.equal [groups(:north), groups(:south)]
+    specify "belongs to a device group" do
+      @user.update_attributes(:device_group => groups(:north))
+      @user.reload.device_group.should.equal groups(:north)
     end
   end
   
@@ -189,21 +182,18 @@ describe "User", ActiveSupport::TestCase do
     end
   end
   
-  specify "allows device_group_ids=, but enforces account ownership and group type" do
-    @user.update_attributes(:device_group_ids => [])
-    @user.device_groups.should.be.empty
+  specify "allows device_group_id=, but enforces account ownership and group type" do
+    @user.update_attributes(:device_group_id => groups(:north).id)
     
     # Wrong group type
     should.raise(ActiveRecord::RecordNotFound) do
-      @user.update_attributes(:device_group_ids => [
-        groups(:north).id, groups(:south).id, groups(:west).id
-      ])
+      @user.update_attributes(:device_group_id => groups(:west).id)
     end
     
     # Wrong account
     bad = accounts(:aaron).groups.of_devices.create!(:name => 'Aaron Group')
     should.raise(ActiveRecord::RecordNotFound) do
-      @user.update_attributes(:device_group_ids => [bad.id])
+      @user.update_attributes(:device_group_id => bad.id)
     end
   end
   

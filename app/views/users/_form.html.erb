@@ -22,7 +22,16 @@
       <%= error_message_on user, :time_zone, :prepend_text => '* Time zone ' %>
     </div>
     
+    <h3>Vehicle Group</h3>
+    <p>Choose a vehicle group below to restrict this user's access to that group and its subgroups.</p>
+    <div class="field">
+      <%= f.label :device_group_id, 'Group' %>
+      <%= f.collection_select :device_group_id, current_account.groups, :id, :name, :prompt => 'None' %>
+      <%= error_message_on user, :device_group_id, :prepend_text => '* Vehicle group ' %>
+    </div>
+    
     <h3>User Roles</h3>
+    <p>Check the boxes below to assign additional roles to this user.</p>
     <ul>
       <% role_options.each do |role| -%>
         <li>
@@ -33,7 +42,6 @@
       <% end -%>
     </ul>
     
-    <p class="reminder">* Asterisks indicate required fields.</p>
   </div>
   
   <div class="clear"></div>
