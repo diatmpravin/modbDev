@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091217152352) do
+ActiveRecord::Schema.define(:version => 20091221144322) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(:version => 20091217152352) do
     t.string   "remember_token",            :limit => 40
     t.datetime "remember_token_expires_at"
     t.string   "password_reset_code",       :limit => 48
+    t.boolean  "delta",                                   :default => true
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"

@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   ##
   # Concerns
   ##
-  concerned_with :sphinx  
+  concerned_with :sphinx
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password
