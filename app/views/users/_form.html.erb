@@ -26,7 +26,7 @@
     <p>Choose a vehicle group below to restrict this user's access to that group and its subgroups.</p>
     <div class="field">
       <%= f.label :device_group_id, 'Group' %>
-      <%= f.collection_select :device_group_id, current_account.groups, :id, :name, :prompt => 'None' %>
+      <%= f.collection_select :device_group_id, current_account.groups, :id, :name, :include_blank => 'None' %>
       <%= error_message_on user, :device_group_id, :prepend_text => '* Vehicle group ' %>
     </div>
     

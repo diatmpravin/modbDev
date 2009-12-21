@@ -107,8 +107,19 @@ class User < ActiveRecord::Base
   end
   
   # Is this user allowed to edit/modify another user on the Users page?
-  def can_edit?(user)
-    self != user
+  # Is this user allowed to edit/modify another vehicle on the Vehicles page?
+  def can_edit?(object)
+    if object.is_a?(User)
+      self != object
+    elsif object.is_a?(Device)
+      device_group.nil? ||
+        device_group.self_and_descendants.of_devices.all(
+          :joins => :devices,
+          :conditions => {:devices => {:id => object.id}}
+        ).any?
+    else
+      true
+    end
   end
   
   def zone

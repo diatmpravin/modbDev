@@ -1,5 +1,6 @@
 class TrackersController < ApplicationController
-  before_filter :set_tracker, :only => [:edit, :update, :destroy, :get_info, :configure]
+  before_filter :require_role
+  before_filter :set_tracker,  :only => [:edit, :update, :destroy, :get_info, :configure]
   
   layout except_ajax('trackers')
   
@@ -62,6 +63,11 @@ class TrackersController < ApplicationController
   end
   
   protected
+  def require_role
+    redirect_to root_path unless current_user.has_role?(User::Role::RESELLER) &&
+      current_account.reseller?
+  end
+  
   def set_tracker
     @tracker = Tracker.find(params[:id])
   end

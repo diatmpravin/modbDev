@@ -4,6 +4,7 @@ describe "Devices Controller", ActionController::TestCase do
   use_controller DevicesController
   
   setup do
+    users(:quentin).update_attributes(:roles => [User::Role::FLEET])
     login_as :quentin
     @account = accounts(:quentin)
   end
@@ -158,6 +159,21 @@ describe "Devices Controller", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['error'].should.include("Name can't be blank")
     end
+    
+    specify "requires FLEET role" do
+      users(:quentin).update_attributes(:roles => [])
+      login_as :quentin
+      
+      Device.should.differ(:count).by(0) do
+        xhr :post, :create, {
+          :name => 'Mine',
+          :imei => '923456789012345',
+          :imei_confirmation => '923456789012345'
+        }
+      end
+      
+      should.redirect_to root_path
+    end
   end
   
   context "Editing devices" do
@@ -205,6 +221,23 @@ describe "Devices Controller", ActionController::TestCase do
       assigns(:device).name.should.equal "I'm a name that's 31 characters"
       assigns(:device).errors.on(:name).should.equal "is too long (maximum is 30 characters)"
     end
+    
+    specify "requires FLEET role" do
+      users(:quentin).update_attributes(:roles => [])
+      login_as :quentin
+      
+      post :update, {
+        :id => @device.id,
+        :device => {
+          @device.id.to_s => {
+            :name => 'Updated name',
+            :rpm_threshold => 3017
+          }
+        }
+      }
+      
+      should.redirect_to root_path
+    end    
   end
   
   context "Destroying devices" do
@@ -222,6 +255,19 @@ describe "Devices Controller", ActionController::TestCase do
       should.redirect_to :action => 'index'
       @account.reload.devices.should.be.empty
     end
+
+    specify "requires FLEET role" do
+      users(:quentin).update_attributes(:roles => [])
+      login_as :quentin
+    
+      Device.should.differ(:count).by(0) do
+        post :destroy, {
+          :id => @device.id
+        }
+      end
+      
+      should.redirect_to root_path
+    end    
   end
   
   context "Getting device's current position" do
