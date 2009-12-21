@@ -596,11 +596,28 @@ describe "Device", ActiveSupport::TestCase do
     context "VIN Mismatch Alerts" do
       setup do
         @device.update_attribute(:vin_number, '1111')
+        @device.update_attribute(:lock_vin, true)
         Mailer.deliveries.clear
+      end
+
+      specify "nothing set if lock_vin isn't set" do
+        @device.update_attribute(:lock_vin, false)
+
+        # Event::RESET
+        @device.process(@example_location.merge(:event => '6015', :vin => '2222'))
+        @device.vin_number.should.equal '2222'
+
+        # Normal event
+        @device.process(@example_location.merge(:event => '4001', :vin => '2233'))
+        @device.vin_number.should.equal '2233'
+
+        Mailer.deliveries.length.should.equal 0
+        @device.points.last.events.count.should.equal 0
       end
       
       specify "sends alerts if vin number does not match" do
         @device.process(@example_location.merge(:event => '6015', :vin => '2222'))
+        @device.vin_number.should.equal '1111'
         
         Mailer.deliveries.length.should.equal 1
         Mailer.deliveries.first.body.should =~ /VIN Mismatch/
