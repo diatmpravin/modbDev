@@ -16,6 +16,15 @@ describe "Trackers Controller", ActionController::TestCase do
       template.should.be 'index'
       assigns(:trackers).length.should.be 2
     end
+    
+    specify "requires RESELLER role" do
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      get :index
+      
+      should.redirect_to root_path
+    end
   end
   
   context "Creating trackers" do
@@ -52,6 +61,22 @@ describe "Trackers Controller", ActionController::TestCase do
       template.should.be 'new'
       assigns(:tracker).errors.on(:imei_number).should.equal 'must be 15 digits'
     end
+    
+    specify "requires RESELLER role" do
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      Tracker.should.differ(:count).by(0) do
+        post :create, {
+          :tracker => {
+            :imei_number => '123451234554321',
+            :sim_number => '10101010101020202020'
+          }
+        }
+      end
+      
+      should.redirect_to root_path
+    end
   end
   
   context "Editing trackers" do
@@ -87,6 +112,20 @@ describe "Trackers Controller", ActionController::TestCase do
       template.should.be 'edit'
       assigns(:tracker).errors.on(:imei_number).should.equal 'must be 15 digits'
     end
+
+    specify "requires RESELLER role" do
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      post :update, {
+        :id => @tracker.id,
+        :tracker => {
+          :imei_number => '178923234567928'
+        }
+      }
+      
+      should.redirect_to root_path
+    end
   end
   
   context "Destroying trackers" do
@@ -99,6 +138,19 @@ describe "Trackers Controller", ActionController::TestCase do
       
       should.redirect_to :action => 'index'
       Tracker.find_by_id(@tracker.id).should.be.nil
+    end
+    
+    specify "requires RESELLER role" do
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
+      login_as :quentin
+      
+      Tracker.should.differ(:count).by(0) do
+        post :destroy, {
+          :id => @tracker.id
+        }
+      end
+      
+      should.redirect_to root_path
     end
   end
 end
