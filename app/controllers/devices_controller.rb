@@ -1,8 +1,9 @@
 class DevicesController < ApplicationController
-  before_filter :require_role, :only => [:create, :update, :destroy,
-                                         :apply_profile, :apply_group, :remove_group]
-  before_filter :set_device,   :only => [:edit, :update, :destroy, :show, :position]
-  before_filter :set_devices,  :only => [:index]
+  before_filter :require_role,   :only => [:create, :update, :destroy,
+                                           :apply_profile, :apply_group, :remove_group]
+  before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
+  before_filter :set_devices,    :only => [:index]
+  before_filter :require_access
   
   layout except_ajax('devices')
 
@@ -194,7 +195,13 @@ class DevicesController < ApplicationController
   def require_role
     redirect_to root_path unless current_user.has_role?(User::Role::FLEET)
   end
-    
+  
+  def require_access
+    if @device && !current_user.can_edit?(@device)
+      redirect_to root_path
+    end
+  end
+  
   def set_device
     @device = current_account.devices.find(params[:id])
   end

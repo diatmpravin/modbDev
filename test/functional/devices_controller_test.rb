@@ -237,7 +237,24 @@ describe "Devices Controller", ActionController::TestCase do
       }
       
       should.redirect_to root_path
-    end    
+    end
+    
+    specify "requires access to the device" do
+      users(:quentin).update_attributes(:device_group => groups(:north))
+      login_as :quentin
+      
+      post :update, {
+        :id => @device.id,
+        :device => {
+          @device.id.to_s => {
+            :name => 'Updated name',
+            :rpm_threshold => 3017
+          }
+        }
+      }
+      
+      should.redirect_to root_path
+    end
   end
   
   context "Destroying devices" do

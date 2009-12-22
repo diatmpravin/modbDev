@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
       self != object
     elsif object.is_a?(Device)
       device_group.nil? ||
-        device_group.self_and_descendants.of_devices.all(
+        device_group.self_and_descendants.all(
           :joins => :devices,
           :conditions => {:devices => {:id => object.id}}
         ).any?

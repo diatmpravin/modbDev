@@ -50,7 +50,8 @@ class Device < ActiveRecord::Base
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
-    :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin
+    :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin,
+    :groups
 
   before_save :prefill_profile_fields
   after_create :assign_phones

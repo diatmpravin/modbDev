@@ -241,5 +241,28 @@ describe "User", ActiveSupport::TestCase do
   specify "a user can not edit him/herself" do
     assert !@user.can_edit?(@user)
   end
+  
+  specify "a user can edit a device if it is in the right group" do
+    # Ensure nested sets are working
+    Group.rebuild!
+    
+    # User with no group can edit all vehicles
+    @device = devices(:quentin_device)
+    assert @user.can_edit?(@device)
+    
+    # User with a group can't edit this vehicle
+    @user.update_attributes(:device_group => groups(:north))
+    assert !@user.can_edit?(@device)
+    
+    # Device is in the user's assigned group
+    @device.update_attributes(:groups => [groups(:north)])
+    assert @user.can_edit?(@device)
+    
+    # Device is in a subgroup of the user's assigned group
+    group = @account.groups.of_devices.create(:name => 'North Child')
+    group.move_to_child_of(groups(:north))
+    @device.update_attributes(:groups => [group])
+    assert @user.can_edit?(@device)
+  end
 end
 
