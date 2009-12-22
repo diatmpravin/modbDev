@@ -5,20 +5,25 @@ class Geofence < ActiveRecord::Base
   has_many :geofence_alert_recipients, :dependent => :delete_all
   has_many :alert_recipients, :through => :geofence_alert_recipients
   
+  has_and_belongs_to_many :device_groups,
+    :class_name => 'Group',
+    :join_table => :geofence_device_groups,
+    :uniq => true
+  
   # Coordinates are stored in the form [{:latitude => N, :longitude => N}, ...]
   serialize :coordinates, Array
   default_value_for :coordinates, Array.new
   
   attr_accessible :geofence_type, :radius, :coordinates, :devices, :device_ids,
     :account, :name, :alert_recipients, :alert_recipient_ids,
-    :alert_on_exit, :alert_on_entry
+    :alert_on_exit, :alert_on_entry, :device_groups, :device_group_ids
   
   before_save :prepare_coordinates
   
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
-
+  
   ##
   # Concerns
   ##
@@ -36,6 +41,12 @@ class Geofence < ActiveRecord::Base
   
   def alert_recipient_ids=(list)
     self.alert_recipients = account.alert_recipients.find(
+      list.reject {|a| a.blank?}
+    )
+  end
+  
+  def device_group_ids=(list)
+    self.device_groups = account.groups.of_devices.find(
       list.reject {|a| a.blank?}
     )
   end

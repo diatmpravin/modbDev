@@ -12,13 +12,20 @@ describe "Geofence", ActiveSupport::TestCase do
       @geofence.should.respond_to(:account)
       @geofence.account.should.equal @account
     end
+    
     specify "has many devices" do
       @geofence.should.respond_to(:devices)
       @geofence.devices.should.include(@device)
     end
+    
     specify "has many alert recipients" do
       @geofence.should.respond_to(:alert_recipients)
       @geofence.alert_recipients.should.include(alert_recipients(:quentin_recipient))
+    end
+    
+    specify "has many device groups" do
+      @geofence.update_attributes(:device_groups => [groups(:north)])
+      @geofence.reload.device_groups.should.equal [groups(:north)]
     end
   end
   
@@ -116,6 +123,25 @@ describe "Geofence", ActiveSupport::TestCase do
     should.raise(ActiveRecord::RecordNotFound) do
       bad = alert_recipients(:aaron_recipient)
       @geofence.update_attributes(:alert_recipient_ids => [@recipient.id, bad.id])
+    end
+  end
+  
+  specify "allows device_group_ids=, but enforces account ownership" do
+    @geofence.update_attributes(:device_group_ids => [])
+    @geofence.device_groups.should.be.empty
+    
+    @geofence.update_attributes(:device_group_ids => [groups(:north).id])
+    @geofence.device_groups.should.include(groups(:north))
+    
+    # Wrong group type
+    should.raise(ActiveRecord::RecordNotFound) do
+      @geofence.update_attributes(:device_group_ids => [groups(:west).id])
+    end
+    
+    # Wrong account
+    bad = accounts(:aaron).groups.of_devices.create!(:name => 'Aaron Group')
+    should.raise(ActiveRecord::RecordNotFound) do
+      @geofence.update_attributes(:device_group_ids => [bad])
     end
   end
   

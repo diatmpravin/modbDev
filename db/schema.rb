@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091221185210) do
+ActiveRecord::Schema.define(:version => 20091222205239) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -136,6 +136,11 @@ ActiveRecord::Schema.define(:version => 20091221185210) do
     t.integer  "alert_recipient_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "geofence_device_groups", :id => false, :force => true do |t|
+    t.integer "geofence_id"
+    t.integer "group_id"
   end
 
   create_table "geofences", :force => true do |t|
