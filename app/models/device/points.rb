@@ -11,9 +11,12 @@ class Device < ActiveRecord::Base
         self.fw_version = report[:fw_version]
         self.obd_fw_version = report[:obd_fw_version]
         self.profile = report[:profile]
-        if self.vin_number.blank? || self.vin_number == '0'
+
+        if !self.lock_vin? ||
+          (self.vin_number.blank? || self.vin_number == '0')
           self.vin_number = report[:vin]
         end
+
         self.reported_vin_number = report[:vin]
         self.save
         

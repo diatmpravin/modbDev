@@ -1041,6 +1041,11 @@ a.liveLook {
 #settings .standardInfo li {
   list-style-type:none;
 }
+#settings label.lockVin {
+  display: inline;
+  float: none;
+  width: auto;
+}
 #settings .alertInfo {
   float:left;
   border-left:solid 1px #d2d3d3;

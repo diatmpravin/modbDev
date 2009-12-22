@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091221154934) do
+ActiveRecord::Schema.define(:version => 20091221185210) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20091221154934) do
     t.integer  "pitstop_threshold",                  :default => 10
     t.boolean  "delta",                              :default => true,                         :null => false
     t.integer  "device_profile_id"
+    t.boolean  "lock_vin",                           :default => false
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"
