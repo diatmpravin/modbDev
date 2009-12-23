@@ -44,6 +44,14 @@
     </ul>
   </div>
   
+  <h3>Vehicle Group</h3>
+  <div class="field">
+    <%= f.label :device_group_ids, 'Group' %>
+    <%= f.collection_select :device_group_ids, current_account.groups.of_devices, :id, :name, 
+      {:include_blank => true},
+      {:name => 'geofence[device_group_ids][]'} %>
+  </div>
+  
   <div class="field alerts">
     <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>
     <h3>Alert recipients</h3>
