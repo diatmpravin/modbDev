@@ -12,7 +12,7 @@ describe "Reports Controller", ActionController::TestCase do
     setup do
       # Each create call stores two copies of the report (HTML + CSV)
       Redis.expects(:build).returns(stub('Redis') {|r|
-        r.expects(:[]=).times(2)
+        r.expects(:[]=).times(3)
       })
     end
     
@@ -76,7 +76,7 @@ describe "Reports Controller", ActionController::TestCase do
     setup do
       # Each create call stores two copies of the report (HTML + CSV)
       Redis.expects(:build).returns(stub('Redis') {|r|
-        r.expects(:[]=).times(2)
+        r.expects(:[]=).times(3)
       })
       
       devices(:quentin_device).groups << groups(:north)
@@ -135,6 +135,7 @@ describe "Reports Controller", ActionController::TestCase do
     
     specify "Retrieving a stored CSV report" do
       Redis.expects(:build).returns(stub('Redis') {|r|
+        r.expects(:[]).with('7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b.title').returns('The Banana Show')
         r.expects(:[]).with('7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b.csv').returns('bananas')
       })
       get :show, {:id => '7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b', :format => 'csv'}
