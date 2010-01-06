@@ -83,9 +83,15 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::VIN_MISMATCH)
       end
       
-      # Handle boundary testing for geofences
+      # Handle boundary testing for geofences linked to this vehicle or
+      # any of this vehicle's groups.
+      geofences_to_test = geofences + account.geofences.all(
+        :joins => :device_groups,
+        :conditions => {:geofence_device_groups => {:group_id => groups.map(&:id)}}
+      )
+      
       if last_point
-        geofences.each do |fence|
+        geofences_to_test.each do |fence|
           if fence.contain?(point) && !fence.contain?(last_point)
             point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name)
             if fence.alert_on_entry?
