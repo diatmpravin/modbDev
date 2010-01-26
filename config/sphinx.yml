@@ -12,10 +12,10 @@ test:
 
 staging:
   port: 3312
-  address: 127.0.0.1
+  listen: 127.0.0.1
   <<: *defaults
 
 production:
   port: 3312
-  address: 127.0.0.1
+  listen: 127.0.0.1
   <<: *defaults
