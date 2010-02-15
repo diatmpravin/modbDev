@@ -31,7 +31,7 @@ Rails::Initializer.run do |config|
   # as 1.0.3 breaks tests that use ActiveRecord... aka all of them.
   config.gem 'after_commit', :version => '1.0.2'
   
-  config.gem 'thinking-sphinx'
+  config.gem 'thinking-sphinx', :lib => 'thinking_sphinx'
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
