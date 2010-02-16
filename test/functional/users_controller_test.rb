@@ -140,6 +140,10 @@ describe "UsersController", ActionController::TestCase do
         }
       end
       
+      #should have an account
+      wumpus = User.find_by_login 'wumpus'
+      wumpus.account.should.not.be.nil
+      
       should.redirect_to :action => 'index'
     end
     

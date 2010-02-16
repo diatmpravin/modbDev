@@ -10,13 +10,18 @@ class Account < ActiveRecord::Base
   has_many :users, :dependent => :destroy
   has_many :device_profiles, :order => 'name', :dependent => :destroy
   
+  accepts_nested_attributes_for :users
+  
   validates_presence_of :number
   validates_numericality_of :number
+  validates_uniqueness_of :number
   validates_length_of :name, :maximum => 50
+  
+  before_validation_on_create :generate_number
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
-    :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles
+    :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes
 
   has_many :groups, :order => "name ASC"
 
@@ -32,6 +37,12 @@ class Account < ActiveRecord::Base
   
   def today
     self[:today] || Time.now.to_date
+  end
+  
+  protected
+  
+  def generate_number
+    self.number = Account.maximum(:number) + 1
   end
 
 end
