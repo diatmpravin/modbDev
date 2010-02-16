@@ -17,8 +17,8 @@
       <td><%= h a.number %></td>
       <td><%= h a.name %></td>
       <% if account.can_assign_reseller? -%>
-        <td><%= h a.reseller? %></td>
-        <td><%= h a.can_assign_reseller? %></td>
+        <td><%= check_image a.reseller? %></td>
+        <td><%= check_image a.can_assign_reseller? %></td>
       <% end -%>
       <% if account.reseller? -%>
         <td class="buttons">
