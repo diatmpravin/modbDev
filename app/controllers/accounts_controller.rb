@@ -1,13 +1,14 @@
 class AccountsController < ApplicationController
   before_filter :require_reseller
   before_filter :require_role
-  before_filter :set_account, :only => [:edit, :update]
+  before_filter :set_account, :only => [:edit, :update, :index]
+  before_filter :set_accounts, :only => :index
   before_filter :require_password, :only => [:destroy]
   
   layout 'accounts'
   
   def index
-    @accounts = current_account.children
+    #@accounts = current_account.children
   end
   
   def new
@@ -30,6 +31,10 @@ class AccountsController < ApplicationController
   
   def set_account
     @account = current_account
+  end
+  
+  def set_accounts
+    @accounts = current_account.children.paginate :page => params[:page], :per_page => 30
   end
   
   def require_reseller

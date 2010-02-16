@@ -1,5 +1,17 @@
-<h2>Account List</h2>
+<h2>Accounts</h2>
 
+<%= messages %>
+<div class="accounts">
+  <div class="buttonsLeft">
+    <%= button_to 'Add Account', new_account_path, :method => :get %>
+  </div>
+  
+  <div class="clear spacer"></div>
+  
+  <%= render :partial => 'list', :locals => {:account => @account, :accounts => @accounts} %>
+</div>
+
+<!--
 <div>
   <%= link_to 'Create Account', new_account_path, :class => 'simple' %>
   <br/><br/>
@@ -29,3 +41,4 @@
     </tbody>
   </table>
 </div>
+-->
