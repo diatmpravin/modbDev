@@ -74,10 +74,17 @@ table {
 table img {
   vertical-align:middle;
 }
+
 a, a:visited {
-  color:black;
+  color:#318ba9;
+  font-weight:bold;
   text-decoration:none;
 }
+a:hover {
+  color:black;
+  text-decoration:underline;
+}
+
 .red {
   color: red;
   font-weight: bold;
@@ -97,14 +104,6 @@ a, a:visited {
 img.busy {
   display: none;
   vertical-align: middle;
-}
-a.simple, a.simple:visited {
-  font-weight:bold;
-  color:#318ba9;
-}
-a.simple:hover {
-  color:black;
-  text-decoration:underline;
 }
 .key { text-align: right; }
 .value { font-weight: bold; }
@@ -331,9 +330,13 @@ a.close {
   cursor:pointer;
 }
 #navbar #livelook a {
+  color:#15191a;
   display:block;
   padding:0 28px 0 54px;
   background:transparent url(/images/live_look.png) no-repeat 24px center;
+}
+#navbar #livelook a:hover {
+  text-decoration:none;
 }
 #navbar #livelook.selected a {
   background:transparent url(/images/live_look_selected.png) no-repeat 24px center;

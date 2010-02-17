@@ -9,7 +9,7 @@
     </tr>
     <% @trackers.each do |tracker| -%>
       <tr class="<%= cycle('','odd') %>">
-        <td><%= link_to h(tracker.imei_number), edit_tracker_path(tracker), :class => 'simple' %></td>
+        <td><%= link_to h(tracker.imei_number), edit_tracker_path(tracker) %></td>
         <td><%= tracker.sim_number %></td>
         <td><%= tracker.status_text %></td>
         <td><%= tracker.device_id ? tracker.device_id : '' %></td>
@@ -25,6 +25,6 @@
   </table>
   <br/>
   <div>
-    <%= link_to 'Add Tracker', new_tracker_path, :class => 'simple' %>
+    <%= link_to 'Add Tracker', new_tracker_path %>
   </div>
 </div>
