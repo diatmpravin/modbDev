@@ -916,6 +916,29 @@ module ActiveRecord #:nodoc:
         connection.select_value(sql, "#{name} Count").to_i
       end
 
+      # Resets one or more counter caches to their correct value using an SQL
+      # count query.  This is useful when adding new counter caches, or if the
+      # counter has been corrupted or modified directly by SQL.
+      #
+      # ==== Parameters
+      #
+      # * +id+ - The id of the object you wish to reset a counter on.
+      # * +counters+ - One or more counter names to reset
+      #
+      # ==== Examples
+      #
+      #   # For Post with id #1 records reset the comments_count
+      #   Post.reset_counters(1, :comments)
+      def reset_counters(id, *counters)
+        object = find(id)
+        counters.each do |association|
+          child_class = reflect_on_association(association).klass
+          counter_name = child_class.reflect_on_association(self.name.downcase.to_sym).counter_cache_column
+
+          connection.update("UPDATE #{quoted_table_name} SET #{connection.quote_column_name(counter_name)} = #{object.send(association).count} WHERE #{connection.quote_column_name(primary_key)} = #{quote_value(object.id)}", "#{name} UPDATE")
+        end
+      end
+
       # A generic "counter updater" implementation, intended primarily to be
       # used by increment_counter and decrement_counter, but which may also
       # be useful on its own. It simply does a direct SQL update for the record
@@ -2436,7 +2459,7 @@ module ActiveRecord #:nodoc:
         @new_record = true
         ensure_proper_type
         self.attributes = attributes unless attributes.nil?
-        self.class.send(:scope, :create).each { |att,value| self.send("#{att}=", value) } if self.class.send(:scoped?, :create)
+        assign_attributes(self.class.send(:scope, :create)) if self.class.send(:scoped?, :create)
         result = yield self if block_given?
         callback(:after_initialize) if respond_to_without_attributes?(:after_initialize)
         result
@@ -2736,18 +2759,8 @@ module ActiveRecord #:nodoc:
         attributes = new_attributes.dup
         attributes.stringify_keys!
 
-        multi_parameter_attributes = []
         attributes = remove_attributes_protected_from_mass_assignment(attributes) if guard_protected_attributes
-
-        attributes.each do |k, v|
-          if k.include?("(")
-            multi_parameter_attributes << [ k, v ]
-          else
-            respond_to?(:"#{k}=") ? send(:"#{k}=", v) : raise(UnknownAttributeError, "unknown attribute: #{k}")
-          end
-        end
-
-        assign_multiparameter_attributes(multi_parameter_attributes)
+        assign_attributes(attributes) if attributes and attributes.any?
       end
 
       # Returns a hash of all the attributes with their names as keys and the values of the attributes as values.
@@ -2869,6 +2882,23 @@ module ActiveRecord #:nodoc:
       end
 
     private
+      # Assigns attributes, dealing nicely with both multi and single paramater attributes
+      # Assumes attributes is a hash
+
+      def assign_attributes(attributes={})
+        multiparameter_attributes = []
+        
+        attributes.each do |k, v|
+          if k.to_s.include?("(")
+            multiparameter_attributes << [ k, v ]
+          else
+            respond_to?(:"#{k}=") ? send(:"#{k}=", v) : raise(UnknownAttributeError, "unknown attribute: #{k}")
+          end
+        end
+
+        assign_multiparameter_attributes(multiparameter_attributes) unless  multiparameter_attributes.empty?        
+      end
+    
       def create_or_update
         raise ReadOnlyRecord if readonly?
         result = new_record? ? create : update

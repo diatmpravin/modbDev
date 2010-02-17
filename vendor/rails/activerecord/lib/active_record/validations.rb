@@ -27,11 +27,13 @@ module ActiveRecord
     end
 
     def message
-      generate_message(@message, default_options)
+      # When type is a string, it means that we do not have to do a lookup, because
+      # the user already sent the "final" message.
+      type.is_a?(String) ? type : generate_message(default_options)
     end
 
     def full_message
-      attribute.to_s == 'base' ? message : generate_full_message(message, default_options)
+      attribute.to_s == 'base' ? message : generate_full_message(default_options)
     end
 
     alias :to_s :message
@@ -60,16 +62,16 @@ module ActiveRecord
       # <li><tt>activerecord.errors.messages.blank</tt></li>
       # <li>any default you provided through the +options+ hash (in the activerecord.errors scope)</li>
       # </ol>
-      def generate_message(message, options = {})
+      def generate_message(options = {})
         keys = @base.class.self_and_descendants_from_active_record.map do |klass|
-          [ :"models.#{klass.name.underscore}.attributes.#{attribute}.#{message}",
-            :"models.#{klass.name.underscore}.#{message}" ]
+          [ :"models.#{klass.name.underscore}.attributes.#{attribute}.#{@message}",
+            :"models.#{klass.name.underscore}.#{@message}" ]
         end.flatten
 
         keys << options.delete(:default)
-        keys << :"messages.#{message}"
-        keys << message if message.is_a?(String)
-        keys << @type unless @type == message
+        keys << :"messages.#{@message}"
+        keys << @message if @message.is_a?(String)
+        keys << @type unless @type == @message
         keys.compact!
 
         options.merge!(:default => keys)
@@ -103,7 +105,7 @@ module ActiveRecord
       #         full_messages:
       #           title:
       #             blank: This title is screwed!
-      def generate_full_message(message, options = {})
+      def generate_full_message(options = {})
         keys = [
           :"full_messages.#{@message}",
           :'full_messages.format',
@@ -154,16 +156,10 @@ module ActiveRecord
     # error can be added to the same +attribute+ in which case an array will be returned on a call to <tt>on(attribute)</tt>.
     # If no +messsage+ is supplied, :invalid is assumed.
     # If +message+ is a Symbol, it will be translated, using the appropriate scope (see translate_error).
-    # def add(attribute, message = nil, options = {})
-    #   message ||= :invalid
-    #   message = generate_message(attribute, message, options)) if message.is_a?(Symbol)
-    #   @errors[attribute.to_s] ||= []
-    #   @errors[attribute.to_s] << message
-    # end
-
-    def add(error_or_attr, message = nil, options = {})
-      error, attribute = error_or_attr.is_a?(Error) ? [error_or_attr, error_or_attr.attribute] : [nil, error_or_attr]
-      options[:message] = options.delete(:default) if options.has_key?(:default)
+    #
+    def add(attribute, message = nil, options = {})
+      options[:message] = options.delete(:default) if options[:default].is_a?(Symbol)
+      error, message = message, nil if message.is_a?(Error)
 
       @errors[attribute.to_s] ||= []
       @errors[attribute.to_s] << (error || Error.new(@base, attribute, message, options))

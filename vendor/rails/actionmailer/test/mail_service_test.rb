@@ -29,6 +29,18 @@ class TestMailer < ActionMailer::Base
     self.body       = "Goodbye, Mr. #{recipient}"
   end
 
+  def from_with_name
+    from       "System <system@loudthinking.com>"
+    recipients "root@loudthinking.com"
+    body       "Nothing to see here."
+  end
+
+  def from_without_name
+    from       "system@loudthinking.com"
+    recipients "root@loudthinking.com"
+    body       "Nothing to see here."
+  end
+
   def cc_bcc(recipient)
     recipients recipient
     subject    "testing bcc/cc"
@@ -454,6 +466,28 @@ class ActionMailerTest < Test::Unit::TestCase
     assert_equal expected.encoded, ActionMailer::Base.deliveries.first.encoded
   end
 
+  def test_from_without_name_for_smtp
+    ActionMailer::Base.delivery_method = :smtp
+    TestMailer.deliver_from_without_name
+
+    mail = MockSMTP.deliveries.first
+    assert_not_nil mail
+    mail, from, to = mail
+
+    assert_equal 'system@loudthinking.com', from.to_s
+  end
+
+  def test_from_with_name_for_smtp
+    ActionMailer::Base.delivery_method = :smtp
+    TestMailer.deliver_from_with_name
+
+    mail = MockSMTP.deliveries.first
+    assert_not_nil mail
+    mail, from, to = mail
+
+    assert_equal 'system@loudthinking.com', from.to_s
+  end
+
   def test_reply_to
     expected = new_mail
 
@@ -700,8 +734,8 @@ EOF
     expected.date    = Time.local 2004, 12, 12
 
     created = TestMailer.create_utf8_body @recipient
-    assert_match(/\nFrom: =\?utf-8\?Q\?Foo_.*?\?= <extended@example.net>\r/, created.encoded)
-    assert_match(/\nTo: =\?utf-8\?Q\?Foo_.*?\?= <extended@example.net>, Example Recipient <me/, created.encoded)
+    assert_match(/From:\ =\?utf\-8\?Q\?Foo_=C3=A1=C3=AB=C3=B4_=C3=AE=C3=BC\?=\ <extended@example\.net>/, created.encoded)
+    assert_match(/To:\ =\?utf\-8\?Q\?Foo_=C3=A1=C3=AB=C3=B4_=C3=AE=C3=BC\?=\ <extended@example\.net>/, created.encoded)
   end
 
   def test_receive_decodes_base64_encoded_mail

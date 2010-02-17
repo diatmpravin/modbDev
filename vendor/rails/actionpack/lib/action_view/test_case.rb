@@ -53,7 +53,7 @@ module ActionView
     setup :setup_with_controller
     def setup_with_controller
       @controller = TestController.new
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
       @rendered = ''
 
       self.class.send(:include_helper_modules!)
@@ -118,6 +118,7 @@ module ActionView
       def _view
         view = ActionView::Base.new(ActionController::Base.view_paths, _assigns, @controller)
         view.helpers.include master_helper_module
+        view.output_buffer = self.output_buffer
         view
       end
 

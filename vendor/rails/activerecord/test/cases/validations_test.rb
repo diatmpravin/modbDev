@@ -9,6 +9,8 @@ require 'models/guid'
 require 'models/owner'
 require 'models/pet'
 require 'models/event'
+require 'models/man'
+require 'models/interest'
 
 # The following methods in Topic are used in test_conditional_validation_*
 class Topic
@@ -28,6 +30,12 @@ class ProtectedPerson < ActiveRecord::Base
   set_table_name 'people'
   attr_accessor :addon
   attr_protected :first_name
+
+  def special_error
+    this_method_does_not_exist!
+  rescue
+    errors.add(:special_error, "This method does not exist")
+  end
 end
 
 class UniqueReply < Reply
@@ -169,6 +177,14 @@ class ValidationsTest < ActiveRecord::TestCase
         person = ProtectedPerson.create!
         assert_equal person.first_name, "Mary", "should be ok when no attributes are passed to create!"
       end
+    end
+  end
+
+  def test_values_are_not_retrieved_unless_needed
+    assert_nothing_raised do
+      person = ProtectedPerson.new
+      person.special_error
+      assert_equal "This method does not exist", person.errors[:special_error]
     end
   end
 
@@ -340,6 +356,25 @@ class ValidationsTest < ActiveRecord::TestCase
     t.content = "like stuff"
 
     assert t.save
+  end
+
+  def test_validates_presence_of_belongs_to_association__parent_is_new_record
+    repair_validations(Interest) do
+      # Note that Interest and Man have the :inverse_of option set
+      Interest.validates_presence_of(:man)
+      man = Man.new(:name => 'John')
+      interest = man.interests.build(:topic => 'Airplanes')
+      assert interest.valid?, "Expected interest to be valid, but was not. Interest should have a man object associated"
+    end
+  end
+
+  def test_validates_presence_of_belongs_to_association__existing_parent
+    repair_validations(Interest) do
+      Interest.validates_presence_of(:man)
+      man = Man.create!(:name => 'John')
+      interest = man.interests.build(:topic => 'Airplanes')
+      assert interest.valid?, "Expected interest to be valid, but was not. Interest should have a man object associated"
+    end
   end
 
   def test_validate_uniqueness
