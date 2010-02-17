@@ -21,7 +21,8 @@ class Account < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
-    :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes
+    :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
+    :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone
 
   has_many :groups, :order => "name ASC"
 

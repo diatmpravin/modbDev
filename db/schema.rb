@@ -9,20 +9,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091222205239) do
+ActiveRecord::Schema.define(:version => 20100217190203) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "setup_status",                      :default => 1
-    t.boolean  "accept_terms",                      :default => false
-    t.boolean  "accept_offers",                     :default => false
+    t.integer  "setup_status",                                                    :default => 1
+    t.boolean  "accept_terms",                                                    :default => false
+    t.boolean  "accept_offers",                                                   :default => false
     t.date     "today"
     t.integer  "number"
     t.string   "name",                :limit => 50
     t.integer  "parent_id"
-    t.boolean  "reseller",                          :default => false
-    t.boolean  "can_assign_reseller",               :default => false
+    t.boolean  "reseller",                                                        :default => false
+    t.boolean  "can_assign_reseller",                                             :default => false
+    t.string   "phone_number",        :limit => 10
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.decimal  "monthly_unit_price",                :precision => 6, :scale => 2
   end
 
   add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"
