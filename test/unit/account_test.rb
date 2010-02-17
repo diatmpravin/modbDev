@@ -65,4 +65,5 @@ describe "Account", ActiveSupport::TestCase do
     @account.setup_status = 0
     @account.should.be.setup
   end
+  
 end

@@ -42,23 +42,23 @@ class DurationTest < ActiveSupport::TestCase
   end
 
   def test_since_and_ago_with_fractional_days
-    t = Time.local(2000)
+    Time.stubs(:now).returns Time.local(2000)
     # since
-    assert_equal 36.hours.since(t), 1.5.days.since(t)
-    assert_in_delta((24 * 1.7).hours.since(t), 1.7.days.since(t), 1)
+    assert_equal 36.hours.since, 1.5.days.since
+    assert_in_delta((24 * 1.7).hours.since, 1.7.days.since, 0.01)
     # ago
-    assert_equal 36.hours.ago(t), 1.5.days.ago(t)
-    assert_in_delta((24 * 1.7).hours.ago(t), 1.7.days.ago(t), 1)
+    assert_equal 36.hours.ago, 1.5.days.ago
+    assert_in_delta((24 * 1.7).hours.ago, 1.7.days.ago, 0.01)
   end
 
   def test_since_and_ago_with_fractional_weeks
-    t = Time.local(2000)
+    Time.stubs(:now).returns Time.local(2000)
     # since
-    assert_in_delta((7 * 36).hours.since, 1.5.weeks.since, 1)
-    assert_in_delta((7 * 24 * 1.7).hours.since, 1.7.weeks.since, 1)
+    assert_equal((7 * 36).hours.since, 1.5.weeks.since)
+    assert_in_delta((7 * 24 * 1.7).hours.since, 1.7.weeks.since, 0.01)
     # ago
-    assert_in_delta((7 * 36).hours.ago, 1.5.weeks.ago, 1)
-    assert_in_delta((7 * 24 * 1.7).hours.ago, 1.7.weeks.ago, 1)
+    assert_equal((7 * 36).hours.ago, 1.5.weeks.ago)
+    assert_in_delta((7 * 24 * 1.7).hours.ago, 1.7.weeks.ago, 0.01)
   end
 
   def test_deprecated_fractional_years

@@ -21,14 +21,6 @@ describe "User", ActiveSupport::TestCase do
     end
   end
   
-  context "Validations" do
-    specify "requires an account" do
-      @user.should.be.valid
-      @user.account = nil
-      @user.should.not.be.valid
-    end
-  end
-  
   context "Authentication" do
     def create_user(options = {})
       record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options))

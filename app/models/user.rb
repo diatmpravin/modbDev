@@ -29,7 +29,8 @@ class User < ActiveRecord::Base
   # Virtual attribute for current password
   attr_accessor :current_password
   
-  validates_presence_of     :account
+  #Validating account causes account create to fail
+  #validates_presence_of     :account
   validates_presence_of     :login, :email
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?

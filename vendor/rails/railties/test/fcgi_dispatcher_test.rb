@@ -1,6 +1,5 @@
 require 'abstract_unit'
 
-if RUBY_VERSION < '1.9.0'
 uses_gem "fcgi", "0.8.7" do
 
 require 'action_controller'
@@ -263,4 +262,3 @@ class RailsFCGIHandlerPeriodicGCTest < Test::Unit::TestCase
   end
 end
 end # uses_gem "fcgi"
-end # exclude 1.9

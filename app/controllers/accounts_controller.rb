@@ -1,19 +1,44 @@
 class AccountsController < ApplicationController
   before_filter :require_reseller
   before_filter :require_role
-  
   before_filter :set_account, :only => [:edit, :update]
+  before_filter :set_accounts, :only => :index
   before_filter :require_password, :only => [:destroy]
   
   layout 'accounts'
   
   def index
-    @accounts = current_account.children
+    @account = current_account
+    #@accounts = current_account.children
+  end
+  
+  def new
+    @account = Account.new
+    @account.users.build
+  end
+  
+  def create
+    @account = current_account.children.new
+    
+    if @account.update_attributes(params[:account])
+      redirect_to :action => 'index'
+    else
+      Rails.logger.debug @account.to_yaml
+      render :action => 'new'
+    end
+  end
+  
+  def edit
   end
   
   protected
+  
   def set_account
-    @account = current_account
+    @account = current_account.children.find(params[:id])
+  end
+  
+  def set_accounts
+    @accounts = current_account.children.paginate :page => params[:page], :per_page => 30
   end
   
   def require_reseller

@@ -47,8 +47,7 @@ module ActionController # :nodoc:
       @block = nil
 
       @body = "",
-      @session = []
-      @assigns = []
+      @session, @assigns = [], []
     end
 
     def location; headers['Location'] end
@@ -233,8 +232,7 @@ module ActionController # :nodoc:
       end
 
       def convert_cookies!
-        cookies = Array(headers['Set-Cookie']).compact
-        headers['Set-Cookie'] = cookies unless cookies.empty?
+        headers['Set-Cookie'] = Array(headers['Set-Cookie']).compact
       end
   end
 end
