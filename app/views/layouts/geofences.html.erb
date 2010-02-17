@@ -1,8 +1,4 @@
-<% @title = 'Geofence Settings' -%>
-<% content_for 'javascript' do -%>
-  <%= javascript_include_tag 'filter' %>
-<% end -%>
-<% inside_layout 'settings' do -%>
-  <%= render :partial => "geofences/filter_form" %>
+<% @page_title = 'Geofence Settings' -%>
+<% inside_layout 'internal' do -%>
   <%= yield %>
 <% end -%>

@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
-  layout 'settings'
+  layout 'internal'
 
   def show
     # Contact form

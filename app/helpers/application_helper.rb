@@ -29,7 +29,7 @@ module ApplicationHelper
 
   # Shortcut for showing any flash errors, warnings, and notices
   def messages
-    render :partial => 'layouts/messages'
+    render :partial => 'common/messages'
   end
 
   # Shortcut for showing a checkmark

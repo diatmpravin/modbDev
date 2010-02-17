@@ -3,6 +3,8 @@
   <%= javascript_include_tag "list_view" -%>
   <%= javascript_include_tag "devices/index" -%>
   <%= javascript_include_tag "reports/form" -%>
+  <%= javascript_include_tag 'jquery/jquery.blockUI' %>
+  <%= javascript_include_tag 'filter' %>
 <% end -%>
 
 <%= messages %>
@@ -112,3 +114,5 @@
     <p>The IMEI Number is located on the label on the Tracker.</p>
   <% end -%>
 </div>
+
+<%= render :partial => "devices/filter_form" -%>

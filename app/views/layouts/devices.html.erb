@@ -1,10 +1,4 @@
-<% @title = 'Vehicle Settings' -%>
-<% content_for 'javascript' do -%>
-  <%= javascript_include_tag 'jquery/jquery.blockUI' %>
-  <%= javascript_include_tag 'filter' %>
-<% end -%>
-<% inside_layout 'settings' do -%>
-  <%= render :partial => "devices/filter_form" -%>
-
+<% @page_title = 'Vehicle Settings' -%>
+<% inside_layout 'internal' do -%>
   <%= yield %>
 <% end -%>

@@ -1,6 +1,6 @@
 <% form_for user, :html => {:autocomplete => "off"} do |f| -%>
-  <div class="standardInfo">
-    <h3>User Details</h3>
+  <h3>User Details</h3>
+  <fieldset>
     <div class="field">
       <%= f.label :login, 'Username *' %>
       <%= f.text_field :login, {:size => 30, :maxlength => 30} %>
@@ -21,16 +21,20 @@
       <%= f.collection_select :time_zone, ActiveSupport::TimeZone.us_zones.reverse, :name, :to_s %>
       <%= error_message_on user, :time_zone, :prepend_text => '* Time zone ' %>
     </div>
-    
-    <h3>Vehicle Group</h3>
+  </fieldset>
+  
+  <h3>Vehicle Group</h3>
+  <fieldset>
     <p>Choose a vehicle group below to restrict this user's access to that group and its subgroups.</p>
     <div class="field">
       <%= f.label :device_group_id, 'Group' %>
       <%= f.collection_select :device_group_id, current_account.groups, :id, :name, :include_blank => 'None' %>
       <%= error_message_on user, :device_group_id, :prepend_text => '* Vehicle group ' %>
     </div>
+  </fieldset>
     
-    <h3>User Roles</h3>
+  <h3>User Roles</h3>
+  <fieldset>
     <p>Check the boxes below to assign additional roles to this user.</p>
     <ul>
       <% role_options.each do |role| -%>
@@ -41,8 +45,7 @@
         </li>
       <% end -%>
     </ul>
-    
-  </div>
+  </fieldset>
   
   <div class="clear"></div>
   

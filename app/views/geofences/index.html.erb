@@ -1,5 +1,6 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag "geofences/index" %>
+  <%= javascript_include_tag 'filter' %>  
 <% end %>
 
 <%= messages %>
@@ -48,3 +49,4 @@
   <p>Are you sure you want to remove this geofence?</p>
 </div>
 
+<%= render :partial => "geofences/filter_form" %>
