@@ -178,6 +178,15 @@ describe "Alert Recipient", ActiveSupport::TestCase do
         @mail.deliveries.first.body.should.equal '06:00 PM UTC, 03-25-2009 abcd'
       end
     end
+
+    specify "can give a time to use instead of account.zone.today" do
+      @recipient = alert_recipients(:quentin_sms)
+      @recipient.alert('abcd', Time.parse("01/01/2008 12:37:44 EST"))
+
+      @mail.deliveries.length.should.be 1
+      @mail.deliveries.first.to.should.equal ['3135551212@messaging.sprintpcs.com']
+      @mail.deliveries.first.body.should.equal '12:37 PM EST, 01-01-2008 abcd'
+    end
   end
   
   specify "has the name of its carrier" do

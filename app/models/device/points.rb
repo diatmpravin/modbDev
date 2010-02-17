@@ -24,7 +24,7 @@ class Device < ActiveRecord::Base
         if report[:event] == DeviceReport::Event::RESET.to_s &&
             self.vin_number != self.reported_vin_number
           alert_recipients.each do |r|
-            r.alert("#{self.name} VIN Mismatch")
+            r.alert("#{self.name} VIN Mismatch", self.zone.now)
           end
         end
       end
@@ -96,14 +96,14 @@ class Device < ActiveRecord::Base
             point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name)
             if fence.alert_on_entry?
               fence.alert_recipients.each do |r|
-                r.alert("#{self.name} entered area #{fence.name}")
+                r.alert("#{self.name} entered area #{fence.name}", self.zone.now)
               end
             end
           elsif !fence.contain?(point) && fence.contain?(last_point)
             point.events.create(:event_type => Event::EXIT_BOUNDARY, :geofence_name => fence.name)
             if fence.alert_on_exit?
               fence.alert_recipients.each do |r|
-                r.alert("#{self.name} exited area #{fence.name}")
+                r.alert("#{self.name} exited area #{fence.name}", self.zone.now)
               end
             end
           end
@@ -125,7 +125,7 @@ class Device < ActiveRecord::Base
 
         if !last_point || last_point.speed <= speed_threshold
           alert_recipients.each do |r|
-            r.alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)")
+            r.alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)", self.zone.now)
           end
         end
       end
@@ -135,7 +135,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::RPM, :rpm_threshold => rpm_threshold)
         if alert_on_aggressive?
           alert_recipients.each do |r|
-            r.alert("#{self.name} experienced excessive RPM")
+            r.alert("#{self.name} experienced excessive RPM", self.zone.now)
           end
         end
       end
@@ -144,7 +144,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::RAPID_ACCEL)
         if alert_on_aggressive?
           alert_recipients.each do |r|
-            r.alert("#{self.name} experienced rapid acceleration")
+            r.alert("#{self.name} experienced rapid acceleration", self.zone.now)
           end
         end
       end
@@ -153,7 +153,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::RAPID_DECEL)
         if alert_on_aggressive?
           alert_recipients.each do |r|
-            r.alert("#{self.name} experienced rapid deceleration")
+            r.alert("#{self.name} experienced rapid deceleration", self.zone.now)
           end
         end
       end
@@ -162,7 +162,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::IDLE)
         #if alert_on_idle?
           alert_recipients.each do |r|
-            r.alert("#{self.name} idled for an extended period")
+            r.alert("#{self.name} idled for an extended period", self.zone.now)
           end
         #end
       end
@@ -179,7 +179,7 @@ class Device < ActiveRecord::Base
         if !last ||
            !last.events.exists?(:event_type => Event::AFTER_HOURS)
           alert_recipients.each do |r|
-            r.alert("#{self.name} is running after hours")
+            r.alert("#{self.name} is running after hours", self.zone.now)
           end
         end
       end
