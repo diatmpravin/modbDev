@@ -31,6 +31,14 @@ class AccountsController < ApplicationController
   def edit
   end
   
+  def update
+    if @account.update_attributes(params[:account])
+      redirect_to :action => 'index'
+    else
+      render :action => 'new'
+    end
+  end
+
   protected
   
   def set_account
