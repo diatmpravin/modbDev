@@ -616,7 +616,7 @@ module ActionView
 
           build_selects_from_types(order)
         else
-          "#{select_date}#{@options[:datetime_separator]}#{select_time}".html_safe
+          "#{select_date}#{@options[:datetime_separator]}#{select_time}"
         end
       end
 
@@ -835,7 +835,7 @@ module ActionView
           select_html << prompt_option_tag(type, @options[:prompt]) + "\n" if @options[:prompt]
           select_html << select_options_as_html.to_s
 
-          (content_tag(:select, select_html, select_options) + "\n").html_safe
+          content_tag(:select, select_html, select_options) + "\n"
         end
 
         # Builds a prompt option tag with supplied options or from default options
@@ -860,12 +860,12 @@ module ActionView
         #  build_hidden(:year, 2008)
         #  => "<input id="post_written_on_1i" name="post[written_on(1i)]" type="hidden" value="2008" />"
         def build_hidden(type, value)
-          (tag(:input, {
+          tag(:input, {
             :type => "hidden",
             :id => input_id_from_type(type),
             :name => input_name_from_type(type),
             :value => value
-          }) + "\n").html_safe
+          }) + "\n"
         end
 
         # Returns the name attribute for the input tag
@@ -896,7 +896,7 @@ module ActionView
             separator = separator(type) unless type == order.first # don't add on last field
             select.insert(0, separator.to_s + send("select_#{type}").to_s)
           end
-          select.html_safe
+          select
         end
 
         # Returns the separator for a given datetime component
@@ -916,15 +916,15 @@ module ActionView
 
     class InstanceTag #:nodoc:
       def to_date_select_tag(options = {}, html_options = {})
-        datetime_selector(options, html_options).select_date.html_safe
+        datetime_selector(options, html_options).select_date.html_safe!
       end
 
       def to_time_select_tag(options = {}, html_options = {})
-        datetime_selector(options, html_options).select_time.html_safe
+        datetime_selector(options, html_options).select_time.html_safe!
       end
 
       def to_datetime_select_tag(options = {}, html_options = {})
-        datetime_selector(options, html_options).select_datetime.html_safe
+        datetime_selector(options, html_options).select_datetime.html_safe!
       end
 
       private
@@ -935,7 +935,7 @@ module ActionView
           options[:field_name]           = @method_name
           options[:include_position]     = true
           options[:prefix]             ||= @object_name
-          options[:index]                = @auto_index if defined?(@auto_index) && @auto_index && !options.has_key?(:index)
+          options[:index]                = @auto_index if @auto_index && !options.has_key?(:index)
           options[:datetime_separator] ||= ' &mdash; '
           options[:time_separator]     ||= ' : '
 

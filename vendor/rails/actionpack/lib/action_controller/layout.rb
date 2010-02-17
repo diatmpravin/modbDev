@@ -194,11 +194,6 @@ module ActionController #:nodoc:
         end
     end
 
-    def initialize(*args)
-      super
-      @real_format = nil
-    end
-
     # Returns the name of the active layout. If the layout was specified as a method reference (through a symbol), this method
     # is called and the return value is used. Likewise if the layout was specified as an inline method (through a proc or method
     # object). If the layout was defined without a directory, layouts is assumed. So <tt>layout "weblog/standard"</tt> will return
