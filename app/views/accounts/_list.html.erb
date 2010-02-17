@@ -23,8 +23,8 @@
       <% if account.reseller? -%>
         <td class="buttons">
           <% requires_role(User::Role::ADMIN) do -%>
-            <%= link_to 'Edit', edit_account_path(account), :class => 'edit', :title => 'Edit' %>
-            <!-- <%= link_to 'Delete', account_path(account), :class => 'delete', :title => 'Remove' %> -->
+            <%= link_to 'Edit', edit_account_path(a), :class => 'edit', :title => 'Edit' %>
+            <!-- <%= link_to 'Delete', account_path(a), :class => 'delete', :title => 'Remove' %> -->
           <% end -%>
         </td>
       <% end -%>

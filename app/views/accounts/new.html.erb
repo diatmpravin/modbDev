@@ -1,3 +1,7 @@
+<%= render :partial => 'form', :locals => {:account => @account} %>
+<div class="clear"></div>
+
+<% if false -%>
 <% form_for @account do |f| -%>
   <h3>Account Details</h3>
   
@@ -59,4 +63,5 @@
     <%= f.submit 'Save' %>
   </div>
   
+<% end -%>
 <% end -%>

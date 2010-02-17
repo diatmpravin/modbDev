@@ -1,13 +1,14 @@
 class AccountsController < ApplicationController
   before_filter :require_reseller
   before_filter :require_role
-  before_filter :set_account, :only => [:edit, :update, :index]
+  before_filter :set_account, :only => [:edit, :update]
   before_filter :set_accounts, :only => :index
   before_filter :require_password, :only => [:destroy]
   
   layout 'accounts'
   
   def index
+    @account = current_account
     #@accounts = current_account.children
   end
   
@@ -27,10 +28,13 @@ class AccountsController < ApplicationController
     end
   end
   
+  def edit
+  end
+  
   protected
   
   def set_account
-    @account = current_account
+    @account = current_account.children.find(params[:id])
   end
   
   def set_accounts
