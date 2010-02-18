@@ -1,17 +1,4 @@
-<% @title = 'Vehicle Groups' -%>
-<% content_for 'javascript' do -%>
-  <%= javascript_include_tag 'filter' %>
-<% end -%>
-<% inside_layout 'settings' do -%>
-
-  <% content_for :filter_form do %>
-    <table>
-      <tr>
-        <td><%= label_tag 'name', "Name:" %></td>
-        <td><%= text_field_tag "name" %></td>
-      </tr>
-    </table>
-  <% end %>
-
+<% @page_title = 'Vehicle Groups' -%>
+<% inside_layout 'internal' do -%>
   <%= yield %>
 <% end -%>

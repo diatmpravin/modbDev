@@ -1,4 +1,15 @@
 <% inside_layout 'global' do -%>
-  <%= render :partial => "common/header" %>
-  <%= yield %>
+  <%= render :partial => 'common/header' %>
+  
+  <div id="navbar">
+    <%= yield :navbar %>
+  </div>
+  
+  <div id="content">
+    <div class="content">
+      <%= yield %>
+    </div>
+  </div>
+  
+  <%= render :partial => 'common/footer' %>
 <% end -%>

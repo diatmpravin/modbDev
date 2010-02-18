@@ -4,32 +4,32 @@
   <div id="logo">
     <%= link_to image_tag("logo.png"), root_path -%>
   </div>
-  <div id="welcome">
-    <span class="logout"><%= link_to "Logout", logout_path %></span>
 
-    <ul class="sf-menu">
-      <li>
-        <%= link_to 'Profile', profile_path %>
-      </li>
-      <li>
-        <%= link_to 'Settings', '#' %>
-        <ul>
-          <li><%= link_to 'Vehicles', devices_path %></li>
-          <li><%= link_to 'Landmarks', landmarks_path %></li>
-          <li><%= link_to 'Geofences', geofences_path %></li>
-          <% requires_role(User::Role::USERS) do -%>
-            <li><%= link_to 'Users', users_path %></li>
+  <ul class="sf-menu">
+    <li>
+      <%= link_to 'Profile', profile_path %>
+    </li>
+    <li>
+      <%= link_to 'Settings', '#' %>
+      <ul>
+        <li><%= link_to 'Vehicles', devices_path %></li>
+        <li><%= link_to 'Landmarks', landmarks_path %></li>
+        <li><%= link_to 'Geofences', geofences_path %></li>
+        <% requires_role(User::Role::USERS) do -%>
+          <li><%= link_to 'Users', users_path %></li>
+        <% end -%>
+        <% requires_role(User::Role::RESELLER) do -%>
+          <% if current_account.reseller? -%>
+            <li><%= link_to 'Trackers', trackers_path %></li>
           <% end -%>
-          <% requires_role(User::Role::RESELLER) do -%>
-            <% if current_account.reseller? -%>
-              <li><%= link_to 'Trackers', trackers_path %></li>
-            <% end -%>
-          <% end -%>
-          <li><%= link_to 'Contact Us', contact_path %></li>
-        </ul>
-      </li>
-    </ul>
-
-    <span class="info"><strong><%= h(current_account.name) %></strong> &middot; <%= h(current_user.name) %></span>
-  </div>
+        <% end -%>
+        <li><%= link_to 'Contact Us', contact_path %></li>
+      </ul>
+    </li>
+    <li class="logout">
+      <%= link_to 'Logout', logout_path %>
+    </li>
+  </ul>
+  
+  <span class="info"><strong><%= h(current_account.name) %></strong> &middot; <%= h(current_user.name) %></span>
 </div>

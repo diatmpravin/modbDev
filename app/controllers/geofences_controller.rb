@@ -43,7 +43,7 @@ class GeofencesController < ApplicationController
     @geofence = current_account.geofences.find(params[:id])
 
     # If device ids or alert_recipient ids are missing, blank them out
-    record = {:device_ids => [], :alert_recipient_ids => []}.merge(params[:geofence])
+    record = {"device_ids" => [], "alert_recipient_ids" => []}.merge(params[:geofence])
 
     if @geofence.update_attributes(record)
       redirect_to geofences_path

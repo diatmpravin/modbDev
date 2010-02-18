@@ -2,6 +2,8 @@
   <%= javascript_include_tag 'device_profiles/index' %>
 <% end -%>
 
+<% filter %>
+
 <%= messages %>
 <div class="buttonsLeft">
   <%= button_tag 'Add Profile', :class => 'addProfile', :onclick => "location.href = '#{new_device_profile_path}';" %>

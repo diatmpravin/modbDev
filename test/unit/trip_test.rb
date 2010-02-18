@@ -217,6 +217,65 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.average_rpm.should.equal 2056
     end
   end
+
+  context "Recognizing trip in progress" do
+    setup do
+      @t = devices(:quentin_device).trips.create
+      leg = @t.legs.create
+      
+      leg.points << Point.create(
+        :event => Point::PERIODIC_IGNITION_ON,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.now - 10.seconds,
+        :device => @device
+      )
+    end
+
+    specify "Ongoing trip is shown in progress" do
+      @t.is_in_progress?.should.equal true
+    end
+
+    specify "Trip ending with ignition off is NOT in progress" do
+      @t.legs.last.points << Point.create(
+        :event => Point::IGNITION_OFF,
+        :latitude => 33.65,
+        :longitude => -84.42,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.now,
+        :device => @device
+      )
+      @t.is_in_progress?.should.equal false
+    end
+
+    specify "Trip with no IGNITION_OFF but isn't the latest trip is recognized as NOT in progress" do
+      t2 = devices(:quentin_device).trips.create
+      leg = t2.legs.create
+      
+      leg.points << Point.create(
+        :event => Point::PERIODIC_IGNITION_ON,
+        :latitude => 33.68,
+        :longitude => -84.40,
+        :mpg => 20,
+        :miles => 30,
+        :occurred_at => Time.now + 1,
+        :device => @device
+      )
+
+      @t.is_in_progress?.should.equal false
+      t2.is_in_progress?.should.equal true
+    end
+
+    specify "Trip with no IGNITION_OFF but is too old is recognized as NOT in progress" do
+      @t.is_in_progress?.should.equal true
+	   Time.freeze(Time.now + Device::TRIP_REPORT_CUTOFF) do |t|
+        @t.is_in_progress?.should.equal false
+      end
+    end
+  end
   
   context "Collapsing a trip" do
     setup do

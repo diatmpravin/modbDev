@@ -54,7 +54,6 @@ ActionController::Routing::Routes.draw do |map|
   
   # Phones
   map.resources :phones, :collection => {
-    :activate => [:post],
     :download => [:put]
   }
   
@@ -100,17 +99,4 @@ ActionController::Routing::Routes.draw do |map|
   # Static Pages
   map.resource :contact
   
-  # Phone Finder
-  map.resource :phone_finder, :controller => 'phone_finder', :collection => {
-    :popup => :get,
-    :carrier => :get,
-  } do |phone_finder|
-    
-    # /phone_finder/carriers
-    phone_finder.resources :carriers, :controller => 'phone_finder/carriers' do |carriers|
-      
-      # /phone_finder/carriers/:id/phones
-      carriers.resources :phones, :controller => 'phone_finder/carriers/phones'
-    end
-  end
 end

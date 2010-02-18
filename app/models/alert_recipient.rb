@@ -21,9 +21,9 @@ class AlertRecipient < ActiveRecord::Base
   # Return alert recipients that match the given parameters
   named_scope :matching, lambda { |hash|
     {
-      :conditions => hash[:recipient_type] == EMAIL ?
-        ["recipient_type = ? AND email = ?", hash[:recipient_type], hash[:email]] :
-        ["recipient_type = ? AND phone_number = ?", hash[:recipient_type], hash[:phone_number]]
+      :conditions => hash[:recipient_type] == EMAIL.to_s ?
+        ["recipient_type = ? AND email = ?", EMAIL, hash[:email]] :
+        ["recipient_type = ? AND phone_number = ?", PHONE, hash[:phone_number]]
     }
   }
   
