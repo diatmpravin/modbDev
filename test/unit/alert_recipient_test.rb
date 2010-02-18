@@ -40,12 +40,12 @@ describe "Alert Recipient", ActiveSupport::TestCase do
     
     context "matching()" do
       specify "matches appropriate emails" do
-        set = AlertRecipient.matching(:recipient_type => 0, :email => 'quentin@example.com')
+        set = AlertRecipient.matching(:recipient_type => "0", :email => 'quentin@example.com')
         set.should.equal [alert_recipients(:quentin_recipient)]
       end
       
       specify "matches appropriate phone numbers" do
-        set = AlertRecipient.matching(:recipient_type => 1, :phone_number => '3135551212')
+        set = AlertRecipient.matching(:recipient_type => "1", :phone_number => '3135551212')
         set.should.equal [alert_recipients(:quentin_sms)]
       end
     end
@@ -185,7 +185,7 @@ describe "Alert Recipient", ActiveSupport::TestCase do
 
       @mail.deliveries.length.should.be 1
       @mail.deliveries.first.to.should.equal ['3135551212@messaging.sprintpcs.com']
-      @mail.deliveries.first.body.should.equal '12:37 PM EST, 01-01-2008 abcd'
+      @mail.deliveries.first.body.should.match(/12:37 PM E.*S.*T.*, 01-01-2008 abcd/)
     end
   end
   
