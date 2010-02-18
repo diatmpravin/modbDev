@@ -94,6 +94,56 @@ describe "UsersController", ActionController::TestCase do
     end
   end
   
+  context "Setting Password" do
+    setup do
+      @user = users(:quentin)
+      @user.update_attribute(:activation_code, 'blah')
+      @user.update_attribute(:activated_at, nil)
+    end
+    
+    specify "can see set password page" do
+      get :set_password, {:id => 'blah'}
+      
+      template.should.equal 'set_password'
+    end
+    
+    specify "redirect for invalid" do
+      get :set_password, {:id => 'bad'}
+      
+      should.redirect_to forgot_password_path
+      flash[:error].should.not.be.nil
+    end
+    
+    specify "can set the password" do
+      @user.should.be.authenticated('test')
+      @user.should.not.be.activated
+      
+      post :set_password, {
+        :id => 'blah',
+        :password => 'halb',
+        :password_confirmation => 'halb'
+      }
+      
+      should.redirect_to login_path #somewhere else appropriate
+      flash[:notice].should.match 'Your password has been set'
+      
+      @user.reload
+      @user.should.be.authenticated('halb')
+      @user.activation_code.should.be.nil
+    end
+    
+    specify "will fail if bad password" do
+      post :set_password, {
+        :id => 'blah',
+        :password => 'blahblah',
+        :password_confirmation => 'doubleblah'
+      }
+      
+      template.should.equal 'set_password'
+      assigns(:user).errors.on(:password).should.not.be.nil
+    end
+  end
+  
   context "Listing users" do
     setup do
       @user = users(:quentin)

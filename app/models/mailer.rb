@@ -12,6 +12,14 @@ class Mailer < ActionMailer::Base
     content_type 'text/html'
   end
   
+  def set_password(user, sub, message)
+    recipients user.email
+    from support_address
+    body(:url => set_password_url(:id => user.activation_code), :message => message)
+    subject sub
+    content_type 'text/html'
+  end
+  
   #
   # Alerts
   #

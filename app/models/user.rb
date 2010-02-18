@@ -179,6 +179,23 @@ class User < ActiveRecord::Base
     
     Mailer.deliver_forgotten_password(self)
   end
+
+  def lock_password
+    self.crypted_password = '!' + self.crypted_password
+  end
+
+  def set_password(new_password, new_password_confirmation)
+    self.crypted_password = nil
+    self.password_reset_code = nil
+    self.password = new_password
+    self.password_confirmation = new_password_confirmation
+  end
+
+  def send_set_password(sub, message)
+    unless self.activated?
+     Mailer.deliver_set_password(self, sub, message)
+    end
+  end
   
   # Mark that this account is now active
   def activate
