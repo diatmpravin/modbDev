@@ -26,6 +26,7 @@ Rails::Initializer.run do |config|
   config.gem 'ruport', :version => '>= 1.6.0'
   config.gem 'redis'
   config.gem 'resque'
+  config.gem 'less',   :version => '>= 1.2'
 
   #config.gem 'mini_magick'
   

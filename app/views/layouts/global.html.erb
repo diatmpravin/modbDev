@@ -28,11 +28,9 @@
     <%= javascript_include_tag 'moshitime' %>
     <%= yield :javascript %>
   </head>
-  <% content_tag :body, :id => body_id do %>
-    <div id="wrapper">
-      <div id="layout">
-        <%= yield %>
-      </div>
+  <% content_tag :body, :id => body_id do %>   
+    <div id="layout">
+      <%= yield %>
     </div>
   <% end -%>
 </html>
