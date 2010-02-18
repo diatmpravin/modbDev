@@ -1,8 +1,8 @@
 <% inside_layout 'global' do -%>
-  <%= render :partial => "common/header" %>
+  <%= render :partial => 'common/header' %>
   
   <div id="navbar">
-    <%= render :partial => 'common/filter' %>
+    <%= yield :navbar %>
   </div>
   
   <div id="content">
@@ -10,4 +10,6 @@
       <%= yield %>
     </div>
   </div>
+  
+  <%= render :partial => 'common/footer' %>
 <% end -%>

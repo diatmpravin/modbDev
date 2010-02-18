@@ -4,10 +4,8 @@
   <%= javascript_include_tag 'geofences/model' %>
   <%= javascript_include_tag 'geofences/view' %>
   <%= javascript_include_tag 'alert_recipients' %>
-  <%= javascript_include_tag 'filter' %>
 <% end -%>
 <% inside_layout 'maps' do -%>
   <% @with_sidebar = true -%>
-  <%= render :partial => "geofences/filter_form" %>
   <%= yield %>
 <% end -%>

@@ -1,8 +1,9 @@
 <% content_for 'javascript' do -%>
   <%= javascript_include_tag 'users/index' %>
   <%= javascript_include_tag 'jquery/jquery.blockUI' %>
-  <%= javascript_include_tag 'filter' %>
 <% end -%>
+
+<% filter %>
 
 <%= messages %>
 <div class="users">
@@ -24,5 +25,3 @@
   <p>If this user manages any users or vehicles, they will be "moved up" one level and managed by you.</p>
   <p>Are you sure you want to remove this user?</p>
 </div>
-
-<%= render :partial => 'users/filter_form' -%>
