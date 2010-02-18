@@ -80,8 +80,7 @@ class DeviceReport
   # Attempt to parse the given string report and create a hash containing
   # the appropriate key/value pairs.
   def self.parse(report_string)
-    return nil unless report_string.scan(/\$\$.*?##/).any?
-    report = report_string[2..-3].split(',')
+    report = report_string.split(',')
     
     # The second field of the report is always the event type
     format = Format.for(report[1])
