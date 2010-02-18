@@ -47,7 +47,7 @@ describe "Alert Recipients Controller", ActionController::TestCase do
       AlertRecipient.should.differ(:count).by(0) do
         put :create, {
           :alert_recipient => {
-            :recipient_type => 0,
+            :recipient_type => "0",
             :email => 'quentin@example.com'
           }
         }
