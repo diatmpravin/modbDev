@@ -105,7 +105,9 @@ namespace :workers do
   task :list do
     pid_dir = Rails.root.join("tmp", "pids")
     Dir["#{pid_dir}/*.pid"].each do |pid_file|
-      puts pid_file
+      pid = File.read(pid_file)
+      status = `ps -C rake -o pid= | grep #{pid}`.strip
+      puts "#{status == "" ? "( STALE )" : "(Running)"} #{pid_file}"
     end
   end
 
