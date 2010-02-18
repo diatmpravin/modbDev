@@ -28,6 +28,49 @@
       </div>
     <% end -%>
     
+    <h3>Billing</h3>
+    <div class="field">
+      <%= f.label :address1, 'Address' %>
+      <%= f.text_field :address1 %>
+      <%= f.error_message_on :address1, :prepend_text => '* Address ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :address2, 'Address Line 2' %>
+      <%= f.text_field :address2 %>
+      <%= f.error_message_on :address2, :prepend_text => '* Address Line 2 ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :city, 'City' %>
+      <%= f.text_field :city %>
+      <%= f.error_message_on :city, :prepend_text => '* City ' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :state, 'State' %>
+      <%= f.select :state, STATES, {:include_blank => true} %>
+      <%= f.error_message_on :state, :prepend_text => '* State ' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :zip, 'Zip' %>
+      <%= f.text_field :zip, :maxlength => 5 %>
+      <%= f.error_message_on :zip, :prepend_text => '* Zip ' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :phone_number, 'Phone' %>
+      <%= f.text_field :phone_number, :maxlength => 10 %>
+      <%= f.error_message_on :phone_number, :prepend_text => '* Phone ' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :monthly_unit_price, 'Monthly Unit Price' %>
+      <%= f.text_field :monthly_unit_price %>
+      <%= f.error_message_on :monthly_unit_price, :prepend_text => '* Monthly Unit Price ' %>
+    </div>
+    
     <% if account.new_record? -%>
       <% f.fields_for :users do |u| -%>
         <h3>Admin User</h3>

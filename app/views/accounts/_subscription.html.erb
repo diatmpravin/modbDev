@@ -36,7 +36,7 @@
 
     <%= render :partial => "subscription/receipt", :locals => {:element => subscription} %>
 
-    <% if Rails.env != "production" -%><div style="margin-top: 1em;"><%= link_to "Billing Tester", billing_tester_path, :class => "simple" -%></div><% end -%>
+    <% if Rails.env != "production" -%><div style="margin-top: 1em;"><%= link_to "Billing Tester", billing_tester_path -%></div><% end -%>
   </div>
 </div>
 

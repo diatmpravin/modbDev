@@ -1,4 +1,13 @@
 <% inside_layout 'global' do -%>
   <%= render :partial => "common/header" %>
-  <%= yield %>
+  
+  <div id="navbar">
+    <%= render :partial => 'common/filter' %>
+  </div>
+  
+  <div id="content">
+    <div class="content">
+      <%= yield %>
+    </div>
+  </div>
 <% end -%>

@@ -18,7 +18,7 @@
     <p>Events: <%= trip.events.length %></p>
     <p class="tags">
       <%= format_tags(trip.tags) %>
-      (<%= link_to 'edit', '#', {:class => 'editSettings simple'} %>)
+      (<%= link_to 'edit', '#', {:class => 'editSettings'} %>)
     </p>
     <% if trip.legs.length > 1 -%>
       <div class="legs">

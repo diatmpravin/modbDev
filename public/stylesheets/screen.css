@@ -7,31 +7,35 @@ html, body, div, span, iframe, p, form, label, img {
 
 /* element styles */
 body {
-  background-color:#323c3e;
+  background-color:#0c1317;
 }
+
 body, table, input, select {
   font:12px/1.4em helvetica,arial,sans-serif;
 }
+
+h1, h2, h3, h4 {
+  font-weight:bold;
+  margin:0 0 0.75em 0;
+  padding:0;
+}
+
 h1 {
-  color:#15191a;
-  font-size:120%;
-  font-weight:bold;
-  margin:0 16px 0 0;
+  font-size:1.24em
 }
+
 h2 {
-  font-size:108%;
-  font-weight:bold;
-  margin:0 0 8px 0;
+  font-size:1.16em;
 }
+
 h3 {
-  font-weight:bold;
-  padding:0.2em 0.6em 0.2em 0.6em;
-  margin:0 0 8px 0;
+  font-size:1.08em;
 }
+
 h4 {
-  font-weight:bold;
-  margin:0 0 8px 0;
+  font-size:1em;
 }
+
 label {
   float:left;
   padding-top:2px;
@@ -68,16 +72,28 @@ form {
 form .authenticityToken {
   display:none;
 }
+fieldset {
+  border:none;
+  margin:0 0 0.5em 16px;
+  padding:0;
+}
 table {
   border-collapse:collapse;
 }
 table img {
   vertical-align:middle;
 }
+
 a, a:visited {
-  color:black;
+  color:#318ba9;
+  font-weight:bold;
   text-decoration:none;
 }
+a:hover {
+  color:black;
+  text-decoration:underline;
+}
+
 .red {
   color: red;
   font-weight: bold;
@@ -97,14 +113,6 @@ a, a:visited {
 img.busy {
   display: none;
   vertical-align: middle;
-}
-a.simple, a.simple:visited {
-  font-weight:bold;
-  color:#318ba9;
-}
-a.simple:hover {
-  color:black;
-  text-decoration:underline;
 }
 .key { text-align: right; }
 .value { font-weight: bold; }
@@ -204,7 +212,12 @@ a.close {
   padding:0;
 }
 #layout {
-  background-color:#323c3e;
+}
+#content {
+}
+#content .content {
+  background:white url(/images/content_bg.png) repeat-x 0 0;
+  padding:32px;
 }
 
 /* header */
@@ -331,9 +344,13 @@ a.close {
   cursor:pointer;
 }
 #navbar #livelook a {
+  color:#15191a;
   display:block;
   padding:0 28px 0 54px;
   background:transparent url(/images/live_look.png) no-repeat 24px center;
+}
+#navbar #livelook a:hover {
+  text-decoration:none;
 }
 #navbar #livelook.selected a {
   background:transparent url(/images/live_look_selected.png) no-repeat 24px center;
