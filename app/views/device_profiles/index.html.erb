@@ -1,7 +1,8 @@
 <% content_for 'javascript' do -%>
   <%= javascript_include_tag 'device_profiles/index' %>
-  <%= javascript_include_tag 'filter' %>
 <% end -%>
+
+<% filter %>
 
 <%= messages %>
 <div class="buttonsLeft">
@@ -35,24 +36,3 @@
   <p>If you remove this vehicle profile, it will be deleted permanently and any linked vehicles will be unlinked.</p>
   <p>Are you sure you want to remove this profile?</p>
 </div>
-
-<% content_for :filter_form do %>
-  <table>
-    <tr>
-      <td><%= label_tag 'name', "Name:" %></td>
-      <td><%= text_field_tag "name" %></td>
-    </tr>
-    <tr>
-      <td><%= label_tag 'tracker_id', 'Tracker ID:' %></td>
-      <td><%= text_field_tag "tracker_id" %></td>
-    </tr>
-    <tr>
-      <td><%= label_tag 'vin', 'VIN:' %></td>
-      <td><%= text_field_tag "vin" %></td>
-    </tr>
-    <tr>
-      <td><%= label_tag 'tag', 'Tag' %></td>
-      <td><%= text_field_tag "tag" %></td>
-    </tr>
-  </table>
-<% end %>

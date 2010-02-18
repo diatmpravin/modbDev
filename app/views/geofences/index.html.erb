@@ -1,7 +1,8 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag "geofences/index" %>
-  <%= javascript_include_tag 'filter' %>  
 <% end %>
+
+<% filter %>
 
 <%= messages %>
 <div class="geofences">
@@ -48,5 +49,3 @@
   <p>This will also remove this geofence from any groups and vehicles using it.</p>
   <p>Are you sure you want to remove this geofence?</p>
 </div>
-
-<%= render :partial => "geofences/filter_form" %>
