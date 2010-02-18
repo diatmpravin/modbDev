@@ -31,6 +31,11 @@ class Trip < ActiveRecord::Base
   default_value_for :finish do
     Time.now.utc
   end
+
+  # determine if the trip is in progress
+  def is_in_progress?
+    self.id == self.device.trips.last.id && self.points.last.event != Point::IGNITION_OFF && (Time.now - self.points.last.occurred_at < Device::TRIP_REPORT_CUTOFF)
+  end
   
   # Save tag names as tags
   def tag_names=(list)
