@@ -78,6 +78,7 @@
       <% f.fields_for :users do |u| -%>
         <h3>Admin User</h3>
         <fieldset>
+          A one use activation email will be sent.
           <div class="field">
             <%= u.label :email, 'Email' %>
             <%= u.text_field :email %>
@@ -88,18 +89,6 @@
             <%= u.label :login, 'Login' %>
             <%= u.text_field :login %>
             <%= u.error_message_on :login, :prepend_text => '* Login ' %>
-          </div>
-          
-          <div class="field">
-            <%= u.label :password, 'Password' %>
-            <%= u.text_field :password %>
-            <%= u.error_message_on :password, :prepend_text => '* Password '%>
-          </div>
-          
-          <div class="field">
-            <%= u.label :password_confirmation, 'Confirm Password' %>
-            <%= u.text_field :password_confirmation %>
-            <%= u.error_message_on :password_confirmation, :prepend_text => '* Confirm Password ' %>
           </div>
         </fieldset>
       <% end -%>

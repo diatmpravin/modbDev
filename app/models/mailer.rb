@@ -12,11 +12,11 @@ class Mailer < ActionMailer::Base
     content_type 'text/html'
   end
   
-  def set_password(user, sub, message)
+  def set_password(user)
     recipients user.email
     from support_address
-    body(:url => set_password_url(:id => user.activation_code), :message => message)
-    subject sub
+    body(:url => set_password_url(:id => user.activation_code), :account_number => user.account.number, :user_login => user.login)
+    subject 'Smart Fleet Services: Welcome'
     content_type 'text/html'
   end
   

@@ -9,7 +9,6 @@ class AccountsController < ApplicationController
   
   def index
     @account = current_account
-    #@accounts = current_account.children
   end
   
   def new
@@ -20,11 +19,16 @@ class AccountsController < ApplicationController
   def create
     @account = current_account.children.new
     
+    #Rails.logger.debug params.to_yaml
+
+    temp_pass = 'T3mPpAs5'
+    user_params = params[:account][:users_attributes]['0']
+    user_params[:password] = temp_pass
+    user_params[:password_confirmation] = temp_pass
+
     if @account.update_attributes(params[:account])
-      
-      # probably don't want to send an email until it has been crafted... just testing
-      #@account.users[0].send_set_password("test set pass", "test message")
-      
+      @account.users.first.lock_password
+      @account.users.first.send_set_password
       redirect_to :action => 'index'
     else
       Rails.logger.debug @account.to_yaml
