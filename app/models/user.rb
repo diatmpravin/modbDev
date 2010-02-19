@@ -34,12 +34,14 @@ class User < ActiveRecord::Base
   
   # Validating account causes account create to fail
   #validates_presence_of     :account
-  validates_presence_of     :login, :email
+  validates_presence_of     :login, :name, :email
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   validates_length_of       :login,    :within => 3..30,
+    :allow_nil => true, :allow_blank => true
+  validates_length_of       :name,     :within => 1..30,
     :allow_nil => true, :allow_blank => true
   validates_length_of       :email,    :within => 3..50,
     :allow_nil => true, :allow_blank => true
@@ -219,7 +221,7 @@ class User < ActiveRecord::Base
   end
   
   def password_required?
-    crypted_password.blank? || !password.blank?
+    !password.blank?
   end
   
   def current_password_matches
