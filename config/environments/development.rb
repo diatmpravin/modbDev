@@ -18,7 +18,7 @@ config.action_mailer.raise_delivery_errors = false
 
 # Mailer configuration
 config.action_mailer.smtp_settings = {
-  :address => 'walter.gomoshi.com',
+  :address => 'smokey.gomoshi.com',
   :domain => 'gomoshi.com'
 }
 

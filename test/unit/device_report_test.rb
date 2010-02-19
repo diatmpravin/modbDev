@@ -1,14 +1,9 @@
 require 'test_helper'
 
 describe "Device Report", ActiveSupport::TestCase do
-  specify "ignores improperly formatted reports" do
-    report = DeviceReport.parse('12345,12345,12345')
-    report.should.be.nil
-  end
-  
   # Location reports pre-1A firmware
   specify "handles a backward-compatible location report correctly" do
-    report = DeviceReport.parse('$$12345678901234567890,4001,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21##')
+    report = DeviceReport.parse('12345678901234567890,4001,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21')
     
     report.should.equal({
       :imei => '12345678901234567890',
@@ -31,7 +26,7 @@ describe "Device Report", ActiveSupport::TestCase do
   
   # Location reports from new firmware
   specify "handles a location report correctly" do
-    report = DeviceReport.parse('$$12345678901234567890,4001,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1##')
+    report = DeviceReport.parse('12345678901234567890,4001,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1')
     
     report.should.equal({
       :imei => '12345678901234567890',
@@ -57,8 +52,8 @@ describe "Device Report", ActiveSupport::TestCase do
   end
   
   specify "handles a heartbeat report correctly" do
-    #report = DeviceReport.parse('$$12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
-    report = DeviceReport.parse('$$12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G##')
+    #report = DeviceReport.parse('12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G')
+    report = DeviceReport.parse('12345678901234567890,4006,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G')
     
     report.should.equal({
       :imei => '12345678901234567890',
@@ -88,8 +83,8 @@ describe "Device Report", ActiveSupport::TestCase do
   end
   
   specify "handles a reset report correctly" do
-    #report = DeviceReport.parse('$$12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G##')
-    report = DeviceReport.parse('$$12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G##')
+    #report = DeviceReport.parse('12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,S001-1111A,0088,FacDflt,1G1G1G1G1G1G1G')
+    report = DeviceReport.parse('12345678901234567890,6015,2009/02/17,12:18:54,33.64512,-84.44697,312.1,31,0,1,866,218.0,9,1.6,21,13.1,14.3,12,1,1G1G1G1G1G1G1G')
     
     report.should.equal({
       :imei => '12345678901234567890',

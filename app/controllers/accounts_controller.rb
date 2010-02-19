@@ -21,6 +21,10 @@ class AccountsController < ApplicationController
     @account = current_account.children.new
     
     if @account.update_attributes(params[:account])
+      
+      # probably don't want to send an email until it has been crafted... just testing
+      #@account.users[0].send_set_password("test set pass", "test message")
+      
       redirect_to :action => 'index'
     else
       Rails.logger.debug @account.to_yaml

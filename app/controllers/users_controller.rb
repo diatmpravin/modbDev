@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
-  before_filter :require_role, :except => [:forgot_password, :reset_password]
+  before_filter :require_role, :except => [:forgot_password, :reset_password, :set_password]
   before_filter :new_user,     :only => [:new, :create]
   before_filter :set_user,     :only => [:edit, :update, :destroy]
   before_filter :set_users,    :only => :index
   before_filter :filter_roles, :only => [:create, :update]
   
-  skip_before_filter :login_required, :only => [:forgot_password, :reset_password]
+  skip_before_filter :login_required, :only => [:forgot_password, :reset_password, :set_password]
   
   layout except_ajax('users')
   
@@ -69,6 +69,32 @@ class UsersController < ApplicationController
     end
   end
   
+  def set_password
+    unless @user = User.find_by_activation_code(params[:id])
+      flash[:error] = 'The set password link you followed is no longer valid.'
+      redirect_to forgot_password_path #somewhere else that is appropriate
+      return
+    end
+    
+    unless request.post?
+      render :action => 'set_password', :layout => 'external'
+      return
+    end
+    
+    @user.set_password(params[:password], params[:password_confirmation])
+    
+    if @user.save
+      @user.password = nil
+      @user.password_confirmation = nil
+      @user.activate
+      
+      flash[:notice] = 'Your password has been set.'
+      redirect_to login_path #somewhere else that is appropriate
+    else
+      render :action => 'set_password', :layout => 'external'
+    end
+  end
+  
   def reset_password 
     unless @user = User.find_by_password_reset_code(params[:id])
       flash[:error] = 'The password reset link you followed is no longer valid.'
@@ -81,10 +107,7 @@ class UsersController < ApplicationController
       return
     end
     
-    @user.crypted_password = nil
-    @user.password_reset_code = nil
-    @user.password = params[:password]
-    @user.password_confirmation = params[:password_confirmation]
+    @user.set_password(params[:password], params[:password_confirmation])
     
     if @user.save
       flash[:notice] = 'Your password has been updated.'

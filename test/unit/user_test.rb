@@ -145,6 +145,36 @@ describe "User", ActiveSupport::TestCase do
     end
   end
   
+  context "Setting Password" do
+    specify "sending a set password is successful" do
+      Mailer.deliveries.clear
+      new_user = User.new
+      
+      # generate activation code through save
+      new_user.save(false) 
+      new_user.activation_code.should.not.be.nil
+      new_user.send_set_password('subject', 'message')
+      Mailer.deliveries.length.should.be 1
+      Mailer.deliveries.clear
+      new_user.delete      
+    end
+    
+    specify "setting a password works" do
+      @user.set_password('bogus', 'boguser')
+      @user.crypted_password.should.be.nil
+      @user.password_reset_code.should.be.nil
+      @user.password.should.equal 'bogus'
+      @user.password_confirmation.should.equal 'boguser'
+    end
+    
+    specify "locking a password works" do
+      @user.password = 'test'
+      @user.authenticated?(@user.password).should.be true
+      @user.lock_password
+      @user.authenticated?(@user.password).should.not.be true
+    end
+  end
+  
   context "Resetting Password" do
     specify "forgotten password generates a reset code and sends an email" do
       Mailer.deliveries.clear

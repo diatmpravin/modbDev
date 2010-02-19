@@ -18,13 +18,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :collection => {
     :resend_activation => :get,
     :forgot_password => :get,
-    :reset_password => :get
+    :reset_password => :get,
+    :set_password => :get
   }, :member => {
     :activate => :get
   }
 
   map.forgot_password '/users/forgot_password', :controller => 'users', :action => 'forgot_password', :conditions => {:method => :post}
   map.reset_password '/users/reset_password/:id', :controller => 'users', :action => 'reset_password'
+  map.set_password '/users/set_password/:id', :controller => 'users', :action => 'set_password'
 
   map.resource :profile, :controller => 'profile'
   
