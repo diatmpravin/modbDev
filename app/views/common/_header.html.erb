@@ -21,6 +21,7 @@
         <% requires_role(User::Role::RESELLER) do -%>
           <% if current_account.reseller? -%>
             <li><%= link_to 'Trackers', trackers_path %></li>
+            <li><%= link_to 'Accounts', accounts_path %></li>
           <% end -%>
         <% end -%>
         <li><%= link_to 'Contact Us', contact_path %></li>
