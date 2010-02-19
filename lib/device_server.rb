@@ -2,19 +2,15 @@ require 'eventmachine'
 require 'redis'
 
 module DeviceServer
-  include LoadsYamlConfig
   include Logging
 
   log_to 'device_server'
-  loads_yaml_config :redis_config, 'device_server.yml'
 
   class Dispatcher
-    def initialize(redis_config)
-      @redis_config = redis_config
-
+    def initialize
       # Redis-rb doesn't know about spop
       Redis::ALIASES["set_pop"] = "spop"
-      @redis = Redis.new(redis_config)
+      @redis = Redis.build
     end
 
     def logger
@@ -43,7 +39,7 @@ module DeviceServer
     def process
       while imei = @redis.set_pop("mobd:imei:waiting")
         logger.debug("Dispatching processing for IMEI: #{imei}")
-        Resque.enqueue(Worker, @redis_config, imei)
+        Resque.enqueue(Worker, imei)
       end
 
       EM::add_timer(5) { process } if @running
@@ -63,8 +59,8 @@ module DeviceServer
     @queue = :points
 
     # Resque hook
-    def self.perform(redis_config, imei)
-      worker = Worker.new(redis_config)
+    def self.perform(imei)
+      worker = Worker.new
       worker.process(imei)
     end
 
@@ -74,8 +70,8 @@ module DeviceServer
     end
 
 
-    def initialize(redis_config)
-      @redis = Redis.new(redis_config)
+    def initialize
+      @redis = Redis.build
     end
 
     def process(imei)
@@ -115,7 +111,7 @@ module DeviceServer
     logger.info("Device Server started")
 
     EventMachine::run do
-      @dispatcher = Dispatcher.new(redis_config)
+      @dispatcher = Dispatcher.new
       @dispatcher.run
     end
   ensure
