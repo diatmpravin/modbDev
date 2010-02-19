@@ -18,9 +18,9 @@ class ApplicationController < ActionController::Base
   # Any record-not-found will redirect back to :index
   # If other logic is required, implement in the appropriate
   # controller
-  rescue_from(ActiveRecord::RecordNotFound) do |error|
-    redirect_to :action => "index"
-  end
+  #rescue_from(ActiveRecord::RecordNotFound) do |error|
+  #  redirect_to :action => "index"
+  #end
 
   def filter_query
     logger.info "(Filter Query) Session: #{session.inspect}"

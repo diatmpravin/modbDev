@@ -29,7 +29,10 @@ class User < ActiveRecord::Base
   # Virtual attribute for current password
   attr_accessor :current_password
   
-  #Validating account causes account create to fail
+  # Virtual attribute, set when we require the user to enter current password
+  attr_accessor :require_current_password
+  
+  # Validating account causes account create to fail
   #validates_presence_of     :account
   validates_presence_of     :login, :email
   validates_presence_of     :password,                   :if => :password_required?
@@ -41,17 +44,19 @@ class User < ActiveRecord::Base
   validates_length_of       :email,    :within => 3..50,
     :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :login, :case_sensitive => false, :scope => :account_id
-  validate_on_update :current_password_matches
-  validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
+  validate_on_update        :current_password_matches
+  validates_inclusion_of    :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
   
   # List accessible attributes here
   attr_accessible :login, :email, :password, :password_confirmation,
     :account, :current_password, :roles, :name, :time_zone, :devices,
     :device_group, :device_group_id
   
-  before_save :encrypt_password
-  before_create :make_activation_code
-
+  before_validation_on_create :lock_password
+  before_save                 :encrypt_password
+  before_create               :make_activation_code
+  after_create                :send_set_password
+  
   # Work around bug:
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
   def device_ids
@@ -60,7 +65,7 @@ class User < ActiveRecord::Base
   
   # Allow device_group_id=, but enforce account ownership and group type
   def device_group_id=(value)
-    self.device_group = value ? account.groups.of_devices.find(value) : nil
+    self.device_group = value.blank? ? nil : account.groups.of_devices.find(value)
   end
   
   class Role
@@ -181,7 +186,7 @@ class User < ActiveRecord::Base
   end
 
   def lock_password
-    self.crypted_password = '!' + self.crypted_password
+    self.crypted_password = "!!#{self.crypted_password}"
   end
 
   def set_password(new_password, new_password_confirmation)
@@ -191,7 +196,7 @@ class User < ActiveRecord::Base
     self.password_confirmation = new_password_confirmation
   end
 
-  def send_set_password(sub, message)
+  def send_set_password(sub = 'Blargh', message = 'OHNOOOOOOOOOOOOOOOOES')
     unless self.activated?
      Mailer.deliver_set_password(self, sub, message)
     end
@@ -220,9 +225,11 @@ class User < ActiveRecord::Base
   end
   
   def current_password_matches
-    if (email_changed? || !password.blank? || login_changed?) &&
-      (!crypted_password.blank? && !authenticated?(current_password))
-      errors.add(:current_password, ' is not correct')
+    if require_current_password
+      if (email_changed? || !password.blank? || login_changed?) &&
+        (!crypted_password.blank? && !authenticated?(current_password))
+        errors.add(:current_password, ' is not correct')
+      end
     end
   end
   

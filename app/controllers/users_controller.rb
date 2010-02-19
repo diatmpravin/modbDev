@@ -16,12 +16,8 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user.attributes = params[:user]
-    @user.password = 'password'
-    @user.password_confirmation = 'password'
-    @user.activated_at = Time.now
-    
-    if @user.save
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "User '#{@user.login}' has been created. A welcome email was sent to '#{@user.email}'."
       redirect_to :action => 'index'
     else
       render :action => 'new'
