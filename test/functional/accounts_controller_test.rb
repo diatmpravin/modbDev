@@ -48,6 +48,7 @@ describe "Accounts Controller", ActionController::TestCase do
             :name => 'ooga',
             :users_attributes => { '0' => {
               :login => 'oogabooga',
+              :name => 'Ooga Booga',
               :email => 'ooga@booga.com',
               :password => 'test',
               :password_confirmation => 'test'
