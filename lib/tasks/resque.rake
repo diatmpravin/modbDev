@@ -39,7 +39,7 @@ namespace :workers do
 
       # Start up our new worker via dtach
       puts "Starting worker ##{i} to listen to queue #{queue.inspect}"
-      system "dtach -n #{dtach_socket} rake resque:work QUEUE=#{queue}"
+      `dtach -n #{dtach_socket} rake resque:work QUEUE=#{queue}`
 
       # Now get the pid of the new process and save it.
       # This is a two step process, we need to find the new dtach process, get it's pid,
