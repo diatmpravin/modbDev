@@ -5,6 +5,8 @@
     <tr>
       <th>Number</th>
       <th>Name</th>
+      <th>Phone</th>
+      <th>Monthly Unit Price</th>
       <% if account.can_assign_reseller? -%>
         <th>Reseller?</th>
         <th>Can Create Resellers?</th>
@@ -16,6 +18,8 @@
     <tr class="<%=cycle('','odd')%>">
       <td><%= h a.number %></td>
       <td><%= h a.name %></td>
+      <td><%= h a.phone_number %></td>
+      <td><%= h a.monthly_unit_price %></td>
       <% if account.can_assign_reseller? -%>
         <td><%= check_image a.reseller? %></td>
         <td><%= check_image a.can_assign_reseller? %></td>
