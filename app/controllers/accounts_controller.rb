@@ -28,7 +28,6 @@ class AccountsController < ApplicationController
 
     if @account.update_attributes(params[:account])
       @account.users.first.lock_password
-      @account.users.first.send_set_password
       redirect_to :action => 'index'
     else
       Rails.logger.debug @account.to_yaml
