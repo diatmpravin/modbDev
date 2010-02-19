@@ -1,9 +1,0 @@
-# List redis configuration options per environment
-development:
-  db: 0
-staging:
-  db: 0
-test:
-  db: 15
-production:
-  db: 0
