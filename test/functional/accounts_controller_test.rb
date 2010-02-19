@@ -67,7 +67,6 @@ describe "Accounts Controller", ActionController::TestCase do
           :account => {
             :reseller => '0',
             :can_assign_reseller => '0',
-            :name => 'ooga',
             :users_attributes => { '0' => {
               :login => 'oogabooga',
               :email => 'ooga@booga.com',
@@ -76,7 +75,7 @@ describe "Accounts Controller", ActionController::TestCase do
         }
         
         template.should.equal 'new'
-        assigns(:account).errors.on('users_password').should.not.be.nil
+        assigns(:account).errors.on('name').should.not.be.nil
     end
     
   end

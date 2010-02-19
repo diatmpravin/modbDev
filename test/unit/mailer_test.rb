@@ -19,17 +19,14 @@ describe "Mailer", ActiveSupport::TestCase do
   
   specify "set password" do
     @user = users(:quentin)
-    sub = 'subject subject'
-    message = 'message o message'
     
     @user.update_attribute(:activation_code, 'quarter_pounder')
-    Mailer.deliver_set_password(@user, sub, message)
+    Mailer.deliver_set_password(@user)
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['quentin@example.com']
-    Mailer.deliveries.first.subject.should.equal sub
+    Mailer.deliveries.first.subject.should.equal 'Smart Fleet Services: Welcome'
     Mailer.deliveries.first.body.should =~ 'http://localhost:3000/users/set_password/quarter_pounder'
-    Mailer.deliveries.first.body.should =~ message
   end
   
   specify "email alert" do

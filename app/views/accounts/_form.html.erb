@@ -1,102 +1,96 @@
 <% form_for account, :html => {:autocomplete => "off"} do |f| -%>
   <div class="standardInfo">
     <h3>Account Details</h3>
-    
-    <div class="field">
-      <%= f.label :number, 'Number' %>
-      Account number will be auto generated
-      <%= error_message_on account, :number %>
-    </div>
-    
-    <div class="field">
-      <%= f.label :name, 'Company Name' %>
-      <%= f.text_field :name, :maxlength => 50 %>
-      <%= f.error_message_on :name, :prepend_text => '* Company name ' %>
-    </div>
+    <fieldset>
+      <div class="field">
+        <%= f.label :number, 'Number' %>
+        Account number will be auto generated
+        <%= error_message_on account, :number %>
+      </div>
+      
+      <div class="field">
+        <%= f.label :name, 'Company Name' %>
+        <%= f.text_field :name, :maxlength => 50 %>
+        <%= f.error_message_on :name, :prepend_text => '* Company name ' %>
+      </div>
 
-    <% if current_account.can_assign_reseller? -%>
-      <h3>Reseller Options</h3>
-      
-      <div class="field">
-        <%= f.check_box :reseller %>
-        <%= f.label :reseller, 'Is a reseller? (can create accounts)', :class => 'checkbox' %>
-      </div>
-      
-      <div class="field">
-        <%= f.check_box :can_assign_reseller %>
-        <%= f.label :can_assign_reseller, 'Can create reseller accounts?', :class => 'checkbox' %>
-      </div>
-    <% end -%>
+      <% if current_account.can_assign_reseller? -%>
+        <h3>Reseller Options</h3>
+        
+        <div class="field">
+          <%= f.check_box :reseller %>
+          <%= f.label :reseller, 'Is a reseller? (can create accounts)', :class => 'checkbox' %>
+        </div>
+        
+        <div class="field">
+          <%= f.check_box :can_assign_reseller %>
+          <%= f.label :can_assign_reseller, 'Can create reseller accounts?', :class => 'checkbox' %>
+        </div>
+      <% end -%>
+    </fieldset>
     
     <h3>Billing</h3>
-    <div class="field">
-      <%= f.label :address1, 'Address' %>
-      <%= f.text_field :address1 %>
-      <%= f.error_message_on :address1, :prepend_text => '* Address ' %>
-    </div>
-    
-    <div class="field">
-      <%= f.label :address2, 'Address Line 2' %>
-      <%= f.text_field :address2 %>
-      <%= f.error_message_on :address2, :prepend_text => '* Address Line 2 ' %>
-    </div>
-    
-    <div class="field">
-      <%= f.label :city, 'City' %>
-      <%= f.text_field :city %>
-      <%= f.error_message_on :city, :prepend_text => '* City ' %>
-    </div>
+    <fieldset>
+      <div class="field">
+        <%= f.label :address1, 'Address' %>
+        <%= f.text_field :address1 %>
+        <%= f.error_message_on :address1, :prepend_text => '* Address ' %>
+      </div>
+      
+      <div class="field">
+        <%= f.label :address2, 'Address Line 2' %>
+        <%= f.text_field :address2 %>
+        <%= f.error_message_on :address2, :prepend_text => '* Address Line 2 ' %>
+      </div>
+      
+      <div class="field">
+        <%= f.label :city, 'City' %>
+        <%= f.text_field :city %>
+        <%= f.error_message_on :city, :prepend_text => '* City ' %>
+      </div>
 
-    <div class="field">
-      <%= f.label :state, 'State' %>
-      <%= f.select :state, STATES, {:include_blank => true} %>
-      <%= f.error_message_on :state, :prepend_text => '* State ' %>
-    </div>
-    
-    <div class="field">
-      <%= f.label :zip, 'Zip' %>
-      <%= f.text_field :zip, :maxlength => 5 %>
-      <%= f.error_message_on :zip, :prepend_text => '* Zip ' %>
-    </div>
+      <div class="field">
+        <%= f.label :state, 'State' %>
+        <%= f.select :state, STATES, {:include_blank => true} %>
+        <%= f.error_message_on :state, :prepend_text => '* State ' %>
+      </div>
+      
+      <div class="field">
+        <%= f.label :zip, 'Zip' %>
+        <%= f.text_field :zip, :maxlength => 5 %>
+        <%= f.error_message_on :zip, :prepend_text => '* Zip ' %>
+      </div>
 
-    <div class="field">
-      <%= f.label :phone_number, 'Phone' %>
-      <%= f.text_field :phone_number, :maxlength => 10 %>
-      <%= f.error_message_on :phone_number, :prepend_text => '* Phone ' %>
-    </div>
+      <div class="field">
+        <%= f.label :phone_number, 'Phone' %>
+        <%= f.text_field :phone_number, :maxlength => 10 %>
+        <%= f.error_message_on :phone_number, :prepend_text => '* Phone ' %>
+      </div>
 
-    <div class="field">
-      <%= f.label :monthly_unit_price, 'Monthly Unit Price' %>
-      <%= f.text_field :monthly_unit_price %>
-      <%= f.error_message_on :monthly_unit_price, :prepend_text => '* Monthly Unit Price ' %>
-    </div>
-    
+      <div class="field">
+        <%= f.label :monthly_unit_price, 'Monthly Unit Price' %>
+        <%= f.text_field :monthly_unit_price %>
+        <%= f.error_message_on :monthly_unit_price, :prepend_text => '* Monthly Unit Price ' %>
+      </div>
+    </fieldset>
+
     <% if account.new_record? -%>
       <% f.fields_for :users do |u| -%>
         <h3>Admin User</h3>
-        <div class="field">
-          <%= u.label :email, 'Email' %>
-          <%= u.text_field :email %>
-          <%= u.error_message_on :email, :prepend_text => '* Email ' %>
-        </div>
-        
-        <div class="field">
-          <%= u.label :login, 'Login' %>
-          <%= u.text_field :login %>
-          <%= u.error_message_on :login, :prepend_text => '* Login ' %>
-        </div>
-        
-        <div class="field">
-          <%= u.label :password, 'Password' %>
-          <%= u.text_field :password %>
-          <%= u.error_message_on :password, :prepend_text => '* Password '%>
-        </div>
-        
-        <div class="field">
-          <%= u.label :password_confirmation, 'Confirm Password' %>
-          <%= u.text_field :password_confirmation %>
-          <%= u.error_message_on :password_confirmation, :prepend_text => '* Confirm Password ' %>
-        </div>
+        <fieldset>
+          A one use activation email will be sent.
+          <div class="field">
+            <%= u.label :email, 'Email' %>
+            <%= u.text_field :email %>
+            <%= u.error_message_on :email, :prepend_text => '* Email ' %>
+          </div>
+          
+          <div class="field">
+            <%= u.label :login, 'Login' %>
+            <%= u.text_field :login %>
+            <%= u.error_message_on :login, :prepend_text => '* Login ' %>
+          </div>
+        </fieldset>
       <% end -%>
     <% end -%>
   </div>

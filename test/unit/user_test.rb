@@ -148,12 +148,13 @@ describe "User", ActiveSupport::TestCase do
   context "Setting Password" do
     specify "sending a set password is successful" do
       Mailer.deliveries.clear
-      new_user = User.new
+      # requires account number
+      new_user = accounts(:quentin).users.build
       
       # generate activation code through save
       new_user.save(false) 
       new_user.activation_code.should.not.be.nil
-      new_user.send_set_password('subject', 'message')
+      new_user.send_set_password
       Mailer.deliveries.length.should.be 1
       Mailer.deliveries.clear
       new_user.delete      

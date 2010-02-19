@@ -1,5 +1,6 @@
 defaults: &defaults
   port: 6379
+  db: 1
   #db:
   #timeout:
   #password:
@@ -10,6 +11,9 @@ development:
   <<: *defaults
 
 test:
+  host: 127.0.0.1
+  port: 6379
+  db: 15
   # Redis calls will be mock/stub'd in test mode
 
 staging:

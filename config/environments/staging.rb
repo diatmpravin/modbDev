@@ -35,6 +35,3 @@ config.action_mailer.smtp_settings = {
 config.action_mailer.default_url_options = {
   :host => 'fleetqa.gomoshi.com'
 }
-
-# Setup cookies to work with base domain
-config.action_controller.session[:domain] = ".gomoshi.com"

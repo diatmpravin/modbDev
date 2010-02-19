@@ -39,7 +39,7 @@ namespace :workers do
 
       # Start up our new worker via dtach
       puts "Starting worker ##{i} to listen to queue #{queue.inspect}"
-      system "dtach -n #{dtach_socket} rake resque:work QUEUE=#{queue}"
+      `dtach -n #{dtach_socket} rake resque:work QUEUE=#{queue}`
 
       # Now get the pid of the new process and save it.
       # This is a two step process, we need to find the new dtach process, get it's pid,
@@ -82,15 +82,15 @@ namespace :workers do
 
       `kill -s TERM #{pid}`
 
-      count = 0
+      wait_tick = 0
 
       while `ps -C rake -o pid= | grep #{pid}`.strip != ""
         sleep 1
-        count += 1
+        wait_tick += 1
 
-        if count > 20
+        if wait_tick > 20
           puts "Process #{pid} doesn't seem to be dying. You can wait or kill it yourself, this script will wait for you."
-          count = 0
+          wait_tick = 0
         end
       end
 

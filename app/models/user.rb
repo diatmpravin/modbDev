@@ -196,12 +196,10 @@ class User < ActiveRecord::Base
     self.password_confirmation = new_password_confirmation
   end
 
-  def send_set_password(sub = 'Blargh', message = 'OHNOOOOOOOOOOOOOOOOES')
-    unless self.activated?
-     Mailer.deliver_set_password(self, sub, message)
-    end
+  def send_set_password
+    Mailer.deliver_set_password(self) unless self.activation_code.nil?
   end
-  
+
   # Mark that this account is now active
   def activate
     self.activated_at = Time.now
