@@ -21,68 +21,78 @@ describe "User", ActiveSupport::TestCase do
     end
   end
   
-  context "Authentication" do
-    def create_user(options = {})
-      record = User.new({:login => 'quire', :name => 'Quire', :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire'}.merge(options))
-      record.account = accounts(:quentin)
-      record.save
-      record
-    end
-    
-    specify "should create user" do
-      assert_difference 'User.count' do
-        user = create_user
-        assert !user.new_record?, "#{user.errors.full_messages.to_sentence}"
-      end
-    end
-    
-    specify "should require login" do  
-      assert_no_difference 'User.count' do
-        u = create_user(:login => nil)
-        assert u.errors.on(:login)
-      end
-    end
-    
-    specify "should require name" do
-      assert_no_difference 'User.count' do
-        u = create_user(:name => nil)
-        assert u.errors.on(:name)
-      end
-    end
-    
-    specify "should NOT require password" do
-      assert_difference 'User.count' do
-        u = create_user(:password => nil)
-      end
-    end
-
-    specify "should require password confirmation (if password provided)" do
-      assert_difference 'User.count' do
-        u = create_user(:password => nil, :password_confirmation => nil)
-      end
+  context "Validations" do
+    specify "requires login" do
+      @user.should.be.valid
       
-      assert_no_difference 'User.count' do
-        u = create_user(:password_confirmation => nil)
-        assert u.errors.on(:password_confirmation)
-      end
+      @user.login = nil
+      @user.should.not.be.valid
+      assert @user.errors.on(:login)
     end
-
-    specify "should require email" do
-      assert_no_difference 'User.count' do
-        u = create_user(:email => nil)
-        assert u.errors.on(:email)
-      end
+    
+    specify "enforces uniqueness of login" do
+      user = @account.users.new(:login => 'quentin')
+      user.should.not.be.valid
+      user.errors.on(:login).should =~ /already been taken/
     end
-
-    specify "should reset password" do
-      users(:quentin).update_attributes(
-        :password => 'new password',
-        :password_confirmation => 'new password',
+    
+    specify "requires name" do
+      @user.should.be.valid
+      
+      @user.name = nil
+      @user.should.not.be.valid
+      assert @user.errors.on(:name)
+    end
+    
+    specify "requires email" do
+      @user.should.be.valid
+      
+      @user.email = nil
+      @user.should.not.be.valid
+      assert @user.errors.on(:email)
+    end
+    
+    specify "requires password confirmation IF password provided" do
+      @user.password_confirmation = nil
+      @user.should.be.valid
+      
+      @user.password = 'elephants'
+      @user.should.not.be.valid
+      assert @user.errors.on(:password_confirmation)
+    end
+  end
+  
+  context "Requiring Current Password" do
+    setup do
+      @user.require_current_password = true
+    end
+    
+    specify "requires the current password to change password" do
+      @user.should.not.update_attributes(
+        :password => 'test2', :password_confirmation => 'test2'
+      )
+      @user.errors.on(:current_password).should =~ /is not correct/
+      
+      @user.should.update_attributes(
+        :password => 'test2',
+        :password_confirmation => 'test2',
         :current_password => 'test'
       )
-      assert_equal users(:quentin), User.authenticate(@account, 'quentin', 'new password')
     end
+    
+    specify "requires current password to change email" do
+      @user.should.not.update_attributes(
+        :email => 'hello@hello.com'
+      )
+      @user.errors.on(:current_password).should =~ /is not correct/
+      
+      @user.should.update_attributes(
+        :email => 'hello@hello.com', :current_password => 'test'
+      )
+    end
+  end
 
+  context "Authentication" do
     specify "should authenticate user" do
       assert_equal users(:quentin), User.authenticate(@account, 'quentin', 'test')
     end
@@ -126,51 +136,28 @@ describe "User", ActiveSupport::TestCase do
       assert users(:quentin).remember_token_expires_at.between?(before, after)
     end
     
-    specify "requires the current password to change password" do
-      user = users(:quentin)
-      user.require_current_password = true
-      
-      user.should.not.update_attributes(
-        :password => 'test2', :password_confirmation => 'test2'
+    specify "can reset passsword" do
+      @user.update_attributes(
+        :password => 'new password',
+        :password_confirmation => 'new password'
       )
-      user.errors.on(:current_password).should =~ /is not correct/
-      
-      user.should.update_attributes(
-        :password => 'test2',
-        :password_confirmation => 'test2',
-        :current_password => 'test'
-      )
-    end
-    
-    specify "requires current password to change email" do
-      user = users(:quentin)
-      user.require_current_password = true
-      
-      user.should.not.update_attributes(
-        :email => 'hello@hello.com'
-      )
-      user.errors.on(:current_password).should =~ /is not correct/
-      
-      user.should.update_attributes(
-        :email => 'hello@hello.com', :current_password => 'test'
-      )
+      assert_equal users(:quentin), User.authenticate(@account, 'quentin', 'new password')
     end
   end
   
   context "Setting Password" do
-    xspecify "sending a set password is successful" do
+    specify "creating a new user sends a set password email" do
       Mailer.deliveries.clear
       
-      # requires account number
-      new_user = accounts(:quentin).users.build
+      new_user = accounts(:quentin).users.build(
+        :login => 'jeff',
+        :name => 'Jeffrey Lebowski',
+        :email => 'jeff@jeff.com'
+      )
       
-      # generate activation code through save
-      new_user.save
-      #new_user.should.save
-      puts new_user.errors.inspect
-      puts new_user.activation_code
-      new_user.activation_code.should.not.be.nil
-      Mailer.deliveries.length.should.equal 1
+      new_user.should.save
+      new_user.password_reset_code.should.not.be.nil
+      Mailer.deliveries.length.should.be 1
     end
     
     specify "setting a password works" do
@@ -183,9 +170,10 @@ describe "User", ActiveSupport::TestCase do
     
     specify "locking a password works" do
       @user.password = 'test'
-      @user.authenticated?(@user.password).should.be true
+      @user.should.be.authenticated(@user.password)
+      
       @user.lock_password
-      @user.authenticated?(@user.password).should.not.be true
+      @user.should.not.be.authenticated(@user.password)
     end
   end
   
