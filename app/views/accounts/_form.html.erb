@@ -9,7 +9,7 @@
       </div>
       
       <div class="field">
-        <%= f.label :name, 'Company Name' %>
+        <%= f.label :name, 'Company Name', :class => 'required' %>
         <%= f.text_field :name, :maxlength => 50 %>
         <%= f.error_message_on :name, :prepend_text => '* Company name ' %>
       </div>
