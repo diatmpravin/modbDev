@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100217190203) do
+ActiveRecord::Schema.define(:version => 20100222194505) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -305,8 +305,6 @@ ActiveRecord::Schema.define(:version => 20100217190203) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "time_zone",                 :limit => 64, :default => "Eastern Time (US & Canada)"
-    t.string   "activation_code",           :limit => 40
-    t.datetime "activated_at"
     t.string   "remember_token",            :limit => 40
     t.datetime "remember_token_expires_at"
     t.string   "password_reset_code",       :limit => 48
