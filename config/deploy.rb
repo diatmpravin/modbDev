@@ -30,9 +30,29 @@ depend(:remote, :gem, 'ruport', '>= 1.6.1')
 # Fix for sudo to properly use the shell
 default_run_options[:pty] = true
 
+def rake(*tasks)
+  rails_env = fetch(:rails_env, "production")
+  rake = fetch(:rake, "rake")
+  tasks.each do |t|
+    sudo "echo ''"
+    run "if [ -d #{release_path} ]; then cd #{release_path}; else cd #{current_path}; fi; sudo -u www-data #{rake} RAILS_ENV=#{rails_env} #{t}"
+  end
+end
+
+# Set ownership after a deploy:setup
+after 'deploy:setup', :roles => :app do
+  sudo "chown -R #{webuser}:#{webgrp} #{deploy_to}"
+end
+
 # Pull the configs in for the current stage
 after 'deploy:update_code', :roles => :app do
   sudo "cp #{release_path}/config/deploy/#{stage}/*.yml #{release_path}/config/"
+
+  sudo "chown -R #{webuser}:#{webgrp} #{release_path}"
+  sudo "chmod -R g+w #{release_path}"
+
+  # Force parse the CSS on deploy
+  rake "more:parse"
 end
 
 namespace :deploy do
