@@ -10,6 +10,8 @@ class ProfileController < ApplicationController
   # PUT /profile
   def update
     @user = current_user
+    @user.require_current_password = true
+    
     if @user.update_attributes(params[:user])
       flash[:notice] = "Profile settings updated."
 

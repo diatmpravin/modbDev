@@ -160,9 +160,8 @@ describe "User", ActiveSupport::TestCase do
       Mailer.deliveries.length.should.be 1
     end
     
-    specify "setting a password works" do
-      @user.set_password('bogus', 'boguser')
-      @user.crypted_password.should.be.nil
+    specify "resetting a password works" do
+      @user.reset_password('bogus', 'boguser')
       @user.password_reset_code.should.be.nil
       @user.password.should.equal 'bogus'
       @user.password_confirmation.should.equal 'boguser'

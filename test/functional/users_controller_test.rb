@@ -3,147 +3,6 @@ require 'test_helper'
 describe "UsersController", ActionController::TestCase do
   use_controller UsersController
   
-  context "Forgotten Password" do
-    setup do
-      @user = users(:quentin)
-    end
-    
-    specify "can see the forgotten password page" do
-      get :forgot_password
-      
-      template.should.equal 'forgot_password'
-    end
-    
-    specify "can submit a forgotten password request" do
-      User.any_instance.expects(:forgot_password)
-      
-      post :forgot_password, {
-        :account_number => 10001,
-        :login => 'quentin'
-      }
-      
-      should.redirect_to login_path
-    end
-    
-    specify "will fail if credentials are incorrect" do
-      User.any_instance.expects(:forgot_password).never
-      
-      post :forgot_password, {
-        :account_number => 55555,
-        :login => 'quentin'
-      }
-      
-      template.should.equal 'forgot_password'
-      flash[:error].should.not.be.nil
-      
-      post :forgot_password, {
-        :account_number => 10001,
-        :login => 'quotient'
-      }
-      
-      template.should.equal 'forgot_password'
-      flash[:error].should.not.be.nil
-    end
-  end
-  
-  context "Reset Password" do
-    setup do
-      @user = users(:quentin)
-      @user.update_attribute(:password_reset_code, 'fish')
-    end
-    
-    specify "can see the password reset page" do
-      get :reset_password, {:id => 'fish'}
-      
-      template.should.equal 'reset_password'
-    end
-    
-    specify "will be redirected if reset code is invalid" do
-      get :reset_password, {:id => 'trouble'}
-      
-      should.redirect_to forgot_password_path
-      flash[:error].should.not.be.nil
-    end
-    
-    specify "can reset the user's password" do
-      @user.should.be.authenticated('test')
-      
-      post :reset_password, {
-        :id => 'fish',
-        :password => 'salmon',
-        :password_confirmation => 'salmon'
-      }
-      
-      should.redirect_to login_path
-      flash[:notice].should.not.be.nil
-      
-      @user.reload
-      @user.should.be.authenticated('salmon')
-      @user.password_reset_code.should.be.nil
-    end
-    
-    specify "will fail if user cannot be saved" do
-      post :reset_password, {
-        :id => 'fish',
-        :password => 'salmon',
-        :password_confirmation => 'halibut'
-      }
-      
-      template.should.equal 'reset_password'
-      assigns(:user).errors.on(:password).should.not.be.nil
-    end
-  end
-  
-  context "Setting Password" do
-    setup do
-      @user = users(:quentin)
-      @user.update_attribute(:activation_code, 'blah')
-      @user.update_attribute(:activated_at, nil)
-    end
-    
-    specify "can see set password page" do
-      get :set_password, {:id => 'blah'}
-      
-      template.should.equal 'set_password'
-    end
-    
-    specify "redirect for invalid" do
-      get :set_password, {:id => 'bad'}
-      
-      should.redirect_to forgot_password_path
-      flash[:error].should.not.be.nil
-    end
-    
-    specify "can set the password" do
-      @user.should.be.authenticated('test')
-      @user.should.not.be.activated
-      
-      post :set_password, {
-        :id => 'blah',
-        :password => 'halb',
-        :password_confirmation => 'halb'
-      }
-      
-      should.redirect_to login_path #somewhere else appropriate
-      flash[:notice].should.match 'Your password has been set'
-      
-      @user.reload
-      @user.should.be.authenticated('halb')
-      @user.activation_code.should.be.nil
-    end
-    
-    specify "will fail if bad password" do
-      post :set_password, {
-        :id => 'blah',
-        :password => 'blahblah',
-        :password_confirmation => 'doubleblah'
-      }
-      
-      template.should.equal 'set_password'
-      assigns(:user).errors.on(:password).should.not.be.nil
-    end
-  end
-  
   context "Listing users" do
     setup do
       @user = users(:quentin)
@@ -180,6 +39,8 @@ describe "UsersController", ActionController::TestCase do
     end
     
     specify "works" do
+      Mailer.deliveries.clear
+      
       User.should.differ(:count).by(1) do
         post :create, {
           :user => {
@@ -190,7 +51,9 @@ describe "UsersController", ActionController::TestCase do
         }
       end
       
-      #should have an account
+      Mailer.deliveries.length.should.be 1
+      
+      # Should have an account
       wumpus = User.find_by_login 'wumpus'
       wumpus.account.should.not.be.nil
       
@@ -332,6 +195,145 @@ describe "UsersController", ActionController::TestCase do
       }
       
       should.redirect_to root_path
+    end
+  end
+  
+
+  context "Forgotten Password" do
+    setup do
+      @user = users(:quentin)
+    end
+    
+    specify "can see the forgotten password page" do
+      get :forgot_password
+      
+      template.should.equal 'forgot_password'
+    end
+    
+    specify "can submit a forgotten password request" do
+      User.any_instance.expects(:forgot_password)
+      
+      post :forgot_password, {
+        :account_number => 10001,
+        :login => 'quentin'
+      }
+      
+      should.redirect_to login_path
+    end
+    
+    specify "will fail if credentials are incorrect" do
+      User.any_instance.expects(:forgot_password).never
+      
+      post :forgot_password, {
+        :account_number => 55555,
+        :login => 'quentin'
+      }
+      
+      template.should.equal 'forgot_password'
+      flash[:error].should.not.be.nil
+      
+      post :forgot_password, {
+        :account_number => 10001,
+        :login => 'quotient'
+      }
+      
+      template.should.equal 'forgot_password'
+      flash[:error].should.not.be.nil
+    end
+  end
+  
+  context "Reset Password" do
+    setup do
+      @user = users(:quentin)
+      @user.update_attribute(:password_reset_code, 'fish')
+    end
+    
+    specify "can see the password reset page" do
+      get :reset_password, {:id => 'fish'}
+      
+      template.should.equal 'reset_password'
+    end
+    
+    specify "will be redirected if reset code is invalid" do
+      get :reset_password, {:id => 'trouble'}
+      
+      should.redirect_to forgot_password_path
+      flash[:error].should.not.be.nil
+    end
+    
+    specify "can reset the user's password" do
+      @user.should.be.authenticated('test')
+      
+      post :reset_password, {
+        :id => 'fish',
+        :password => 'salmon',
+        :password_confirmation => 'salmon'
+      }
+      
+      should.redirect_to root_path
+      flash[:notice].should.not.be.nil
+      
+      @user.reload
+      @user.should.be.authenticated('salmon')
+      @user.password_reset_code.should.be.nil
+    end
+    
+    specify "will fail if user cannot be saved" do
+      post :reset_password, {
+        :id => 'fish',
+        :password => 'salmon',
+        :password_confirmation => 'halibut'
+      }
+      
+      template.should.equal 'reset_password'
+      assigns(:user).errors.on(:password).should.not.be.nil
+    end
+  end
+  
+  context "Setting Password" do
+    setup do
+      @user = users(:quentin)
+      @user.update_attribute(:password_reset_code, 'blah')
+    end
+    
+    specify "can see set password page" do
+      get :set_password, {:id => 'blah'}
+      
+      template.should.equal 'set_password'
+    end
+    
+    specify "redirect for invalid" do
+      get :set_password, {:id => 'bad'}
+      
+      should.redirect_to forgot_password_path
+      flash[:error].should.not.be.nil
+    end
+    
+    specify "can set the password" do
+      @user.should.be.authenticated('test')
+      
+      post :set_password, {
+        :id => 'blah',
+        :password => 'halb',
+        :password_confirmation => 'halb'
+      }
+      
+      should.redirect_to root_path
+      flash[:notice].should =~ /Welcome/
+      
+      @user.reload
+      @user.should.be.authenticated('halb')
+    end
+    
+    specify "will fail if bad password" do
+      post :set_password, {
+        :id => 'blah',
+        :password => 'blahblah',
+        :password_confirmation => 'doubleblah'
+      }
+      
+      template.should.equal 'set_password'
+      assigns(:user).errors.on(:password).should.not.be.nil
     end
   end
 end

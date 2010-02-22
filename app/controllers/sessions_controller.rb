@@ -12,20 +12,15 @@ class SessionsController < ApplicationController
       self.current_user = User.authenticate(account, params[:login], params[:password])
       
       if logged_in?
-        if self.current_user.activated?
-          if params[:remember_me] == "1"
-            current_user.remember_me unless current_user.remember_token?
-            cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
-          end
-          
-          default = root_path
-          
-          flash.discard
-          redirect_back_or_default(default)
-        else
-          @email = self.current_user.email
-          render :action => 'waiting_on_activation', :layout => 'wizard'
+        if params[:remember_me] == "1"
+          current_user.remember_me unless current_user.remember_token?
+          cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
         end
+        
+        default = root_path
+        
+        flash.discard
+        redirect_back_or_default(default)
       else
         flash.now[:error] = 'Your Username or Password is incorrect.'
         render :action => 'new'

@@ -12,25 +12,16 @@ class AccountsController < ApplicationController
   end
   
   def new
-    @account = Account.new
-    @account.users.build
+    @account = current_account.children.new
   end
   
   def create
     @account = current_account.children.new
-    
-    #Rails.logger.debug params.to_yaml
-
-    temp_pass = 'T3mPpAs5'
-    user_params = params[:account][:users_attributes]['0']
-    user_params[:password] = temp_pass
-    user_params[:password_confirmation] = temp_pass
 
     if @account.update_attributes(params[:account])
-      @account.users.first.lock_password
+      flash[:notice] = "Account #{@account.number} has been created. A welcome email was sent to the admin user."
       redirect_to :action => 'index'
     else
-      Rails.logger.debug @account.to_yaml
       render :action => 'new'
     end
   end
@@ -42,7 +33,7 @@ class AccountsController < ApplicationController
     if @account.update_attributes(params[:account])
       redirect_to :action => 'index'
     else
-      render :action => 'new'
+      render :action => 'edit'
     end
   end
 
@@ -64,23 +55,6 @@ class AccountsController < ApplicationController
   def require_role
     # Is it better to have all these guys return 403 Forbidden?
     redirect_to root_path unless current_user.has_role?(User::Role::RESELLER)
-  end
-  
-  def require_password
-    unless current_user.authenticated?(params[:password])
-      respond_to do |format|
-        format.html {
-          flash[:error] = 'You must enter your current password.'
-          redirect_to :action => 'edit'
-        }
-        format.json {
-          render :json => {
-            :status => 'failure',
-            :error => 'You must enter your current password.'
-          }
-        }
-      end
-    end
   end
   
   def external_or_accounts

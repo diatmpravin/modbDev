@@ -8,18 +8,15 @@ describe "ProfileController", ActionController::TestCase do
   end
 
   context "Show" do
-
     specify "shows edit form" do
       get :show
       template.should.be "show"
 
       assigns(:user).should.equal users(:quentin)
     end
-
   end
 
   context "Update" do
-
     specify "can update profile settings" do
       params = {
         :user => {
@@ -59,7 +56,7 @@ describe "ProfileController", ActionController::TestCase do
       u.crypted_password.should.not.equal old_pass
     end
 
-    xspecify "security settings require current password" do
+    specify "security settings require current password" do
       params = {
         :user => {
           :login => "testing",
@@ -98,7 +95,6 @@ describe "ProfileController", ActionController::TestCase do
       u.reload
       u.crypted_password.should.equal old_pass
     end
-
   end
 
 end
