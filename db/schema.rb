@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100222194505) do
+ActiveRecord::Schema.define(:version => 20100223161823) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -270,6 +270,7 @@ ActiveRecord::Schema.define(:version => 20100222194505) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "msisdn_number", :limit => 32
+    t.integer  "account_id"
   end
 
   add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"
