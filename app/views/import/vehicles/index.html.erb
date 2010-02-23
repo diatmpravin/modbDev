@@ -1,1 +1,38 @@
-<h1>Import Vehicles</h1>
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "import/vehicles" -%>
+<% end -%>
+
+<%= messages %>
+
+<div id="upload">
+  <h1>Import Vehicles</h1>
+
+  <p>
+  Use the form below to create vehicles based on an existing list. This form will accept CSV files, Excel Spreadsheets (xls), or OpenOffice.org's Calc files (ods).
+  <p>
+
+  <p>
+  This tool will look for VIN, Name and Odometer in the uploaded document. VIN and Name are required, Odometer is not. Use the "Details" form to specify where in the document this information is if the upload is unable to find it.
+  </p>
+
+  <div id="uploadForm">
+    <% form_tag import_vehicles_path, :method => :post, :multipart => true do -%>
+      <fieldset>
+        <div class="field">
+          <%= label_tag :upload, "Upload File:" -%>
+          <%= file_field_tag :upload -%>
+        </div>
+
+        <%= submit_tag "Upload" -%>
+      </fieldset>
+    <% end -%>
+  </div>
+
+  <div id="busy">
+    <p>File is uploading</p>
+    <%= image_tag "progress_bar.gif" -%>
+  </div>
+
+  <div id="results">
+  </div>
+</div>
