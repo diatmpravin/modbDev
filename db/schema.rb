@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100217190203) do
+ActiveRecord::Schema.define(:version => 20100223192054) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20100217190203) do
     t.string   "state"
     t.string   "zip"
     t.decimal  "monthly_unit_price",                :precision => 6, :scale => 2
+    t.boolean  "delta",                                                           :default => true,  :null => false
   end
 
   add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"

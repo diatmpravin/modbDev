@@ -54,7 +54,9 @@ class AccountsController < ApplicationController
   end
   
   def set_accounts
-    @accounts = current_account.children.paginate :page => params[:page], :per_page => 30
+    @accounts = search_on Account do
+      current_account.children.paginate :page => params[:page], :per_page => 30
+    end
   end
   
   def require_reseller
