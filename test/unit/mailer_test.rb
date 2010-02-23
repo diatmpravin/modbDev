@@ -20,7 +20,7 @@ describe "Mailer", ActiveSupport::TestCase do
   specify "set password" do
     @user = users(:quentin)
     
-    @user.update_attribute(:activation_code, 'quarter_pounder')
+    @user.update_attribute(:password_reset_code, 'quarter_pounder')
     Mailer.deliver_set_password(@user)
     
     Mailer.deliveries.length.should.be 1

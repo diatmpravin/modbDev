@@ -1,4 +1,5 @@
 class Tracker < ActiveRecord::Base
+  belongs_to :account
   has_one :device, :dependent => :nullify
   
   UNKNOWN = 0

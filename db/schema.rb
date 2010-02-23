@@ -271,6 +271,7 @@ ActiveRecord::Schema.define(:version => 20100223192054) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "msisdn_number", :limit => 32
+    t.integer  "account_id"
   end
 
   add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"
@@ -306,8 +307,6 @@ ActiveRecord::Schema.define(:version => 20100223192054) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "time_zone",                 :limit => 64, :default => "Eastern Time (US & Canada)"
-    t.string   "activation_code",           :limit => 40
-    t.datetime "activated_at"
     t.string   "remember_token",            :limit => 40
     t.datetime "remember_token_expires_at"
     t.string   "password_reset_code",       :limit => 48

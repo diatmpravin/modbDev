@@ -34,12 +34,14 @@ class User < ActiveRecord::Base
   
   # Validating account causes account create to fail
   #validates_presence_of     :account
-  validates_presence_of     :login, :email
+  validates_presence_of     :login, :name, :email
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   validates_length_of       :login,    :within => 3..30,
+    :allow_nil => true, :allow_blank => true
+  validates_length_of       :name,     :within => 1..30,
     :allow_nil => true, :allow_blank => true
   validates_length_of       :email,    :within => 3..50,
     :allow_nil => true, :allow_blank => true
@@ -54,7 +56,6 @@ class User < ActiveRecord::Base
   
   before_validation_on_create :lock_password
   before_save                 :encrypt_password
-  before_create               :make_activation_code
   after_create                :send_set_password
   
   # Work around bug:
@@ -189,26 +190,17 @@ class User < ActiveRecord::Base
     self.crypted_password = "!!#{self.crypted_password}"
   end
 
-  def set_password(new_password, new_password_confirmation)
-    self.crypted_password = nil
+  def reset_password(new_password, new_password_confirmation)
     self.password_reset_code = nil
     self.password = new_password
     self.password_confirmation = new_password_confirmation
   end
 
   def send_set_password
-    Mailer.deliver_set_password(self) unless self.activation_code.nil?
-  end
-
-  # Mark that this account is now active
-  def activate
-    self.activated_at = Time.now
-    self.activation_code = nil
-    self.save
-  end
-
-  def activated?
-    !!self.activated_at
+    generate_password_reset_code
+    save(false)
+    
+    Mailer.deliver_set_password(self)
   end
   
   protected
@@ -219,7 +211,7 @@ class User < ActiveRecord::Base
   end
   
   def password_required?
-    crypted_password.blank? || !password.blank?
+    !password.blank?
   end
   
   def current_password_matches
@@ -231,15 +223,11 @@ class User < ActiveRecord::Base
     end
   end
   
-  def random_digest
-    ActiveSupport::SecureRandom.hex(20)
-  end
-
   def generate_password_reset_code
     self.password_reset_code = random_digest
   end
   
-  def make_activation_code
-    self.activation_code = random_digest
+  def random_digest
+    ActiveSupport::SecureRandom.hex(20)
   end
 end

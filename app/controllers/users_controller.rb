@@ -38,6 +38,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     
+    flash[:notice] = "User '#{@user.login}' has been deleted."
     redirect_to :action => 'index'
   end
   
@@ -66,9 +67,9 @@ class UsersController < ApplicationController
   end
   
   def set_password
-    unless @user = User.find_by_activation_code(params[:id])
+    unless @user = User.find_by_password_reset_code(params[:id])
       flash[:error] = 'The set password link you followed is no longer valid.'
-      redirect_to forgot_password_path #somewhere else that is appropriate
+      redirect_to forgot_password_path
       return
     end
     
@@ -77,15 +78,13 @@ class UsersController < ApplicationController
       return
     end
     
-    @user.set_password(params[:password], params[:password_confirmation])
+    @user.reset_password(params[:password], params[:password_confirmation])
     
     if @user.save
-      @user.password = nil
-      @user.password_confirmation = nil
-      @user.activate
+      self.current_user = @user.reload
       
-      flash[:notice] = 'Your password has been set.'
-      redirect_to login_path #somewhere else that is appropriate
+      flash[:notice] = "Welcome, #{@user.name}!"
+      redirect_to root_path
     else
       render :action => 'set_password', :layout => 'external'
     end
@@ -103,11 +102,13 @@ class UsersController < ApplicationController
       return
     end
     
-    @user.set_password(params[:password], params[:password_confirmation])
+    @user.reset_password(params[:password], params[:password_confirmation])
     
     if @user.save
+      self.current_user = @user.reload
+      
       flash[:notice] = 'Your password has been updated.'
-      redirect_to login_path
+      redirect_to root_path
     else
       render :action => 'reset_password', :layout => 'external'
     end

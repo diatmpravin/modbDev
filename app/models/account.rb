@@ -9,6 +9,7 @@ class Account < ActiveRecord::Base
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
   has_many :device_profiles, :order => 'name', :dependent => :destroy
+  has_many :trackers, :dependent => :nullify
   
   accepts_nested_attributes_for :users
   

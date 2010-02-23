@@ -2,17 +2,17 @@
   <h3>User Details</h3>
   <fieldset>
     <div class="field">
-      <%= f.label :login, 'Username *' %>
+      <%= f.label :login, 'Username', :class => 'required' %>
       <%= f.text_field :login, {:size => 30, :maxlength => 30} %>
       <%= error_message_on user, :login, :prepend_text => '* Username ' %>
     </div>
     <div class="field">
-      <%= f.label :name %>
+      <%= f.label :name, 'Name', :class => 'required' %>
       <%= f.text_field :name, {:size => 30, :maxlength => 30} %>
       <%= error_message_on user, :name, :prepend_text => '* Name ' %>
     </div>
     <div class="field">
-      <%= f.label :email, 'Email address *' %>
+      <%= f.label :email, 'Email address', :class => 'required' %>
       <%= f.text_field :email %>
       <%= error_message_on user, :email, :prepend_text => '* Email address ' %>
     </div>
