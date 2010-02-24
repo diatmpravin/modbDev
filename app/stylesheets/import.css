@@ -4,11 +4,10 @@
 
 #upload {
   #uploadForm {
+    margin-top: 1em;
   }
 
   #busy {
-    width: 100%;
-    text-align: center;
     display: none;
   }
 

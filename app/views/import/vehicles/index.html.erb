@@ -12,7 +12,15 @@
   <p>
 
   <p>
-  This tool will look for VIN, Name and Odometer in the uploaded document. VIN and Name are required, Odometer is not. Use the "Details" form to specify where in the document this information is if the upload is unable to find it.
+  This tool expects the following file formatting:
+  <ul>
+    <li>CSV: Three columns "Name", "VIN", "Odometer" (odometer is optional)</li>
+    <li>Excel: Single worksheet, data in three columns in the order of "Name", "VIN", "Odometer" (odometer is optional)</li>
+  </ul>
+  </p>
+
+  <p>
+  The data <strong>must</strong> start on the first, please do not include a header row.
   </p>
 
   <div id="uploadForm">

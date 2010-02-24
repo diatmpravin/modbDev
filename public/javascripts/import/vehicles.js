@@ -19,5 +19,5 @@
   // Live event hookups
 
   // document-ready initialization
-  $(Vehicles.init);
+  //$(Vehicles.init);
 })(jQuery);
