@@ -1,0 +1,44 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "import/vehicles" -%>
+<% end -%>
+
+<%= messages %>
+
+<div id="upload">
+  <h1>Import Vehicles - Preview</h1>
+
+  <p>
+  Below is a preview of the data you have uploaded. On clicking "Import" vehicles will be added to your account
+  according to this list.
+  <p>
+
+  <p>
+  If this list has errors, please double-check the file you've uploaded, hit Back and re-upload the file.
+  </p>
+
+  <div id="uploadForm">
+    <% form_tag import_vehicle_path("process"), :method => :put do -%>
+      <%= hidden_field_tag :file_name, @processor.file_name -%>        
+      <%= submit_tag "Import" -%>
+    <% end -%>
+  </div>
+
+  <div id="preview">
+    <h2>The following vehicles will be added to your account</h2>
+
+    <table class="data">
+      <tr>
+        <th>Vehicle Name</th>
+        <th>VIN</th>
+        <th>Odometer</th>
+      </tr>
+      <% @processor.data.each do |entry| -%>
+        <tr>
+          <td><%= entry[0] -%></td>
+          <td><%= entry[1] -%></td>
+          <td><%= entry[2] -%></td>
+        </tr>
+      <% end -%>
+    </table>
+  </div>
+</div>

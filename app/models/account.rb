@@ -13,6 +13,8 @@ class Account < ActiveRecord::Base
   
   accepts_nested_attributes_for :users
   
+  concerned_with :sphinx
+  
   validates_presence_of :name
   validates_presence_of :number
   validates_numericality_of :number

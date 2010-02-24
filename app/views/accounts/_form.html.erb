@@ -80,19 +80,19 @@
         <fieldset>
           A one use activation email will be sent.
           <div class="field">
-            <%= u.label :email, 'Email' %>
+            <%= u.label :email, 'Email', :class => 'required' %>
             <%= u.text_field :email %>
             <%= u.error_message_on :email, :prepend_text => '* Email ' %>
           </div>
           
           <div class="field">
-            <%= u.label :name, 'Name' %>
+            <%= u.label :name, 'Name', :class => 'required' %>
             <%= u.text_field :name %>
             <%= u.error_message_on :name, :prepend_text => '* Name ' %>
           </div>
           
           <div class="field">
-            <%= u.label :login, 'Login' %>
+            <%= u.label :login, 'Login', :class => 'required' %>
             <%= u.text_field :login %>
             <%= u.error_message_on :login, :prepend_text => '* Login ' %>
           </div>

@@ -28,6 +28,9 @@ Rails::Initializer.run do |config|
   config.gem 'resque'
   config.gem 'less',   :version => '>= 1.2'
 
+  config.gem 'fastercsv'
+  config.gem 'spreadsheet'
+
   #config.gem 'mini_magick'
   
   config.gem 'thinking-sphinx', :lib => 'thinking_sphinx'
