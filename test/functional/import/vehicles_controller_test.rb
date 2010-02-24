@@ -3,12 +3,12 @@ require File.dirname(__FILE__) + '/../../test_helper'
 context "Import::VehiclesController", ActionController::TestCase do
   use_controller Import::VehiclesController
 
-  context "Main Page" do
+  setup do
+    @user = users(:quentin)
+    login_as :quentin
+  end
 
-    setup do
-      @user = users(:quentin)
-      login_as :quentin
-    end
+  context "Main Page" do
 
     specify "shows upload form" do
       get :index
@@ -26,19 +26,45 @@ context "Import::VehiclesController", ActionController::TestCase do
 
   context "Uploading file" do
 
-    context "Allows certain types" do
+    context "Processes file" do
 
-      xspecify "allows xls"
+      specify "shows preview page if valid" do
+        file = fixture_file_upload("import/proper_10.csv", "text/csv")
 
-      xspecify "allows csv"
+        post :create, :upload => file
+        template.should.be "create"
 
-      xspecify "allows ods" 
+        assigns(:parser).should.not.be.nil
+        assigns(:processor).should.not.be.nil
+        assigns(:processor).file_name.should.equal "proper_10.csv"
+      end
 
-      xspecify "errors out if file type not recognized"
+      specify "errors should show upload page again" do
+        file = fixture_file_upload("import/proper_10.xls", "text/csv")
+
+        post :create, :upload => file
+        template.should.be "index"
+
+        assigns(:parser).should.not.be.nil
+        flash[:error].should.match /Unable to parse/
+      end
 
     end
 
-    context "Processes file" do
+    context "Processing vehicles list" do
+
+      setup do
+        file = fixture_file_upload("import/proper_10.csv", "text/csv")
+        post :create, :upload => file
+      end
+
+      specify "creates vehicles accordingly" do
+        Device.should.differ(:count).by(10) do
+          put :update, :id => "huh", :file_name => "proper_10.csv"
+        end
+
+        should.redirect_to devices_path
+      end
 
     end
 

@@ -14,4 +14,11 @@
   #results {
     display: none;
   }
+
+  #preview {
+    margin-top: 2em;
+    table {
+      margin: 1em;
+    }
+  }
 }
