@@ -1,0 +1,17 @@
+/**
+ * Styles for the /import/ set of controllers
+ */
+
+#upload {
+  #uploadForm {
+    margin-top: 1em;
+  }
+
+  #busy {
+    display: none;
+  }
+
+  #results {
+    display: none;
+  }
+}

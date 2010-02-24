@@ -93,6 +93,11 @@ ActionController::Routing::Routes.draw do |map|
   # Payments
   map.resources :payments
 
+  # Imports
+  map.namespace :import do |import|
+    import.resources :vehicles
+  end
+
   # Billing Tester
   map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'
 

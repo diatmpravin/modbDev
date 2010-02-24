@@ -1,0 +1,46 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "import/vehicles" -%>
+<% end -%>
+
+<%= messages %>
+
+<div id="upload">
+  <h1>Import Vehicles</h1>
+
+  <p>
+  Use the form below to create vehicles based on an existing list. This form will accept CSV files, Excel Spreadsheets (xls), or OpenOffice.org's Calc files (ods).
+  <p>
+
+  <p>
+  This tool expects the following file formatting:
+  <ul>
+    <li>CSV: Three columns "Name", "VIN", "Odometer" (odometer is optional)</li>
+    <li>Excel: Single worksheet, data in three columns in the order of "Name", "VIN", "Odometer" (odometer is optional)</li>
+  </ul>
+  </p>
+
+  <p>
+  The data <strong>must</strong> start on the first, please do not include a header row.
+  </p>
+
+  <div id="uploadForm">
+    <% form_tag import_vehicles_path, :method => :post, :multipart => true do -%>
+      <fieldset>
+        <div class="field">
+          <%= label_tag :upload, "Upload File:" -%>
+          <%= file_field_tag :upload -%>
+        </div>
+
+        <%= submit_tag "Upload" -%>
+      </fieldset>
+    <% end -%>
+  </div>
+
+  <div id="busy">
+    <p>File is uploading</p>
+    <%= image_tag "progress_bar.gif" -%>
+  </div>
+
+  <div id="results">
+  </div>
+</div>

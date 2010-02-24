@@ -116,4 +116,8 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/groups", groups_path
     assert_equal "/groups/3/live_look", live_look_group_path(3)
   end
+
+  test "import vehicles resource" do
+    assert_equal "/import/vehicles", import_vehicles_path
+  end
 end
