@@ -10,13 +10,10 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
   end
 
   specify "can store data in redis" do
+    key = "mobd:import:#{@quentin.id}:#{@quentin_user.id}:filename.txt"
+    Redis.expects(:build).returns(mock(:set => [key, %w(data is kind of cool).to_json]))
+
     @importer.store("filename.txt", %w(data is kind of cool))
-
-    r = Redis.build
-    found = r.get("mobd:import:#{@quentin.id}:#{@quentin_user.id}:filename.txt")
-
-    ActiveSupport::JSON.decode(found).should.equal %w(data is kind of cool)
-
     @importer.data.should.equal %w(data is kind of cool)
   end
 
@@ -28,7 +25,12 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
       %w(Vehicle4 000000000000004 40203),
       %w(Vehicle5 000000000000005 50203),
     ]
-    @importer.store("vehicles.csv", data)
+
+    key = "mobd:import:#{@quentin.id}:#{@quentin_user.id}:vehicles.csv"
+    redis_mock = mock()
+    redis_mock.expects(:get).with(key).returns(data.to_json)
+
+    Redis.expects(:build).returns(redis_mock)
 
     @quentin.devices.should.differ(:count).by(5) do
       @importer.process("vehicles.csv")
