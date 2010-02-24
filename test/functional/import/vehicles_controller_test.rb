@@ -31,12 +31,16 @@ context "Import::VehiclesController", ActionController::TestCase do
       specify "shows preview page if valid" do
         file = fixture_file_upload("import/proper_10.csv", "text/csv")
 
+        Import::VehicleImporter.any_instance.expects(:store).with { |file, data|
+          file =="proper_10.csv" &&
+            data.length == 10
+        }
+
         post :create, :upload => file
         template.should.be "create"
 
         assigns(:parser).should.not.be.nil
         assigns(:processor).should.not.be.nil
-        assigns(:processor).file_name.should.equal "proper_10.csv"
       end
 
       specify "errors should show upload page again" do
@@ -53,16 +57,10 @@ context "Import::VehiclesController", ActionController::TestCase do
 
     context "Processing vehicles list" do
 
-      setup do
-        file = fixture_file_upload("import/proper_10.csv", "text/csv")
-        post :create, :upload => file
-      end
-
       specify "creates vehicles accordingly" do
-        Device.should.differ(:count).by(10) do
-          put :update, :id => "huh", :file_name => "proper_10.csv"
-        end
+        Import::VehicleImporter.any_instance.expects(:process).with("proper_10.csv")
 
+        put :update, :id => "huh", :file_name => "proper_10.csv"
         should.redirect_to devices_path
       end
 
