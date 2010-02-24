@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false, :scope => :account_id
   validate_on_update        :current_password_matches
   validates_inclusion_of    :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
+  validates_email_veracity_of :email, :domain_check => false, :message => 'is not a valid e-mail address'
   
   # List accessible attributes here
   attr_accessible :login, :email, :password, :password_confirmation,
