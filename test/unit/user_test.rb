@@ -51,6 +51,16 @@ describe "User", ActiveSupport::TestCase do
       @user.should.not.be.valid
       assert @user.errors.on(:email)
     end
+
+    specify "requires valid email" do
+      @user.should.be.valid
+
+      @user.email = 'junk@domain'
+      @user.should.not.be.valid
+      assert @user.errors.on(:email)
+      @user.email = 'junk@domain.com'
+      @user.should.be.valid
+    end
     
     specify "requires password confirmation IF password provided" do
       @user.password_confirmation = nil

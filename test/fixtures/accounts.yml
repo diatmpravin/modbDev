@@ -4,6 +4,7 @@ quentin:
   number: 10001
   reseller: true
   can_assign_reseller: true
+  name: 'quentin_account'
 aaron:
   parent: quentin
   reseller: true
