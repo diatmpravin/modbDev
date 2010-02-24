@@ -26,18 +26,6 @@ context "Import::VehiclesController", ActionController::TestCase do
 
   context "Uploading file" do
 
-    context "Allows certain types" do
-
-      xspecify "allows xls"
-
-      xspecify "allows csv"
-
-      xspecify "allows ods" 
-
-      xspecify "errors out if file type not recognized"
-
-    end
-
     context "Processes file" do
 
       specify "shows preview page if valid" do
@@ -59,6 +47,23 @@ context "Import::VehiclesController", ActionController::TestCase do
 
         assigns(:parser).should.not.be.nil
         flash[:error].should.match /Unable to parse/
+      end
+
+    end
+
+    context "Processing vehicles list" do
+
+      setup do
+        file = fixture_file_upload("import/proper_10.csv", "text/csv")
+        post :create, :upload => file
+      end
+
+      specify "creates vehicles accordingly" do
+        Device.should.differ(:count).by(10) do
+          put :update, :id => "huh", :file_name => "proper_10.csv"
+        end
+
+        should.redirect_to devices_path
       end
 
     end

@@ -35,8 +35,8 @@ class Device < ActiveRecord::Base
   VALID_IDLE_THRESHOLDS = [1, 2, 3, 4, 5, 10, 15, 20]
   VALID_PITSTOP_THRESHOLDS = [5, 10, 15, 20, 30, 45, 60]
 
-  validates_presence_of :tracker, :message => 'is not valid'
-  validates_uniqueness_of :tracker_id, :message => 'is already in use'
+#  validates_presence_of :tracker, :message => 'is not valid'
+#  validates_uniqueness_of :tracker_id, :message => 'is already in use'
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true

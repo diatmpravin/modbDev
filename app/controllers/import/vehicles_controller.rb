@@ -23,6 +23,17 @@ class Import::VehiclesController < ApplicationController
     end
   end
 
+  # PUT /import/vehicles/:id
+  # Expects :file_name
+  # Starts the process to actually create the vehicles
+  def update
+    file = params[:file_name]
+    processor = Import::VehicleImporter.new(current_account, current_user)
+    processor.process(file)
+
+    redirect_to devices_path
+  end
+
   protected
 
   def require_role
