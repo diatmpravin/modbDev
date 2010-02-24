@@ -3,12 +3,12 @@ require File.dirname(__FILE__) + '/../../test_helper'
 context "Import::VehiclesController", ActionController::TestCase do
   use_controller Import::VehiclesController
 
-  context "Main Page" do
+  setup do
+    @user = users(:quentin)
+    login_as :quentin
+  end
 
-    setup do
-      @user = users(:quentin)
-      login_as :quentin
-    end
+  context "Main Page" do
 
     specify "shows upload form" do
       get :index
@@ -39,6 +39,27 @@ context "Import::VehiclesController", ActionController::TestCase do
     end
 
     context "Processes file" do
+
+      specify "shows preview page if valid" do
+        file = fixture_file_upload("import/proper_10.csv", "text/csv")
+
+        post :create, :upload => file
+        template.should.be "create"
+
+        assigns(:parser).should.not.be.nil
+        assigns(:processor).should.not.be.nil
+        assigns(:processor).file_name.should.equal "proper_10.csv"
+      end
+
+      specify "errors should show upload page again" do
+        file = fixture_file_upload("import/proper_10.xls", "text/csv")
+
+        post :create, :upload => file
+        template.should.be "index"
+
+        assigns(:parser).should.not.be.nil
+        flash[:error].should.match /Unable to parse/
+      end
 
     end
 

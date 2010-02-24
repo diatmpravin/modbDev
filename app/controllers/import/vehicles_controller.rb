@@ -8,19 +8,18 @@ class Import::VehiclesController < ApplicationController
   end
 
   # POST /import/vehicles
-  # Takes an uploaded file named :upload and attempts
-  # to parse it into usable vehicle information
+  # Takes an uploaded file named :upload, checks to
+  # see validitity of data
   def create
-    Rails.logger.info params.inspect
-    Rails.logger.info params[:upload].original_filename
-    Rails.logger.info params[:upload].content_type
-
     @parser = Import::Parser.new
     @parser.parse(params[:upload])
 
-    Rails.logger.info @parser.data.inspect
-
     if @parser.valid?
+      @processor = Import::VehicleImporter.new(current_account, current_user)
+      @processor.store(params[:upload].original_filename, @parser.data)
+    else
+      flash.now[:error] = @parser.errors[0]
+      render :action => "index"
     end
   end
 
