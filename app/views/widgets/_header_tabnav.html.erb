@@ -15,10 +15,23 @@ render_tabnav :header do
     t.highlights_on :controller => 'geofences'
   end
   
-  add_tab do |t|
-    t.named 'Users'
-    t.links_to users_path
-    t.highlights_on :controller => 'users'
+  requires_role(User::Role::USERS) do
+    add_tab do |t|
+      t.named 'Users'
+      t.links_to users_path
+      t.highlights_on :controller => 'users'
+    end
+  end
+  
+  if current_account.reseller?
+    requires_role(User::Role::RESELLER) do
+      add_tab do |t|
+        t.named 'Reseller'
+        t.links_to accounts_path
+        t.highlights_on :controller => 'accounts'
+        t.highlights_on :controller => 'trackers'
+      end
+    end
   end
   
   # CSS Hack
