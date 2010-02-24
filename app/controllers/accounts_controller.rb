@@ -13,6 +13,7 @@ class AccountsController < ApplicationController
   
   def new
     @account = current_account.children.new
+    @account.users.build
   end
   
   def create
