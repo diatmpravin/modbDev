@@ -10,7 +10,7 @@ render_tabnav :header do
 
   add_tab do |t|
     t.named 'Map Features'
-    t.links_to landmarks_path
+    t.links_to geofences_path
     t.highlights_on :controller => 'landmarks'
     t.highlights_on :controller => 'geofences'
   end
@@ -21,9 +21,10 @@ render_tabnav :header do
     t.highlights_on :controller => 'users'
   end
   
+  # CSS Hack
   add_tab do |t|
-    t.named '.'
-	  t.links_to ''
+    t.named ''
+    t.disable!
   end
 end
 %>
