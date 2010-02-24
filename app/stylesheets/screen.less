@@ -367,35 +367,32 @@ a.close {
       margin:0;
       padding:0 16px;
     }
-    
+  }
+  
 	li.active {
 	  background:#cdf1f6 url(/images/topnav_active.png) no-repeat 0 0;
 	}
-	/*
-    li:hover {
-      background:#e0decc url(/images/navbar_bg_selected.gif) repeat-x 0 0;
-    }*/
-  }
   
   a {
     :link, :visited {
-      color:black;
-	  font-weight:normal;
+      color:#303030;
+	    font-weight:bold;
     }
 	
     :hover {
-	  font-weight:bold;
+	    color:black;
       text-decoration:none;
     }
   }
   
   a.active {
-	font-weight:bold;
+    color:black;
   }
 }
 
-#vehicles_tabnav {
+#vehicles_tabnav, #map_features_tabnav, #users_tabnav {
   background:#cbf1f5 url(/images/subnav_bg.png) repeat-x 0 0;
+  display:none;
   height:31px;
   line-height:31px;
   padding:0 32px 0 32px;
@@ -410,29 +407,34 @@ a.close {
       margin:0;
       padding:0 16px;
     }
-    
-    /*li:hover {
-      border-left:solid 1px #e3e3e2;
-      border-right:solid 1px #9a988a;
-      background:#e0decc url(/images/navbar_bg_selected.gif) repeat-x left top;
-    }*/
   }
   
   a {
     :link, :visited {
-      color:black;
-	  font-weight:normal;
+      color:#303030;
+	    font-weight:normal;
     }
 	
     :hover {
-	  font-weight:bold;
+	    color:black;
       text-decoration:none;
     }
   }
   
   a.active {
-    font-weight:bold;
+    color:black;
   }
+}
+
+/* Tab Defaults */
+
+#devices         #vehicles_tabnav,
+#groups          #vehicles_tabnav,
+#device_profiles #vehicles_tabnav,
+#geofences       #map_features_tabnav,
+#landmarks       #map_features_tabnav,
+#users           #users_tabnav {
+  display:block;
 }
 
 /* Filter Form */
@@ -474,69 +476,7 @@ a.close {
   display: none;
 }
 
-#navbar {
-  height:36px;
-  line-height:36px;
-  padding:0 32px 0 32px;
-  background:#e0decc url(/images/navbar_bg.gif) repeat-x left top;
-  border-bottom:solid 1px #a3a18f;
-}
-#navbar div {
-  float:left;
-  height:36px;
-  padding:0 8px 0 8px;
-  border-left:solid 1px #f8f8f4;
-  border-right:solid 1px #acaa9b;
-}
-#navbar div.selected {
-  border-left:solid 1px #e3e3e2;
-  border-right:solid 1px #9a988a;
-  background:#e0decc url(/images/navbar_bg_selected.gif) repeat-x left top;
-}
-#navbar div.vehicles {
-  padding-left:0;
-  border-left:none;
-}
-
-#navbar div.noLeft {
-  padding:0;
-  border-left:none;
-}
-#navbar div.noRight {
-  padding:0;
-  border-right:none;
-}
-#navbar div.float {
-  float:right;
-}
-#navbar #livelook {
-  font-weight:bold;
-  cursor:pointer;
-}
-#navbar #livelook a {
-  color:#15191a;
-  display:block;
-  padding:0 28px 0 54px;
-  background:transparent url(/images/live_look.png) no-repeat 24px center;
-}
-#navbar #livelook a:hover {
-  text-decoration:none;
-}
-#navbar #livelook.selected a {
-  background:transparent url(/images/live_look_selected.png) no-repeat 24px center;
-}
-#navbar label {
-  float:none;
-  padding:0;
-  vertical-align:middle;
-}
-#navbarShort {
-  height:4px;
-  background:#e0decc url(/images/navbar_bg_short.gif) repeat-x left top;
-}
-#navbar h1 {
-  margin:0 16px 0 0;
-}
+/* Footer */
 
 #footer {
   background-color:#0c1317;

@@ -1,19 +1,17 @@
 <% inside_layout 'global' do -%>
   <%= render :partial => 'common/header' %>
   
-  
-  <!--<div id="navbar">-->
   <%= tabnav :header %>
-  <div id="filter_container">
-    <%= yield :navbar %>
-  </div>
+  
+  <%= yield :navbar %>
+  
   <%= tabnav :vehicles %>
-  <!--</div>-->
+  <%= tabnav :map_features %>
+  <%= tabnav :users %>
   
   <div id="content">
     <div class="content">
       <%= yield %>
-      
     </div>
   </div>
   
