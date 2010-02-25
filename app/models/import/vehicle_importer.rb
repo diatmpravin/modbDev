@@ -18,7 +18,9 @@ module Import
       @data = data
 
       redis = Redis.build
-      redis.set(key(@file_name), data.to_json)
+
+      # Save data and set to expire this data after an hour
+      redis.set(key(@file_name), data.to_json, (60 * 60))
     end
 
     # Assuming data exists in redis for the given filename
@@ -32,6 +34,8 @@ module Import
           @account.devices.create! :name => entry[0], :vin_number => entry[1], :odometer => entry[2]
         end
       end
+
+      redis.delete(key(filename))
     end
 
     protected

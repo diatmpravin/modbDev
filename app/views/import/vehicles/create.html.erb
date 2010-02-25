@@ -23,6 +23,12 @@
     <% end -%>
   </div>
 
+  <div id="previewError">
+    There are problems with the uploaded data. Please fix this data and re-upload the file.
+    <br/><br/>
+    <span class="error">Data in the first column cannot be blank</span>
+  </div>
+
   <div id="preview">
     <h2>The following vehicles will be added to your account</h2>
 
@@ -33,7 +39,7 @@
         <th>Odometer</th>
       </tr>
       <% @processor.data.each do |entry| -%>
-        <tr>
+        <tr class="<%= (entry[0].nil? || entry[0].empty?) ? "error" : "" -%>">
           <td><%= entry[0] -%></td>
           <td><%= entry[1] -%></td>
           <td><%= entry[2] -%></td>

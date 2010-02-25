@@ -20,13 +20,15 @@ class Account < ActiveRecord::Base
   validates_numericality_of :number
   validates_uniqueness_of :number
   validates_length_of :name, :maximum => 50
+  validates_format_of :phone_number, :with => /^\d{10}$/,
+    :allow_nil => true, :allow_blank => true, :message => 'is not a valid phone number'
   
   before_validation_on_create :generate_number
   
   # List accessible attributes here
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
-    :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone
+    :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number
 
   has_many :groups, :order => "name ASC"
 

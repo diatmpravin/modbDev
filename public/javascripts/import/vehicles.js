@@ -1,23 +1,15 @@
 (function($) {
   Vehicles = {
     init: function() {
-      $("#uploadForm form").ajaxForm({
-        beforeSubmit: function() { 
-          $("#uploadForm").hide();
-          $("#busy").show();
-        },
-        complete: function() {
-          $("#uploadForm").show();
-          $("#busy").hide();
-        },
-        success: function() { 
-        }
-      });
+      if($("#preview table tr.error").length > 0) {
+        $("#uploadForm").hide(); 
+        $("#previewError").show();
+      }
     }
   };
 
   // Live event hookups
 
   // document-ready initialization
-  //$(Vehicles.init);
+  $(Vehicles.init);
 })(jQuery);

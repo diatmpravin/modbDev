@@ -48,21 +48,22 @@ class DevicesController < ApplicationController
   end
   
   def create
-    if params[:imei] == params[:imei_confirmation] && 
-      (params[:imei].any? || params[:imei_confirmation].any?)
-      @device = current_account.devices.build(:name => params[:name])
-      @device.user = current_user
-      @device.tracker = Tracker.find_by_imei_number(params[:imei])
+    if params[:imei].any? || params[:imei_confirmation].any? 
+      if params[:imei] == params[:imei_confirmation]
+        @device = current_account.devices.build(:name => params[:name])
+        @device.user = current_user
+        @device.tracker = Tracker.find_by_imei_number(params[:imei])
 
-      if @device.tracker.nil?
-        error = "Unknown Tracker"
-      else
-        if !@device.save
-          error = @device.errors.full_messages
+        if @device.tracker.nil?
+          error = "Unknown Tracker"
+        else
+          if !@device.save
+            error = @device.errors.full_messages
+          end
         end
+      else
+        error = "Numbers do not match"
       end
-    else
-      error = "Numbers do not match"
     end
     
     if error

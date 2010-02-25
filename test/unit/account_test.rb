@@ -39,6 +39,17 @@ describe "Account", ActiveSupport::TestCase do
     end
   end
 
+  context "Validations" do
+    specify "valid phone number" do
+      @account.save!
+      @account.should.be.valid
+      
+      @account.phone_number = 'asdf'
+      @account.should.not.be.valid
+      assert @account.errors.on(:phone_number)
+    end
+  end
+
   specify "acts as tree" do
     @account.parent.should.be.nil
     @account.children.should.equal [accounts(:aaron)]
