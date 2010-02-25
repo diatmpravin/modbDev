@@ -19,6 +19,23 @@
     margin-top: 2em;
     table {
       margin: 1em;
+
+      tr.error {
+        background-color: red;
+        td {
+          background-color: red;
+        }
+      }
+    }
+  }
+
+  #previewError {
+    display: none;
+    margin-top: 2em;
+
+    .error {
+      font-weight: bold;
+      color: red;
     }
   }
 }
