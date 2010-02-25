@@ -4,7 +4,7 @@
     <fieldset>
       <div class="field">
         <%= f.label :number, 'Number' %>
-        Account number will be auto generated
+        <%= account.new_record? ? 'Account number will be auto generated' : account.number %>
         <%= error_message_on account, :number %>
       </div>
       
