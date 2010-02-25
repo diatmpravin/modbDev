@@ -1,6 +1,6 @@
 <%
 render_tabnav :header do
-  add_tab do |t|
+  add_tab :html => {:class => 'vehicles_tabnav'} do |t|
     t.named 'Vehicles'
     t.links_to devices_path
     t.highlights_on :controller => 'devices'
@@ -8,7 +8,7 @@ render_tabnav :header do
     t.highlights_on :controller => 'device_profiles'
   end
 
-  add_tab do |t|
+  add_tab :html => {:class => 'map_features_tabnav'} do |t|
     t.named 'Map Features'
     t.links_to geofences_path
     t.highlights_on :controller => 'landmarks'
@@ -16,7 +16,7 @@ render_tabnav :header do
   end
   
   requires_role(User::Role::USERS) do
-    add_tab do |t|
+    add_tab :html => {:class => 'users_tabnav'} do |t|
       t.named 'Users'
       t.links_to users_path
       t.highlights_on :controller => 'users'
@@ -25,7 +25,7 @@ render_tabnav :header do
   
   if current_account.reseller?
     requires_role(User::Role::RESELLER) do
-      add_tab do |t|
+      add_tab :html => {:class => 'reseller_tabnav'} do |t|
         t.named 'Reseller'
         t.links_to accounts_path
         t.highlights_on :controller => 'accounts'

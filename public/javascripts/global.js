@@ -37,13 +37,52 @@ Global = {
         return false;
       }
     });
-
+    
+    Global.initTabs();
   }
   ,
   closeNotice: function() {
     var _div = q(this).parents('div:first');
     _div.slideUp('fast', function() {
       _div.remove();
+    });
+  }
+  ,
+  /**
+   * Find all hidden tabnavs and hook up show/hide event handlers for them.
+   * Each subnav has an id of 'something_tabnav'. The associated list element
+   * in the main tabnav will have a class with the same name.
+   */
+  initTabs: function() {
+    Global.primaryTab = q('#header_tabnav li.active');
+    Global.primarySubtab = q('.tabnav:visible');
+    
+    q('.tabnav:hidden').each(function() {
+      var id = q(this).attr('id');
+      var subtabId = '#' + id;
+      var linkSelector = '#header_tabnav li.' + id;
+      
+      // When mouse enters a main tab, make it appear active and show the
+      // appropriate subnav.
+      q(linkSelector).bind('mouseenter', {subtab: q(subtabId)}, function(e) {
+        q(this).addClass('active').siblings().removeClass('active');
+        e.data.subtab.show().siblings('.tabnav').hide();
+      });
+      
+      // When mouse leaves a main tab, revert to default UNLESS the user
+      // is trying to select a link in the subnav.
+      q(linkSelector).mouseleave(function(e) {
+        if (!q(e.relatedTarget).hasClass('tabnav')) {
+          Global.primaryTab.addClass('active').siblings().removeClass('active');
+          Global.primarySubtab.show().siblings('.tabnav').hide();
+        }
+      });
+      
+      // When mouse leaves a subnav, revert to default.
+      q(subtabId).mouseleave(function() {
+        Global.primaryTab.addClass('active').siblings().removeClass('active');
+        Global.primarySubtab.show().siblings('.tabnav').hide();
+      });
     });
   }
 }

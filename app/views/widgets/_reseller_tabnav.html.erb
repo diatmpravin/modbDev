@@ -1,5 +1,5 @@
 <%
-render_tabnav :reseller do
+render_tabnav :reseller, :html => {:class => 'tabnav'} do
   add_tab do |t|
     t.named 'Accounts'
     t.links_to accounts_path

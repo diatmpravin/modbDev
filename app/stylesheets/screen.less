@@ -237,7 +237,8 @@ a.close {
   padding-bottom:2em; /* footer */
 }
 #content .content {
-  background:white url(/images/content_bg.png) repeat-x 0 0;
+  /* Gradient background temporarily removed */
+  /*background:white url(/images/content_bg.png) repeat-x 0 0;*/
   padding:32px;
 }
 
@@ -416,6 +417,10 @@ a.close {
       padding:0 16px;
     }
   }
+  
+	li.active {
+	  background:transparent url(/images/subnav_active.png) no-repeat center bottom;
+	}
   
   a {
     :link, :visited {

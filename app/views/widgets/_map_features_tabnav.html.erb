@@ -1,5 +1,5 @@
 <%
-render_tabnav :map_features do
+render_tabnav :map_features, :html => {:class => 'tabnav'} do
   add_tab do |t|
     t.named 'Landmarks'
     t.links_to landmarks_path
