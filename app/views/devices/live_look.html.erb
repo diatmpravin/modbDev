@@ -2,6 +2,6 @@
   <%= javascript_include_tag "devices/live_look" -%>
 <% end -%>
 
-<%= render :partial => 'devices/filter_form' -%>
+<% filter %>
 
 <%= hidden_field_tag "device_ids", @device_ids -%>

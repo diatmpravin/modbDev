@@ -72,7 +72,7 @@ Global = {
       // When mouse leaves a main tab, revert to default UNLESS the user
       // is trying to select a link in the subnav.
       q(linkSelector).mouseleave(function(e) {
-        if (!q(e.relatedTarget).hasClass('tabnav')) {
+        if (q(e.relatedTarget).closest('.tabnav').length == 0) {
           Global.primaryTab.addClass('active').siblings().removeClass('active');
           Global.primarySubtab.show().siblings('.tabnav').hide();
         }
