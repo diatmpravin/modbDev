@@ -27,7 +27,7 @@ module Import
           CSVParser
         else
           self.errors << "Do not know how to parse #{uploaded_file.original_filename}. " +
-                          "Expects .csv, .xls, or .ods files."
+                          "Expects .csv or .xls (Excel) files."
           nil
         end
 
@@ -77,7 +77,8 @@ module Import
             nil
           end
         end
-      rescue Ole::Storage::FormatError
+      rescue Ole::Storage::FormatError => ex
+        Rails.logger.error("Error parsing spreadsheet: #{ex}")
         self.parent.errors << "Unable to parse uploaded spreadsheet."
         nil
       end
@@ -88,7 +89,8 @@ module Import
       def parse(file)
         begin
           FasterCSV.parse(file.read)
-        rescue FasterCSV::MalformedCSVError
+        rescue FasterCSV::MalformedCSVError => ex
+          Rails.logger.error("Error parsing CSV: #{ex}")
           self.parent.errors << "Unable to parse uploaded CSV file."
           nil
         end

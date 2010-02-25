@@ -11,6 +11,7 @@ class Import::VehiclesController < ApplicationController
   # Takes an uploaded file named :upload, checks to
   # see validitity of data
   def create
+    Rails.logger.debug "File type is: #{params[:upload].content_type}"
     @parser = Import::Parser.new
     @parser.parse(params[:upload])
 
