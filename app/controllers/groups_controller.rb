@@ -13,7 +13,7 @@ class GroupsController < ApplicationController
   end
 
   # GET /groups/:id
-  # Show all vehicles in this gropu
+  # Show all vehicles in this group
   def show
     @devices = @group.devices.paginate :page => params[:page], :per_page => 30
   end
