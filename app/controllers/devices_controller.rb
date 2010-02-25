@@ -146,7 +146,9 @@ class DevicesController < ApplicationController
         current_account.groups.of_devices.find(params[:group_id])
       end
 
-    group.devices << current_account.devices.find(params[:apply_ids].split(","))
+    current_account.devices.find(params[:apply_ids].split(",")).each do |d|
+      group.devices << d unless group.devices.include?(d)
+    end
 
     redirect_to devices_path
   end
