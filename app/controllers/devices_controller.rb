@@ -146,7 +146,7 @@ class DevicesController < ApplicationController
         current_account.groups.of_devices.find(params[:group_id])
       end
 
-    group.devices << Device.find(params[:apply_ids].split(","))
+    group.devices << current_account.devices.find(params[:apply_ids].split(","))
 
     redirect_to devices_path
   end
@@ -156,7 +156,7 @@ class DevicesController < ApplicationController
   def remove_group
     group = current_account.groups.of_devices.find(params[:group_id])
 
-    group.devices.delete(Device.find(params[:apply_ids].split(",")))
+    group.devices.delete(current_account.devices.find(params[:apply_ids].split(",")))
 
     redirect_to devices_path
   end
