@@ -99,17 +99,17 @@
 <div id="addDevice" class="dialog">
   <% form_for @device, { :autocomplete => 'off'} do |f| -%>
     <div class="field">
-      <%= label_tag :name, 'Name* ' %>
+      <%= label_tag :name, 'Name *' %>
       <%= text_field_tag :name, '' %>
     </div>
     
     <div class="field">
-      <%= label_tag :imei, 'Tracker ID* ' %>
+      <%= label_tag :imei, 'Tracker ID ' %>
       <%= text_field_tag :imei, '' %>
     </div>
 
     <div class="field">
-      <%= label_tag :imei_confirmation, 'Confirm Tracker ID* ' %>
+      <%= label_tag :imei_confirmation, 'Confirm Tracker ID ' %>
       <%= text_field_tag :imei_confirmation, '' %>
     </div>
     <br/>
