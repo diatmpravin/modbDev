@@ -68,7 +68,7 @@ module Import
           if book.worksheets.length == 1
             worksheet = book.worksheets[0]
             worksheet.each do |row|
-              data << row
+              data << row.map {|e| e.to_s }
             end
 
             data

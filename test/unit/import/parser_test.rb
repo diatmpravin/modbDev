@@ -47,6 +47,25 @@ describe "Import::Parser", ActiveSupport::TestCase do
       end
     end
 
+    context "On Excel file with data other than strings" do
+      include UploadHelper
+
+      setup do
+        file = fixture_file_upload("import/bad_data_10.xls", "application/vnd.ms-excel")
+        @parser = Import::Parser.new
+        @parser.parse(file)
+      end
+
+      specify "Converts all data to strings" do
+        @parser.should.be.valid
+        data = @parser.data
+        data[2][0].should.equal "3.29483e+19"
+        data[4][1].should.equal "12.45"
+        data[7][2].should.match /Spreadsheet::Formula/
+      end
+
+    end
+
     context "on an Excel file with > 1 worksheet" do
       include UploadHelper
 
