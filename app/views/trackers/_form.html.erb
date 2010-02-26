@@ -18,6 +18,10 @@
     <%= f.select :status, [['Unknown (Not Yet Tested)', 0], ['Inventory', 1], ['Active', 2]] %>
   </div>
   <div class="field">
+    <%= f.label :account_id, 'Account' %>
+    <%= f.collection_select :account_id, current_account.self_and_descendants, :id, :name %>
+  </div>
+  <div class="field">
     <%= label_tag '', '&nbsp;' %>
     <%= f.submit 'Save' %>
   </div>

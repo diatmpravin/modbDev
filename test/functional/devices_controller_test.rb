@@ -104,7 +104,7 @@ describe "Devices Controller", ActionController::TestCase do
   
   context "Adding devices (json only)" do
     setup do
-      Tracker.create(:imei_number => '923456789012345')
+      Tracker.create(:imei_number => '923456789012345', :account => @account)
     end
     
     specify "works" do

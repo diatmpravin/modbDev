@@ -1,6 +1,4 @@
 class Account < ActiveRecord::Base
-  acts_as_tree :order => 'name', :dependent => nil
-  
   has_many :devices, :include => :tracker, :dependent => :destroy
   has_many :phones, :dependent => :destroy
   has_many :geofences, :dependent => :destroy
@@ -29,6 +27,9 @@ class Account < ActiveRecord::Base
   attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
     :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number
+
+  # This line must appear later than the above attr_accessible line
+  acts_as_nested_set :order => 'name', :dependent => nil
 
   has_many :groups, :order => "name ASC"
 

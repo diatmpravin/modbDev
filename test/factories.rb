@@ -9,6 +9,7 @@ end
 Factory.define :tracker do |tracker|
   tracker.imei_number { Factory.next(:imei_number) }
   tracker.sim_number { Factory.next(:sim_number) }
+  tracker.account { Account.find_by_number(10001) }
 end
 
 Factory.define :device do |device|

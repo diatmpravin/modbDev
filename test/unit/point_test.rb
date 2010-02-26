@@ -251,7 +251,6 @@ describe "Point", ActiveSupport::TestCase do
   end
   
   specify "knows the time of day as a string" do
-    @point.device.account.update_attributes(:time_zone => 'Eastern Time (US & Canada)') 
     @point.occurred_at = Time.parse('2009/01/01 17:15:30 UTC')
     @point.time_of_day.should.equal '12:15 PM EST'
     
