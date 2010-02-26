@@ -29,10 +29,8 @@ class Import::VehiclesController < ApplicationController
   # Starts the process to actually create the vehicles
   def update
     file = params[:file_name]
-    processor = Import::VehicleImporter.new(current_account, current_user)
-    processor.process(file)
-
-    redirect_to devices_path
+    @processor = Import::VehicleImporter.new(current_account, current_user)
+    @processor.process(file)
   end
 
   protected
