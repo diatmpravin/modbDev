@@ -73,7 +73,7 @@ module Import
 
             data
           else
-            self.parent.errors << "The uploaded spreadsheet has to many worksheets (#{book.worksheets.length})."
+            self.parent.errors << "The uploaded spreadsheet has too many worksheets (#{book.worksheets.length})."
             nil
           end
         end

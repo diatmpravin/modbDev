@@ -3,9 +3,10 @@ require 'test_helper'
 module UploadHelper
   # We don't have access to this method here, it's available for
   # controller tests, so we'll just hack it ourselves.
-  def fixture_file_upload(path, mime)
+  def fixture_file_upload(path, mime, binary = false)
     ActionController::TestUploadedFile.new(
-      ActionController::TestCase.fixture_path + path, mime)
+      ActionController::TestCase.fixture_path + path, mime, binary)
+    #File.new(ActionController::TestCase.fixture_path + path, mime, binary)
   end
 end
 
@@ -17,7 +18,7 @@ describe "Import::Parser", ActiveSupport::TestCase do
       include UploadHelper
 
       setup do
-        file = fixture_file_upload("import/proper_10.xls", "application/vnd.ms-excel")
+        file = fixture_file_upload("import/proper_10.xls", "application/vnd.ms-excel", true)
         @parser = Import::Parser.new
         @parser.parse(file)
       end
@@ -51,7 +52,7 @@ describe "Import::Parser", ActiveSupport::TestCase do
       include UploadHelper
 
       setup do
-        file = fixture_file_upload("import/bad_data_10.xls", "application/vnd.ms-excel")
+        file = fixture_file_upload("import/bad_data_10.xls", "application/vnd.ms-excel", true)
         @parser = Import::Parser.new
         @parser.parse(file)
       end
@@ -59,7 +60,9 @@ describe "Import::Parser", ActiveSupport::TestCase do
       specify "Converts all data to strings" do
         @parser.should.be.valid
         data = @parser.data
-        data[2][0].should.equal "3.29483e+19"
+        
+        # Windows & Linux see this data slightly differently
+        data[2][0].should =~ /3\.29483e\+0?19/
         data[4][1].should.equal "12.45"
         data[7][2].should.match /Spreadsheet::Formula/
       end
@@ -70,14 +73,14 @@ describe "Import::Parser", ActiveSupport::TestCase do
       include UploadHelper
 
       setup do
-        file = fixture_file_upload("import/with_two_worksheets.xls", "application/vnd.ms-excel")
+        file = fixture_file_upload("import/with_two_worksheets.xls", "application/vnd.ms-excel", true)
         @parser = Import::Parser.new
         @parser.parse(file)
       end
 
       specify "is invalid" do
         @parser.should.not.be.valid
-        @parser.errors[0].should.equal "The uploaded spreadsheet has to many worksheets (2)."
+        @parser.errors[0].should.equal "The uploaded spreadsheet has too many worksheets (2)."
       end
     end
 
@@ -107,7 +110,7 @@ describe "Import::Parser", ActiveSupport::TestCase do
       include UploadHelper
 
       setup do
-        file = fixture_file_upload("import/proper_10.xls", "text/csv")
+        file = fixture_file_upload("import/proper_10.xls", "text/csv", true)
         @parser = Import::Parser.new
         @parser.parse(file)
       end
