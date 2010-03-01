@@ -36,7 +36,7 @@ module Import
           begin
             if @account.devices.find_by_name(entry[0])
               @results[i] = :found
-              @errors[i] = "Already exists"
+              @errors[i] = "Vehicle already exists with this name"
             else
               @account.devices.create! :name => entry[0], :vin_number => entry[1], :odometer => entry[2]
               @results[i] = :success

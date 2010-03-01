@@ -99,7 +99,7 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
     end
 
     @importer.results.should.equal [:found, :success]
-    @importer.errors.should.equal ["Already exists"]
+    @importer.errors.should.equal ["Vehicle already exists with this name"]
   end
 
 end
