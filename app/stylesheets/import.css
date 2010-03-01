@@ -26,6 +26,20 @@
           background-color: red;
         }
       }
+
+      tr.success {
+        background-color: #aaffaa;
+        td {
+          background-color: #aaffaa;
+        }
+      }
+
+      tr.found {
+        background-color: #ffffAA;
+        td {
+          background-color: #ffffAA;
+        }
+      }
     }
   }
 

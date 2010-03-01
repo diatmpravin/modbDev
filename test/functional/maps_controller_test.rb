@@ -25,7 +25,7 @@ describe "Maps Controller", ActionController::TestCase do
     
     specify "will use a specific device if device_id is sent" do
       d = @account.devices.new(:name => 'New')
-      d.tracker = Tracker.create(:imei_number => '171727273737471')
+      d.tracker = Tracker.create(:imei_number => '171727273737471', :account => @account)
       d.save
       
       get :index, { :device_id => d.id }
@@ -37,7 +37,7 @@ describe "Maps Controller", ActionController::TestCase do
     
     specify "will default to 'All Vehicles' if no device_id is sent" do
       d = @account.devices.new(:name => 'New')
-      d.tracker = Tracker.create(:imei_number => '171727273737471')
+      d.tracker = Tracker.create(:imei_number => '171727273737471', :account => @account)
       d.save
       
       get :index
@@ -57,7 +57,7 @@ describe "Maps Controller", ActionController::TestCase do
     
     specify "will use a specific device if device_id is sent" do
       d = @account.devices.new(:name => 'New')
-      d.tracker = Tracker.create(:imei_number => '171727273737471')
+      d.tracker = Tracker.create(:imei_number => '171727273737471', :account => @account)
       d.save
       
       get :status, { :device_id => d.id }

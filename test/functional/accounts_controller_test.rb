@@ -4,6 +4,7 @@ describe "Accounts Controller", ActionController::TestCase do
   use_controller AccountsController
   
   setup do
+    Account.rebuild!
     login_as :quentin
   end
   

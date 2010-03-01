@@ -4,7 +4,7 @@ module Import
   # 
   class VehicleImporter
 
-    attr_reader :file_name, :data
+    attr_reader :file_name, :data, :results, :errors
 
     def initialize(account, user)
       @account = account
@@ -27,15 +27,26 @@ module Import
     # take that data and build vehicles
     def process(filename)
       redis = Redis.build
-      data = ActiveSupport::JSON.decode(redis.get(key(filename)))
+      @data = ActiveSupport::JSON.decode(redis.get(key(filename)))
+      @results = []
+      @errors = []
 
       Device.suspended_delta do
-        data.each do |entry|
-          @account.devices.create! :name => entry[0], :vin_number => entry[1], :odometer => entry[2]
+        @data.each_with_index do |entry, i|
+          begin
+            if @account.devices.find_by_name(entry[0])
+              @results[i] = :found
+              @errors[i] = "Vehicle already exists with this name"
+            else
+              @account.devices.create! :name => entry[0], :vin_number => entry[1], :odometer => entry[2]
+              @results[i] = :success
+            end
+          rescue ActiveRecord::RecordInvalid => ex
+            @errors[i] = ex.message.split(": ")[1]
+            @results[i] = :error
+          end
         end
       end
-
-      redis.delete(key(filename))
     end
 
     protected

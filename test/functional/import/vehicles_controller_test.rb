@@ -58,10 +58,12 @@ context "Import::VehiclesController", ActionController::TestCase do
     context "Processing vehicles list" do
 
       specify "creates vehicles accordingly" do
-        Import::VehicleImporter.any_instance.expects(:process).with("proper_10.csv")
+        Import::VehicleImporter.any_instance.expects(:process).with("proper_10.csv").returns(true)
 
         put :update, :id => "huh", :file_name => "proper_10.csv"
-        should.redirect_to devices_path
+        template.should.be "update"
+
+        assigns(:processor).should.not.be.nil
       end
 
     end

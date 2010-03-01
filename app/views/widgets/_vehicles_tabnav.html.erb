@@ -9,6 +9,7 @@ render_tabnav :vehicles, :html => {:class => 'tabnav'} do
   add_tab do |t|
     t.named 'Vehicles'
     t.links_to :controller => devices_path
+    t.highlights_on :controller => "import/vehicles"
   end
   
   add_tab do |t|

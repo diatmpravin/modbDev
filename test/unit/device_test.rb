@@ -117,6 +117,20 @@ describe "Device", ActiveSupport::TestCase do
       @device.odometer = 12
       @device.should.be.valid
     end
+
+    specify "requires tracker to be visible by owned account" do
+      tracker = Tracker.create(:imei_number => '999940981750984', :account => @account)
+
+      # can't put quentin tracker on aaron device
+      device = Device.new(:account => accounts(:aaron), :name => "test")
+      device.tracker = tracker
+      device.should.not.be.valid
+
+      # ok to put it on quentin device
+      device.account = accounts(:quentin)
+      device.should.be.valid      
+    end
+
   end
 
   context "Parsing device reports" do
@@ -763,15 +777,16 @@ describe "Device", ActiveSupport::TestCase do
     @account.phones << test_phone
 
     d = @account.devices.new(:name => 'Brand New')
-    d.tracker = Tracker.create(:imei_number => '182340981750984')
+    d.tracker = Tracker.create(:imei_number => '182340981750984', :account => @account)
     d.phones.should.be.empty
 
     d.should.save
+
     d.phones.should.equal @account.phones
 
     # Doesn't apply if you give it a specific phone list
     d = @account.devices.new(:name => 'specifying a Phone', :phones => [test_phone])
-    d.tracker = Tracker.create(:imei_number => '987321000192873')
+    d.tracker = Tracker.create(:imei_number => '987321000192873', :account => @account)
     d.phones.should.equal [test_phone]
 
     d.should.save

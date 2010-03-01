@@ -1,7 +1,8 @@
 class TrackersController < ApplicationController
   before_filter :require_role
+  before_filter :new_tracker, :only => [:new, :create]
   before_filter :set_tracker,  :only => [:edit, :update, :destroy, :get_info, :configure]
-  
+
   layout except_ajax('trackers')
   
   def index
@@ -9,14 +10,13 @@ class TrackersController < ApplicationController
   end
   
   def new
-    @tracker = Tracker.new
   end
   
   def create
-    @tracker = Tracker.new(params[:tracker])
-    
-    if @tracker.save
-      redirect_to :action => 'index'
+    @tracker.account = current_account.self_and_descendants.find(params[:tracker][:account_id])
+
+    if @tracker.update_attributes(params[:tracker])
+		redirect_to :action => 'index'
     else
       render :action => 'new'
     end
@@ -26,8 +26,10 @@ class TrackersController < ApplicationController
   end
   
   def update
+    @tracker.account = current_account.self_and_descendants.find(params[:tracker][:account_id])
+
     if @tracker.update_attributes(params[:tracker])
-      redirect_to :action => 'index'
+		redirect_to :action => 'index'
     else
       render :action => 'edit'
     end
@@ -70,6 +72,10 @@ class TrackersController < ApplicationController
   
   def set_tracker
     @tracker = Tracker.find(params[:id])
+  end
+
+  def new_tracker
+    @tracker = current_account.trackers.new
   end
   
   def tracker_options

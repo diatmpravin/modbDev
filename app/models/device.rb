@@ -41,6 +41,7 @@ class Device < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
+  validate :tracker_owned
 
   validates_numericality_of :odometer, :allow_nil => true
 
@@ -146,6 +147,12 @@ class Device < ActiveRecord::Base
   def assign_phones
     if phones.empty?
       phones << account.phones
+    end
+  end
+
+  def tracker_owned
+    if tracker && account_id != tracker.account_id
+      errors.add(:tracker_id, ' is not owned by this account')
     end
   end
 end
