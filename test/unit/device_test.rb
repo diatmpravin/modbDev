@@ -453,16 +453,16 @@ describe "Device", ActiveSupport::TestCase do
     context "Idle" do
       specify "creates events" do
         occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
-
         @example_location[:speed] = 0
-        for i in 1..6
-          new_time = i.minutes.since(occurred_at)
-          @device.process(@example_location)
-          @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
-        end
 
         Event.should.differ(:count).by(1) do
-          @device.process(@example_location)
+          for i in 1..9
+            new_time = i.minutes.since(occurred_at)
+            @device.process(@example_location)
+            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
+          end
+
+          #@device.process(@example_location)
         end
         Mailer.deliveries.length.should.be 0
       end
@@ -472,14 +472,12 @@ describe "Device", ActiveSupport::TestCase do
         
         @device.update_attribute(:alert_on_idle, true)
         @example_location[:speed] = 0
-        for i in 1..6
-          new_time = i.minutes.since(occurred_at)
-          @device.process(@example_location)
-          @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
-        end
-
         Event.should.differ(:count).by(1) do
-          @device.process(@example_location)
+          for i in 1..9
+            new_time = i.minutes.since(occurred_at)
+            @device.process(@example_location)
+            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
+          end
         end
         Mailer.deliveries.length.should.be 1
         Mailer.deliveries.first.body.should =~ /idle/  

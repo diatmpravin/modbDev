@@ -158,21 +158,31 @@ class Device < ActiveRecord::Base
         end
       end
 
+      # idle event
       unless point.leg.nil?
         #if dist between point and last trip point with time > threshold for vehicle
         #is within idle distance threshold, set the point event to idle
         start_idle_window = point.leg.points.before(self.idle_threshold.minutes.ago(point.occurred_at)).last
         unless start_idle_window.nil?
           idle_window_points = self.points.in_range(start_idle_window.occurred_at, point.occurred_at, self.zone)
-          point.event = Point::IDLE if idle_window_points.reject!{|p| p.speed != 0}.nil?
-        end
 
-        if point.event == Point::IDLE
-          point.events.create(:event_type => Event::IDLE)
-          if alert_on_idle?
-            alert_recipients.each do |r|
-              r.alert("#{self.name} idled for an extended period", self.zone.now)
+          if idle_window_points.reject!{|p| p.speed != 0}.nil?
+            #if the previous point has an event... steal it?
+            pre = point.leg.points.before(point.occurred_at).last
+            pre_event = pre.events.find_last_by_event_type(Event::IDLE)
+
+            if (pre_event.nil?)
+              point.events.create(:event_type => Event::IDLE)
+              if alert_on_idle?
+                alert_recipients.each do |r|
+                  r.alert("#{self.name} idled for an extended period", self.zone.now)
+                end
+              end
+            else
+              pre_event.point = point
+              pre_event.save
             end
+
           end
         end
       end
