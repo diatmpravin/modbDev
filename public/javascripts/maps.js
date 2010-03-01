@@ -212,8 +212,9 @@ Maps = {
             label: device.name
           };
           
+          options.title = device.name;
+          
           if (!device.connected) {
-            options.title = device.name;
             options.description = 'As of ' + device.position.time_of_day;
           }
           
