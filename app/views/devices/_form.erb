@@ -45,6 +45,7 @@
   <div class="alertInfo">
     <h3>Vehicle Settings</h3>
     
+  <% if device.tracker -%>
     <div class="field">
       <div class="loading" style="float:right"></div>
       <%= f.label :device_profile_id, 'Profile' %>
@@ -108,6 +109,11 @@
         </span>
       </div>
     </div>
+  <% else -%>
+    <div class="profileSettings">
+      Vehicles must have a Tracker linked to them before any events or alerts can be configured.
+    </div>
+  <% end -%>
     
     <div class="alerts">
       <h3>Alert Recipients</h3>
