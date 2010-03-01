@@ -17,7 +17,7 @@ module ApplicationHelper
 
   # Called when setting the id of the main body tag
   def body_id
-    params[:controller]
+    params[:controller].parameterize
   end
 
   # Courtesy of http://brandonaaron.net/blog/2009/02/24/jquery-rails-and-ajax

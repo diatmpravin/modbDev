@@ -1,19 +1,20 @@
-<div id="filter">
-  <% form_tag filter_path do -%>
-    <%= link_to image_tag("filter_help.png"), "#", :class => "filterHelp" %>
-    <%= hidden_field_tag :return_to, request.path %>
-    <%= hidden_field_tag :class, filter_class %>
-    <%= text_field_tag "query", filter_query %>
-    <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
-    <%= submit_tag "Filter" %>
-    <%= button_tag "Clear", :id => 'filter_clear' %>
-  <% end -%>
+<div id="filter_container">
+  <div id="filter">
+    <% form_tag filter_path do -%>
+      <%= link_to image_tag("filter_help.png"), "#", :class => "filterHelp" %>
+      <%= hidden_field_tag :return_to, request.path %>
+      <%= hidden_field_tag :class, filter_class %>
+      <%= text_field_tag "query", filter_query %>
+      <%= link_to image_tag("advanced.png"), "#", :class => "advanced" %>
+      <%= submit_tag "Filter" %>
+      <%= button_tag "Clear", :id => 'filter_clear' %>
+    <% end -%>
 
-  <div id="filterDetails">
-    <%= yield :filter_form %>
+    <div id="filterDetails">
+      <%= yield :filter_form %>
+    </div>
   </div>
 </div>
-<div class="noRight"></div>
 
 <div id="filterHelp" class="dialog">
   <h4><%= image_tag "advanced.png" %> Filter Form</h4>
@@ -91,5 +92,4 @@
     </p>
 
   </div>
-
 </div>

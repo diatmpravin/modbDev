@@ -10,20 +10,8 @@
       <%= link_to 'Profile', profile_path %>
     </li>
     <li>
-      <%= link_to 'Settings', '#' %>
+      <%= link_to 'Help', '#' %>
       <ul>
-        <li><%= link_to 'Vehicles', devices_path %></li>
-        <li><%= link_to 'Landmarks', landmarks_path %></li>
-        <li><%= link_to 'Geofences', geofences_path %></li>
-        <% requires_role(User::Role::USERS) do -%>
-          <li><%= link_to 'Users', users_path %></li>
-        <% end -%>
-        <% requires_role(User::Role::RESELLER) do -%>
-          <% if current_account.reseller? -%>
-            <li><%= link_to 'Trackers', trackers_path %></li>
-            <li><%= link_to 'Accounts', accounts_path %></li>
-          <% end -%>
-        <% end -%>
         <li><%= link_to 'Contact Us', contact_path %></li>
       </ul>
     </li>

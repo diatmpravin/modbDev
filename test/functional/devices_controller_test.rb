@@ -104,7 +104,7 @@ describe "Devices Controller", ActionController::TestCase do
   
   context "Adding devices (json only)" do
     setup do
-      Tracker.create(:imei_number => '923456789012345')
+      Tracker.create(:imei_number => '923456789012345', :account => @account)
     end
     
     specify "works" do
@@ -352,6 +352,20 @@ describe "Devices Controller", ActionController::TestCase do
 
       @device.reload
       @device.groups.should.equal [@group]
+    end
+
+    specify "doesn't add vehicles to a group multiple times" do
+      d2 = Device.generate!
+      3.times do
+        post :apply_group, {
+          :apply_ids => [@device.id, d2.id].join(","),
+          :group_id => @group.id.to_s,
+          :group_name => ""
+        }
+      end
+
+      @group.reload
+      @group.devices.should.equal [@device, d2]
     end
     
     specify "can specify a name and create a new group" do

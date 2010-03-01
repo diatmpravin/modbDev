@@ -18,7 +18,6 @@ class AccountsController < ApplicationController
   
   def create
     @account = current_account.children.new
-
     if @account.update_attributes(params[:account])
       flash[:notice] = "Account #{@account.number} has been created. A welcome email was sent to the admin user."
       redirect_to :action => 'index'

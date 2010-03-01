@@ -19,6 +19,37 @@
     margin-top: 2em;
     table {
       margin: 1em;
+
+      tr.error {
+        background-color: red;
+        td {
+          background-color: red;
+        }
+      }
+
+      tr.success {
+        background-color: #aaffaa;
+        td {
+          background-color: #aaffaa;
+        }
+      }
+
+      tr.found {
+        background-color: #ffffAA;
+        td {
+          background-color: #ffffAA;
+        }
+      }
+    }
+  }
+
+  #previewError {
+    display: none;
+    margin-top: 2em;
+
+    .error {
+      font-weight: bold;
+      color: red;
     }
   }
 }

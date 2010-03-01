@@ -1,0 +1,44 @@
+<%
+render_tabnav :header do
+  add_tab :html => {:class => 'vehicles_tabnav'} do |t|
+    t.named 'Vehicles'
+    t.links_to devices_path
+    t.highlights_on :controller => 'devices'
+    t.highlights_on :controller => 'groups'
+    t.highlights_on :controller => 'device_profiles'
+    t.highlights_on :controller => 'import/vehicles'
+  end
+
+  add_tab :html => {:class => 'map_features_tabnav'} do |t|
+    t.named 'Map Features'
+    t.links_to geofences_path
+    t.highlights_on :controller => 'landmarks'
+    t.highlights_on :controller => 'geofences'
+  end
+  
+  requires_role(User::Role::USERS) do
+    add_tab :html => {:class => 'users_tabnav'} do |t|
+      t.named 'Users'
+      t.links_to users_path
+      t.highlights_on :controller => 'users'
+    end
+  end
+  
+  if current_account.reseller?
+    requires_role(User::Role::RESELLER) do
+      add_tab :html => {:class => 'reseller_tabnav'} do |t|
+        t.named 'Reseller'
+        t.links_to accounts_path
+        t.highlights_on :controller => 'accounts'
+        t.highlights_on :controller => 'trackers'
+      end
+    end
+  end
+  
+  # CSS Hack
+  add_tab do |t|
+    t.named ''
+    t.disable!
+  end
+end
+%>

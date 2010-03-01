@@ -11,6 +11,7 @@ class Import::VehiclesController < ApplicationController
   # Takes an uploaded file named :upload, checks to
   # see validitity of data
   def create
+    Rails.logger.debug "File type is: #{params[:upload].content_type}"
     @parser = Import::Parser.new
     @parser.parse(params[:upload])
 
@@ -28,10 +29,8 @@ class Import::VehiclesController < ApplicationController
   # Starts the process to actually create the vehicles
   def update
     file = params[:file_name]
-    processor = Import::VehicleImporter.new(current_account, current_user)
-    processor.process(file)
-
-    redirect_to devices_path
+    @processor = Import::VehicleImporter.new(current_account, current_user)
+    @processor.process(file)
   end
 
   protected

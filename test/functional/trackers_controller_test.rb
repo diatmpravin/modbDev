@@ -4,6 +4,7 @@ describe "Trackers Controller", ActionController::TestCase do
   use_controller TrackersController
   
   setup do
+    Account.rebuild!
     login_as :quentin
     @account = accounts(:quentin)
     @tracker = trackers(:quentin_tracker)
@@ -40,7 +41,8 @@ describe "Trackers Controller", ActionController::TestCase do
         post :create, {
           :tracker => {
             :imei_number => '123451234554321',
-            :sim_number => '10101010101020202020'
+            :sim_number => '10101010101020202020',
+            :account_id => @account.id
           }
         }
       end
@@ -53,7 +55,8 @@ describe "Trackers Controller", ActionController::TestCase do
         post :create, {
           :tracker => {
             :imei_number => '1234512345',
-            :sim_number => '10101010101020202020'
+            :sim_number => '10101010101020202020',
+            :account_id => @account.id
           }
         }
       end
@@ -70,7 +73,8 @@ describe "Trackers Controller", ActionController::TestCase do
         post :create, {
           :tracker => {
             :imei_number => '123451234554321',
-            :sim_number => '10101010101020202020'
+            :sim_number => '10101010101020202020',
+            :account_id => @account.id
           }
         }
       end
@@ -93,7 +97,8 @@ describe "Trackers Controller", ActionController::TestCase do
       post :update, {
         :id => @tracker.id,
         :tracker => {
-          :imei_number => '178923234567928'
+          :imei_number => '178923234567928',
+          :account_id => @account.id
         }
       }
       
@@ -105,7 +110,8 @@ describe "Trackers Controller", ActionController::TestCase do
       post :update, {
         :id => @tracker.id,
         :tracker => {
-          :imei_number => 'abcd'
+          :imei_number => 'abcd',
+          :account_id => @account.id
         }
       }
       
@@ -120,7 +126,8 @@ describe "Trackers Controller", ActionController::TestCase do
       post :update, {
         :id => @tracker.id,
         :tracker => {
-          :imei_number => '178923234567928'
+          :imei_number => '178923234567928',
+          :account_id => @account.id
         }
       }
       

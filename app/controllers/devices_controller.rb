@@ -48,21 +48,22 @@ class DevicesController < ApplicationController
   end
   
   def create
-    if params[:imei] == params[:imei_confirmation] && 
-      (params[:imei].any? || params[:imei_confirmation].any?)
-      @device = current_account.devices.build(:name => params[:name])
-      @device.user = current_user
-      @device.tracker = Tracker.find_by_imei_number(params[:imei])
+    if params[:imei].any? || params[:imei_confirmation].any? 
+      if params[:imei] == params[:imei_confirmation]
+        @device = current_account.devices.build(:name => params[:name])
+        @device.user = current_user
+        @device.tracker = Tracker.find_by_imei_number(params[:imei])
 
-      if @device.tracker.nil?
-        error = "Unknown Tracker"
-      else
-        if !@device.save
-          error = @device.errors.full_messages
+        if @device.tracker.nil?
+          error = "Unknown Tracker"
+        else
+          if !@device.save
+            error = @device.errors.full_messages
+          end
         end
+      else
+        error = "Numbers do not match"
       end
-    else
-      error = "Numbers do not match"
     end
     
     if error
@@ -145,7 +146,9 @@ class DevicesController < ApplicationController
         current_account.groups.of_devices.find(params[:group_id])
       end
 
-    group.devices << Device.find(params[:apply_ids].split(","))
+    current_account.devices.find(params[:apply_ids].split(",")).each do |d|
+      group.devices << d unless group.devices.include?(d)
+    end
 
     redirect_to devices_path
   end
@@ -155,7 +158,7 @@ class DevicesController < ApplicationController
   def remove_group
     group = current_account.groups.of_devices.find(params[:group_id])
 
-    group.devices.delete(Device.find(params[:apply_ids].split(",")))
+    group.devices.delete(current_account.devices.find(params[:apply_ids].split(",")))
 
     redirect_to devices_path
   end

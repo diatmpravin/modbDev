@@ -2,6 +2,7 @@ require 'test_helper'
 
 describe "Account", ActiveSupport::TestCase do
   setup do
+    Account.rebuild!
     @account = accounts(:quentin)
   end
   

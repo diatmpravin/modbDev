@@ -1,0 +1,50 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "import/vehicles" -%>
+<% end -%>
+
+<%= messages %>
+
+<div id="upload">
+  <h1>Import Vehicles - Results</h1>
+
+  <p>
+  Below is the results of the import operation. Red means there was an error with a description on what went wrong,
+  Yellow means the vehicle already exists in the system and Green means a successful import.
+  </p>
+  <br/>
+  <p>
+  For any errors, please fix the file used to import this list and reupload it. Any vehicles successfully
+  added here will not be added again and will show up as Yellow for any further uploads.
+  </p>
+
+  <br/>
+  <p>
+  <%= link_to "Done: Go back to the Vehicles page", devices_path -%>
+  </p>
+
+  <br/>
+  <br/>
+  <p>
+  <%= link_to "Re-start the Import process", import_vehicles_path -%>
+  </p>
+
+
+  <div id="preview">
+    <table class="data">
+      <tr>
+        <th>Name</th>
+        <th>VIN</th>
+        <th>Odometer</th>
+        <th>Notes</th>
+      </tr>
+      <% @processor.data.each_with_index do |entry, i| -%>
+        <tr class="<%= @processor.results[i] -%>">
+          <td><%= entry[0] -%></td>
+          <td><%= entry[1] -%></td>
+          <td><%= entry[2] -%></td>
+          <td><%= @processor.errors[i] -%></td>
+        </tr>
+      <% end -%>
+    </table>
+  </div>
+</div>

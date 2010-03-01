@@ -10,13 +10,16 @@ describe "Tracker", ActiveSupport::TestCase do
       setup do
         @tracker1 = Tracker.create(:status => Tracker::UNKNOWN,
           :imei_number => '111122223333444',
-          :sim_number => '11112222333344445555')
+          :sim_number => '11112222333344445555',
+          :account => accounts(:quentin))
         @tracker2 = Tracker.create(:status => Tracker::INVENTORY,
           :imei_number => '222233334444555',
-          :sim_number => '22223333444455556666')
+          :sim_number => '22223333444455556666',
+          :account => accounts(:quentin))
         @tracker3 = Tracker.create(:status => Tracker::ACTIVE,
           :imei_number => '333344445555666',
-          :sim_number => '33334444555566667777')
+          :sim_number => '33334444555566667777',
+          :account => accounts(:quentin))
       end
       
       specify "unknown trackers" do
@@ -48,15 +51,25 @@ describe "Tracker", ActiveSupport::TestCase do
     t.should.not.be.valid
     t.errors.on(:imei_number).should.equal("must be 15 digits")
   end
-  
-  specify "requires a valid imei number" do
+
+  specify "requires an account" do
     t = Tracker.new
     t.imei_number = '098765432109875'
-    t.should.be.valid
+    t.should.not.be.valid
     
+    t.account = accounts(:quentin)
+    t.should.be.valid
+  end
+
+  specify "requires a valid imei number" do
+    t = Tracker.new
+    t.account = accounts(:quentin)
     t.imei_number = '12345678901234'
     t.should.not.be.valid
     t.errors.on(:imei_number).should.equal 'must be 15 digits'
+
+    t.imei_number = '098765432109875'
+    t.should.be.valid    
     
     t.imei_number = '1234567890123456'
     t.should.not.be.valid

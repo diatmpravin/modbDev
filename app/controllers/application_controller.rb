@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
 
         return query
       rescue => ex
-        flash[:warning] = SPHINX_WARNING
+        flash.now[:warning] = SPHINX_WARNING
         Mailer.deliver_exception_thrown(ex, "Sphinx Search Error")
       end
     end

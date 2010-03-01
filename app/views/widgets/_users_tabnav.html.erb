@@ -1,0 +1,9 @@
+<%
+render_tabnav :users, :html => {:class => 'tabnav'} do
+  add_tab do |t|
+    t.named 'User Management'
+    t.links_to users_path
+    t.highlights_on :controller => 'users'
+  end
+end
+%>

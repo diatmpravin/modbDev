@@ -30,8 +30,6 @@
     <% requires_role(User::Role::FLEET) do -%>
       <%= button_tag 'Import Vehicles', :class => 'importVehicle', :onclick => "location.href = '#{import_vehicles_path}';" -%>
     <% end -%>
-    <%= button_tag 'Vehicle Profiles', :class => 'vehicleProfiles', :onclick => "location.href = '#{device_profiles_path}';" %>
-    <%= button_tag 'Vehicle Groups', :class => 'vehicleProfiles', :onclick => "location.href = '#{groups_path}';" %>
     <%= button_tag 'Show Selected on Map (Live Look)', :class => 'showOnMap' %>
   </div>
   
@@ -99,17 +97,17 @@
 <div id="addDevice" class="dialog">
   <% form_for @device, { :autocomplete => 'off'} do |f| -%>
     <div class="field">
-      <%= label_tag :name, 'Name* ' %>
+      <%= label_tag :name, 'Name *' %>
       <%= text_field_tag :name, '' %>
     </div>
     
     <div class="field">
-      <%= label_tag :imei, 'Tracker ID* ' %>
+      <%= label_tag :imei, 'Tracker ID ' %>
       <%= text_field_tag :imei, '' %>
     </div>
 
     <div class="field">
-      <%= label_tag :imei_confirmation, 'Confirm Tracker ID* ' %>
+      <%= label_tag :imei_confirmation, 'Confirm Tracker ID ' %>
       <%= text_field_tag :imei_confirmation, '' %>
     </div>
     <br/>

@@ -1,0 +1,15 @@
+<%
+render_tabnav :reseller, :html => {:class => 'tabnav'} do
+  add_tab do |t|
+    t.named 'Accounts'
+    t.links_to accounts_path
+    t.highlights_on :controller => 'accounts'
+  end
+  
+  add_tab do |t|
+    t.named 'Trackers'
+    t.links_to trackers_path
+    t.highlights_on :controller => 'trackers'
+  end
+end
+%>

@@ -23,11 +23,11 @@ module Import
         case uploaded_file.content_type
         when "application/vnd.ms-excel"
           ExcelParser
-        when "text/csv"
+        when "text/csv", "application/octet-stream", "text/plain"
           CSVParser
         else
           self.errors << "Do not know how to parse #{uploaded_file.original_filename}. " +
-                          "Expects .csv, .xls, or .ods files."
+                          "Expects .csv or .xls (Excel) files."
           nil
         end
 
@@ -68,16 +68,17 @@ module Import
           if book.worksheets.length == 1
             worksheet = book.worksheets[0]
             worksheet.each do |row|
-              data << row
+              data << row.map {|e| e.to_s }
             end
 
             data
           else
-            self.parent.errors << "The uploaded spreadsheet has to many worksheets (#{book.worksheets.length})."
+            self.parent.errors << "The uploaded spreadsheet has too many worksheets (#{book.worksheets.length})."
             nil
           end
         end
-      rescue Ole::Storage::FormatError
+      rescue Ole::Storage::FormatError => ex
+        Rails.logger.error("Error parsing spreadsheet: #{ex}")
         self.parent.errors << "Unable to parse uploaded spreadsheet."
         nil
       end
@@ -88,7 +89,8 @@ module Import
       def parse(file)
         begin
           FasterCSV.parse(file.read)
-        rescue FasterCSV::MalformedCSVError
+        rescue FasterCSV::MalformedCSVError => ex
+          Rails.logger.error("Error parsing CSV: #{ex}")
           self.parent.errors << "Unable to parse uploaded CSV file."
           nil
         end

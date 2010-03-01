@@ -1,8 +1,6 @@
+<% @page_title = 'Landmarks' -%>
 <% content_for(:javascript) do -%>
-  <%= mapquest_include_tags %>
-  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
-  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
-  <%= javascript_include_tag 'moshimap' %>
+  <%= javascript_include_tag 'maps/view' %>
   <%= javascript_include_tag 'landmarks' %>
   <%= javascript_include_tag 'geofences_view' %>
   <%= javascript_include_tag 'vehicles_view' %>
@@ -11,34 +9,7 @@
     VehiclesView.vehicles = <%= devices_for_json %>;
   <% end -%>
 <% end -%>
-<% inside_layout 'global' do -%>
-  <%= render :partial => 'common/header' %>
-  
-  <div id="navbar">
-    <div class="noLeft">
-      <h1>Landmark Settings</h1>
-    </div>
-    <div>
-      <%= check_box_tag :show_geofences, 1, {:checked => false} %>
-      <%= label_tag :show_geofences, 'Show Geofences' %>
-    </div>
-    <div>
-      <%= check_box_tag :show_vehicles, 1, {:checked => false} %>
-      <%= label_tag :show_vehicles, 'Show Vehicles' %>
-    </div>
-    <div>
-      <%= check_box_tag :show_labels, 1, {:checked => false} %>
-      <%= label_tag :show_labels, 'Show Labels' %>
-    </div>
-    <div class="noRight"></div>
-    
-    <%= render :partial => 'common/livelook' %>
-  </div>
-  <div id="settingsContainer">
-    <div id="settings">
-      <div id="settingsContent">
-        <%= yield %>
-      </div>
-    </div>
-  </div>
+<% inside_layout 'maps' do -%>
+  <% @with_sidebar = true -%>
+  <%= yield %>
 <% end -%>

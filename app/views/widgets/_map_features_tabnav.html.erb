@@ -1,0 +1,15 @@
+<%
+render_tabnav :map_features, :html => {:class => 'tabnav'} do
+  add_tab do |t|
+    t.named 'Landmarks'
+    t.links_to landmarks_path
+    t.highlights_on :controller => 'landmarks'
+  end
+  
+  add_tab do |t|
+    t.named 'Geofences'
+    t.links_to geofences_path
+    t.highlights_on :controller => 'geofences'
+  end
+end
+%>
