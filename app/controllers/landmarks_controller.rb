@@ -5,9 +5,9 @@ class LandmarksController < ApplicationController
   layout except_ajax('landmarks')
   
   def index
-    @landmarks = current_account.landmarks
-    @geofences = current_account.geofences
-    @devices = current_account.devices
+    @landmarks = search_on Landmark do
+      current_account.landmarks.paginate(:page => params[:page], :per_page => 30)
+    end
     
     respond_to do |format|
       format.html

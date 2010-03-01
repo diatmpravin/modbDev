@@ -3,21 +3,34 @@
     <%= button_tag 'Add Landmark', {:id => 'addLandmark'} %>
   </div>
   <div class="clear spacer"></div>
+
+  <%= paginate @geofences %>
   
-  <div class="landmark" id="new">
-    <%= render :partial => 'form', :locals => {:landmark => current_account.landmarks.new} %>
-  </div>
-  
-  <% @landmarks.each do |landmark| -%>
-    <div class="landmark">
-      <div class="view">
-        <%= render :partial => 'landmark', :locals => {:landmark => landmark} %>
-      </div>
-      <div class="edit">
-        <%= render :partial => 'form', :locals => {:landmark => landmark} %>
-      </div>
-    </div>
-  <% end -%>
+  <table class="data" style="width:100%">
+    <thead>
+      <tr>
+        <th><%= check_box_tag :landmarks_all, true, false %></th>
+        <th>Name</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th></th>
+      </tr>
+    </thead>
+    <% @landmarks.each do |landmark| -%>
+      <tr class="<%=cycle('','odd')%>">
+        <td><%= check_box_tag :landmarks, landmark.id, false, :id => dom_id(landmark) %></td>
+        <td><%= h landmark.name -%></td>
+        <td><%= h landmark.latitude -%></td>
+        <td><%= h landmark.longitude -%></td>
+        <td class="buttons">
+          <%= link_to 'Edit', edit_landmark_path(landmark), :class => 'edit', :title => 'Edit' %>
+          <%= link_to 'Delete', landmark_path(landmark), :class => 'delete', :title => 'Remove' %>
+        </td>
+      </tr>
+    <% end -%>
+  </table>
+
+  <%= paginate @geofences %>
 </div>
 
 <div id="removeLandmark" class="dialog">

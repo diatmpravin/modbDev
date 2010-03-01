@@ -9,6 +9,11 @@ class Landmark < ActiveRecord::Base
   validates_numericality_of :longitude, :allow_nil => true
   
   attr_accessible :account, :name, :latitude, :longitude, :radius
+
+  ##
+  # Concerns
+  ##
+  concerned_with :sphinx
   
   def contain?(point)
     Haversine::distance(latitude, 
