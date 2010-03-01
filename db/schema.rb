@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100224153538) do
+ActiveRecord::Schema.define(:version => 20100301212123) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(:version => 20100224153538) do
     t.string   "name",       :limit => 30
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "delta",                                                  :default => true, :null => false
   end
 
   add_index "landmarks", ["account_id"], :name => "index_landmarks_on_account_id"

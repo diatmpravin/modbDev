@@ -1,15 +1,4 @@
 <% @page_title = 'Landmarks' -%>
-<% content_for(:javascript) do -%>
-  <%= javascript_include_tag 'maps/view' %>
-  <%= javascript_include_tag 'landmarks' %>
-  <%= javascript_include_tag 'geofences_view' %>
-  <%= javascript_include_tag 'vehicles_view' %>
-  <% javascript_tag do -%>
-    GeofencesView.fences = <%= geofences_for_json %>;
-    VehiclesView.vehicles = <%= devices_for_json %>;
-  <% end -%>
-<% end -%>
-<% inside_layout 'maps' do -%>
-  <% @with_sidebar = true -%>
+<% inside_layout 'internal' do -%>
   <%= yield %>
 <% end -%>
