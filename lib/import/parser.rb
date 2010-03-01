@@ -23,7 +23,7 @@ module Import
         case uploaded_file.content_type
         when "application/vnd.ms-excel"
           ExcelParser
-        when "text/csv", "application/octet-stream"
+        when "text/csv", "application/octet-stream", "text/plain"
           CSVParser
         else
           self.errors << "Do not know how to parse #{uploaded_file.original_filename}. " +
