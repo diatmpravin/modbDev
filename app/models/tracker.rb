@@ -26,6 +26,8 @@ class Tracker < ActiveRecord::Base
   named_scope :active, :conditions => {:status => ACTIVE}
   
   attr_accessible :imei_number, :sim_number, :msisdn_number, :status, :account
+
+  concerned_with :sphinx
   
   def status_text
     TEXT[status] || 'Unknown'

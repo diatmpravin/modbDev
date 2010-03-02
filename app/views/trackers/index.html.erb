@@ -1,3 +1,6 @@
+
+<% filter %>
+
 <div>
   <table class="data">
     <tr>
@@ -13,10 +16,10 @@
         <td><%= link_to h(tracker.imei_number), edit_tracker_path(tracker) %></td>
         <td><%= tracker.sim_number %></td>
         <td><%= tracker.status_text %></td>
-        <td><%= tracker.device_id ? tracker.device_id : '' %></td>
+        <td><%= tracker.device ? tracker.device.id : '' %></td>
         <td><%= tracker.account_id ? tracker.account.name + ' (' + tracker.account_id.to_s + ')' : '' %></td>
         <td>
-          <% if !tracker.device_id -%>
+          <% if !tracker.device -%>
             <% form_for :tracker, tracker, :url => tracker_path(tracker), :html => {:method => :delete} do |f| -%>
               <%= f.submit 'Delete' %>
             <% end -%>
