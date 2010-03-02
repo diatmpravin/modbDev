@@ -17,3 +17,18 @@ Factory.define :device do |device|
   device.account { Account.find_by_number(10001) }
   device.association :tracker
 end
+
+Factory.define :point do |point|
+  point.association :device
+  point.association :leg
+  point.occurred_at Time.now
+  point.miles 0
+end
+
+Factory.define :trip do |trip|
+  trip.association :device
+end
+
+Factory.define :leg do |leg|
+  leg.association :trip
+end

@@ -50,7 +50,7 @@ class Account < ActiveRecord::Base
   protected
   
   def generate_number
-    self.number = Account.maximum(:number) + 1
+   self.number = Account.maximum(:number) + 1
   end
 
 end

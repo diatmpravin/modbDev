@@ -6,7 +6,6 @@ module UploadHelper
   def fixture_file_upload(path, mime, binary = false)
     ActionController::TestUploadedFile.new(
       ActionController::TestCase.fixture_path + path, mime, binary)
-    #File.new(ActionController::TestCase.fixture_path + path, mime, binary)
   end
 end
 
