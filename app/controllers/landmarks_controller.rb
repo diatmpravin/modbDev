@@ -10,7 +10,11 @@ class LandmarksController < ApplicationController
     end
     
     respond_to do |format|
-      format.html
+      format.html {
+        if request.xhr? && params[:page]
+          render :partial => "list", :locals => {:landmarks => @landmarks}
+        end
+      }
       format.json {
         render :text => @landmarks.to_json
       }

@@ -1,3 +1,9 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "list_view" -%>
+  <%= javascript_include_tag "landmarks/index" -%>
+  <%= javascript_include_tag 'jquery/jquery.blockUI' %>
+<% end -%>
+
 <%= filter -%>
 <%= messages -%>
 
@@ -7,33 +13,9 @@
   </div>
   <div class="clear spacer"></div>
 
-  <%= paginate @geofences %>
-  
-  <table class="data" style="width:100%">
-    <thead>
-      <tr>
-        <th><%= check_box_tag :landmarks_all, true, false %></th>
-        <th>Name</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th></th>
-      </tr>
-    </thead>
-    <% @landmarks.each do |landmark| -%>
-      <tr class="<%=cycle('','odd')%>">
-        <td><%= check_box_tag :landmarks, landmark.id, false, :id => dom_id(landmark) %></td>
-        <td><%= h landmark.name -%></td>
-        <td><%= h landmark.latitude -%></td>
-        <td><%= h landmark.longitude -%></td>
-        <td class="buttons">
-          <%= link_to 'Edit', edit_landmark_path(landmark), :class => 'edit', :title => 'Edit' %>
-          <%= link_to 'Delete', landmark_path(landmark), :class => 'delete', :title => 'Remove' %>
-        </td>
-      </tr>
-    <% end -%>
-  </table>
-
-  <%= paginate @geofences %>
+  <div id="landmarksList">
+    <%= render :partial => "list", :locals => {:landmarks => @landmarks} -%>
+  </div>
 </div>
 
 <div id="removeLandmark" class="dialog">
