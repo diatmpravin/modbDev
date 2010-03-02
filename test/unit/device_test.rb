@@ -650,6 +650,7 @@ describe "Device", ActiveSupport::TestCase do
 
       specify "nothing set if lock_vin isn't set" do
         @device.update_attribute(:lock_vin, false)
+        @device.update_attribute(:alert_on_reset, false)
 
         # Event::RESET
         @device.process(@example_location.merge(:event => '6015', :vin => '2222'))

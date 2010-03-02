@@ -121,8 +121,8 @@ class Device < ActiveRecord::Base
 
       # Device Power Reset
       if point.event == DeviceReport::Event::RESET
-        point.events.create(:event_type => Event::RESET)
         if alert_on_reset?
+          point.events.create(:event_type => Event::RESET)
           alert_recipients.each do |r|
             r.alert("#{self.name} has reported a power reset", self.zone.now)
           end
