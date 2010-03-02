@@ -13,6 +13,7 @@ quentin:
   detect_pitstops: true
   pitstop_threshold: 10
   time_zone: Eastern Time (US & Canada)
+  alert_on_reset: false
 aaron:
   account: aaron
   name: Aaron Default

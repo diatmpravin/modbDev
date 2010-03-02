@@ -7,9 +7,9 @@ class DeviceProfile < ActiveRecord::Base
   time_as_text :after_hours_end
   
   attr_accessible :account, :devices, :speed_threshold, :rpm_threshold,
-    :alert_on_speed, :alert_on_aggressive, :alert_on_idle, :idle_threshold,
-    :alert_on_after_hours, :after_hours_end, :after_hours_start, :detect_pitstops,
-    :pitstop_threshold, :idle_threshold, :time_zone, :name
+    :alert_on_speed, :alert_on_aggressive, :alert_on_idle, :alert_on_reset, 
+    :idle_threshold, :alert_on_after_hours, :after_hours_end, :after_hours_start, 
+    :detect_pitstops, :pitstop_threshold, :idle_threshold, :time_zone, :name
   
   PROFILE_ATTRIBUTES = [
     :alert_on_speed,
@@ -21,6 +21,7 @@ class DeviceProfile < ActiveRecord::Base
     :alert_on_after_hours,
     :after_hours_start,
     :after_hours_end,
+    :alert_on_reset,
     :detect_pitstops,
     :pitstop_threshold,
     :time_zone

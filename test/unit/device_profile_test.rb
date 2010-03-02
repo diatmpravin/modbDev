@@ -95,7 +95,8 @@ describe "DeviceProfile", ActiveSupport::TestCase do
       :after_hours_end => 21600,
       :detect_pitstops => true,
       :pitstop_threshold => 10,
-      :time_zone => 'Eastern Time (US & Canada)'
+      :time_zone => 'Eastern Time (US & Canada)',
+      :alert_on_reset => false
     })
   end
   
