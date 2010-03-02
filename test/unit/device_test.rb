@@ -450,6 +450,40 @@ describe "Device", ActiveSupport::TestCase do
       end
     end
 
+    context "Idle" do
+      specify "creates events" do
+        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
+        @example_location[:speed] = 0
+
+        Event.should.differ(:count).by(1) do
+          for i in 1..9
+            new_time = i.minutes.since(occurred_at)
+            @device.process(@example_location)
+            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
+          end
+
+          #@device.process(@example_location)
+        end
+        Mailer.deliveries.length.should.be 0
+      end
+
+      specify "sends alerts" do
+        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
+        
+        @device.update_attribute(:alert_on_idle, true)
+        @example_location[:speed] = 0
+        Event.should.differ(:count).by(1) do
+          for i in 1..9
+            new_time = i.minutes.since(occurred_at)
+            @device.process(@example_location)
+            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
+          end
+        end
+        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.first.body.should =~ /idle/  
+      end
+    end
+    
     context "Rapid acceleration" do
       specify "creates events" do
         @example_location[:event] = DeviceReport::Event::ACCELERATING

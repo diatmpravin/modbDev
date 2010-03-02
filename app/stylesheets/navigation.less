@@ -1,0 +1,104 @@
+/* Navigation Bars */
+
+#header_tabnav {
+  background:#d7d3bb url(/images/topnav_bg.png) repeat-x 0 0;
+  height:33px;
+  line-height:33px;
+  padding:0 32px 0 32px;
+  
+  ul {
+    margin:0;
+    padding:0;
+    
+    li {
+      background:transparent url(/images/topnav_tab.png) no-repeat 0 0;
+      float:left;
+      list-style:none;
+      margin:0;
+      padding:0 16px;
+    }
+  }
+  
+	li.active {
+	  background:#cdf1f6 url(/images/topnav_active.png) no-repeat 0 0;
+	}
+  
+  li.disabled {
+    height:33px;
+    width:10px;
+  }
+  
+  a {
+    :link, :visited {
+      color:#444;
+	    font-weight:bold;
+    }
+	
+    :hover {
+	    color:black;
+      text-decoration:none;
+    }
+  }
+  
+  a.active {
+    color:black;
+  }
+}
+
+#vehicles_tabnav,
+#map_features_tabnav,
+#users_tabnav,
+#reseller_tabnav {
+  background:#cbf1f5 url(/images/subnav_bg.png) repeat-x 0 0;
+  display:none;
+  height:31px;
+  line-height:31px;
+  padding:0 32px 0 32px;
+  
+  ul {
+    margin:0;
+    padding:0;
+    
+    li {
+      float:left;
+      list-style:none;
+      margin:0;
+      padding:0 16px;
+    }
+  }
+  
+	li.active {
+	  background:transparent url(/images/subnav_active.png) no-repeat center bottom;
+	}
+  
+  a {
+    :link, :visited {
+      color:#444;
+	    font-weight:normal;
+    }
+	
+    :hover {
+	    color:black;
+      text-decoration:none;
+    }
+  }
+  
+  a.active {
+    color:black;
+  }
+}
+
+/* Tab Defaults */
+
+#devices         #vehicles_tabnav,
+#groups          #vehicles_tabnav,
+#device_profiles #vehicles_tabnav,
+#import-vehicles #vehicles_tabnav,
+#geofences       #map_features_tabnav,
+#landmarks       #map_features_tabnav,
+#users           #users_tabnav,
+#accounts        #reseller_tabnav,
+#trackers        #reseller_tabnav {
+  display:block;
+}
+
