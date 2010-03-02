@@ -44,7 +44,7 @@ context "Import::VehiclesController", ActionController::TestCase do
       end
 
       specify "errors should show upload page again" do
-        file = fixture_file_upload("import/proper_10.xls", "text/csv")
+        file = fixture_file_upload("import/proper_10.xls", "text/csv", true)
 
         post :create, :upload => file
         template.should.be "index"
