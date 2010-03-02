@@ -1,0 +1,27 @@
+<%= paginate landmarks %>
+
+<table class="data" style="width:100%">
+  <thead>
+    <tr>
+      <th><%= check_box_tag :select_all, true, false %></th>
+      <th>Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th></th>
+    </tr>
+  </thead>
+  <% landmarks.each do |landmark| -%>
+    <tr class="<%=cycle('','odd')%>">
+      <td><%= check_box_tag :apply_to, landmark.id, false, :id => dom_id(landmark) %></td>
+      <td><%= h landmark.name -%></td>
+      <td><%= h landmark.latitude -%></td>
+      <td><%= h landmark.longitude -%></td>
+      <td class="buttons">
+        <%= link_to 'Edit', edit_landmark_path(landmark), :class => 'edit', :title => 'Edit' %>
+        <%= link_to 'Delete', landmark_path(landmark), :class => 'delete', :title => 'Remove' %>
+      </td>
+    </tr>
+  <% end -%>
+</table>
+
+<%= paginate landmarks %>

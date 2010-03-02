@@ -277,6 +277,7 @@ ActiveRecord::Schema.define(:version => 20100302195730) do
     t.datetime "updated_at"
     t.string   "msisdn_number", :limit => 32
     t.integer  "account_id"
+    t.boolean  "delta",                       :default => true, :null => false
   end
 
   add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"

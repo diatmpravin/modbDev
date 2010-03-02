@@ -6,7 +6,9 @@ class TrackersController < ApplicationController
   layout except_ajax('trackers')
   
   def index
-    @trackers = Tracker.all(tracker_options)
+    @trackers = search_on Tracker do
+      @trackers = Tracker.all(tracker_options) 
+    end
   end
   
   def new
