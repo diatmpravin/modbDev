@@ -119,6 +119,16 @@ class Device < ActiveRecord::Base
       
       # Handle various other vehicle tests
 
+      # Device Power Reset
+      if point.event == DeviceReport::Event::RESET
+        point.events.create(:event_type => Event::RESET)
+        if alert_on_reset?
+          alert_recipients.each do |r|
+            r.alert("#{self.name} has reported a power reset", self.zone.now)
+          end
+        end
+      end
+
       # Speed alert, if flagged and if a new point is > 5 mph from the previous speed alert point
       if alert_on_speed? && point.speed > speed_threshold
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)

@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(:version => 20100301212123) do
     t.boolean  "delta",                              :default => true,                         :null => false
     t.integer  "device_profile_id"
     t.boolean  "lock_vin",                           :default => false
+    t.boolean  "alert_on_reset",                     :default => false
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"

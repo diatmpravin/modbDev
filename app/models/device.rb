@@ -47,7 +47,7 @@ class Device < ActiveRecord::Base
 
   attr_accessible :name, :account, :points, :trips, :phone_devices, :phones,
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
-    :alert_on_aggressive, :alert_recipients, :alert_on_idle,
+    :alert_on_aggressive, :alert_recipients, :alert_on_idle, :alert_on_reset,
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,

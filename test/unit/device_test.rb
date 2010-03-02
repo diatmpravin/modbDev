@@ -693,7 +693,28 @@ describe "Device", ActiveSupport::TestCase do
         @device.points.reload.last.events.length.should.equal 0
       end
     end
-    
+
+#    context "Device Power Reset Alerts" do
+#      setup do
+#        Mailer.deliveries.clear
+#        @example_location[:event] = '6015'
+#      end
+#
+#      specify "create events for power reset" do
+#        Event.should.differ(:count).by(1) do
+#          @device.process(@example_location)
+#        end
+#        Mailer.deliveries.length.should.be 0
+#      end
+#
+#      specify "send alerts for power reset" do
+#        Event.should.differ(:count).by(1) do
+#          @device.process(@example_location)
+#        end
+#        Mailer.deliveries.length.should.be 1
+#      end
+#    end
+
     specify "will update odometer" do
       @device.update_attribute(:odometer, 37000)
 
