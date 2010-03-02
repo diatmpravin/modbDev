@@ -10,8 +10,39 @@ Landmarks.Index = {
   ,
   init: function() {
     Landmarks.Index.listView = new ListView(q("#landmarksList"));
-  }
 
+    //q('#addLandmark').live('click', Landmarks.Index.newLandmark);
+
+    q("#removeLandmark").dialog({
+      title: 'Remove Landmark',
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 450,
+      buttons: {
+        'Yes, delete this landmark': Landmarks.Index.destroy,
+        'No, do not delete': function() { q(this).dialog('close'); }
+      }
+    });
+
+    q('a.delete').live('click', function() {
+      q('#removeLandmark').find('form').attr('action', this.href).end()
+                        .dialog('open');
+      return false;
+    });
+  }
+  ,
+  /**
+   * Remove a landmark
+   */
+  destroy: function() {
+    var _this = q(this);
+    
+    _this.dialogLoader().show();
+    _this.find('form').submit();
+    
+    return false;
+  }
 };
 
 jQuery(Landmarks.Index.init);

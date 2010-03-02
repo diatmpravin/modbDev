@@ -1,4 +1,4 @@
-<% form_for landmark, :index => landmark.id, :html => {:autocomplete => 'off'} do |f| -%>
+<% form_for landmark, :html => {:autocomplete => 'off'} do |f| -%>
   <div class="field">
     <%= f.label :name %>
     <%= f.text_field :name, :size => 20, :maxlength => 30 %>
@@ -19,8 +19,7 @@
   
   <div class="clear spacer"></div>
   <div class="buttons">
-    <div class="loading"></div>
-    <%= button_tag 'Cancel', :class => 'cancel' %>
-    <%= button_tag 'Save', :class => 'save' %>
+    <%= submit_tag "Save" %>
+    <%= link_to 'Cancel', landmarks_path %>
   </div>
 <% end -%>

@@ -1,7 +1,5 @@
 class LandmarksController < ApplicationController
-  before_filter :new_landmark, :only => [:new, :create]
-  before_filter :set_landmark, :only => [:show, :edit, :update, :destroy]
-  
+
   layout except_ajax('landmarks')
   
   def index
@@ -15,76 +13,49 @@ class LandmarksController < ApplicationController
           render :partial => "list", :locals => {:landmarks => @landmarks}
         end
       }
-      format.json {
-        render :text => @landmarks.to_json
-      }
     end
   end
   
+  # GET /landmarks/new
   def new
+    @landmark = Landmark.new
   end
   
+  # POST /landmarks
+  # Create a new landmark
   def create
-    save_landmark(params[:landmark].first)
-  end
-  
-  def show
-  end
-  
-  def edit
-  end
-  
-  def update
-    save_landmark(params[:landmark][@landmark.id.to_s])
-  end
-  
-  def destroy
-    @landmark.destroy
-    
-    respond_to do |format|
-      format.json {
-        render :json => {
-          :status => 'success'
-        }
-      }
+    @landmark = current_account.landmarks.build(params[:landmark])
+
+    if @landmark.save
+      flash[:notice] = "Landmark created"
+      redirect_to landmarks_path
+    else
+      render :action => "new"
     end
   end
   
-  protected
-  def new_landmark
-    @landmark = current_account.landmarks.new
-  end
-  
-  def set_landmark
+  # GET /landmarks/:id/edit
+  def edit
     @landmark = current_account.landmarks.find(params[:id])
   end
   
-  def save_landmark(record)
-    if @landmark.update_attributes(record)
-      # Force lat & lng to load from db as valid floats (no lead/trail space,
-      # etc.).  TODO: Better way to handle this situation?
-      @landmark.reload
-      
-      respond_to do |format|
-        format.json {
-          render :json => {
-            :status => 'success',
-            :view => render_to_string(:action => 'show'),
-            :edit => render_to_string(:action => 'edit')
-          }
-        }
-      end
+  # PUT /landmarks/:id
+  # Update an existing landmark
+  def update
+    @landmark = current_account.landmarks.find(params[:id])
+
+    if @landmark.update_attributes(params[:landmark])
+      flash[:notice] = "Landmark updated"
+      redirect_to landmarks_path
     else
-      respond_to do |format|
-        format.json {
-          render :json => {
-            :status => 'failure',
-            :html => render_to_string(
-              :action => @landmark.new_record? ? 'new' : 'edit'
-            )
-          }
-        }
-      end
+      render :action => "edit"
     end
   end
+  
+  def destroy
+    current_account.landmarks.destroy(params[:id])
+
+    redirect_to landmarks_path
+  end
+  
 end
