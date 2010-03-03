@@ -11,10 +11,6 @@ describe "Account", ActiveSupport::TestCase do
       @account.should.respond_to(:devices)
     end
     
-    specify "has many phones" do
-      @account.should.respond_to(:phones)
-    end
-    
     specify "has many geofences" do
       @account.should.respond_to(:geofences)
     end

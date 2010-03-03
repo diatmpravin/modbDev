@@ -1,0 +1,73 @@
+/**
+ * Styles for the report card page
+ */
+#report_card {
+
+  table {
+    width: 100%;
+
+    th {
+      border:solid 1px black;
+      background-color: #CCC;
+      font-weight:bold;
+      text-align:center;
+      padding:2px;
+    }
+
+    th.empty {
+      border: none;
+      border-left: 1px solid white;
+      background-color: white;
+    }
+
+    tr {
+      border-left: 1px solid #888;
+      border-right: 1px solid #888;
+    }
+
+    td {
+      color: black;
+      border: solid 1px #888;
+      text-align: right;
+      line-height: 175%;
+
+      padding-left: 1em;
+      padding-right: 1.0em;
+    }
+
+    td.left {
+      text-align: left;
+      padding-left: 2em;
+
+      img {
+        vertical-align: middle;
+      }
+    }
+
+    td.overall {
+      text-align: center;
+    }
+
+    td.name {
+      text-align: left;
+    }
+
+    td.box {
+      text-align: center;
+      padding: 0;
+    }
+
+    div.warning {
+      float: right;
+    }
+
+    div.status {
+      float: left;
+    }
+
+    tr.odd,
+    tr.odd td {
+      background-color: #CCC;
+    }
+  }
+}

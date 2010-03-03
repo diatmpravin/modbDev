@@ -4,7 +4,7 @@
 
 USER = "quentin"
 DEVICE_INDEX = 0
-START_DATE = Date.parse("12/14/2009")
+START_DATE = Date.parse("02/01/2010")
 END_DATE = Date.today
 
 CLEAR_EXISTING = true
@@ -46,7 +46,7 @@ end
 
 $current_miles = START_MILES
 
-user.account.devices[0..20].each do |device|
+user.account.devices[0..100].each do |device|
   puts "Building information for device: #{device.name}"
 
   if CLEAR_EXISTING
