@@ -19,79 +19,49 @@
         </tr>
       </thead>
       <tbody>
-        <% 10.times do -%>
+        <% @report_card.each do |report| -%>
           <tr class="<%= cycle('even', 'odd') %> entry">
             <td class="box"><%= check_box_tag "apply", 1 -%></td>
             <td class="name">
               <div class="warning"><%= image_tag "alert.png" -%></div>
-              Massive Region ABCDEFGHIJKLMNOP
+              <%= h report.data[:name] -%>
             </td>
-            <td class="overall"><%= image_tag "points/red_start.png" -%></td>
+            <td class="overall">
+              <%= image_tag "points/red_start.png" -%>
+              <% if report.data[:first_start_time] -%>
+                <%= report.data[:first_start_time].in_time_zone(current_user.zone).to_s(:local) -%>
+              <% end -%>
+            </td>
             <td>
               <div class="status"><%= image_tag "points/orange_event.png" -%></div>
-              00:00
+              <%= duration_format(report.data[:duration]) -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              14.7
+              <%= report.data[:miles] -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/green_event.png" -%></div>
-              3
+              <%= report.data[:event_speed] -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/green_event.png" -%></div>
-              4
+              <%= report.data[:event_geofence] -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              5
+              <%= report.data[:event_idle] -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              6
+              <%= report.data[:event_aggressive] -%>
             </td>
             <td>
               <div class="status"><%= image_tag "points/orange_start.png" -%></div>
-              7
+              <%= report.data[:event_after_hours] -%>
             </td>
           </tr>
         <% end -%>
-          <tr class="even entry">
-            <td class="box"><%= check_box_tag "apply", 1 -%></td>
-            <td class="name">
-              Massive Region ABCDEFGHIJKLMNOP
-            </td>
-            <td class="overall"><%= image_tag "points/green_start.png" -%></td>
-            <td>
-              <div class="status"></div>
-              00:00
-            </td>
-            <td>
-              <div class="status"></div>
-              14.7
-            </td>
-            <td>
-              <div class="status"></div>
-              3
-            </td>
-            <td>
-              <div class="status"></div>
-              4
-            </td>
-            <td>
-              <div class="status"></div>
-              5
-            </td>
-            <td>
-              <div class="status"></div>
-              6
-            </td>
-            <td>
-              <div class="status"></div>
-              7
-            </td>
-          </tr>
       </tbody>
     </table>
 
