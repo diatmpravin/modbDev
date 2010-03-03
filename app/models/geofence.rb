@@ -19,6 +19,7 @@ class Geofence < ActiveRecord::Base
     :alert_on_exit, :alert_on_entry, :device_groups, :device_group_ids
   
   before_save :prepare_coordinates
+  after_save :update_associated_deltas
   
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
@@ -137,4 +138,7 @@ class Geofence < ActiveRecord::Base
     inside
   end
   
+  def update_associated_deltas
+      Group.update_all({:delta => true}, {:id => device_groups.map(&:id)})
+  end
 end
