@@ -7,6 +7,13 @@
       <%= f.text_field :name %>
       <%= error_message_on group, :name, :prepend_text => '* Name ' %>
     </div>
+    
+    <div class="field">
+      <%= f.label :parent %>
+      <%= f.select :parent_id, nested_set_options(current_user.groups) {|i| "#{'-' * i.level} #{i.name}" }, :include_blank => 'Root' %>
+      <%= error_message_on group, :parent_id, :prepend_text => '* Parent ' %>
+    </div>
+    
   </div>
 
   <div class="buttons">

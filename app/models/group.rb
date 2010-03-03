@@ -12,11 +12,16 @@
 # See Device for how to hook up the other side of this.
 #
 class Group < ActiveRecord::Base
-  acts_as_nested_set :scope => :account
-
   belongs_to :account
 
-#  before_destroy :move_children_up
+  # parent_id is not accessible because attempting to set parent_id= is almost
+  # always invalid. use a method like move_to_child_of instead.
+  attr_accessible :account, :name
+  
+  acts_as_nested_set :scope => :account
+  
+  validates_presence_of :account
+  validate :belongs_to_parent_account
 
   ##
   # Concerns
@@ -41,33 +46,29 @@ class Group < ActiveRecord::Base
       :order => "name ASC"
   end
 
-  protected
-
-  # When a group is destroyed, and there is a parent it needs to
-  # move all it's children (groups and links) up to that
-  # parent
-  def move_children_up
-    return unless self.parent
-
-    puts "Before:"
-    y self.parent.children
-
-    self.children.each do |c|
-      puts "Moving child #{c.inspect} to parent #{self.parent.inspect}"
-      c.move_to_child_of(self.parent)
-      c.save
+  # Destroy this record AND rollup any devices or subgroups to the parent.
+  # If this group is a root group, this is the same as a call to destroy.
+  def destroy_and_rollup
+    unless self.parent
+      destroy ; return
     end
-
-    self.parent.save
-
-    puts "After:"
-    y self.parent.children
-
+    
+    self.children.each do |c|
+      c.move_to_child_of(self.parent)
+    end
+    
     LINKS.each do |link_name|
       self.send(link_name).each do |link|
         parent.send(link_name) << link
       end
     end
+    
+    destroy
   end
-
+  
+  protected
+  
+  def belongs_to_parent_account
+    errors.add :parent_id, 'account mismatch' if parent && account_id != parent.account_id
+  end
 end
