@@ -52,14 +52,6 @@ ActionController::Routing::Routes.draw do |map|
   # Landmarks
   map.resources :landmarks
   
-  # Phones
-  map.resources :phones, :collection => {
-    :download => [:put]
-  }
-  
-  # Phone communication & control
-  map.dispatch '/dispatch', :controller => 'dispatch', :action => 'index'
-  
   # Alert Recipients
   map.resources :alert_recipients
   
