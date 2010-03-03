@@ -51,6 +51,10 @@ class Geofence < ActiveRecord::Base
       list.reject {|a| a.blank?}
     )
   end
+
+  def device_group_names
+    self.device_groups.map(&:name).join(', ')
+  end
   
   def contain?(point)
     case geofence_type
