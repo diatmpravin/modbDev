@@ -1,0 +1,98 @@
+<div id="report_card">
+
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2" class="empty"></th>
+          <th rowspan="2" width="30%" class="empty"></th>
+          <th rowspan="2">First Start Time</th>
+          <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+          <th rowspan="2">Miles Driven</th>
+          <th colspan="5">Driver Behavior Events</th>
+        </tr>
+        <tr>
+          <th>Speed</th>
+          <th>Geofence</th>
+          <th>Idle</th>
+          <th>Aggressive</th>
+          <th>After Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 10.times do -%>
+          <tr class="<%= cycle('even', 'odd') %> entry">
+            <td class="box"><%= check_box_tag "apply", 1 -%></td>
+            <td class="name">
+              <div class="warning"><%= image_tag "alert.png" -%></div>
+              Massive Region ABCDEFGHIJKLMNOP
+            </td>
+            <td class="overall"><%= image_tag "points/red_start.png" -%></td>
+            <td>
+              <div class="status"><%= image_tag "points/orange_event.png" -%></div>
+              00:00
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/red_event.png" -%></div>
+              14.7
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/green_event.png" -%></div>
+              3
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/green_event.png" -%></div>
+              4
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/red_event.png" -%></div>
+              5
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/red_event.png" -%></div>
+              6
+            </td>
+            <td>
+              <div class="status"><%= image_tag "points/orange_start.png" -%></div>
+              7
+            </td>
+          </tr>
+        <% end -%>
+          <tr class="even entry">
+            <td class="box"><%= check_box_tag "apply", 1 -%></td>
+            <td class="name">
+              Massive Region ABCDEFGHIJKLMNOP
+            </td>
+            <td class="overall"><%= image_tag "points/green_start.png" -%></td>
+            <td>
+              <div class="status"></div>
+              00:00
+            </td>
+            <td>
+              <div class="status"></div>
+              14.7
+            </td>
+            <td>
+              <div class="status"></div>
+              3
+            </td>
+            <td>
+              <div class="status"></div>
+              4
+            </td>
+            <td>
+              <div class="status"></div>
+              5
+            </td>
+            <td>
+              <div class="status"></div>
+              6
+            </td>
+            <td>
+              <div class="status"></div>
+              7
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+</div>
