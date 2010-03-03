@@ -57,7 +57,6 @@ class Device < ActiveRecord::Base
 
   before_save :prefill_profile_fields
   before_save :convert_imei_to_tracker
-  after_create :assign_phones
 
   # Get the list of all the NON marked-for-deletion cars
   named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
@@ -147,12 +146,6 @@ class Device < ActiveRecord::Base
   def prefill_profile_fields
     if device_profile
       self.attributes = device_profile.updates_for_device
-    end
-  end
-
-  def assign_phones
-    if phones.empty?
-      phones << account.phones
     end
   end
 
