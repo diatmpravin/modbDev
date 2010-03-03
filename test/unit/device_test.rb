@@ -3,7 +3,6 @@ require 'test_helper'
 describe "Device", ActiveSupport::TestCase do
   setup do
     @account = accounts(:quentin)
-    @phone = phones(:quentin_phone)
     @device = devices(:quentin_device)
   end
 
@@ -23,11 +22,6 @@ describe "Device", ActiveSupport::TestCase do
 
     specify "has many trips" do
       @device.should.respond_to(:trips)
-    end
-
-    specify "has many phones" do
-      @device.should.respond_to(:phones)
-      @device.phones.should.include(@phone)
     end
 
     specify "has many geofences" do
@@ -828,27 +822,6 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
   
-  specify "assigns any phones on the account automatically" do
-    test_phone = Phone.new(:name => 'Delicious Phone')
-    @account.phones << test_phone
-
-    d = @account.devices.new(:name => 'Brand New')
-    d.tracker = Tracker.create(:imei_number => '182340981750984', :account => @account)
-    d.phones.should.be.empty
-
-    d.should.save
-
-    d.phones.should.equal @account.phones
-
-    # Doesn't apply if you give it a specific phone list
-    d = @account.devices.new(:name => 'specifying a Phone', :phones => [test_phone])
-    d.tracker = Tracker.create(:imei_number => '987321000192873', :account => @account)
-    d.phones.should.equal [test_phone]
-
-    d.should.save
-    d.phones.should.equal [test_phone]
-  end
-
   specify "has getters and setters for TEXT after_hours time" do
     @device.after_hours_start_text = '12:00 am'
     @device.after_hours_start.should.equal 0

@@ -83,5 +83,4 @@ Rails::Initializer.run do |config|
   config.load_paths << Rails.root.join("app", "models", "report")
 end
 
-PhonesDatabase.site = "http://crayon:roygbiv64@phones.gomoshi.com"
 TaxesService.site = "http://crayon:roygbiv64@taxes.gomoshi.com"

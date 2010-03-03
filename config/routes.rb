@@ -52,14 +52,6 @@ ActionController::Routing::Routes.draw do |map|
   # Landmarks
   map.resources :landmarks
   
-  # Phones
-  map.resources :phones, :collection => {
-    :download => [:put]
-  }
-  
-  # Phone communication & control
-  map.dispatch '/dispatch', :controller => 'dispatch', :action => 'index'
-  
   # Alert Recipients
   map.resources :alert_recipients
   
@@ -97,6 +89,9 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace :import do |import|
     import.resources :vehicles
   end
+
+  # Report Card
+  map.resource :report_card, :controller => "report_card"
 
   # Billing Tester
   map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'

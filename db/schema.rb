@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100302195730) do
+ActiveRecord::Schema.define(:version => 20100303190930) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -219,18 +219,6 @@ ActiveRecord::Schema.define(:version => 20100302195730) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "phones", :force => true do |t|
-    t.integer  "account_id"
-    t.string   "name",            :limit => 30
-    t.string   "moshi_key",       :limit => 32
-    t.integer  "request_id",                    :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "activation_code", :limit => 8
-  end
-
-  add_index "phones", ["account_id"], :name => "index_phones_on_account_id"
 
   create_table "points", :force => true do |t|
     t.integer  "event"

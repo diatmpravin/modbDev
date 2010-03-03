@@ -120,4 +120,8 @@ class RoutesTest < ActionController::IntegrationTest
   test "import vehicles resource" do
     assert_equal "/import/vehicles", import_vehicles_path
   end
+
+  test "report card" do
+    assert_equal "/report_card", report_card_path
+  end
 end

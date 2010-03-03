@@ -5,8 +5,6 @@ class Device < ActiveRecord::Base
   belongs_to :device_profile
   has_many :points, :order => 'occurred_at'
   has_many :trips, :order => 'start'
-  has_many :phone_devices, :dependent => :delete_all
-  has_many :phones, :through => :phone_devices
   has_many :device_geofences, :dependent => :delete_all
   has_many :geofences, :through => :device_geofences
   has_many :device_alert_recipients, :dependent => :delete_all
@@ -45,7 +43,7 @@ class Device < ActiveRecord::Base
 
   validates_numericality_of :odometer, :allow_nil => true
 
-  attr_accessible :name, :account, :points, :trips, :phone_devices, :phones,
+  attr_accessible :name, :account, :points, :trips, :phone_devices,
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
     :alert_on_aggressive, :alert_recipients, :alert_on_idle, :alert_on_reset,
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
@@ -55,7 +53,6 @@ class Device < ActiveRecord::Base
     :groups
 
   before_save :prefill_profile_fields
-  after_create :assign_phones
 
   # Get the list of all the NON marked-for-deletion cars
   named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
@@ -141,12 +138,6 @@ class Device < ActiveRecord::Base
   def prefill_profile_fields
     if device_profile
       self.attributes = device_profile.updates_for_device
-    end
-  end
-
-  def assign_phones
-    if phones.empty?
-      phones << account.phones
     end
   end
 
