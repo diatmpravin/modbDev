@@ -9,9 +9,6 @@ Devices.Index = {
   listView: null
   ,
   init: function() {
-    q('input.addVehicle').live('click', function() {
-      q("#addDevice").dialog("open"); 
-    });
 
     q('a.delete').live('click', function() {
       q('#removeDevice').find('form').attr('action', this.href).end()
@@ -35,18 +32,6 @@ Devices.Index = {
       buttons: {
         'Yes, remove this vehicle': Devices.Index.destroy,
         'No, do not remove': function() { q(this).dialog('close'); }
-      }
-    });
-
-    q("#addDevice").dialog({
-      title: 'Add Vehicle',
-      modal: true,
-      autoOpen: false,
-      resizable: false,
-      width: 450,
-      buttons: {
-        'Add this Vehicle': Devices.Index.create,
-        'Cancel': function() { q(this).dialog('close').clearRailsForm(); }
       }
     });
 

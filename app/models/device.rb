@@ -23,6 +23,9 @@ class Device < ActiveRecord::Base
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
     :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
 
+  # Virtual attribute for imei
+  attr_accessor :imei_number
+
   # Link to groups
   has_and_belongs_to_many :groups, 
     :join_table => :group_links, 
@@ -41,7 +44,7 @@ class Device < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
-  validate :tracker_owned
+  validate :tracker_available
 
   validates_numericality_of :odometer, :allow_nil => true
 
@@ -52,9 +55,10 @@ class Device < ActiveRecord::Base
     :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
     :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin,
-    :groups
+    :groups, :imei_number
 
   before_save :prefill_profile_fields
+  before_save :convert_imei_to_tracker
   after_create :assign_phones
 
   # Get the list of all the NON marked-for-deletion cars
@@ -77,7 +81,7 @@ class Device < ActiveRecord::Base
 
   # Shortcut for IMEI number
   def imei_number
-    self.tracker ? tracker.imei_number : nil
+    @imei_number || (self.tracker ? tracker.imei_number : nil)
   end
   
   # Save tag names as tags
@@ -138,6 +142,10 @@ class Device < ActiveRecord::Base
 
   protected
 
+  def convert_imei_to_tracker
+    self.tracker = account.trackers.find_by_imei_number(self.imei_number)
+  end
+
   def prefill_profile_fields
     if device_profile
       self.attributes = device_profile.updates_for_device
@@ -150,9 +158,14 @@ class Device < ActiveRecord::Base
     end
   end
 
-  def tracker_owned
-    if tracker && account_id != tracker.account_id
-      errors.add(:tracker_id, ' is not owned by this account')
+  def tracker_available
+    if self.imei_number && self.imei_number != ''
+      t = self.account.trackers.find_by_imei_number(self.imei_number)
+      if !t
+         errors.add(:imei_number, ' is not owned by this account')
+      elsif t.device && t.device.id != self.id
+         errors.add(:imei_number, ' is already assigned to another vehicle')
+      end
     end
   end
 end

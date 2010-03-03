@@ -121,14 +121,26 @@ describe "Device", ActiveSupport::TestCase do
     specify "requires tracker to be visible by owned account" do
       tracker = Tracker.create(:imei_number => '999940981750984', :account => @account)
 
+      tracker.should.not.be.new_record
+
       # can't put quentin tracker on aaron device
-      device = Device.new(:account => accounts(:aaron), :name => "test")
+      device = Device.create(:account => accounts(:aaron), :name => "test")
+      device.should.be.valid
       device.tracker = tracker
       device.should.not.be.valid
+      device.errors.on(:imei_number).should.match('is not owned')
 
       # ok to put it on quentin device
       device.account = accounts(:quentin)
       device.should.be.valid      
+    end
+
+    specify "cannot assign a tracker that is already on another device" do
+      device = Device.create(:account => accounts(:quentin), :name => "test")
+      device.should.be.valid
+      device.tracker = @device.tracker
+      device.should.not.be.valid
+      device.errors.on(:imei_number).should.match('is already assigned')
     end
 
   end

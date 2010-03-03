@@ -102,62 +102,56 @@ describe "Devices Controller", ActionController::TestCase do
     end
   end
   
-  context "Adding devices (json only)" do
+  context "Adding devices" do
     setup do
       Tracker.create(:imei_number => '923456789012345', :account => @account)
     end
     
     specify "works" do
       Device.should.differ(:count).by(1) do
-        xhr :post, :create, {
-          :name => 'Mine',
-          :imei => '923456789012345',
-          :imei_confirmation => '923456789012345'
+        post :create, {
+          :device => {
+            :name => 'Mine',
+            :imei_number => '923456789012345'
+          }
         }
       end
       
-      json['status'].should.equal 'success'
       device = @account.devices.last
       device.name.should.equal 'Mine'
       device.imei_number.should.equal '923456789012345'
     end
     
-    specify "handles mismatch imei numbers" do
+    specify "fail on unknown imei number" do
       Device.should.differ(:count).by(0) do
-        xhr :post, :create, {
-          :name => 'Mine',
-          :imei => '923456789012345',
-          :imei_confirmation => 'NOT IT!'
+        post :create, {
+          :device => {
+            :name => 'Mine',
+            :imei_number => '1234'
+          }
         }
       end
-      
-      json['status'].should.equal 'failure'
-      json['error'].should =~ /do not match/
     end
 
-    specify "handle unknown imei number" do
+    specify "fail on previously assigned imei number" do
       Device.should.differ(:count).by(0) do
-        xhr :post, :create, {
-          :name => 'Mine',
-          :imei => '1234',
-          :imei_confirmation => '1234'
+        post :create, {
+          :device => {
+            :name => 'Mine',
+            :imei_number => '123456789012345'
+          }
         }
       end
-      
-      json['status'].should.equal 'failure'
-      json['error'].should =~ /unknown tracker/i
     end
     
     specify "handle generic device errors" do
       Device.should.differ(:count).by(0) do
-        xhr :post, :create, {
-          :imei => '923456789012345',
-          :imei_confirmation => '923456789012345'
+        post :create, {
+          :device => { :imei_number => '923456789012345' }
         }
       end
       
-      json['status'].should.equal 'failure'
-      json['error'].should.include("Name can't be blank")
+      assigns(:device).errors.on(:name).should.match "can't be blank"
     end
     
     specify "requires FLEET role" do
@@ -194,10 +188,8 @@ describe "Devices Controller", ActionController::TestCase do
       post :update, {
         :id => @device.id,
         :device => {
-          @device.id.to_s => {
-            :name => 'Updated name',
-            :rpm_threshold => 3017
-          }
+          :name => 'Updated name',
+          :rpm_threshold => 3017
         }
       }
       
@@ -211,9 +203,7 @@ describe "Devices Controller", ActionController::TestCase do
       post :update, {
         :id => @device.id,
         :device => {
-          @device.id.to_s => {
-            :name => "I'm a name that's 31 characters"
-          }
+           :name => "I'm a name that's 31 characters"
         }
       }
       

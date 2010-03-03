@@ -2,7 +2,7 @@
   <%= javascript_include_tag 'device_profiles/form' %>
 <% end -%>
 
-<% form_for device, :index => device.id, :html => {:autocomplete => "off"} do |f| -%>
+<% form_for device, :html => {:autocomplete => "off"} do |f| -%>
   <div class="standardInfo">
     <h3>Vehicle Details</h3>
     
@@ -14,7 +14,8 @@
     
     <div class="field">
       <%= f.label :imei_number, 'Tracker ID' %>
-      <%= h(device.imei_number) %>
+      <%= f.text_field :imei_number %>
+      <%= error_message_on device, :imei_number, :prepend_text => '* Tracker ID ' %>
     </div>
     
     <div class="field">
@@ -39,13 +40,12 @@
     </div>
     
     <h3>Tags</h3>
-    <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device[#{device.id}]"} %>
+    <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device"} %>
   </div>
   
   <div class="alertInfo">
     <h3>Vehicle Settings</h3>
     
-  <% if device.tracker -%>
     <div class="field">
       <div class="loading" style="float:right"></div>
       <%= f.label :device_profile_id, 'Profile' %>
@@ -115,22 +115,17 @@
         </span>
       </div>
     </div>
-  <% else -%>
-    <div class="profileSettings">
-      Vehicles must have a Tracker linked to them before any events or alerts can be configured.
-    </div>
-  <% end -%>
     
     <div class="alerts">
       <h3>Alert Recipients</h3>
       
-      <input type="hidden" name="alertFieldName" value="device[<%=device.id%>][alert_recipient_ids][]"/>
+      <input type="hidden" name="alertFieldName" value="device[alert_recipient_ids][]"/>
       <ul>
         <% device.alert_recipients.each do |a| -%>
           <li>
             <%= link_to '', '#', :class => "remove" %>
             <span><%= a.display_string %></span>
-            <%= hidden_field_tag "device[#{device.id}][alert_recipient_ids][]", a.id, :class => 'id' %>
+            <%= hidden_field_tag "device[alert_recipient_ids][]", a.id, :class => 'id' %>
           </li>
         <% end -%>
         <li>

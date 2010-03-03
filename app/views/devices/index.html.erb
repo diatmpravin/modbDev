@@ -26,7 +26,7 @@
   </div>
   
   <div class="buttonsLeft">
-    <%= button_tag 'Add Vehicle', :class => 'addVehicle' %>
+    <%= button_tag 'Add Vehicle', :class => 'addVehicle', :onclick => "location.href = '#{new_device_path}';" -%>
     <% requires_role(User::Role::FLEET) do -%>
       <%= button_tag 'Import Vehicles', :class => 'importVehicle', :onclick => "location.href = '#{import_vehicles_path}';" -%>
     <% end -%>
