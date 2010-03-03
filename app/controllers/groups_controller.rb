@@ -43,10 +43,12 @@ class GroupsController < ApplicationController
   # Update the given group
   def update
     @group.update_attributes(params[:group])
-    if params[:group][:parent_id].blank?
-      @group.move_to_root
-    else
-      @group.move_to_child_of(params[:group][:parent_id])
+    if params[:group][:parent_id]
+      if params[:group][:parent_id].blank?
+        @group.move_to_root
+      else
+        @group.move_to_child_of(params[:group][:parent_id].to_i)
+      end
     end
     
     redirect_to groups_path
