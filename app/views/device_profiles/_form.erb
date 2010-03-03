@@ -54,7 +54,13 @@
     </span>
   </div>
   
-  <div class="field">
+   <div class="field">
+    <%= help_tooltip :reset_alert %>
+    <%= f.label :alert_on_reset, 'Device Power Reset Alerts' %>
+    <%= f.check_box :alert_on_reset, :class => 'alert' %>
+   </div>
+
+   <div class="field">
     <%= help_tooltip :detect_pitstops %>
     <%= f.label :detect_pitstops, 'Detect Pitstops' %>
     <%= f.check_box :detect_pitstops, :class => 'alert' %>

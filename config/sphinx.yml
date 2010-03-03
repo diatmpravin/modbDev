@@ -6,6 +6,7 @@ defaults: &defaults
 
 development:
   <<: *defaults
+  sql_range_step: 10000000
 
 test:
   <<: *defaults

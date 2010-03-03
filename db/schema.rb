@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100301212123) do
+ActiveRecord::Schema.define(:version => 20100302195730) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20100301212123) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name",                 :limit => 30
+    t.boolean  "alert_on_reset"
   end
 
   create_table "device_tags", :force => true do |t|
@@ -122,6 +123,7 @@ ActiveRecord::Schema.define(:version => 20100301212123) do
     t.boolean  "delta",                              :default => true,                         :null => false
     t.integer  "device_profile_id"
     t.boolean  "lock_vin",                           :default => false
+    t.boolean  "alert_on_reset",                     :default => false
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"

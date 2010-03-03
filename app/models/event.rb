@@ -24,6 +24,7 @@ class Event < ActiveRecord::Base
   AFTER_HOURS = 8
   AT_LANDMARK = 9
   VIN_MISMATCH = 10
+  RESET = 11
   
   TEXT = {
     ENTER_BOUNDARY => 'Enter Boundary',
@@ -35,7 +36,8 @@ class Event < ActiveRecord::Base
     IDLE => 'Idle',
     AFTER_HOURS => 'After Hours',
     AT_LANDMARK => 'At Landmark',
-    VIN_MISMATCH => 'VIN Mismatch'
+    VIN_MISMATCH => 'VIN Mismatch',
+    RESET => 'Device Power Reset'
   }
   
   attr_accessible :event_type, :geofence_name, :speed_threshold, :point,
