@@ -256,5 +256,5 @@ jQuery.fn.groupSelect = function() {
   });
   
   q(this).find('li:not(:has(li)) span.collapsible').hide();
-  q(this).find('span.collapsible:visible').addClass('open');
+  //q(this).find('span.collapsible:visible').addClass('open');
 };

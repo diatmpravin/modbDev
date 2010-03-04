@@ -783,9 +783,9 @@ input.tagEntry {
 div.groupSelect {
   border:solid 1px black;
   cursor:default;
-  height:8em;
+  height:11em;
   overflow-y:scroll;
-  width:260px;
+  width:320px;
   
   ol {
     margin:0;
@@ -810,8 +810,9 @@ div.groupSelect {
   }
   
   span.collapsible {
+    cursor:pointer;
     float:left;
-    width:9px;
+    width:13px;
   }
   
   span.open {
@@ -823,7 +824,7 @@ div.groupSelect {
   }
   
   li.halfchecked {
-    background-color:#88cce0;
+    background-color:#c0c0c0;
     
     > span.checkbox {
       background-image:url(/images/halfchecked.png);
@@ -831,7 +832,8 @@ div.groupSelect {
   }
   
   li.checked {
-    background-color:#88cce0;
+    background-color:#2980d0;
+    color:white;
     
     > span.checkbox {
       background-image:url(/images/checked.png);
@@ -840,7 +842,7 @@ div.groupSelect {
   
   li {
     background-color:white;
-    border-top:solid 1px #606060;
+    border-top:solid 1px white;
     
     span.collapsible { padding-left:4px; }
     span.name { padding-left:40px; }

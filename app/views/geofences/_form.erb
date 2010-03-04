@@ -54,14 +54,16 @@
   </div>
   
   <h3>Vehicle Group</h3>
+  <div class="groupSelect">
+    <%= group_tree(current_user.groups.of_devices.roots) %>
+  </div>
+  
   <div class="field">
     <%= f.label :device_group_ids, 'Group' %>
     <!--<%= f.collection_select :device_group_ids, current_account.groups.of_devices, :id, :name, 
       {:include_blank => true}, {:name => 'geofence[device_group_ids][]', :multiple => true, :class => 'groupSelect'} %>-->
     
-    <div class="groupSelect">
-      <%= group_tree(current_user.groups.of_devices.roots) %>
-    </div>
+  
   </div>
   
   <div class="field alerts">
