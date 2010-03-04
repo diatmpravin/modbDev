@@ -3,6 +3,8 @@
 # sub-groups
 class GroupSummaryReport < Report
 
+  attr_accessor :group
+
   def initialize(user, options = {})
     @group = options.delete(:group)
 

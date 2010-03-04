@@ -1,68 +1,28 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "report_card" -%>
+<% end -%>
+
 <div id="report_card">
-
-    <table>
-      <thead>
-        <tr>
-          <th rowspan="2" class="empty"></th>
-          <th rowspan="2" width="30%" class="empty"></th>
-          <th rowspan="2">First Start Time</th>
-          <th rowspan="2">Operating Time<br/>(hh:mm)</th>
-          <th rowspan="2">Miles Driven</th>
-          <th colspan="5">Driver Behavior Events</th>
-        </tr>
-        <tr>
-          <th>Speed</th>
-          <th>Geofence</th>
-          <th>Idle</th>
-          <th>Aggressive</th>
-          <th>After Hours</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @report_card.each do |report| -%>
-          <tr class="<%= cycle('even', 'odd') %> entry">
-            <td class="box"><%= check_box_tag "apply", 1 -%></td>
-            <td class="name">
-              <div class="warning"><%= image_tag "alert.png" -%></div>
-              <%= h report.data[:name] -%>
-            </td>
-            <td class="overall">
-              <%= image_tag "points/red_start.png" -%>
-              <% if report.data[:first_start_time] -%>
-                <%= report.data[:first_start_time].in_time_zone(current_user.zone).to_s(:local) -%>
-              <% end -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/orange_event.png" -%></div>
-              <%= duration_format(report.data[:duration]) -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              <%= report.data[:miles] -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/green_event.png" -%></div>
-              <%= report.data[:event_speed] -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/green_event.png" -%></div>
-              <%= report.data[:event_geofence] -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              <%= report.data[:event_idle] -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/red_event.png" -%></div>
-              <%= report.data[:event_aggressive] -%>
-            </td>
-            <td>
-              <div class="status"><%= image_tag "points/orange_start.png" -%></div>
-              <%= report.data[:event_after_hours] -%>
-            </td>
-          </tr>
-        <% end -%>
-      </tbody>
-    </table>
-
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2" class="empty"></th>
+        <th rowspan="2" width="30%" class="empty"></th>
+        <th rowspan="2">First Start Time</th>
+        <th rowspan="2">Operating Time<br/>(hh:mm)</th>
+        <th rowspan="2">Miles Driven</th>
+        <th colspan="5">Driver Behavior Events</th>
+      </tr>
+      <tr>
+        <th>Speed</th>
+        <th>Geofence</th>
+        <th>Idle</th>
+        <th>Aggressive</th>
+        <th>After Hours</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render :partial => "list", :locals => {:report_card => @report_card} -%>
+    </tbody>
+  </table>
 </div>
