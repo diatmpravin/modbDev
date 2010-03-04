@@ -779,6 +779,71 @@ input.tagEntry {
   padding-right: 5px;
 }
 
+/* Group Select Widget */
+div.groupSelect {
+  border:solid 1px black;
+  cursor:default;
+  height:8em;
+  overflow-y:scroll;
+  width:260px;
+  
+  ol {
+    margin:0;
+    padding:0;
+  }
+  
+  span {
+    display:block;
+    height:1.5em;
+    line-height:1.5em;
+  }
+  
+  span.checkbox {
+    background:transparent url(/images/unchecked.png) no-repeat center center;
+    float:left;
+    width:19px;
+  }
+  
+  li.halfchecked {
+    background-color:#88cce0;
+    
+    > span.checkbox {
+      background-image:url(/images/halfchecked.png);
+    }
+  }
+  
+  li.checked {
+    background-color:#88cce0;
+    
+    > span.checkbox {
+      background-image:url(/images/checked.png);
+    }
+  }
+  
+  li {
+    background-color:white;
+    border-top:solid 1px #606060;
+    
+    span.name { padding-left:20px; }
+    
+    li {
+      span.name { padding-left:26px; }
+      
+      li {
+        span.name { padding-left:32px; }
+        
+        li {
+          span.name { padding-left:38px; }
+          
+          li {
+            span.name { padding-left:44px; }
+          }
+        }
+      }
+    }
+  }
+}
+
 /* trips */
 #sidebar .trips {
   overflow:auto;

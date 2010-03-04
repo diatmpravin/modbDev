@@ -29,6 +29,44 @@ Geofence.Form = function(form) {
     this.buildGeofence();
   }
   
+  //var groupDiv = q('select.groupSelect').wrap('<div class="groupSelect"></div>').hide().parent();
+  //var groupList = q('<ul></ul>').appendTo(groupDiv);
+  
+  /*groupDiv.find('option').each(function() {
+    var _this = q(this);
+    groupList.append('<li>' + _this.attr('text') + '</li>');
+  });*/
+  
+  q('div.groupSelect li').click(function() {
+    var _this = q(this);
+    
+    if (_this.hasClass('checked')) {
+      _this.removeClass('checked').removeClass('halfchecked')
+             .find('li').removeClass('checked').removeClass('halfchecked');
+    } else if (_this.hasClass('halfchecked')) {
+      _this.removeClass('halfchecked').addClass('checked')
+             .find('li').removeClass('halfchecked').addClass('checked');
+    } else {
+      _this.addClass('checked')
+             .find('li').removeClass('halfchecked').addClass('checked');
+    }
+    
+    _this.parents('li').each(function() {
+      var total = q(this).find('li').length;
+      var checked = q(this).find('li.checked').length;
+      
+      if (checked == 0) {
+        q(this).removeClass('halfchecked').removeClass('checked');
+      } else if (checked == total) {
+        q(this).removeClass('halfchecked').addClass('checked');
+      } else {
+        q(this).addClass('halfchecked').removeClass('checked');
+      }
+    });
+    
+    return false;
+  });
+  
 /**
  * .fitWindow(function(width, height))
  *
