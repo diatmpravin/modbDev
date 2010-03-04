@@ -1,31 +1,59 @@
 /**
  * Handle form logic on the geofences/edit and geofences/new pages
  */
-if(typeof Geofence == "undefined") {
+if(typeof Geofence == 'undefined') {
   Geofence = {};
 }
 
-Geofence.Form = function(container) {
+Geofence.Form = function(form) {
   var self = this;
 
-  this._container = container;
-  this._form = container.find("form");
-
-  q("#sidebar").corners("transparent");
-
-  q("#shapeChooser a").live("click", function() { self.changeShape(q(this)); });
-
-  this._container.fitWindow(function(newWidth, newHeight) {
-    self.resize(newWidth, newHeight);
+  this._form = form;
+  
+  q('#shapeChooser a').live('click', function() {
+    self.changeShape(q(this));
+    return false;
   });
+  
+  q('#map').css('position','fixed');
+  q('#map').css('top','80px');
+  q('#map').css('right','32px');
+  
+  /*this._map.fitWindow(self.resize);*/
 
   // Initialize our map
-  this._map = new Map.View(q("#map"), this._container);
+  this._map = new Map.View();
 
   // Handle new, where there isn't a shape yet
   if(this._getGeofenceType()) {
     this.buildGeofence();
   }
+  
+/**
+ * .fitWindow(function(width, height))
+ *
+ * Register an element as being resizable, aka hooking into the
+ * 'resize' event, allowing elements on the page to update
+ * to fit the browser window size.
+ *
+ * function should take two parameters: width and height. Use this
+ * callback to do the actual resizing of elements as necessary.
+ *
+ * I was going to go with .resizable, but jquery UI has that taken.
+ *
+jQuery.fn.fitWindow = function(callback) {
+  var _self = q(this);
+  q(window).resize(function(event) {
+    callback(
+      q(window).width(),
+      q(window).height() - _self.position().top - 1
+    );
+  });
+
+  // And run once to ensure a good start case
+  q(window).resize();
+}*/
+  
 }
 
 Geofence.Form.prototype = {
@@ -61,10 +89,12 @@ Geofence.Form.prototype = {
    * in proper proportion
    */
   resize: function(newWidth, newHeight) {
+    /*newHeight = Math.max(425, newHeight);
+    
     newHeight = Math.max(425, newHeight);
     this._container.height(newHeight - 32);
     this._container.find('#sidebar').height(newHeight - 32 - 16);
-    this._container.find('#sidebarContent').height(newHeight - 32 - 32);
+    this._container.find('#sidebarContent').height(newHeight - 32 - 32);*/
   }
   ,
   /**
@@ -137,5 +167,5 @@ Geofence.Form.prototype = {
 };
 
 jQuery(function() {
-  new Geofence.Form(q("#sidebarContainer"));
+  new Geofence.Form(q('#content form'));
 });

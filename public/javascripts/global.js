@@ -202,7 +202,7 @@ jQuery.fn.fitWindow = function(callback) {
   q(window).resize(function(event) {
     callback(
       q(window).width(),
-      q(window).height() - _self.position().top - 1
+      q(window).height() - _self.offset().top - 1
     );
   });
 
