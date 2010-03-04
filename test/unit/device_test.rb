@@ -4,6 +4,7 @@ describe "Device", ActiveSupport::TestCase do
   setup do
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
+    @device.debug = false
   end
 
   context "Associations" do
@@ -467,11 +468,23 @@ describe "Device", ActiveSupport::TestCase do
             @device.process(@example_location)
             @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
           end
-
-          #@device.process(@example_location)
         end
         Mailer.deliveries.length.should.be 0
       end
+      
+      specify "creates an event per idle period" do
+        @device.debug = true
+        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
+
+        Event.should.differ(:count).by(2) do
+          for i in 1..20
+            new_time = i.minutes.since(occurred_at)
+            @example_location[:speed] = i == 10 ? 20 : 0
+            @device.process(@example_location)
+            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
+          end
+        end
+     end
 
       specify "sends alerts" do
         occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
