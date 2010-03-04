@@ -7,7 +7,7 @@ class ReportCardController < ApplicationController
   def show
     groups = 
       if params[:group_id]
-        current_account.groups.find(params[:group_id]).descendants
+        current_account.groups.find(params[:group_id]).children
       else
         current_account.groups.of_devices.roots
       end
