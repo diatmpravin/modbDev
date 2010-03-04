@@ -2,6 +2,7 @@ class DevicesController < ApplicationController
   before_filter :require_role,   :only => [:create, :update, :destroy,
                                            :apply_profile, :apply_group, :remove_group]
   before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
+  before_filter :new_device,     :only => [:new, :create ]
   before_filter :set_devices,    :only => [:index]
   before_filter :require_access
   
@@ -28,6 +29,9 @@ class DevicesController < ApplicationController
       }
     end
   end
+
+  def new
+  end
   
   def show
     respond_to do |format|
@@ -48,32 +52,13 @@ class DevicesController < ApplicationController
   end
   
   def create
-    if params[:imei].any? || params[:imei_confirmation].any? 
-      if params[:imei] == params[:imei_confirmation]
-        @device = current_account.devices.build(:name => params[:name])
-        @device.user = current_user
-        @device.tracker = Tracker.find_by_imei_number(params[:imei])
+    @device.user = current_user
 
-        if @device.tracker.nil?
-          error = "Unknown Tracker"
-        else
-          if !@device.save
-            error = @device.errors.full_messages
-          end
-        end
-      else
-        error = "Numbers do not match"
-      end
-    end
-    
-    if error
-      render :json => {
-        :status => 'failure',
-        :error => error
-      }
-    else
+	 if @device.update_attributes(params[:device])
       flash[:notice] = 'Vehicle added'
-      render :json => {:status => 'success'}
+      redirect_to :action => 'index'
+    else
+      render :action => 'new'
     end
   end
   
@@ -87,9 +72,9 @@ class DevicesController < ApplicationController
   end
   
   def update
-    params[:device][@device.id.to_s][:alert_recipient_ids] ||= []
-    
-    if @device.update_attributes(params[:device][@device.id.to_s])
+    params[:device][:alert_recipient_ids] ||= []
+
+    if @device.update_attributes(params[:device])
       # Presumably, this needs to return to index with the CORRECT FILTER
       # and the CORRECT PAGE.
       redirect_to :action => 'index'
@@ -203,6 +188,10 @@ class DevicesController < ApplicationController
     if @device && !current_user.can_edit?(@device)
       redirect_to root_path
     end
+  end
+
+  def new_device
+    @device = current_account.devices.build(:name => params[:name])
   end
   
   def set_device

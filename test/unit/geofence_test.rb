@@ -27,6 +27,16 @@ describe "Geofence", ActiveSupport::TestCase do
       @geofence.update_attributes(:device_groups => [groups(:north)])
       @geofence.reload.device_groups.should.equal [groups(:north)]
     end
+
+    specify "updates associated group delta" do
+      device_group = groups(:north)
+      device_group.delta = false
+      device_group.save
+      
+      device_group.reload.delta.should.equal false
+      @geofence.update_attributes(:device_groups => [device_group])
+      @geofence.reload.device_groups.first.delta.should.equal true
+    end
   end
   
   context "Validations" do
@@ -52,7 +62,7 @@ describe "Geofence", ActiveSupport::TestCase do
       @geofence.should.be.valid
     end
     
-  end
+  end 
   
   context "Serialized coordinates" do
     specify "can get and set coordinates" do

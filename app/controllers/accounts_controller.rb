@@ -60,7 +60,7 @@ class AccountsController < ApplicationController
   end
   
   def external_or_accounts
-    if %w{new create resend_activation activate}.include? params[:action]
+    if %w{new create}.include? params[:action]
       'external'
     else
       'accounts'

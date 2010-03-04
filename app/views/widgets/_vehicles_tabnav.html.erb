@@ -1,10 +1,10 @@
 <%
 render_tabnav :vehicles, :html => {:class => 'tabnav'} do
-  #A "Report Card" link that doesn't exist yet
-  #add_tab do |t|
-  #  t.named 'Report Card'
-  #  t.links_to :controller => devices_path
-  #end
+  add_tab do |t|
+    t.named 'Report Card'
+    t.links_to report_card_path
+    t.highlights_on :controller => "report_card"
+  end
   
   add_tab do |t|
     t.named 'Vehicles'

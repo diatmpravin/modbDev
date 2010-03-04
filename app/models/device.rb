@@ -5,8 +5,6 @@ class Device < ActiveRecord::Base
   belongs_to :device_profile
   has_many :points, :order => 'occurred_at'
   has_many :trips, :order => 'start'
-  has_many :phone_devices, :dependent => :delete_all
-  has_many :phones, :through => :phone_devices
   has_many :device_geofences, :dependent => :delete_all
   has_many :geofences, :through => :device_geofences
   has_many :device_alert_recipients, :dependent => :delete_all
@@ -22,6 +20,9 @@ class Device < ActiveRecord::Base
   # Last known position
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
     :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
+
+  # Virtual attribute for imei
+  attr_accessor :imei_number
 
   # Link to groups
   has_and_belongs_to_many :groups, 
@@ -41,21 +42,21 @@ class Device < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_inclusion_of :time_zone, :in => ActiveSupport::TimeZone.us_zones.map {|z| z.name}
-  validate :tracker_owned
+  validate :tracker_available
 
   validates_numericality_of :odometer, :allow_nil => true
 
-  attr_accessible :name, :account, :points, :trips, :phone_devices, :phones,
+  attr_accessible :name, :account, :points, :trips, :phone_devices,
     :geofences, :color_id, :speed_threshold, :rpm_threshold, :alert_on_speed,
     :alert_on_aggressive, :alert_recipients, :alert_on_idle, :alert_on_reset,
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
     :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
     :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin,
-    :groups
+    :groups, :imei_number
 
   before_save :prefill_profile_fields
-  after_create :assign_phones
+  before_save :convert_imei_to_tracker
 
   # Get the list of all the NON marked-for-deletion cars
   named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
@@ -77,7 +78,7 @@ class Device < ActiveRecord::Base
 
   # Shortcut for IMEI number
   def imei_number
-    self.tracker ? tracker.imei_number : nil
+    @imei_number || (self.tracker ? tracker.imei_number : nil)
   end
   
   # Save tag names as tags
@@ -138,21 +139,24 @@ class Device < ActiveRecord::Base
 
   protected
 
+  def convert_imei_to_tracker
+    self.tracker = account.trackers.find_by_imei_number(self.imei_number)
+  end
+
   def prefill_profile_fields
     if device_profile
       self.attributes = device_profile.updates_for_device
     end
   end
 
-  def assign_phones
-    if phones.empty?
-      phones << account.phones
-    end
-  end
-
-  def tracker_owned
-    if tracker && account_id != tracker.account_id
-      errors.add(:tracker_id, ' is not owned by this account')
+  def tracker_available
+    if self.imei_number && self.imei_number != ''
+      t = self.account.trackers.find_by_imei_number(self.imei_number)
+      if !t
+         errors.add(:imei_number, ' is not owned by this account')
+      elsif t.device && t.device.id != self.id
+         errors.add(:imei_number, ' is already assigned to another vehicle')
+      end
     end
   end
 end

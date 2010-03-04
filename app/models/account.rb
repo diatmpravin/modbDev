@@ -1,6 +1,5 @@
 class Account < ActiveRecord::Base
   has_many :devices, :include => :tracker, :dependent => :destroy
-  has_many :phones, :dependent => :destroy
   has_many :geofences, :dependent => :destroy
   has_many :landmarks, :dependent => :destroy
   has_many :alert_recipients, :dependent => :destroy
@@ -24,7 +23,7 @@ class Account < ActiveRecord::Base
   before_validation_on_create :generate_number
   
   # List accessible attributes here
-  attr_accessible :devices, :phones, :geofences, :alert_recipients, :tags, :today,
+  attr_accessible :devices, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
     :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number
 
