@@ -183,7 +183,7 @@ jQuery.fn.dialogLoader = function() {
     );
   }
   return loader;
-}
+};
 
 /**
  * .fitWindow(function(width, height))
@@ -208,4 +208,53 @@ jQuery.fn.fitWindow = function(callback) {
 
   // And run once to ensure a good start case
   q(window).resize();
-}
+};
+
+/**
+ * .groupSelect()
+ *
+ * Take an ordered list of groups and turn it into a group select widget,
+ * with appropriate select all/none/some functionality.
+ *
+ * If you want to submit the list of checked groups to a form, just include
+ * a checkbox input inside each li - it will be checked and unchecked as
+ * appropriate.
+ *
+ * This method doesn't handle the look - stylesheet will take care of that.
+ */
+jQuery.fn.groupSelect = function() {
+  q(this).find('li').click(function() {
+    var self = q(this);
+    
+    if (self.hasClass('checked')) {
+      self.find('li').andSelf().removeClass('checked halfchecked');
+    } else {
+      self.find('li').andSelf().removeClass('halfchecked').addClass('checked');
+    }
+    
+    self.parents('li').each(function() {
+      var total = q(this).find('li').length;
+      var checked = q(this).find('li.checked').length;
+      
+      if (checked == 0) {
+        q(this).removeClass('halfchecked checked');
+      } else if (checked == total) {
+        q(this).removeClass('halfchecked').addClass('checked');
+      } else {
+        q(this).removeClass('checked').addClass('halfchecked');
+      }
+    });
+    
+    return false;
+  });
+  
+  q(this).find('span.collapsible').click(function() {
+    q(this).toggleClass('open').toggleClass('closed');
+    q(this).siblings('ol').toggle(q(this).hasClass('open'));
+    
+    return false;
+  });
+  
+  q(this).find('li:not(:has(li)) span.collapsible').hide();
+  q(this).find('span.collapsible:visible').addClass('open');
+};

@@ -792,16 +792,34 @@ div.groupSelect {
     padding:0;
   }
   
+  > ol {
+    margin-top:-1px;
+  }
+  
   span {
     display:block;
     height:1.5em;
     line-height:1.5em;
   }
   
+  
   span.checkbox {
     background:transparent url(/images/unchecked.png) no-repeat center center;
     float:left;
     width:19px;
+  }
+  
+  span.collapsible {
+    float:left;
+    width:9px;
+  }
+  
+  span.open {
+    background:transparent url(/images/group_open.png) no-repeat right center;
+  }
+  
+  span.closed {
+    background:transparent url(/images/group_closed.png) no-repeat right center;
   }
   
   li.halfchecked {
@@ -824,19 +842,24 @@ div.groupSelect {
     background-color:white;
     border-top:solid 1px #606060;
     
-    span.name { padding-left:20px; }
+    span.collapsible { padding-left:4px; }
+    span.name { padding-left:40px; }
     
     li {
-      span.name { padding-left:26px; }
+      span.collapsible { padding-left:10px; }
+      span.name { padding-left:46px; }
       
       li {
-        span.name { padding-left:32px; }
+        span.collapsible { padding-left:16px; }
+        span.name { padding-left:52px; }
         
         li {
-          span.name { padding-left:38px; }
+          span.collapsible { padding-left:22px; }
+          span.name { padding-left:58px; }
           
           li {
-            span.name { padding-left:44px; }
+            span.collapsible { padding-left:28px; }
+            span.name { padding-left:64px; }
           }
         }
       }
