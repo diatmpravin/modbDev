@@ -60,4 +60,25 @@ module ApplicationHelper
   def paginate(collection)
     will_paginate(collection, :inner_window => 2)
   end
+
+  # Google analytics
+  def analytics
+    return "" if Rails.env.development? || Rails.env.test?
+
+    <<-END
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', '#{Rails.env.production? ? "UA-6523957-6" : "UA-6523957-4"}']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+  })();
+
+</script>
+    END
+  end
 end
