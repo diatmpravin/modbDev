@@ -78,14 +78,18 @@
      * selected group, we need to request the data from the server
      */
     requestSubgroupData: function(href, row, callback) {
+      var range_type = $("#range_type").val();
       $.ajax({
-        url: href,
+        url: href + "&range_type=" + range_type,
         beforeSend: function() {
           row.find("span").hide();
           row.find(".busy").show();
         },
         complete: function() {
           row.find(".busy").hide();
+        },
+        error: function() {
+          row.find(".expand").show();
         },
         success: function(html) {
           row.after(html);
