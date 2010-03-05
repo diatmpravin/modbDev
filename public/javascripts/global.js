@@ -220,7 +220,7 @@ jQuery.fn.fitWindow = function(callback) {
  * a checkbox input inside each li - it will be checked and unchecked as
  * appropriate.
  *
- * This method doesn't handle the look - stylesheet will take care of that.
+ * This method doesn't handle the look (stylesheet will take care of that).
  */
 jQuery.fn.groupSelect = function() {
   q(this).find('li').click(function() {
@@ -232,18 +232,8 @@ jQuery.fn.groupSelect = function() {
       self.find('li').andSelf().removeClass('halfchecked').addClass('checked');
     }
     
-    self.parents('li').each(function() {
-      var total = q(this).find('li').length;
-      var checked = q(this).find('li.checked').length;
-      
-      if (checked == 0) {
-        q(this).removeClass('halfchecked checked');
-      } else if (checked == total) {
-        q(this).removeClass('halfchecked').addClass('checked');
-      } else {
-        q(this).removeClass('checked').addClass('halfchecked');
-      }
-    });
+    self.parents('li').removeClass('halfchecked checked')
+        .filter(':has(li.checked)').addClass('halfchecked');
     
     return false;
   });

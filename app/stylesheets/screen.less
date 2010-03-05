@@ -787,6 +787,8 @@ div.groupSelect {
   overflow-y:scroll;
   width:320px;
   
+  @group_padding: 6px;
+  
   ol {
     margin:0;
     padding:0;
@@ -801,7 +803,6 @@ div.groupSelect {
     height:1.5em;
     line-height:1.5em;
   }
-  
   
   span.checkbox {
     background:transparent url(/images/unchecked.png) no-repeat center center;
@@ -824,7 +825,7 @@ div.groupSelect {
   }
   
   li.halfchecked {
-    background-color:#c0c0c0;
+    background-color:#eee;
     
     > span.checkbox {
       background-image:url(/images/halfchecked.png);
@@ -832,8 +833,7 @@ div.groupSelect {
   }
   
   li.checked {
-    background-color:#2980d0;
-    color:white;
+    background-color:#85d3d8;
     
     > span.checkbox {
       background-image:url(/images/checked.png);
@@ -842,26 +842,26 @@ div.groupSelect {
   
   li {
     background-color:white;
-    border-top:solid 1px white;
+    /*border-top:solid 1px white;*/
     
-    span.collapsible { padding-left:4px; }
-    span.name { padding-left:40px; }
+    span.collapsible { padding-left:4px + @group_padding * 0; }
+    span.name { padding-left:40px + @group_padding * 0; }
     
     li {
-      span.collapsible { padding-left:10px; }
-      span.name { padding-left:46px; }
+      span.collapsible { padding-left:10px + @group_padding * 1; }
+      span.name { padding-left:46px + @group_padding * 1; }
       
       li {
-        span.collapsible { padding-left:16px; }
-        span.name { padding-left:52px; }
+        span.collapsible { padding-left:16px + @group_padding * 2; }
+        span.name { padding-left:52px + @group_padding * 2; }
         
         li {
-          span.collapsible { padding-left:22px; }
-          span.name { padding-left:58px; }
+          span.collapsible { padding-left:22px + @group_padding * 3; }
+          span.name { padding-left:58px + @group_padding * 3; }
           
           li {
-            span.collapsible { padding-left:28px; }
-            span.name { padding-left:64px; }
+            span.collapsible { padding-left:28px + @group_padding * 4; }
+            span.name { padding-left:64px + @group_padding * 4; }
           }
         }
       }
