@@ -54,11 +54,13 @@
   </div>
   
   <h3>Vehicle Groups</h3>
-  <div class="groupSelect">
-    <%= group_tree(current_user.groups.of_devices.roots,
-      :checkbox => 'geofence[device_group_ids][]',
-      :selected => geofence.device_groups) %>
-  </div>
+  <fieldset>
+    <div class="groupSelect">
+      <%= group_tree(current_user.groups.of_devices.roots,
+        :checkbox => 'geofence[device_group_ids][]',
+        :selected => geofence.device_groups) %>
+    </div>
+  </fieldset>
   
   <div class="field alerts">
     <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>
