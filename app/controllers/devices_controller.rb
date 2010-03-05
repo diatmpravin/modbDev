@@ -163,9 +163,7 @@ class DevicesController < ApplicationController
     @device_ids = params[:device_ids]
 
     respond_to do |format|
-      format.html { 
-        render :layout => "maps"
-      }
+      format.html
       format.json {
         render :json => @devices.to_json(
           :methods => [:color, :connected],
