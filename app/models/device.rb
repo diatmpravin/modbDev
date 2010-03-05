@@ -69,6 +69,7 @@ class Device < ActiveRecord::Base
 
   ROLLOVER_MILES = 10000
   TRIP_REPORT_CUTOFF = 75.minutes
+  NOT_REPORTING_THRESHOLD = 130.minutes
 
   # Build an array that contains all group names this device is a part of
   def group_names

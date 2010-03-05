@@ -119,6 +119,13 @@ class Device < ActiveRecord::Base
       
       # Handle various other vehicle tests
 
+      # Device Not Reporting
+      if last_point
+        if point.occurred_at > last_point.occurred_at + NOT_REPORTING_THRESHOLD
+          point.events.create(:event_type => Event::NOT_REPORTING)
+        end
+      end
+
       # Device Power Reset
       if point.event == DeviceReport::Event::RESET
         if alert_on_reset?
