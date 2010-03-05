@@ -25,7 +25,8 @@ class GroupSummaryReport < Report
       :event_geofence => "Geofence Events",
       :event_idle => "Idle Events",
       :event_aggressive => "Aggressive Events",
-      :event_after_hours => "After Hours Events"
+      :event_after_hours => "After Hours Events",
+      :first_start_time => "First Start Time"
     )
     super
   end
@@ -39,7 +40,8 @@ class GroupSummaryReport < Report
       :event_geofence,
       :event_idle,
       :event_aggressive,
-      :event_after_hours
+      :event_after_hours,
+      :first_start_time
     )
 
     aggregate = {

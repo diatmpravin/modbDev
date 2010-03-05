@@ -1,8 +1,17 @@
 <% content_for :javascript do -%>
+  <%= mapquest_include_tags %>
+  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
+  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
+  <%= javascript_include_tag 'moshimap' %>
+  <%= javascript_include_tag 'maps/view' %>
+  
+  <%= javascript_include_tag 'geofences/model' %>
+  <%= javascript_include_tag 'geofences/view' %>
+  <%= javascript_include_tag 'alert_recipients' %>
   <%= javascript_include_tag "geofences/form" -%>
 <% end -%>
 
-<% form_for geofence do |f| -%>
+<% form_for geofence, :html => {:autocomplete => 'off'} do |f| -%>
   <% if geofence.new_record? -%>
     <div class="field">
       To create a geofence, scroll and zoom the map to where you want the geofence,
@@ -44,13 +53,14 @@
     </ul>
   </div>
   
-  <h3>Vehicle Group</h3>
-  <div class="field">
-    <%= f.label :device_group_ids, 'Group' %>
-    <%= f.collection_select :device_group_ids, current_account.groups.of_devices, :id, :name, 
-      {:include_blank => true},
-      {:name => 'geofence[device_group_ids][]'} %>
-  </div>
+  <h3>Vehicle Groups</h3>
+  <fieldset>
+    <div class="groupSelect">
+      <%= group_tree(current_user.groups.of_devices.roots,
+        :checkbox => 'geofence[device_group_ids][]',
+        :selected => geofence.device_groups) %>
+    </div>
+  </fieldset>
   
   <div class="field alerts">
     <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>

@@ -63,7 +63,7 @@ class GeofencesController < ApplicationController
 
   def set_layout
     return nil if request.xhr?
-    return "geofences_map" if [:edit, :new, :update, :create].include?(action_name.to_sym)
+    #return "geofences_map" if [:edit, :new, :update, :create].include?(action_name.to_sym)
     "geofences"
   end
 end

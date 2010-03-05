@@ -1,51 +1,62 @@
-<% parent = report.group.parent ? dom_id(report.group.parent) : "" -%>
-
-<tr id="<%= dom_id(report.group) -%>" class="<%= cycle('even', 'odd') %> entry <%= parent -%>">
+<%# This view is used for both groups and vehicles, thus the logic here at the top -%>
+<% group ||= report.group -%>
+<% vehicle ||= false -%>
+<%
+  if vehicle
+    id = ""
+    parent = dom_id(group)
+  else
+    id = dom_id(group)
+    parent = group.parent ? dom_id(group.parent) : ""
+  end
+ -%>
+<tr id="<%= id -%>" class="<%= cycle('even', 'odd') %> entry <%= parent -%>">
   <td class="box"><%= check_box_tag "apply", 1 -%></td>
-  <td class="name" style="padding-left: <%= report.group.level + 1 -%>em">
-    <div class="warning"><%= image_tag "alert.png" -%></div>
-
-    <% if !report.group.leaf? -%>
-      <span class="expand"><%= image_tag "expand.png" -%></span>
-      <span class="collapse"><%= image_tag "collapse.png" -%></span>
+  <td class="name" style="padding-left: <%= group.level + (vehicle ? 2 : 1) -%>em">
+    <% if expandable?(group) && !vehicle -%>
+      <span class="expand"><%= image_tag "report_card_closed.png" -%></span>
+      <span class="collapse"><%= image_tag "report_card_open.png" -%></span>
       <span class="busy"><%= image_tag "spinner.gif" -%></span>
-      <%= link_to h(report.data[:name]), report_card_path(:group_id => report.group.id), :class => "toggleGroup" -%>
+      <%= link_to h(report.data[:name]), report_card_path(:group_id => group.id), :class => "toggleGroup" -%>
     <% else -%>
       <%= h report.data[:name] -%>
     <% end -%>
   </td>
   <td class="overall">
-    <%= image_tag "points/red_start.png" -%>
-    <% if report.data[:first_start_time] -%>
+    <% display_value = vehicle && report.data[:first_start_time] -%>
+    <%= status_icon group, :first_start_time, report.data[:first_start_time], true, 
+      :class => display_value ? "status" : "" -%>
+
+    <% if display_value -%>
       <%= report.data[:first_start_time].in_time_zone(current_user.zone).to_s(:local) -%>
     <% end -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/orange_event.png" -%></div>
+    <%= status_icon group, :duration, report.data[:duration] -%>
     <%= duration_format(report.data[:duration]) -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/red_event.png" -%></div>
+    <%= status_icon group, :miles, report.data[:miles] -%>
     <%= report.data[:miles] -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/green_event.png" -%></div>
+    <%= status_icon group, :event_speed, report.data[:event_speed] -%>
     <%= report.data[:event_speed] -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/green_event.png" -%></div>
+    <%= status_icon group, :event_geofence, report.data[:event_geofence] -%>
     <%= report.data[:event_geofence] -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/red_event.png" -%></div>
+    <%= status_icon group, :event_idle, report.data[:event_idle] -%>
     <%= report.data[:event_idle] -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/red_event.png" -%></div>
+    <%= status_icon group, :event_aggressive, report.data[:event_aggressive] -%>
     <%= report.data[:event_aggressive] -%>
   </td>
   <td>
-    <div class="status"><%= image_tag "points/orange_start.png" -%></div>
+    <%= status_icon group, :event_after_hours, report.data[:event_after_hours] -%>
     <%= report.data[:event_after_hours] -%>
   </td>
 </tr>

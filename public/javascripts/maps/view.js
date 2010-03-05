@@ -1,20 +1,56 @@
 /**
- * A map view. This takes care of initializing
- * and running a map on a page.
+ * A wrapper for adding and initializing a map on the page.
  */
 if(typeof Map == "undefined") {
   Map = {};
 }
 
-Map.View = function(element, sidebar) {
+/**
+ * The Map.View constructor creates the map container and immediately applies
+ * the appropriate styles so that the content pane can "shrink" and scroll
+ * correctly.
+ */
+Map.View = function(options) {
+  options = options || {};
+  
+  // Handle options
+  this._contentWidth = options.contentWidth || 500;
+  this._hidden = options.hidden || false;
+  
   var self = this;
-
-  this._sidebar = sidebar;
+  
   this._resizeHandlers = [];
-
-  this._map = element;
+  
+  if (options.container) {
+    this._mapContainer = q(options.container);
+    this._map = this._mapContainer.find('.map').first();
+  } else {
+    this._mapContainer = q('<div class="mapContainer"></div>').appendTo(q('#content'));
+    this._map = q('<div class="map"></div>').appendTo(this._mapContainer);
+  }
+  
+  this._mapContainer.css('top', '0px');
+  this._mapContainer.css('right', '0px');
+  this._mapContainer.css('position', 'absolute');
+  this._mapContainer.css('overflow', 'hidden');
+  this._mapContainer.css('border-left', 'solid 1px #404040');
+  
+  //q('#layout').css('height','100%');
+  //q('#layout').css('overflow','hidden');
+  
+  q('#content .content').css('overflow','auto');
+  q('#content .content').css('width','400px');
+  q('#content .content').css('height','200px');
+  
+  this._contentPaddingY = parseInt(q('#content .content').css('padding-top')) +
+    parseInt(q('#content .content').css('padding-bottom'));
+  this._contentPaddingX = parseInt(q('#content .content').css('padding-left')) +
+    parseInt(q('#content .content').css('padding-right'));
+  
+  //q('#content').css('overflow','auto');
+  
   this._map.moshiMap().init();
-  this._map.fitWindow(function(width, height) { self.resize(width, height); });
+  this._map.fitWindow(function(w, h) { self.resize(w, h); });
 }
 
 Map.View.prototype = {
@@ -52,7 +88,23 @@ Map.View.prototype = {
    * and inform MapQuest to also do resizing as necessary
    */
   resize: function(newWidth, newHeight) {
-    if(this._sidebar != undefined) {
+    var self = this;
+    
+    /*var newHeight = this._mapContainer.parent().height() - 5;
+    
+    this._map.height(newHeight);
+    
+    if (MoshiMap.moshiMap) {
+      var self = this;
+      
+      MoshiMap.moshiMap.resizeTo(400, newHeight, function() {
+        q.each(self._resizeHandlers, function(i, handler) {
+          handler();
+        });
+      });
+    }*/
+    
+    /*if(this._sidebar != undefined) {
       newWidth = newWidth - this._sidebar.outerWidth();
     }
 
@@ -69,7 +121,25 @@ Map.View.prototype = {
           handler();
         });
       });
-    }
+    }*/
+    
+    var mapWidth = newWidth - this._contentWidth;
+    var mapHeight = newHeight - 30;
+    
+    var contentWidth = this._contentWidth - this._contentPaddingX;
+    var contentHeight = mapHeight - this._contentPaddingY;
+    
+    this._map.width(mapWidth)
+    this._map.height(mapHeight);
+    q('#content .content').width(contentWidth)
+    q('#content .content').height(contentHeight);
+    
+    this._map.moshiMap().resizeTo(mapWidth, mapHeight);
+    /*, function() {
+      q.each(self._resizeHandlers, function(i, handler) {
+        handler();
+      });
+    });*/
   }
   ,
   /**
