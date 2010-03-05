@@ -787,16 +787,20 @@ div.groupSelect {
   overflow-y:scroll;
   width:320px;
   
-  @group_padding: 6px;
+  @group_padding: 8px;
+  
+  input {
+    display:none;
+  }
   
   ol {
     margin:0;
     padding:0;
   }
   
-  > ol {
+  /*> ol {
     margin-top:-1px;
-  }
+  }*/
   
   span {
     display:block;
