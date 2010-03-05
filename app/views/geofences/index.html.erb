@@ -6,11 +6,6 @@
 
 <%= messages %>
 <div class="geofences">
-  <div class="buttonsLeft">
-    <%= button_to 'Add Geofence', new_geofence_path, :method => :get %>
-  </div>
-  <div class="clear spacer"></div>
-
   <%= paginate @geofences %>
   
   <table class="data" style="width:100%">
@@ -25,6 +20,11 @@
         <th></th>
       </tr>
     </thead>
+    <tr class="newRow">
+      <td colspan="6">
+        <%= link_to 'Add New Geofence', new_geofence_path %>
+      </td>
+    </tr>
     <% @geofences.each do |geofence| -%>
       <tr class="<%=cycle('','odd')%>">
         <td><%= check_box_tag :geofences, geofence.id, false, :id => dom_id(geofence) %></td>

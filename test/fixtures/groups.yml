@@ -12,3 +12,8 @@ west:
   account: quentin
   name: West
   of: Geofence
+
+aaron:
+  account: aaron
+  name: Aaron Group
+  of: Device

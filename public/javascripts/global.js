@@ -183,7 +183,7 @@ jQuery.fn.dialogLoader = function() {
     );
   }
   return loader;
-}
+};
 
 /**
  * .fitWindow(function(width, height))
@@ -202,10 +202,63 @@ jQuery.fn.fitWindow = function(callback) {
   q(window).resize(function(event) {
     callback(
       q(window).width(),
-      q(window).height() - _self.position().top - 1
+      q(window).height() - _self.offset().top - 1
     );
   });
 
   // And run once to ensure a good start case
   q(window).resize();
-}
+};
+
+/**
+ * .groupSelect()
+ *
+ * Take an ordered list of groups and turn it into a group select widget,
+ * with appropriate select all/none/some functionality.
+ *
+ * If you want to submit the list of checked groups to a form, just include
+ * a checkbox input inside each li - it will be checked and unchecked as
+ * appropriate.
+ *
+ * This method doesn't handle the look (stylesheet will take care of that).
+ */
+jQuery.fn.groupSelect = function() {
+  // Check/uncheck rows when clicked
+  q(this).find('li').click(function() {
+    var self = q(this);
+    
+    if (self.hasClass('checked')) {
+      self.find('li').andSelf().removeClass('checked halfchecked');
+      self.find('input').attr('checked', false);
+    } else {
+      self.find('li').andSelf().removeClass('halfchecked').addClass('checked');
+      self.find('input').attr('checked', true);
+    }
+    
+    self.parents('li').removeClass('halfchecked checked')
+        .children('input').attr('checked', false).end()
+        .filter(':has(li.checked)').addClass('halfchecked');
+    
+    return false;
+  });
+  
+  // Collapse and expand group lists when arrow is clicked
+  q(this).find('span.collapsible').click(function() {
+    q(this).toggleClass('open').toggleClass('closed');
+    q(this).siblings('ol').toggle(q(this).hasClass('open'));
+    
+    return false;
+  });
+  
+  // Hide the collapse/expand arrow for leaf rows
+  q(this).find('li:not(:has(li)) span.collapsible').hide();
+  
+  // Check all rows that should start as selected
+  q(this).find('input:checked')
+         .parent().addClass('checked')
+         .find('li').addClass('checked').end()
+         .parents('li:not(.checked)').addClass('halfchecked');
+  
+  // "Open" the tree for all pre-selected rows, to save time
+  q(this).find('li:has(li.checked) > span.collapsible').click();
+};

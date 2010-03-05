@@ -2,6 +2,8 @@ require 'test_helper'
 
 describe "Geofence", ActiveSupport::TestCase do
   setup do
+    Group.rebuild!
+    
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
     @geofence = geofences(:quentin_geofence)
@@ -153,6 +155,20 @@ describe "Geofence", ActiveSupport::TestCase do
     should.raise(ActiveRecord::RecordNotFound) do
       @geofence.update_attributes(:device_group_ids => [bad])
     end
+  end
+  
+  specify "when setting device groups, weeds out groups already included in the tree" do
+    child = @account.groups.of_devices.create(:name => 'North Child')
+    child.move_to_child_of(groups(:north))
+    
+    @geofence.update_attributes(:device_groups => [child, groups(:south)])
+    assert @geofence.device_groups.include?(groups(:south))
+    assert @geofence.device_groups.include?(child)
+    
+    @geofence.update_attributes(:device_groups => [groups(:north), groups(:south), child])
+    assert @geofence.device_groups.include?(groups(:north))
+    assert @geofence.device_groups.include?(groups(:south))
+    assert !@geofence.device_groups.include?(child)
   end
   
   context "Testing if a point is within a geofence" do
