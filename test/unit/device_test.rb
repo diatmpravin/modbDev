@@ -459,47 +459,21 @@ describe "Device", ActiveSupport::TestCase do
     end
 
     context "Idle" do
-      specify "creates events" do
-        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
-        @example_location[:speed] = 0
-
+      specify "events" do
+        Mailer.deliveries.clear
+        @example_location[:event] = '6016'
         Event.should.differ(:count).by(1) do
-          for i in 1..9
-            new_time = i.minutes.since(occurred_at)
-            @device.process(@example_location)
-            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
-          end
-        end
+          @device.process(@example_location)
+        end 
         Mailer.deliveries.length.should.be 0
       end
-      
-      specify "creates an event per idle period" do
-        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
 
-        Event.should.differ(:count).by(2) do
-          for i in 1..20
-            new_time = i.minutes.since(occurred_at)
-            @example_location[:speed] = i == 10 ? 20 : 0
-            @device.process(@example_location)
-            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
-          end
-        end
-     end
-
-      specify "sends alerts" do
-        occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
-        
+      specify "alerts" do
         @device.update_attribute(:alert_on_idle, true)
-        @example_location[:speed] = 0
-        Event.should.differ(:count).by(1) do
-          for i in 1..9
-            new_time = i.minutes.since(occurred_at)
-            @device.process(@example_location)
-            @example_location[:time] = "#{new_time.hour}:#{new_time.min}:#{new_time.sec}"
-          end
-        end
+        Mailer.deliveries.clear
+        @example_location[:event] = '6016'
+        @device.process(@example_location)
         Mailer.deliveries.length.should.be 1
-        Mailer.deliveries.first.body.should =~ /idle/  
       end
     end
     
@@ -714,26 +688,27 @@ describe "Device", ActiveSupport::TestCase do
       end
     end
 
-#    context "Device Power Reset Alerts" do
-#      setup do
-#        Mailer.deliveries.clear
-#        @example_location[:event] = '6015'
-#      end
-#
-#      specify "create events for power reset" do
-#        Event.should.differ(:count).by(1) do
-#          @device.process(@example_location)
-#        end
-#        Mailer.deliveries.length.should.be 0
-#      end
-#
-#      specify "send alerts for power reset" do
-#        Event.should.differ(:count).by(1) do
-#          @device.process(@example_location)
-#        end
-#        Mailer.deliveries.length.should.be 1
-#      end
-#    end
+    context "Device Power Reset Alerts" do
+      setup do
+        Mailer.deliveries.clear
+        @example_location[:event] = '6015'
+        @device.update_attribute(:alert_on_reset, true)
+      end
+
+      xspecify "create events for power reset" do
+        Event.should.differ(:count).by(1) do
+          @device.process(@example_location)
+        end
+        Mailer.deliveries.length.should.be 0
+      end
+
+      specify "send alerts for power reset" do
+        Event.should.differ(:count).by(1) do
+          @device.process(@example_location)
+        end
+        Mailer.deliveries.length.should.be 1
+      end
+    end
 
     specify "will update odometer" do
       @device.update_attribute(:odometer, 37000)
