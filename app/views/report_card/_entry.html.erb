@@ -6,8 +6,8 @@
     <div class="warning"><%= image_tag "alert.png" -%></div>
 
     <% if !report.group.leaf? -%>
-      <span class="expand"><%= image_tag "expand.png" -%></span>
-      <span class="collapse"><%= image_tag "collapse.png" -%></span>
+      <span class="expand"><%= image_tag "report_card_closed.png" -%></span>
+      <span class="collapse"><%= image_tag "report_card_open.png" -%></span>
       <span class="busy"><%= image_tag "spinner.gif" -%></span>
       <%= link_to h(report.data[:name]), report_card_path(:group_id => report.group.id), :class => "toggleGroup" -%>
     <% else -%>
