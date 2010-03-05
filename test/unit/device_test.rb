@@ -4,7 +4,8 @@ describe "Device", ActiveSupport::TestCase do
   setup do
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
-    @device.debug = false
+
+    Tracker.any_instance.stubs(:async_configure)
   end
 
   context "Associations" do
@@ -473,7 +474,6 @@ describe "Device", ActiveSupport::TestCase do
       end
       
       specify "creates an event per idle period" do
-        @device.debug = true
         occurred_at = Time.parse("#{@example_location[:date]} #{@example_location[:time]} UTC")
 
         Event.should.differ(:count).by(2) do
@@ -939,6 +939,31 @@ describe "Device", ActiveSupport::TestCase do
       
       @device.update_attributes(:device_profile => nil, :alert_on_speed => false)
       @device.reload.alert_on_speed.should.equal false
+    end
+  end
+
+  context "updating tracker settings" do
+    specify "updates when necessary" do
+      @device.speed_threshold = 80
+      @device.rpm_threshold = 6000
+      @device.idle_threshold = 20
+      @device.alert_on_idle = true
+      Tracker.any_instance.expects(:async_configure).with({:speed=>80, :rpm=>6000, :idle=>20})
+      @device.save
+
+      @device.alert_on_idle = false
+      Tracker.any_instance.expects(:async_configure).with({:idle=>0})
+      @device.save
+    end
+    
+    specify "doesn't update if thresholds unchanged" do
+      @device.speed_threshold = 80
+      @device.rpm_threshold = 6000
+      @device.idle_threshold = 20
+
+      Tracker.any_instance.expects(:async_configure).with({:speed=>80, :rpm=>6000, :idle=>20}).at_most_once
+      @device.save
+      @device.save
     end
   end
 end

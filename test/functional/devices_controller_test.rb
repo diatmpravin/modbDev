@@ -7,6 +7,7 @@ describe "Devices Controller", ActionController::TestCase do
     users(:quentin).update_attributes(:roles => [User::Role::FLEET])
     login_as :quentin
     @account = accounts(:quentin)
+    Tracker.any_instance.stubs(:async_configure)
   end
   
   context "Viewing devices" do

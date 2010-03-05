@@ -41,6 +41,13 @@ describe "Tracker", ActiveSupport::TestCase do
       end
     end
   end
+ 
+  context "Configuration" do
+    specify "enqueues configure job" do
+      Resque.expects(:enqueue).with(Tracker::ConfigureJob, @tracker.id, {:speed=>80, :rpm=>6000, :idle=>20})
+      @tracker.async_configure({:speed=>80, :rpm=>6000, :idle=>20})
+    end
+  end
   
   specify "has a helper for status text" do
     Tracker.new(:status => 2).status_text.should.equal 'Active'

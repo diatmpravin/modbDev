@@ -55,8 +55,7 @@ class Device < ActiveRecord::Base
     :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin,
     :groups, :imei_number
 
-  before_save :prefill_profile_fields
-  before_save :convert_imei_to_tracker
+  before_save :prefill_profile_fields, :convert_imei_to_tracker, :update_thresholds
 
   # Get the list of all the NON marked-for-deletion cars
   named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
@@ -159,4 +158,43 @@ class Device < ActiveRecord::Base
       end
     end
   end
+
+  # Kicks off a background job to update the threshold options on the tracker.
+  def update_thresholds
+    return if tracker.nil?
+
+    updates = {}
+
+    # First check to see if any of the values for the various thresholds have changed
+    if(speed_threshold_changed?)
+      updates[:speed] = self.speed_threshold
+    end
+
+    if(rpm_threshold_changed?)
+      updates[:rpm] = self.rpm_threshold
+    end
+
+    if(idle_threshold_changed?)
+      updates[:idle] = self.idle_threshold
+    end
+
+    # Next we need to see if any of them have been disabled or enabled. If they
+    # have then we need to make sure they are disabled on the device or set to
+    # the proper threshold.
+    if(alert_on_speed_changed?)
+      updates[:speed] = alert_on_speed ? self.speed_threshold : 0
+    end
+
+    if(alert_on_aggressive_changed?)
+      updates[:rpm] = alert_on_aggressive ? self.rpm_threshold : 0
+    end
+
+    if(alert_on_idle_changed?)
+      updates[:idle] = alert_on_idle ? self.idle_threshold : 0
+    end
+
+    # Finally send the updates if there are any to send
+    tracker.async_configure(updates) if updates.any?
+  end
+
 end
