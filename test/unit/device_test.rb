@@ -146,7 +146,7 @@ describe "Device", ActiveSupport::TestCase do
 
       # Car starts out with ignition off
       @device.points.create(
-        :occurred_at => Time.parse('2009/02/17 09:00:00 UTC'),
+        :occurred_at => Time.parse('2009/02/05 09:00:00 UTC'),
         :event => 4002,
         :latitude => 33.64512,
         :longitude => -84.44697
@@ -156,8 +156,8 @@ describe "Device", ActiveSupport::TestCase do
       @example_location = {
         :sim => '12345678901234567890',
         :event => '4001',
-        :date => '2009/02/17',
-        :time => '12:18:54',
+        :date => '2009/02/05',
+        :time => '09:18:54',
         :latitude => '33.64512',
         :longitude => '-84.44697',
         :altitude => '312.1',
@@ -538,6 +538,17 @@ describe "Device", ActiveSupport::TestCase do
       end
     end
 
+    context "Device Not Reporting" do
+      specify "creates events" do
+        Event.should.differ(:count).by(1) do
+          @device.process(@example_location.merge(:time => "12:05:00"))
+        end
+        p = Point.find(:last)
+        p.events.length.should.equal 1
+        p.events[0].event_type.should.equal Event::NOT_REPORTING
+      end
+    end
+
     context "After Hours" do
       setup do
         @device.update_attributes(
@@ -545,6 +556,9 @@ describe "Device", ActiveSupport::TestCase do
           :after_hours_start => 64800,  # 18:00
           :after_hours_end => 21600     # 06:00
         )
+
+        # update the time of the last point so that we don't cause NOT_REPORTING events
+		  @device.points.last.occurred_at = Time.parse("02/05/2009 22:15:00")	  
       end
 
       ##
@@ -553,7 +567,7 @@ describe "Device", ActiveSupport::TestCase do
       ##
 
       specify "sets event and alert when trip crosses after-hour boundary" do
-        # Point right before
+        # Point right before       
         Event.should.differ(:count).by(0) do
           @device.process(@example_location.merge(:time => "22:55:00"))
         end
@@ -572,6 +586,7 @@ describe "Device", ActiveSupport::TestCase do
       end
 
       specify "sets event and alert when new trip started during after-hours" do
+
         # Point right before
         Event.should.differ(:count).by(1) do
           @device.process(@example_location.merge(
@@ -587,6 +602,7 @@ describe "Device", ActiveSupport::TestCase do
       end
 
       specify "only sends one alert per trip leg" do
+
         # Start the trip
         Event.should.differ(:count).by(0) do
           @device.process(@example_location.merge(:time => "22:55:00"))
@@ -596,34 +612,41 @@ describe "Device", ActiveSupport::TestCase do
         Event.should.differ(:count).by(5) do
           @device.process(@example_location.merge(:time => "23:00:10"))
           @device.process(@example_location.merge(:time => "23:30:10"))
-          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "00:32:52", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "00:40:00", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/06"))
+          @device.process(@example_location.merge(:time => "00:32:52", :date => "2009/02/06"))
+          @device.process(@example_location.merge(:time => "00:40:00", :date => "2009/02/06"))
         end
 
-        @device.process(@example_location.merge(:time => "00:45:00", :date => "2009/02/18", :event => '6012'))
+        @device.process(@example_location.merge(:time => "00:45:00", :date => "2009/02/05", :event => '6012'))
 
         Mailer.deliveries.length.should.equal 1
 
         # New trip
         Trip.should.differ(:count).by(1) do
           Event.should.differ(:count).by(3) do
-            @device.process(@example_location.merge(:time => "05:00:00", :date => "2009/02/18", :event => '6011'))
-            @device.process(@example_location.merge(:time => "05:10:00", :date => "2009/02/18", :event => '4001'))
-            @device.process(@example_location.merge(:time => "05:20:00", :date => "2009/02/18", :event => '6001'))
+            @device.process(@example_location.merge(:time => "02:00:00", :date => "2009/02/06", :event => '6011'))
+            @device.process(@example_location.merge(:time => "02:10:00", :date => "2009/02/06", :event => '4001'))
+            @device.process(@example_location.merge(:time => "02:20:00", :date => "2009/02/06", :event => '6001'))
           end
         end
 
-        @device.process(@example_location.merge(:time => "05:30:00", :date => "2009/02/18", :event => '6012'))
+        @device.process(@example_location.merge(:time => "02:30:00", :date => "2009/02/06", :event => '6012'))
 
         # Should have alerted on the Ignition On
         Mailer.deliveries.length.should.equal 2
 
+        # some periodic reports while stationary
+        @device.process(@example_location.merge(:time => "04:30:00", :date => "2009/02/06", :event => '4002'))
+        @device.process(@example_location.merge(:time => "06:30:00", :date => "2009/02/06", :event => '4002'))
+        @device.process(@example_location.merge(:time => "08:30:00", :date => "2009/02/06", :event => '4002'))
+        @device.process(@example_location.merge(:time => "10:30:00", :date => "2009/02/06", :event => '4002'))
+
+
         # No longer after-hours
         Trip.should.differ(:count).by(1) do
           Event.should.differ(:count).by(0) do
-            @device.process(@example_location.merge(:time => "11:01:00", :date => "2009/02/18", :event => '6011'))
-            @device.process(@example_location.merge(:time => "11:20:00", :date => "2009/02/18"))
+            @device.process(@example_location.merge(:time => "11:01:00", :date => "2009/02/06", :event => '6011'))
+            @device.process(@example_location.merge(:time => "11:20:00", :date => "2009/02/06"))
           end
         end
 
@@ -632,13 +655,14 @@ describe "Device", ActiveSupport::TestCase do
       end
 
       specify "all points made during after-hours are flagged as such" do
+
         # Multiple points
         Event.should.differ(:count).by(5) do
           @device.process(@example_location.merge(:time => "23:00:10"))
           @device.process(@example_location.merge(:time => "23:30:10"))
-          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "02:32:52", :date => "2009/02/18"))
-          @device.process(@example_location.merge(:time => "03:30:30", :date => "2009/02/18"))
+          @device.process(@example_location.merge(:time => "00:10:10", :date => "2009/02/06"))
+          @device.process(@example_location.merge(:time => "01:32:52", :date => "2009/02/06"))
+          @device.process(@example_location.merge(:time => "02:30:30", :date => "2009/02/06"))
         end
 
         @device.trips.last.points.each do |point|
