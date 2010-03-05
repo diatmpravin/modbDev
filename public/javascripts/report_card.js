@@ -62,6 +62,7 @@
      */
     hideNested: function(parent) {
       var parentId = parent.attr("id");
+      if(parentId == "") { return; }
 
       $.each(parent.siblings("tr." + parentId + ":visible"), function(idx, tr) {
         tr = $(tr);

@@ -1,15 +1,26 @@
-<% parent = report.group.parent ? dom_id(report.group.parent) : "" -%>
+<% group ||= report.group -%>
+<% vehicle ||= false -%>
 
-<tr id="<%= dom_id(report.group) -%>" class="<%= cycle('even', 'odd') %> entry <%= parent -%>">
+<% 
+  if vehicle
+    id = ""
+    parent = dom_id(group)
+  else
+    id = dom_id(group)
+    parent = group.parent ? dom_id(group.parent) : ""
+  end
+ -%>
+
+<tr id="<%= id -%>" class="<%= cycle('even', 'odd') %> entry <%= parent -%>">
   <td class="box"><%= check_box_tag "apply", 1 -%></td>
-  <td class="name" style="padding-left: <%= report.group.level + 1 -%>em">
+  <td class="name" style="padding-left: <%= group.level + (vehicle ? 2 : 1) -%>em">
     <div class="warning"><%= image_tag "alert.png" -%></div>
 
-    <% if !report.group.leaf? -%>
+    <% if expandable?(group) && !vehicle -%>
       <span class="expand"><%= image_tag "report_card_closed.png" -%></span>
       <span class="collapse"><%= image_tag "report_card_open.png" -%></span>
       <span class="busy"><%= image_tag "spinner.gif" -%></span>
-      <%= link_to h(report.data[:name]), report_card_path(:group_id => report.group.id), :class => "toggleGroup" -%>
+      <%= link_to h(report.data[:name]), report_card_path(:group_id => group.id), :class => "toggleGroup" -%>
     <% else -%>
       <%= h report.data[:name] -%>
     <% end -%>
