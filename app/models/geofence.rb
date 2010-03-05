@@ -18,6 +18,7 @@ class Geofence < ActiveRecord::Base
     :account, :name, :alert_recipients, :alert_recipient_ids,
     :alert_on_exit, :alert_on_entry, :device_groups, :device_group_ids
   
+  before_save :consolidate_device_groups
   before_save :prepare_coordinates
   after_save :update_associated_deltas
   
@@ -144,5 +145,13 @@ class Geofence < ActiveRecord::Base
   
   def update_associated_deltas
       Group.update_all({:delta => true}, {:id => device_groups.map(&:id)})
+  end
+  
+  # Weed out group linkings that aren't necessary, because they have parents
+  # that are already linked to this object.
+  def consolidate_device_groups
+    if self.device_groups.length > 1
+      self.device_groups -= self.device_groups.map(&:descendants).flatten
+    end
   end
 end

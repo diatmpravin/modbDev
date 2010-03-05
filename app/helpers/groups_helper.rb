@@ -24,7 +24,7 @@ module GroupsHelper
         content_tag(:span, '', :class => 'collapsible closed'),
         content_tag(:span, g.name, :class => 'name'),
         g.children.any? ? group_tree(g.children, options.merge(:style => 'display:none')) : nil
-      ].join)
+      ]) + '\n'
     }, {:style => options[:style]})
   end
   
