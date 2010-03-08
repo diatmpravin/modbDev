@@ -6,6 +6,7 @@ describe "DeviceProfile", ActiveSupport::TestCase do
     @profile = device_profiles(:quentin)
     @device = devices(:quentin_device)
     
+    Tracker.any_instance.stubs(:async_configure)
     @device.update_attributes(:device_profile => @profile)
   end
   

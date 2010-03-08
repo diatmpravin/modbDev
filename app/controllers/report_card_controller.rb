@@ -6,6 +6,7 @@ class ReportCardController < ApplicationController
   # Main view of the report card
   def show
     template = "list"
+    @range_type = (params[:range_type] || 1).to_i
 
     @report_card = 
       if params[:group_id]
@@ -16,7 +17,7 @@ class ReportCardController < ApplicationController
         elsif group.devices.any?
           template = "list_vehicles"
           GroupVehiclesReport.new(current_user, 
-                                   :group => group, :range => {:type => 1}).tap {|g| g.run }
+                                   :group => group, :range => {:type => @range_type}).tap {|g| g.run }
         else
           []
         end
@@ -34,7 +35,7 @@ class ReportCardController < ApplicationController
 
   def group_reports(groups)
     groups.map do |g|
-      GroupSummaryReport.new(current_user, :group => g, :range => {:type => 1}).tap {|g| g.run }
+      GroupSummaryReport.new(current_user, :group => g, :range => {:type => @range_type}).tap {|g| g.run }
     end
   end
 

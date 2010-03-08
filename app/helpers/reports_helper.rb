@@ -46,5 +46,16 @@ module ReportsHelper
       ['Custom',     Report::DateRange::CUSTOM]
     ].freeze
   end
+
+  def range_options_report_card
+    @@range_options_report_card ||= [
+      ['Today',      Report::DateRange::TODAY],
+      ['Yesterday',  Report::DateRange::YESTERDAY],
+      ['This Week',  Report::DateRange::THIS_WEEK],
+      ['Last Week',  Report::DateRange::LAST_WEEK],
+      ['This Month', Report::DateRange::THIS_MONTH],
+      ['Last Month', Report::DateRange::LAST_MONTH],
+    ].freeze
+  end
   
 end

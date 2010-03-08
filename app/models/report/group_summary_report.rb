@@ -41,11 +41,13 @@ class GroupSummaryReport < Report
       :event_idle,
       :event_aggressive,
       :event_after_hours,
-      :first_start_time
+      :first_start_time,
+      :last_end_time
     )
 
     aggregate = {
       :first_start_time => [],
+      :last_end_time => [],
       :duration => 0,
       :miles => 0,
       :event_speed => 0,
@@ -69,6 +71,7 @@ class GroupSummaryReport < Report
         events = Hash[*events.inject([]) {|arr, elem| arr.concat(elem)}]
 
         aggregate[:first_start_time] << trips.first.start if trips.any?
+        aggregate[:last_end_time] << trips.last.finish if trips.any?
         aggregate[:duration] += trips.map {|t| t.duration}.sum
         aggregate[:miles] += trips.map {|t| t.miles}.sum
         aggregate[:event_speed] += events[Event::SPEED] || 0
@@ -87,6 +90,7 @@ class GroupSummaryReport < Report
     end
 
     aggregate[:first_start_time] = aggregate[:first_start_time].sort.first
+    aggregate[:last_end_time] = aggregate[:last_end_time].sort.last
 
     self.data = aggregate.merge(:name => @group.name)
   end
