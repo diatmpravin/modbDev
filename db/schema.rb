@@ -56,6 +56,20 @@ ActiveRecord::Schema.define(:version => 20100308203830) do
     t.datetime "updated_at"
   end
 
+  create_table "device_data_per_day", :force => true do |t|
+    t.integer "device_id"
+    t.date    "date"
+    t.integer "duration"
+    t.integer "miles"
+    t.integer "speed_events"
+    t.integer "geofence_events"
+    t.integer "idle_events"
+    t.integer "aggressive_events"
+    t.integer "after_hours_events"
+    t.time    "first_start_time"
+    t.time    "last_end_time"
+  end
+
   create_table "device_profiles", :force => true do |t|
     t.integer  "account_id"
     t.boolean  "alert_on_speed",                     :default => false

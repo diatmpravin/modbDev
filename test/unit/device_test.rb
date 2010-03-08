@@ -965,4 +965,58 @@ describe "Device", ActiveSupport::TestCase do
       @device.save
     end
   end
+
+  context "Calculating and storing daily data" do
+
+    setup do
+      t = @device.trips.create
+      l = t.legs.create
+      @point1 = l.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST"), :miles => 100,
+        :device => @device)
+      @point2 = l.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :occurred_at => Time.parse("01/01/2009 11:50:30 AM EST"), :miles => 200,
+        :device => @device)
+      @point3 = l.points.create(
+        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST"), :miles => 300,
+        :device => @device)
+    end
+
+    specify "aggregates various data" do
+      DeviceDataPerDay.should.differ(:count).by(1) do
+        @device.calculate_data_for(Date.parse("01/01/2009"))
+      end
+
+      data = @device.daily_data.for(Date.parse("01/01/2009")).first
+
+      data.should.not.be.nil
+      data.miles.should.equal 200
+      data.duration.should.equal 3600
+      data.date.should.equal Date.parse("01/01/2009")
+    end
+
+    context "Resque job" do
+
+      specify "Runs calculations for all vehicles for the given date" do
+        Device.any_instance.expects(:calculate_data_for).with(Date.parse("01/01/2010"))
+        Device.any_instance.expects(:calculate_data_for).with(Date.parse("01/01/2010"))
+
+        Device::CalculateDailyData.process("01/01/2010")
+      end
+
+      specify "only calculates for devices who need it" do
+        date = "01/01/2010"
+        @device.daily_data.create(:date => Date.parse(date))
+
+        Device.any_instance.expects(:calculate_data_for).with(Date.parse(date))
+
+        Device::CalculateDailyData.process(date)
+      end
+
+    end
+
+  end
 end

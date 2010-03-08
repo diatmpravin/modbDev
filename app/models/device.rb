@@ -11,6 +11,8 @@ class Device < ActiveRecord::Base
   has_many :device_tags, :dependent => :delete_all
   has_many :tags, :through => :device_tags, :order => 'name'
   
+  has_many :daily_data, :class_name => "DeviceDataPerDay"
+  
   include TimeAsText
   time_as_text :after_hours_start
   time_as_text :after_hours_end
@@ -64,6 +66,7 @@ class Device < ActiveRecord::Base
   concerned_with :sphinx
   concerned_with :alerts
   concerned_with :points
+  concerned_with :jobs
 
   ROLLOVER_MILES = 10000
   TRIP_REPORT_CUTOFF = 75.minutes

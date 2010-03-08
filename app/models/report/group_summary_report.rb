@@ -13,7 +13,11 @@ class GroupSummaryReport < Report
   end
 
   def title
-    "Group Summary Report - Group #{@group.name}: #{self.start} through #{self.end}"
+    if self.start == self.end
+      self.start.to_s
+    else
+      "#{self.start} through #{self.end}"
+    end
   end
 
   def to_csv
