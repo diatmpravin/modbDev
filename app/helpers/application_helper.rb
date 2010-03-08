@@ -12,7 +12,7 @@ module ApplicationHelper
   end
 
   def mapquest_jsapi_url
-    "http://btilelog.access.mapquest.com/tilelog/transaction?transaction=script&key=mjtd%7Clu6y216tng%2Crl%3Do5-lwa51&itk=true&v=5.3.s&ipkg=controls1,traffic&ipr=false"
+    "http://btilelog.access.mapquest.com/tilelog/transaction?transaction=script&key=Gmjtd%7Clu6y216tng%2Crl%3Do5-lwa51&itk=true&v=5.3.s&ipkg=controls1,traffic&ipr=false"
   end
 
   # Called when setting the id of the main body tag
