@@ -6,7 +6,6 @@ describe "Geofences Controller", ActionController::TestCase do
   setup do
     login_as :quentin
     @account = accounts(:quentin)
-    @device = devices(:quentin_device)
   end
 
   context "Index - HTML" do

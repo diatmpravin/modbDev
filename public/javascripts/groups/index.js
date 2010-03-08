@@ -32,6 +32,9 @@ Groups = {
       deviceField: 'input[name=group_ids]',
       getSelection: function() { return Groups.getSelected(); }
     });
+    
+    
+    
   }
   ,
   /**

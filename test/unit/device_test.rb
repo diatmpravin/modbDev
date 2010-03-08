@@ -2,6 +2,7 @@ require 'test_helper'
 
 describe "Device", ActiveSupport::TestCase do
   setup do
+    Group.rebuild!
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
   end
@@ -22,11 +23,6 @@ describe "Device", ActiveSupport::TestCase do
 
     specify "has many trips" do
       @device.should.respond_to(:trips)
-    end
-
-    specify "has many geofences" do
-      @device.should.respond_to(:geofences)
-      @device.geofences.should.include(geofences(:quentin_geofence))
     end
 
     specify "has many alert recipients" do
@@ -334,13 +330,17 @@ describe "Device", ActiveSupport::TestCase do
     context "Geofence checking" do
       setup do
         @geofence = geofences(:quentin_geofence)
+        @geofence.device_groups << groups(:north)
+        @device.groups << groups(:north)
+        @device.reload
+        
       end
 
       specify "no alerts sent if no flags are set" do
         @geofence.update_attributes(:alert_on_entry => false, :alert_on_exit => false)
         Geofence.any_instance.expects(:contain? ).times(2).returns(true, false)
-
-        @device.process(@example_location)
+        
+        @device.process(@example_location)        
         Mailer.deliveries.length.should.be 0
       end
 

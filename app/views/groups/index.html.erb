@@ -22,6 +22,8 @@
   
   <div class="clear spacer"></div>
 
+  <%= group_tree(current_user.groups.of_devices.roots) %>
+  
   <div id="groupsWrapper">
     <%= render :partial => "group", :collection => @groups -%>
   </div>

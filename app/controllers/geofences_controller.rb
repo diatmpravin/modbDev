@@ -22,8 +22,8 @@ class GeofencesController < ApplicationController
   def create
     @geofence = current_account.geofences.build
 
-    # If device ids or alert_recipient ids are missing, blank them out
-    record = {:device_ids => [], :alert_recipient_ids => []}.merge(params[:geofence])
+    # If group ids or alert_recipient ids are missing, blank them out
+    record = {'device_group_ids' => [], 'alert_recipient_ids' => []}.merge(params[:geofence])
 
     if @geofence.update_attributes(record)
       redirect_to geofences_path
@@ -42,8 +42,8 @@ class GeofencesController < ApplicationController
   def update
     @geofence = current_account.geofences.find(params[:id])
 
-    # If device ids or alert_recipient ids are missing, blank them out
-    record = {"device_ids" => [], "alert_recipient_ids" => []}.merge(params[:geofence])
+    # If group ids or alert_recipient ids are missing, blank them out
+    record = {'device_group_ids' => [], 'alert_recipient_ids' => []}.merge(params[:geofence])
 
     if @geofence.update_attributes(record)
       redirect_to geofences_path

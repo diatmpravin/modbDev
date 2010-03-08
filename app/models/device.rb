@@ -5,8 +5,6 @@ class Device < ActiveRecord::Base
   belongs_to :device_profile
   has_many :points, :order => 'occurred_at'
   has_many :trips, :order => 'start'
-  has_many :device_geofences, :dependent => :delete_all
-  has_many :geofences, :through => :device_geofences
   has_many :device_alert_recipients, :dependent => :delete_all
   has_many :alert_recipients, :through => :device_alert_recipients
   has_many :events, :through => :points

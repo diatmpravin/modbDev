@@ -5,7 +5,6 @@ describe "Geofence", ActiveSupport::TestCase do
     Group.rebuild!
     
     @account = accounts(:quentin)
-    @device = devices(:quentin_device)
     @geofence = geofences(:quentin_geofence)
   end
   
@@ -13,11 +12,6 @@ describe "Geofence", ActiveSupport::TestCase do
     specify "belongs to an account" do
       @geofence.should.respond_to(:account)
       @geofence.account.should.equal @account
-    end
-    
-    specify "has many devices" do
-      @geofence.should.respond_to(:devices)
-      @geofence.devices.should.include(@device)
     end
     
     specify "has many alert recipients" do
@@ -83,7 +77,7 @@ describe "Geofence", ActiveSupport::TestCase do
     end
     
     specify "can use the coordinates array immediately on a new geofence" do
-      geofence = @device.geofences.new(:name => 'Test')
+      geofence = @account.geofences.new(:name => 'Test')
       geofence.coordinates << {:latitude => 10.05, :longitude => 10.05}
       geofence.should.save
       geofence.coordinates.should.equal [
@@ -108,19 +102,6 @@ describe "Geofence", ActiveSupport::TestCase do
     
     geofence = Geofence.new(:account => @account)
     geofence.account_id.should.equal @account.id
-  end
-  
-  specify "allows device_ids=, but enforces account ownership" do
-    @geofence.update_attributes(:device_ids => [])
-    @geofence.devices.should.be.empty
-    
-    @geofence.update_attributes(:device_ids => [@device.id])
-    @geofence.devices.should.include(@device)
-    
-    should.raise(ActiveRecord::RecordNotFound) do
-      bad = devices(:aaron_device)
-      @geofence.update_attributes(:device_ids => [@device.id, bad.id])
-    end
   end
   
   specify "allows alert_recipient_ids=, but enforces account ownership" do
