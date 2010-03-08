@@ -1,5 +1,7 @@
 class GeofencesController < ApplicationController
-
+  before_filter :new_geofence, :only => [:new, :create]
+  before_filter :set_geofence, :only => [:edit, :update]
+  
   layout :set_layout
 
   def index
@@ -16,40 +18,20 @@ class GeofencesController < ApplicationController
   end
 
   def new
-    @geofence = Geofence.new
   end
 
   def create
-    @geofence = current_account.geofences.build
-
-    # If group ids or alert_recipient ids are missing, blank them out
-    record = {'device_group_ids' => [], 'alert_recipient_ids' => []}.merge(params[:geofence])
-
-    if @geofence.update_attributes(record)
-      redirect_to geofences_path
-    else
-      render :action => "new"
-    end
+    save_record
   end
 
   def show
   end
 
   def edit
-    @geofence = current_account.geofences.find(params[:id])
   end
 
   def update
-    @geofence = current_account.geofences.find(params[:id])
-
-    # If group ids or alert_recipient ids are missing, blank them out
-    record = {'device_group_ids' => [], 'alert_recipient_ids' => []}.merge(params[:geofence])
-
-    if @geofence.update_attributes(record)
-      redirect_to geofences_path
-    else
-      render :action => "edit"
-    end
+    save_record
   end
 
   # DELETE /geofences/:id
@@ -61,9 +43,28 @@ class GeofencesController < ApplicationController
 
   protected
 
+  def new_geofence
+    @geofence = current_account.geofences.new
+  end
+  
+  def set_geofence
+    @geofence = current_account.geofences.find(params[:id])
+  end
+  
   def set_layout
     return nil if request.xhr?
     #return "geofences_map" if [:edit, :new, :update, :create].include?(action_name.to_sym)
     "geofences"
+  end
+  
+  def save_record
+    # If group ids are missing, blank them out
+    params[:geofence]['device_group_ids'] ||= []
+    
+    if @geofence.update_attributes(params[:geofence])
+      redirect_to geofences_path
+    else
+      render :action => @geofence.new_record? ? 'new' : 'edit'
+    end
   end
 end

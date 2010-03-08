@@ -7,7 +7,6 @@
   
   <%= javascript_include_tag 'geofences/model' %>
   <%= javascript_include_tag 'geofences/view' %>
-  <%= javascript_include_tag 'alert_recipients' %>
   <%= javascript_include_tag "geofences/form" -%>
 <% end -%>
 
@@ -62,26 +61,6 @@
     </div>
   </fieldset>
   
-  <div class="field alerts">
-    <input type="hidden" name="alertFieldName" value="geofence[alert_recipient_ids][]"/>
-    <h3>Alert recipients</h3>
-    <ul>
-      <li>
-        <%= link_to '', '#', :class => "add" %>
-        <select class="recipientSelect">
-          <%= alert_options_for(geofence) %>
-        </select>
-      </li>
-      <% geofence.alert_recipients.each do |a| -%>
-        <li>
-          <%= link_to '', '#', :class => "remove" %>
-          <span><%= a.display_string %></span>
-          <%= hidden_field_tag 'geofence[alert_recipient_ids][]', a.id, :class => 'id' %>
-        </li>
-      <% end -%>
-    </ul>
-  </div>
-  
   <div id="coordinates">
     <% geofence.coordinates.each do |coord| -%>
       <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude], :class => "latitude" %>
@@ -97,7 +76,3 @@
 
   <div class="clear spacer"></div>
 <% end -%>
-
-<div id="newAlertRecipient" class="dialog">
-  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
-</div>
