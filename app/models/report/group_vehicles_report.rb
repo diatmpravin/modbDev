@@ -41,7 +41,8 @@ class GroupVehiclesReport < Report
       :event_idle,
       :event_aggressive,
       :event_after_hours,
-      :first_start_time
+      :first_start_time,
+      :last_end_time
     )
 
     devices.each do |device|
@@ -57,6 +58,7 @@ class GroupVehiclesReport < Report
       events = Hash[*events.inject([]) {|arr, elem| arr.concat(elem)}]
 
       first_start_time = trips.any? ? trips.first.start : nil
+      last_end_time = trips.any? ? trips.last.finish : nil
 
       report << {
         :name => device.name,
@@ -74,7 +76,8 @@ class GroupVehiclesReport < Report
           events[Event::RAPID_DECEL] || 0
         ].sum,
         :event_after_hours => events[Event::AFTER_HOURS] || 0,
-        :first_start_time => first_start_time
+        :first_start_time => first_start_time,
+        :last_end_time => last_end_time
       }
     end
 
