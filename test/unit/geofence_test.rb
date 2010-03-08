@@ -14,11 +14,6 @@ describe "Geofence", ActiveSupport::TestCase do
       @geofence.account.should.equal @account
     end
     
-    specify "has many alert recipients" do
-      @geofence.should.respond_to(:alert_recipients)
-      @geofence.alert_recipients.should.include(alert_recipients(:quentin_recipient))
-    end
-    
     specify "has many device groups" do
       @geofence.update_attributes(:device_groups => [groups(:north)])
       @geofence.reload.device_groups.should.equal [groups(:north)]
@@ -102,21 +97,6 @@ describe "Geofence", ActiveSupport::TestCase do
     
     geofence = Geofence.new(:account => @account)
     geofence.account_id.should.equal @account.id
-  end
-  
-  specify "allows alert_recipient_ids=, but enforces account ownership" do
-    @recipient = alert_recipients(:quentin_recipient)
-    
-    @geofence.update_attributes(:alert_recipient_ids => [])
-    @geofence.alert_recipients.should.be.empty
-    
-    @geofence.update_attributes(:alert_recipient_ids => [@recipient.id])
-    @geofence.alert_recipients.should.include(@recipient)
-    
-    should.raise(ActiveRecord::RecordNotFound) do
-      bad = alert_recipients(:aaron_recipient)
-      @geofence.update_attributes(:alert_recipient_ids => [@recipient.id, bad.id])
-    end
   end
   
   specify "allows device_group_ids=, but enforces account ownership" do

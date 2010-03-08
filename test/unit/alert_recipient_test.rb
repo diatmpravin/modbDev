@@ -4,7 +4,6 @@ describe "Alert Recipient", ActiveSupport::TestCase do
   setup do
     @account = accounts(:quentin)
     @recipient = alert_recipients(:quentin_recipient)
-    @geofence = geofences(:quentin_geofence)
     @device = devices(:quentin_device)
   end
   
@@ -12,11 +11,6 @@ describe "Alert Recipient", ActiveSupport::TestCase do
     specify "belongs to an account" do
       @recipient.should.respond_to(:account)
       @recipient.account.should.equal @account
-    end
-    
-    specify "has many geofences" do
-      @recipient.should.respond_to(:geofences)
-      @recipient.geofences.should.include(@geofence)
     end
     
     specify "has many devices" do
@@ -29,12 +23,12 @@ describe "Alert Recipient", ActiveSupport::TestCase do
     context "for()" do
       specify "excludes alerts already on a given object" do
         @account.alert_recipients.should.include(@recipient)
-        @geofence.alert_recipients.should.include(@recipient)
-        @account.alert_recipients.for(@geofence).should.not.include(@recipient)
+        @device.alert_recipients.should.include(@recipient)
+        @account.alert_recipients.for(@device).should.not.include(@recipient)
       end
       
       specify "excludes nothing if the object is new" do
-        @account.alert_recipients.for(Geofence.new).should.include(@recipient)
+        @account.alert_recipients.for(Device.new).should.include(@recipient)
       end
     end
     

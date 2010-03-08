@@ -2,8 +2,6 @@ class AlertRecipient < ActiveRecord::Base
   include SMSFu
   
   belongs_to :account
-  has_many :geofence_alert_recipients, :dependent => :delete_all
-  has_many :geofences, :through => :geofence_alert_recipients
   has_many :device_alert_recipients, :dependent => :delete_all
   has_many :devices, :through => :device_alert_recipients
   
@@ -49,7 +47,7 @@ class AlertRecipient < ActiveRecord::Base
     :allow_nil => true, :allow_blank => true, :message => 'is not a valid carrier'
   
   attr_accessible :recipient_type, :email, :phone_number, :phone_carrier,
-    :account, :geofences, :devices
+    :account, :devices
   
   EMAIL = 0
   PHONE = 1

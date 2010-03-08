@@ -1,7 +1,5 @@
 class Geofence < ActiveRecord::Base
   belongs_to :account
-  has_many :geofence_alert_recipients, :dependent => :delete_all
-  has_many :alert_recipients, :through => :geofence_alert_recipients
   
   has_and_belongs_to_many :device_groups,
     :class_name => 'Group',
@@ -13,8 +11,8 @@ class Geofence < ActiveRecord::Base
   default_value_for :coordinates, Array.new
   
   attr_accessible :geofence_type, :radius, :coordinates,
-    :account, :name, :alert_recipients, :alert_recipient_ids,
-    :alert_on_exit, :alert_on_entry, :device_groups, :device_group_ids
+    :account, :name, :alert_on_exit, :alert_on_entry,
+    :device_groups, :device_group_ids
   
   before_save :consolidate_device_groups
   before_save :prepare_coordinates
@@ -33,12 +31,6 @@ class Geofence < ActiveRecord::Base
     ELLIPSE = 0   # coordinates = [upper-left point, lower-right point]
     RECTANGLE = 1 # coordinates = [upper-left point, lower-right point]
     POLYGON = 2   # coordinates = [p0, p1, p2, ... pN]
-  end
-  
-  def alert_recipient_ids=(list)
-    self.alert_recipients = account.alert_recipients.find(
-      list.reject {|a| a.blank?}
-    )
   end
   
   def device_group_ids=(list)

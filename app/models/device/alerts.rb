@@ -6,4 +6,10 @@ class Device < ActiveRecord::Base
     )
   end
   
+  def send_alert(message, at = nil)
+    self.alert_recipients.each do |r|
+      r.alert(message, at || self.zone.now)
+    end
+  end
+  
 end

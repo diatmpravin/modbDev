@@ -23,9 +23,7 @@ class Device < ActiveRecord::Base
         # VIN Mismatch Alert
         if report[:event] == DeviceReport::Event::RESET.to_s &&
             self.vin_number != self.reported_vin_number
-          alert_recipients.each do |r|
-            r.alert("#{self.name} VIN Mismatch", self.zone.now)
-          end
+          send_alert("#{self.name} VIN Mismatch")
         end
       end
 
@@ -96,16 +94,12 @@ class Device < ActiveRecord::Base
           if fence.contain?(point) && !fence.contain?(last_point)
             point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name)
             if fence.alert_on_entry?
-              fence.alert_recipients.each do |r|
-                r.alert("#{self.name} entered area #{fence.name}", self.zone.now)
-              end
+              send_alert("#{self.name} entered area #{fence.name}")
             end
           elsif !fence.contain?(point) && fence.contain?(last_point)
             point.events.create(:event_type => Event::EXIT_BOUNDARY, :geofence_name => fence.name)
             if fence.alert_on_exit?
-              fence.alert_recipients.each do |r|
-                r.alert("#{self.name} exited area #{fence.name}", self.zone.now)
-              end
+              send_alert("#{self.name} exited area #{fence.name}")
             end
           end
         end
@@ -131,9 +125,7 @@ class Device < ActiveRecord::Base
       if point.event == DeviceReport::Event::RESET
         if alert_on_reset?
           point.events.create(:event_type => Event::RESET)
-          alert_recipients.each do |r|
-            r.alert("#{self.name} has reported a power reset", self.zone.now)
-          end
+          send_alert("#{self.name} has reported a power reset")
         end
       end
 
@@ -142,9 +134,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)
 
         if !last_point || last_point.speed <= speed_threshold
-          alert_recipients.each do |r|
-            r.alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)", self.zone.now)
-          end
+          send_alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)")
         end
       end
 
@@ -152,27 +142,21 @@ class Device < ActiveRecord::Base
       if point.rpm > rpm_threshold
         point.events.create(:event_type => Event::RPM, :rpm_threshold => rpm_threshold)
         if alert_on_aggressive?
-          alert_recipients.each do |r|
-            r.alert("#{self.name} experienced excessive RPM", self.zone.now)
-          end
+          send_alert("#{self.name} experienced excessive RPM")
         end
       end
 
       if point.event == DeviceReport::Event::ACCELERATING
         point.events.create(:event_type => Event::RAPID_ACCEL)
         if alert_on_aggressive?
-          alert_recipients.each do |r|
-            r.alert("#{self.name} experienced rapid acceleration", self.zone.now)
-          end
+          send_alert("#{self.name} experienced rapid acceleration")
         end
       end
 
       if point.event == DeviceReport::Event::DECELERATING
         point.events.create(:event_type => Event::RAPID_DECEL)
         if alert_on_aggressive?
-          alert_recipients.each do |r|
-            r.alert("#{self.name} experienced rapid deceleration", self.zone.now)
-          end
+          send_alert("#{self.name} experienced rapid deceleration")
         end
       end
 
@@ -180,9 +164,7 @@ class Device < ActiveRecord::Base
       if point.event == DeviceReport::Event::IDLE
         point.events.create(:event_type => Event::IDLE)
         if alert_on_idle?
-          alert_recipients.each do |r|
-            r.alert("#{self.name} idled for an extended period", self.zone.now)
-          end
+          send_alert("#{self.name} idled for an extended period")
         end
       end
 
@@ -197,9 +179,7 @@ class Device < ActiveRecord::Base
         # our alert. Otherwise, we assume the alert has already been sent
         if !last ||
            !last.events.exists?(:event_type => Event::AFTER_HOURS)
-          alert_recipients.each do |r|
-            r.alert("#{self.name} is running after hours", self.zone.now)
-          end
+          send_alert("#{self.name} is running after hours")
         end
       end
 
