@@ -12,6 +12,7 @@
             <%= select_tag :range_type, options_for_select(range_options_report_card, @range_type) %>
             <%= submit_tag "Update" -%>
           <% end -%>
+          <div>Showing data for: <%= @report_card[0].title -%></div>
         </th>
         <th rowspan="2">First Start Time</th>
         <th rowspan="2">Last End Time</th>
