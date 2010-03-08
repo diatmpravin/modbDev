@@ -51,7 +51,7 @@ Map.View = function(options) {
   
   this._map.moshiMap().init();
   this._map.fitWindow(function(w, h) { self.resize(w, h); });
-}
+};
 
 Map.View.prototype = {
   /**
@@ -129,9 +129,9 @@ Map.View.prototype = {
     var contentWidth = this._contentWidth - this._contentPaddingX;
     var contentHeight = mapHeight - this._contentPaddingY;
     
-    this._map.width(mapWidth)
+    this._map.width(mapWidth);
     this._map.height(mapHeight);
-    q('#content .content').width(contentWidth)
+    q('#content .content').width(contentWidth);
     q('#content .content').height(contentHeight);
     
     this._map.moshiMap().resizeTo(mapWidth, mapHeight);
@@ -159,4 +159,4 @@ Map.View.prototype = {
   removePoints: function() {
     MoshiMap.moshiMap.clearPoints();
   }
-}
+};
