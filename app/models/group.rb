@@ -23,10 +23,17 @@ class Group < ActiveRecord::Base
   validates_presence_of :account
   validate :belongs_to_parent_account
 
+  serialize :grading
+
+  default_value_for :grading do 
+    {}
+  end
+
   ##
   # Concerns
   ##
   concerned_with :sphinx
+  concerned_with :grading
 
   # Every group linkage possible needs to have a declaration
   # here. This is as simple as adding to the list

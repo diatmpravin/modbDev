@@ -3,22 +3,27 @@
 class Group < ActiveRecord::Base
 
   module Grade
-    VALUE_ATTRIBUTES = []
-
     PASS = 0
     WARN = 1
     FAIL = 2
   end
 
   # Given an attribute in key and a current value,
-  # grade the value according to rules that have been given to this Group
-  #
-  # TODO Actually implement this
-  def grade(key, value)
-    r = rand(100)
-    if r < 15
+  # grade the value according to rules that have been given to this Group.
+  def grade(key, value, days = 1)
+    test = days > 1 ? value / days : value
+
+    if self.grading.nil? 
+      self.update_attribute(:grading, {})
+    end
+
+    equation = self.grading[key]
+
+    return Grade::PASS unless equation
+
+    if test > equation[:fail]
       Grade::FAIL
-    elsif r < 30
+    elsif test < equation[:fail] && test > equation[:pass]
       Grade::WARN
     else 
       Grade::PASS

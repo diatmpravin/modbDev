@@ -102,4 +102,40 @@ describe "Group", ActiveSupport::TestCase do
       parent.devices.count.should.equal 3
     end
   end
+
+  context "Grading" do
+    setup do
+      @north.update_attribute(:grading, {
+        :key1 => {:fail => 90, :pass => 30},
+        :key2 => {:fail => 10, :pass => 10}
+      })
+    end
+
+    specify "can know if a value is fail" do
+      @north.grade(:key1, 100).should.be Group::Grade::FAIL
+    end
+
+    specify "can know if a value is warn" do
+      @north.grade(:key1, 70).should.be Group::Grade::WARN
+    end
+
+    specify "can know if a value is pass" do
+      @north.grade(:key1, 25).should.be Group::Grade::PASS
+    end
+
+    specify "gives Pass if no grading defined for key" do
+      @north.grade(:unknown, 1200).should.be Group::Grade::PASS
+    end
+
+    context "Over a range of time" do
+
+      specify "takes an average of the value over days before grading" do
+        @north.grade(:key2, 100, 10).should.be Group::Grade::PASS
+
+        @north.grade(:key1, 120, 2).should.be Group::Grade::WARN
+      end
+
+    end
+
+  end
 end

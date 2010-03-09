@@ -7,9 +7,11 @@ module ReportCardHelper
   # and output an appropriate status icon
   # By default, will not print "green", pass in a 4th parameter
   # to print a green dot
-  def status_icon(group, key, value, show_green = false, options = {})
+  def status_icon(group, key, value, days, options = {})
+    show_green = options.delete(:show_green) || false
+
     grade =
-      case group.grade(key, value)
+      case group.grade(key, value, days)
       when Group::Grade::FAIL
         :red
       when Group::Grade::WARN
