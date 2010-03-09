@@ -7,10 +7,10 @@ class Device < ActiveRecord::Base
     start = day.beginning_of_day.in_time_zone(self.zone)
     finish = day.end_of_day.in_time_zone(self.zone)
 
-    day_trips = self.trips.in_range(start, finish, self.user.zone)
+    day_trips = self.trips.in_range(start, finish, self.zone)
 
     # Do event grouping in database
-    events = self.events.in_range(start, finish, self.user.zone).all(
+    events = self.events.in_range(start, finish, self.zone).all(
       :select => 'event_type, COUNT(*) AS count_all',
       :group => :event_type
     ).map {|e| [e.event_type, e.count_all.to_i]}

@@ -10,13 +10,13 @@ class Device < ActiveRecord::Base
   has_many :events, :through => :points
   has_many :device_tags, :dependent => :delete_all
   has_many :tags, :through => :device_tags, :order => 'name'
-  
+
   has_many :daily_data, :class_name => "DeviceDataPerDay"
-  
+
   include TimeAsText
   time_as_text :after_hours_start
   time_as_text :after_hours_end
-  
+
   # Last known position
   has_one :position, :class_name => 'Point', :order => 'occurred_at DESC',
     :conditions => 'latitude <> 0 OR longitude <> 0', :readonly => true
@@ -25,8 +25,8 @@ class Device < ActiveRecord::Base
   attr_accessor :imei_number
 
   # Link to groups
-  has_and_belongs_to_many :groups, 
-    :join_table => :group_links, 
+  has_and_belongs_to_many :groups,
+    :join_table => :group_links,
     :foreign_key => :link_id,
     :order => "name ASC",
     :uniq => true
@@ -81,30 +81,30 @@ class Device < ActiveRecord::Base
   def imei_number
     @imei_number || (self.tracker ? tracker.imei_number : nil)
   end
-  
+
   # Save tag names as tags
   def tag_names=(list)
     # Throw away extra space and blank tags
     list = list.map {|x| x.strip}.reject {|x| x.blank?}
-    
+
     # Re-use any tags that already exist
     self.tags = account.tags.all(:conditions => {:name => list})
     tag_names = self.tags.map(&:name)
-    
+
     # Create new tags for any names left in the list
     list.reject! {|x| tag_names.find {|name| name.casecmp(x) == 0}}
     self.tags += account.tags.create(list.map {|n| {:name => n}}).select(&:valid? )
   end
-  
+
   # Safe device_profile_id=
   def device_profile_id=(value)
     self.device_profile = value.blank? ? nil : account.device_profiles.find(value)
   end
-  
+
   def zone
     ActiveSupport::TimeZone[self[:time_zone] || "Eastern Time (US & Canada)"]
   end
-  
+
   # Connected flag
   def connected
     position && Time.now - position.occurred_at < TRIP_REPORT_CUTOFF
@@ -136,6 +136,19 @@ class Device < ActiveRecord::Base
     else
       "No Data"
     end
+  end
+
+  # Get a single aggregate object that pulls in all data
+  # over a given range
+  def daily_data_over(from, to)
+    from = from.to_date; to = to.to_date
+    aggregate = DeviceDataPerDay.new
+
+    self.daily_data.for_range(from, to).each do |data|
+      aggregate.merge!(data)
+    end
+
+    aggregate
   end
 
   protected

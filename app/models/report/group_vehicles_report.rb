@@ -46,38 +46,19 @@ class GroupVehiclesReport < Report
     )
 
     devices.each do |device|
-      trips = device.trips.in_range(self.start, self.end, self.user.zone)
-
-      # Do event grouping in database
-      events = device.events.in_range(self.start, self.end, self.user.zone).all(
-        :select => 'event_type, COUNT(*) AS count_all',
-        :group => :event_type
-      ).map {|e| [e.event_type, e.count_all.to_i]}
-      
-      # Hashify
-      events = Hash[*events.inject([]) {|arr, elem| arr.concat(elem)}]
-
-      first_start_time = trips.any? ? trips.first.start : nil
-      last_end_time = trips.any? ? trips.last.finish : nil
+      data = device.daily_data_over(self.start, self.end)
 
       report << {
         :name => device.name,
-        :miles => trips.map {|t| t.miles}.sum,
-        :duration => trips.map {|t| t.duration}.sum,
-        :event_speed => events[Event::SPEED] || 0,
-        :event_geofence => [
-          events[Event::ENTER_BOUNDARY] || 0,
-          events[Event::EXIT_BOUNDARY] || 0
-        ].sum,
-        :event_idle => events[Event::IDLE] || 0,
-        :event_aggressive => [
-          events[Event::RPM] || 0,
-          events[Event::RAPID_ACCEL] || 0,
-          events[Event::RAPID_DECEL] || 0
-        ].sum,
-        :event_after_hours => events[Event::AFTER_HOURS] || 0,
-        :first_start_time => first_start_time,
-        :last_end_time => last_end_time
+        :miles => data.miles,
+        :duration => data.duration,
+        :event_speed => data.speed_events,
+        :event_geofence => data.geofence_events,
+        :event_idle => data.idle_events,
+        :event_aggressive => data.aggressive_events,
+        :event_after_hours => data.after_hours_events,
+        :first_start_time => data.first_start_time,
+        :last_end_time => data.last_end_time
       }
     end
 
