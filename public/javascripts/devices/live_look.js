@@ -13,7 +13,7 @@ LiveLook = {
   init: function() {
     LiveLook.map = new Map.View({contentWidth: 1});
 
-    LiveLook.updatePath = "/devices/live_look?device_ids=" + q("#device_ids").val();
+    LiveLook.updatePath = "/devices/live_look.json?device_ids=" + q("#device_ids").val();
     LiveLook.devices = q("#device_ids").val().split(",");
 
     LiveLook.updateDevices(function() {
