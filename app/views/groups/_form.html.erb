@@ -1,3 +1,8 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "jquery/jquery.slider.js" -%>
+  <%= javascript_include_tag "groups/edit" -%>
+<% end -%>
+
 <% form_for group do |f| %>
   <div>
     <h3>Group Details</h3>
@@ -15,6 +20,18 @@
     </div>
     
   </div>
+
+  <% proxy = group.grade_proxy -%>
+  <h3>Group Parameters</h3>
+  <% Group::Grade::VALID_PARAMS.each do |param| -%>
+    <div>
+      <span><%= param.to_s.humanize.titleize -%></span> <span class="pass"></span> - <span class="fail"></span>
+      <div id="<%= param -%>_events_slider" class="slider">
+        <%= hidden_field_tag "group[grading][#{param}][fail]", proxy.send(param)[:fail], :class => "fail" -%>
+        <%= hidden_field_tag "group[grading][#{param}][pass]", proxy.send(param)[:pass], :class => "pass" -%>
+      </div>
+    </div>
+  <% end -%>
 
   <div class="buttons">
     <%= link_to 'Cancel', groups_path %>

@@ -3,9 +3,40 @@
 class Group < ActiveRecord::Base
 
   module Grade
+    VALID_PARAMS = [:miles, 
+      :duration,
+      :speed_events,
+      :geofence_events,
+      :idle_events,
+      :aggressive_events,
+      :after_hours_events,
+      :first_start_time,
+      :last_end_time
+    ]
+
     PASS = 0
     WARN = 1
     FAIL = 2
+  end
+
+  class GradeProxy
+    def initialize(group)
+      @group = group
+    end
+
+    Group::Grade::VALID_PARAMS.each do |param|
+      define_method(param) do
+        @group.grading[param] ||= {}
+      end
+
+      define_method("#{param}=") do |val|
+        @group.grading[param] = val
+      end
+    end
+  end
+
+  def grade_proxy
+    GradeProxy.new(self)
   end
 
   # Given an attribute in key and a current value,
@@ -21,9 +52,9 @@ class Group < ActiveRecord::Base
 
     return Grade::PASS unless equation
 
-    if test > equation[:fail]
+    if test > equation[:fail].to_i
       Grade::FAIL
-    elsif test < equation[:fail] && test > equation[:pass]
+    elsif test < equation[:fail].to_i && test > equation[:pass].to_i
       Grade::WARN
     else 
       Grade::PASS

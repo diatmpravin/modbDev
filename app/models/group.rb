@@ -25,6 +25,8 @@ class Group < ActiveRecord::Base
 
   serialize :grading
 
+  attr_accessible :grading
+
   default_value_for :grading do 
     {}
   end
