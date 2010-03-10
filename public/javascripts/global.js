@@ -174,16 +174,31 @@ jQuery.fn.clearRailsForm = function() {
  * Call on a jQuery dialog pane to add a loading div (hidden by default) to the
  * lower left inside the button row.  Subsequent calls on the same dialog will
  * return the existing loading div.
+ *
+ * NEW: Try calling .dialogLoader(true) instead of .dialogLoader().show().
+ * In addition to showing the loader, this will disable the dialog buttons.
+ * Passing false will hide the loader and re-enable the dialog buttons.
  */
-jQuery.fn.dialogLoader = function() {
+jQuery.fn.dialogLoader = function(showLoader) {
   var loader = q(this).siblings('.ui-dialog-buttonpane').find('.loading');
   if (loader.length == 0) {
     loader = q('<div class="loading"></div>').prependTo(
       q(this).siblings('.ui-dialog-buttonpane')
     );
   }
+  
+  if (typeof(showLoader) != 'undefined') {
+    if (showLoader) {
+      loader.show().siblings().attr('disabled', true);
+    } else {
+      loader.hide().siblings().attr('disabled', false);
+    }
+  }
+  
   return loader;
 };
+
+//jQuery.fn.dialog
 
 /**
  * .fitWindow(function(width, height))
