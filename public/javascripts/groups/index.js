@@ -25,6 +25,17 @@ Groups = {
       }
     });
 
+    q('#moveGroup').dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': Groups.move,
+        'Cancel': function() { q(this).dialog('close'); }
+      }
+    });
+    
     q(".viewDetails").live('click', Groups.toggleDetails);
     
     new Reports.Form({
@@ -34,7 +45,21 @@ Groups = {
     });
     
     q('.groupList li').draggable({helper: 'clone', handle: 'span.handle', opacity:0.8});
-    q('.groupList li').droppable({hoverClass: 'dropHover', greedy: true, tolerance: 'pointer'});
+    q('.groupList li').droppable({
+      hoverClass: 'dropHover',
+      greedy: true,
+      tolerance: 'pointer',
+      drop: function(event, ui) {
+        Groups.confirmMove(ui.draggable, q(this));
+      }
+    });
+    
+    q('.groupList li').mouseover(function() {
+      q(this).children('span.handle').show();
+      return false;
+    }).mouseout(function() {
+      q('span.handle').hide();
+    });
   }
   ,
   /**
@@ -75,6 +100,53 @@ Groups = {
     
     _this.dialogLoader().show();
     _this.find('form').submit();
+    
+    return false;
+  }
+  ,
+  confirmMove: function(dragGroup, dropGroup) {
+    q('#moveGroup').data('dragGroup', dragGroup)
+      .data('dropGroup', dropGroup)
+      .find('form').attr('action', '/groups/' + dragGroup.attr('id').split('_')[1])
+      .find('input.parent_id').val(dropGroup.attr('id').split('_')[1]);
+    q('#moveGroup span.from').text(dragGroup.children('span.name').text());
+    q('#moveGroup span.to').text(dropGroup.children('span.name').text());
+    
+    q('#moveGroup').dialog('open');
+    q('span.handle').hide();
+  }
+  ,
+  move: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() {
+        self.dialogLoader(true);
+      },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          // Get the sub-list, or create it if it isn't there
+          var list = self.data('dropGroup').find('ol');
+          if (list.length == 0) {
+            list = q('<ol></ol>').appendTo(self.data('dropGroup'));
+          }
+          
+          // Append the dropped element to the list, then sort alphabetically
+          self.data('dragGroup').hide().appendTo(list);
+          list.sort(function(a,b) {
+            return q(a).children('span.name').text() > q(b).children('span.name').text() ? 1 : -1
+          });
+          self.data('dragGroup').show().effect('highlight', {}, 'slow');
+        } else {
+          self.errors(json.error);
+        }
+      }
+    });
     
     return false;
   }

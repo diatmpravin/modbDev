@@ -39,8 +39,15 @@
 
 </div>
 
-<div id="removeGroup" class="dialog">
+<div id="removeGroup" class="dialog" title="Remove group?">
   <% form_tag groups_path, :method => :delete do -%>
   <% end -%>
-  <p>Are you sure you want to remove this group from the system?</p>
+  <p>This will permanently remove the group from the system. Are you sure?</p>
+</div>
+
+<div id="moveGroup" class="dialog" title="Move group?">
+  <% form_tag groups_path, :method => :put do -%>
+    <%= hidden_field_tag 'group[parent_id]', '', :class => 'parent_id' %>
+  <% end -%>
+  <p>This will move the group "<span class="from"></span>" under "<span class="to"></span>". Are you sure?</p>
 </div>

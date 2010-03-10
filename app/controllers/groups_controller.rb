@@ -42,6 +42,9 @@ class GroupsController < ApplicationController
   # PUT /groups/:id
   # Update the given group
   def update
+    # TODO: Add error handling
+    # I believe "name already taken" and "group move invalid" are the two possible errors
+    #
     @group.update_attributes(params[:group])
     if params[:group][:parent_id]
       if params[:group][:parent_id].blank?
@@ -51,9 +54,16 @@ class GroupsController < ApplicationController
       end
     end
     
-    redirect_to groups_path
+    respond_to do |format|
+      format.html {
+        redirect_to groups_path
+      }
+      format.json {
+        render :json => {:status => 'success'}
+      }
+    end
   end
-
+  
   # DELETE /groups/:id
   # Destroy the given group
   def destroy

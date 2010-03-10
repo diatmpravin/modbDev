@@ -27,7 +27,7 @@ module GroupsHelper
       content_tag(:li, [
         capture(g, level, &block),
         g.children.any? ? group_tree(g.children, options, level + 1, &block) : nil
-      ].join)
+      ].join, {:id => dom_id(g)})
     }, options[:closed] && level > 0 ? {:style => 'display:none'} : {})
     
     level > 0 ? tree : concat(tree)
