@@ -25,6 +25,7 @@ class Device < ActiveRecord::Base
       :date => day.to_date,
       :miles => day_trips.map {|t| t.miles}.sum,
       :duration => day_trips.map {|t| t.duration}.sum,
+      :mpg => day_trips.map {|t| t.average_mpg}.sum / day_trips.size.to_f,
       :speed_events => events[Event::SPEED] || 0,
       :geofence_events => [
         events[Event::ENTER_BOUNDARY] || 0,

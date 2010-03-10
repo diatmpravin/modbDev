@@ -41,12 +41,14 @@
     <% end -%>
   </td>
   <td>
-    <%# status_icon group, :duration, report.data[:duration] -%>
     <%= duration_format(report.data[:duration]) -%>
   </td>
   <td>
-    <%# status_icon group, :miles, report.data[:miles] -%>
     <%= report.data[:miles] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:mpg] -%>
+    <%= report.data[:mpg] -%>
   </td>
   <td>
     <%= status_icon report.data[:report_card][:speed_events] -%>

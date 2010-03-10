@@ -24,6 +24,7 @@ class GroupSummaryReport < Report
     self.data.rename_columns(
       :name => "Group Name",
       :duration => "Operating Time (s)",
+      :mpg => "MPG",
       :miles => "Miles",
       :speed_events => "Speed Events",
       :geofence_events => "Geofence Events",
@@ -40,6 +41,7 @@ class GroupSummaryReport < Report
       :name,
       :duration,
       :miles,
+      :mpg,
       :speed_events,
       :geofence_events,
       :idle_events,
@@ -53,6 +55,7 @@ class GroupSummaryReport < Report
       :report_card => {},
       :first_start_time => [],
       :last_end_time => [],
+      :mpg => [],
       :duration => 0,
       :miles => 0,
       :speed_events => 0,
@@ -66,6 +69,7 @@ class GroupSummaryReport < Report
       :count => 0,
       :miles => 0,
       :duration => 0,
+      :mpg => 0,
       :speed_events => 0,
       :geofence_events => 0,
       :idle_events => 0,
@@ -84,6 +88,7 @@ class GroupSummaryReport < Report
 
         aggregate[:first_start_time] << data.first_start_time
         aggregate[:last_end_time] << data.last_end_time
+        aggregate[:mpg] << data.mpg
         aggregate[:duration] += data.duration
         aggregate[:miles] += data.miles
         aggregate[:speed_events] += data.speed_events
@@ -109,6 +114,8 @@ class GroupSummaryReport < Report
     end
 
     if report_card[:count] > 0
+      aggregate[:mpg] = aggregate[:mpg].sum.to_f / aggregate[:mpg].length.to_f
+
       Group::Grade::VALID_PARAMS.each do |param|
         score = report_card[param] / report_card[:count]
         aggregate[:report_card][param] =

@@ -3,8 +3,8 @@
 class Group < ActiveRecord::Base
 
   module Grade
-    VALID_PARAMS = [:miles,
-      :duration,
+    VALID_PARAMS = [
+      :mpg,
       :speed_events,
       :geofence_events,
       :idle_events,
