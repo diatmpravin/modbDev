@@ -198,8 +198,6 @@ jQuery.fn.dialogLoader = function(showLoader) {
   return loader;
 };
 
-//jQuery.fn.dialog
-
 /**
  * .fitWindow(function(width, height))
  *
@@ -276,4 +274,24 @@ jQuery.fn.groupSelect = function() {
   
   // "Open" the tree for all pre-selected rows, to save time
   q(this).find('li:has(li.checked) > span.collapsible').click();
+};
+
+/**
+ * .sort(sort_fn)
+ *
+ * Given a sorting function sort_fn(a,b), do an in-place sort of all the
+ * immediate children in the DOM. This function is intended to be called
+ * on the CONTAINER element, and assumes all children will be sorted.
+ *
+ * Discussion & original source: http://bit.ly/afdKjY
+ *
+ * Example (sort all li's in an ordered list by id):
+ *   q('ol').sort(function(a,b) {
+ *     return a.attr('id') < b.attr('id') ? 1 : -1;
+ *   });
+ */
+jQuery.fn.sort = function(sort_fn) {
+  this.each(function(index, o) {
+    [].sort.apply(jQuery(o).children(), [sort_fn]).appendTo(o);
+  });
 };
