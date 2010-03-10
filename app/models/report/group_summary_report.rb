@@ -88,7 +88,7 @@ class GroupSummaryReport < Report
 
         aggregate[:first_start_time] << data.first_start_time
         aggregate[:last_end_time] << data.last_end_time
-        aggregate[:mpg] << data.mpg
+        aggregate[:mpg] << data.mpg unless data.mpg <= 0
         aggregate[:duration] += data.duration
         aggregate[:miles] += data.miles
         aggregate[:speed_events] += data.speed_events
