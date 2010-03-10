@@ -33,8 +33,8 @@ Groups = {
       getSelection: function() { return Groups.getSelected(); }
     });
     
-    
-    
+    q('.groupList li').draggable({helper: 'clone', handle: 'span.handle', opacity:0.8});
+    q('.groupList li').droppable({hoverClass: 'dropHover', greedy: true, tolerance: 'pointer'});
   }
   ,
   /**

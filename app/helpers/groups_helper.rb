@@ -28,4 +28,19 @@ module GroupsHelper
     }, {:style => options[:style]})
   end
   
+  def group_list(groups, options = {})
+    options[:selected] ||= []
+    options[:selected_ids] ||= options[:selected].map(&:id) 
+    
+    content_tag(:ol, groups.map { |g|
+      content_tag(:li, [
+        content_tag(:span, '', :class => 'handle'),
+        options[:checkbox] ? check_box_tag(options[:checkbox], g.id, options[:selected_ids].include?(g.id)) : nil,
+        content_tag(:span, '', :class => 'checkbox'),
+        content_tag(:span, '', :class => 'collapsible closed'),
+        content_tag(:span, g.name, :class => 'name'),
+        g.children.any? ? group_list(g.children, options.merge(:style => 'display:none')) : nil
+      ]) + "\n"
+    }, {:style => options[:style]})
+  end
 end

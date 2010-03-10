@@ -22,7 +22,11 @@
   
   <div class="clear spacer"></div>
 
-  <%= group_tree(current_user.groups.of_devices.roots) %>
+  <div class="groupList">
+    <%= group_list(current_user.groups.of_devices.roots) %>
+  </div>
+  
+  <br/><br/>
   
   <div id="groupsWrapper">
     <%= render :partial => "group", :collection => @groups -%>
