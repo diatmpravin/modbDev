@@ -55,9 +55,12 @@
   <h3>Vehicle Groups</h3>
   <fieldset>
     <div class="groupSelect">
-      <%= group_tree(current_user.groups.of_devices.roots,
-        :checkbox => 'geofence[device_group_ids][]',
-        :selected => geofence.device_groups) %>
+      <% group_tree(current_user.groups.of_devices, :closed => true) do |group, level| -%>
+        <%= check_box_tag 'geofence[device_group_ids][]', group.id, geofence.device_groups.include?(group) %>
+        <span class="checkbox"></span>
+        <span class="collapsible closed"></span>
+        <span class="name"><%= group.name %></span>
+      <% end -%>
     </div>
   </fieldset>
   

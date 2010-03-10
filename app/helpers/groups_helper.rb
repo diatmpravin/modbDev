@@ -1,46 +1,36 @@
 module GroupsHelper
 
-  # Create a group tree that allows the user to select a list of groups. Intended
-  # to be used in conjunction with the ".groupSelect()" jQuery function.
+  # Create a group tree by passing a list of groups and a block defining how
+  # each element of the tree should look. The block will be passed a group object
+  # and the current "level" of the tree.
+  #
+  # Example:
+  #   <% group_list(my_groups) do |group, level| -%>
+  #     <strong><%= group.name %></strong>
+  #     <%= link_to 'Edit', edit_group_path(group) %>
+  #   <% end -%>
   #
   # Options:
+  #   :closed  if true, non-root elements will start out hidden (false by default)
   #
-  #   :checkbox  a string to be used as the field name of the checkboxes. If
-  #              not included, checkboxes will be visible to the user, but not
-  #              result in any form action on submit.
-  #
-  #   :selected  a list of groups already "selected" on the object you're
-  #              working with. Leave this option out to start with no selected
-  #              groups.
-  #
-  def group_tree(groups, options = {})
-    options[:selected] ||= []
-    options[:selected_ids] ||= options[:selected].map(&:id) 
+  def group_tree(groups, options = {}, level = 0, &block)
+    if level == 0
+      # Get the "roots" of this collection (not necessarily true roots)
+      # Do this the math way, to avoid hitting the database for each group
+      rgt = 0
+      groups -= groups.sort {|x,y| x.lft <=> y.lft}.select {|g|
+        rgt = [rgt, g.rgt].max ; g.rgt < rgt
+      }
+    end
     
-    content_tag(:ol, groups.map { |g|
+    tree = content_tag(:ol, groups.map { |g|
       content_tag(:li, [
-        options[:checkbox] ? check_box_tag(options[:checkbox], g.id, options[:selected_ids].include?(g.id)) : nil,
-        content_tag(:span, '', :class => 'checkbox'),
-        content_tag(:span, '', :class => 'collapsible closed'),
-        content_tag(:span, g.name, :class => 'name'),
-        g.children.any? ? group_tree(g.children, options.merge(:style => 'display:none')) : nil
-      ]) + "\n"
-    }, {:style => options[:style]})
+        capture(g, level, &block),
+        g.children.any? ? group_tree(g.children, options, level + 1, &block) : nil
+      ].join)
+    }, options[:closed] && level > 0 ? {:style => 'display:none'} : {})
+    
+    level > 0 ? tree : concat(tree)
   end
   
-  def group_list(groups, options = {})
-    options[:selected] ||= []
-    options[:selected_ids] ||= options[:selected].map(&:id) 
-    
-    content_tag(:ol, groups.map { |g|
-      content_tag(:li, [
-        content_tag(:span, '', :class => 'handle'),
-        options[:checkbox] ? check_box_tag(options[:checkbox], g.id, options[:selected_ids].include?(g.id)) : nil,
-        content_tag(:span, '', :class => 'checkbox'),
-        content_tag(:span, '', :class => 'collapsible closed'),
-        content_tag(:span, g.name, :class => 'name'),
-        g.children.any? ? group_list(g.children, options.merge(:style => 'display:none')) : nil
-      ]) + "\n"
-    }, {:style => options[:style]})
-  end
 end

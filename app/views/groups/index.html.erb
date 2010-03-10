@@ -23,7 +23,12 @@
   <div class="clear spacer"></div>
 
   <div class="groupList">
-    <%= group_list(current_user.groups.of_devices.roots) %>
+    <% group_tree(current_user.groups.of_devices) do |group, level| %>
+      <span class="handle"></span>
+      <span class="checkbox"></span>
+      <span class="collapsible closed"></span>
+      <span class="name"><%= group.name %></span>
+    <% end %>
   </div>
   
   <br/><br/>
