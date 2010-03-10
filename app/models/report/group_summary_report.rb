@@ -114,7 +114,8 @@ class GroupSummaryReport < Report
     end
 
     if report_card[:count] > 0
-      aggregate[:mpg] = aggregate[:mpg].sum.to_f / aggregate[:mpg].length.to_f
+      aggregate[:mpg] = 
+        aggregate[:mpg].length > 0 ?  aggregate[:mpg].sum.to_f / aggregate[:mpg].length.to_f : 0
 
       Group::Grade::VALID_PARAMS.each do |param|
         score = report_card[param] / report_card[:count]
