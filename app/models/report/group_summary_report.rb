@@ -25,11 +25,11 @@ class GroupSummaryReport < Report
       :name => "Group Name",
       :duration => "Operating Time (s)",
       :miles => "Miles",
-      :event_speed => "Speed Events",
-      :event_geofence => "Geofence Events",
-      :event_idle => "Idle Events",
-      :event_aggressive => "Aggressive Events",
-      :event_after_hours => "After Hours Events",
+      :speed_events => "Speed Events",
+      :geofence_events => "Geofence Events",
+      :idle_events => "Idle Events",
+      :aggressive_events => "Aggressive Events",
+      :after_hours_events => "After Hours Events",
       :first_start_time => "First Start Time"
     )
     super
@@ -40,11 +40,11 @@ class GroupSummaryReport < Report
       :name,
       :duration,
       :miles,
-      :event_speed,
-      :event_geofence,
-      :event_idle,
-      :event_aggressive,
-      :event_after_hours,
+      :speed_events,
+      :geofence_events,
+      :idle_events,
+      :aggressive_events,
+      :after_hours_events,
       :first_start_time,
       :last_end_time
     )
@@ -54,11 +54,11 @@ class GroupSummaryReport < Report
       :last_end_time => [],
       :duration => 0,
       :miles => 0,
-      :event_speed => 0,
-      :event_geofence => 0,
-      :event_idle => 0,
-      :event_aggressive => 0,
-      :event_after_hours => 0
+      :speed_events => 0,
+      :geofence_events => 0,
+      :idle_events => 0,
+      :aggressive_events => 0,
+      :after_hours_events => 0
     }
 
     @group.self_and_descendants.each do |g|
@@ -70,12 +70,11 @@ class GroupSummaryReport < Report
         aggregate[:last_end_time] << data.last_end_time
         aggregate[:duration] += data.duration
         aggregate[:miles] += data.miles
-        aggregate[:event_speed] += data.speed_events
-        aggregate[:event_geofence] += data.geofence_events
-        aggregate[:event_idle] += data.idle_events
-        aggregate[:event_aggressive] += data.aggressive_events
-        aggregate[:event_after_hours] += data.after_hours_events
-
+        aggregate[:speed_events] += data.speed_events
+        aggregate[:geofence_events] += data.geofence_events
+        aggregate[:idle_events] += data.idle_events
+        aggregate[:aggressive_events] += data.aggressive_events
+        aggregate[:after_hours_events] += data.after_hours_events
       end
     end
 
