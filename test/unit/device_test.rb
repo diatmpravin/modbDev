@@ -1004,7 +1004,7 @@ describe "Device", ActiveSupport::TestCase do
         Device.any_instance.expects(:calculate_data_for).with(Date.parse("01/01/2010"))
         Device.any_instance.expects(:calculate_data_for).with(Date.parse("01/01/2010"))
 
-        Device::CalculateDailyData.process("01/01/2010")
+        Device::CalculateDailyData.perform("01/01/2010")
       end
 
       specify "only calculates for devices who need it" do
@@ -1013,7 +1013,7 @@ describe "Device", ActiveSupport::TestCase do
 
         Device.any_instance.expects(:calculate_data_for).with(Date.parse(date))
 
-        Device::CalculateDailyData.process(date)
+        Device::CalculateDailyData.perform(date)
       end
 
     end

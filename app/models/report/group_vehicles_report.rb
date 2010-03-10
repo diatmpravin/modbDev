@@ -22,11 +22,12 @@ class GroupVehiclesReport < Report
       :name => "Name",
       :duration => "Operating Time (s)",
       :miles => "Miles",
-      :event_speed => "Speed Events",
-      :event_geofence => "Geofence Events",
-      :event_idle => "Idle Events",
-      :event_aggressive => "Aggressive Events",
-      :event_after_hours => "After Hours Events"
+      :mpg => "MPG",
+      :speed_events => "Speed Events",
+      :geofence_events => "Geofence Events",
+      :idle_events => "Idle Events",
+      :aggressive_events => "Aggressive Events",
+      :after_hours_events => "After Hours Events"
     )
     super
   end
@@ -36,30 +37,49 @@ class GroupVehiclesReport < Report
       :name,
       :duration,
       :miles,
-      :event_speed,
-      :event_geofence,
-      :event_idle,
-      :event_aggressive,
-      :event_after_hours,
+      :mpg,
+      :speed_events,
+      :geofence_events,
+      :idle_events,
+      :aggressive_events,
+      :after_hours_events,
       :first_start_time,
       :last_end_time
     )
 
+    days = (self.end - self.start).to_i + 1
+
     devices.each do |device|
       data = device.daily_data_over(self.start, self.end)
 
-      report << {
+      tmp = {
         :name => device.name,
         :miles => data.miles,
         :duration => data.duration,
-        :event_speed => data.speed_events,
-        :event_geofence => data.geofence_events,
-        :event_idle => data.idle_events,
-        :event_aggressive => data.aggressive_events,
-        :event_after_hours => data.after_hours_events,
+        :mpg => data.mpg,
+        :speed_events => data.speed_events,
+        :geofence_events => data.geofence_events,
+        :idle_events => data.idle_events,
+        :aggressive_events => data.aggressive_events,
+        :after_hours_events => data.after_hours_events,
         :first_start_time => data.first_start_time,
-        :last_end_time => data.last_end_time
+        :last_end_time => data.last_end_time,
+        :report_card => {}
       }
+
+      Group::Grade::VALID_PARAMS.each do |param|
+        tmp[:report_card][param] =
+          case @group.grade(param, data.send(param), days)
+          when Group::Grade::PASS
+            "pass"
+          when Group::Grade::WARN
+            "warn"
+          when Group::Grade::FAIL
+            "fail"
+          end
+      end
+
+      report << tmp
     end
 
     self.data = report

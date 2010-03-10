@@ -2,7 +2,7 @@ class DeviceDataPerDay < ActiveRecord::Base
   set_table_name :device_data_per_day
   belongs_to :device
 
-  attr_accessible :date, :duration, :miles, :speed_events, :geofence_events,
+  attr_accessible :date, :mpg, :duration, :miles, :speed_events, :geofence_events,
       :idle_events, :aggressive_events, :after_hours_events, :first_start_time,
       :last_end_time
 
@@ -15,6 +15,7 @@ class DeviceDataPerDay < ActiveRecord::Base
     {:conditions => {:date => (from..to).to_a}}
   }
 
+  default_value_for :mpg, 0
   default_value_for :duration, 0
   default_value_for :miles, 0
   default_value_for :speed_events, 0
@@ -27,6 +28,7 @@ class DeviceDataPerDay < ActiveRecord::Base
   def merge!(other)
     return unless other
 
+    self.mpg = (self.mpg + other.mpg) / 2.0
     self.duration += other.duration
     self.miles += other.miles
     self.speed_events += other.speed_events

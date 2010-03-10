@@ -3,8 +3,8 @@
 class Group < ActiveRecord::Base
 
   module Grade
-    VALID_PARAMS = [:miles, 
-      :duration,
+    VALID_PARAMS = [
+      :mpg,
       :speed_events,
       :geofence_events,
       :idle_events,
@@ -42,9 +42,11 @@ class Group < ActiveRecord::Base
   # Given an attribute in key and a current value,
   # grade the value according to rules that have been given to this Group.
   def grade(key, value, days = 1)
+    return Grade::PASS if value.is_a?(Time) || value.nil?
+
     test = days > 1 ? value / days : value
 
-    if self.grading.nil? 
+    if self.grading.nil?
       self.update_attribute(:grading, {})
     end
 
@@ -56,7 +58,7 @@ class Group < ActiveRecord::Base
       Grade::FAIL
     elsif test < equation[:fail].to_i && test > equation[:pass].to_i
       Grade::WARN
-    else 
+    else
       Grade::PASS
     end
   end

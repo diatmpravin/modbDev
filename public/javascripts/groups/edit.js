@@ -21,7 +21,7 @@
       $(slider).slider({
         range: true,
         min: 0,
-        max: 200,
+        max: 50,
         values: [input_pass.val(), input_fail.val()],
         slide: function(event, ui) {
           input_pass.val(ui.values[0]); 
