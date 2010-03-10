@@ -45,10 +45,12 @@ class GroupVehiclesReport < Report
       :last_end_time
     )
 
+    days = (self.end - self.start).to_i + 1
+
     devices.each do |device|
       data = device.daily_data_over(self.start, self.end)
 
-      report << {
+      tmp = {
         :name => device.name,
         :miles => data.miles,
         :duration => data.duration,
@@ -58,8 +60,23 @@ class GroupVehiclesReport < Report
         :aggressive_events => data.aggressive_events,
         :after_hours_events => data.after_hours_events,
         :first_start_time => data.first_start_time,
-        :last_end_time => data.last_end_time
+        :last_end_time => data.last_end_time,
+        :report_card => {}
       }
+
+      Group::Grade::VALID_PARAMS.each do |param|
+        tmp[:report_card][param] =
+          case @group.grade(param, data.send(param), days)
+          when Group::Grade::PASS
+            "pass"
+          when Group::Grade::WARN
+            "warn"
+          when Group::Grade::FAIL
+            "fail"
+          end
+      end
+
+      report << tmp
     end
 
     self.data = report

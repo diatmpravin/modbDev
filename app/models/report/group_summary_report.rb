@@ -1,5 +1,5 @@
 # This report is basically identical to the VehicleSummaryReport, but instead
-# it aggregates the summary across all vehicles in a group and this group's 
+# it aggregates the summary across all vehicles in a group and this group's
 # sub-groups
 class GroupSummaryReport < Report
 
@@ -50,6 +50,7 @@ class GroupSummaryReport < Report
     )
 
     aggregate = {
+      :report_card => {},
       :first_start_time => [],
       :last_end_time => [],
       :duration => 0,
@@ -58,8 +59,23 @@ class GroupSummaryReport < Report
       :geofence_events => 0,
       :idle_events => 0,
       :aggressive_events => 0,
-      :after_hours_events => 0
+      :after_hours_events => 0,
     }
+
+    report_card = {
+      :count => 0,
+      :miles => 0,
+      :duration => 0,
+      :speed_events => 0,
+      :geofence_events => 0,
+      :idle_events => 0,
+      :aggressive_events => 0,
+      :after_hours_events => 0,
+      :first_start_time => 0,
+      :last_end_time => 0
+    }
+
+    days = (self.end - self.start).to_i + 1
 
     @group.self_and_descendants.each do |g|
       g.devices.each do |device|
@@ -75,6 +91,34 @@ class GroupSummaryReport < Report
         aggregate[:idle_events] += data.idle_events
         aggregate[:aggressive_events] += data.aggressive_events
         aggregate[:after_hours_events] += data.after_hours_events
+
+        # Report card grading
+        report_card[:count] += 1
+        Group::Grade::VALID_PARAMS.each do |param|
+          report_card[param] +=
+            case @group.grade(param, data.send(param), days)
+            when Group::Grade::PASS
+              1
+            when Group::Grade::WARN
+              0.4
+            when Group::Grade::FAIL
+              -1
+            end
+        end
+      end
+    end
+
+    if report_card[:count] > 0
+      Group::Grade::VALID_PARAMS.each do |param|
+        score = report_card[param] / report_card[:count]
+        aggregate[:report_card][param] =
+          if score >= 0.8
+           "pass"
+          elsif score >= 0.33 && score < 0.8
+            "warn"
+          else
+            "fail"
+          end
       end
     end
 

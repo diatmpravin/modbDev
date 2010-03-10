@@ -49,23 +49,23 @@
     <%= report.data[:miles] -%>
   </td>
   <td>
-    <%= status_icon group, :speed_events, report.data[:speed_events], days -%>
+    <%= status_icon report.data[:report_card][:speed_events] -%>
     <%= report.data[:speed_events] -%>
   </td>
   <td>
-    <%= status_icon group, :geofence_events, report.data[:geofence_events], days -%>
+    <%= status_icon report.data[:report_card][:geofence_events] -%>
     <%= report.data[:geofence_events] -%>
   </td>
   <td>
-    <%= status_icon group, :idle_events, report.data[:idle_events], days -%>
+    <%= status_icon report.data[:report_card][:idle_events] -%>
     <%= report.data[:idle_events] -%>
   </td>
   <td>
-    <%= status_icon group, :aggressive_events, report.data[:aggressive_events], days -%>
+    <%= status_icon report.data[:report_card][:aggressive_events] -%>
     <%= report.data[:aggressive_events] -%>
   </td>
   <td>
-    <%= status_icon group, :after_hours_events, report.data[:after_hours_events], days -%>
+    <%= status_icon report.data[:report_card][:after_hours_events] -%>
     <%= report.data[:after_hours_events] -%>
   </td>
 </tr>
