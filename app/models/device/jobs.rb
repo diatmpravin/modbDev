@@ -41,6 +41,11 @@ class Device < ActiveRecord::Base
       :last_end_time => last_end_time
     )
   end
+
+  # Enqueue a job to run daily data calculations
+  def self.async_daily_data(date)
+    Resque.enqueue(CalculateDailyData, date.to_s)
+  end
   
   # Resque Job that takes a date and
   # runs the above method on all vehicles for the given date
@@ -50,7 +55,7 @@ class Device < ActiveRecord::Base
 
     # TODO Find a way to check the non-existence of daily data
     # in the sql query
-    def self.process(date_str)
+    def self.perform(date_str)
       date = Date.parse(date_str)
       Device.find_each do |d|
         next if d.daily_data.for(date).any?
