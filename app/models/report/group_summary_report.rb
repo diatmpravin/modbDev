@@ -86,8 +86,10 @@ class GroupSummaryReport < Report
 
         data = device.daily_data_over(self.start, self.end)
 
-        aggregate[:first_start_time] << data.first_start_time.in_time_zone(data.time_zone)
-        aggregate[:last_end_time] << data.last_end_time.in_time_zone(data.time_zone)
+        aggregate[:first_start_time] << data.first_start_time ? 
+          data.first_start_time.in_time_zone(data.time_zone) : nil
+        aggregate[:last_end_time] << data.last_end_time ? 
+          data.last_end_time.in_time_zone(data.time_zone) : nil
 
         aggregate[:mpg] << data.mpg
         aggregate[:duration] += data.duration
