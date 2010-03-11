@@ -134,6 +134,10 @@ class User < ActiveRecord::Base
     device_group.nil? ? account.groups : device_group.self_and_descendants
   end
   
+  def group_name
+    device_group.nil? ? 'All' : device_group.name
+  end
+  
   def zone
     ActiveSupport::TimeZone[self[:time_zone]]
   end

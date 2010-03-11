@@ -871,6 +871,7 @@ div.groupSelect {
 /* Group List Widget */
 div.groupList {
   border:solid 1px #c0c0c0;
+  width:500px;
   
   ol {
     list-style:none;
@@ -880,6 +881,11 @@ div.groupList {
   
   > ol {
     margin-top:-1px;
+  }
+  
+  span {
+    display:block;
+    height:25px;
   }
   
   span.edit {
@@ -900,19 +906,20 @@ div.groupList {
     cursor:move;
     display:none;
     float:left;
-    height:25px;
     width:20px;
   }
   
-  /*span.checkbox {
+  span.checkbox {
     background:transparent url(/images/unchecked.png) no-repeat center center;
     float:left;
     width:19px;
-  }*/
+  }
+  
+  span.collapsible {
+    float:left;
+  }
   
   span.name {
-    display:block;
-    height:25px;
     line-height:25px;
   }
   
@@ -920,23 +927,31 @@ div.groupList {
     background-color:#bcebf3;
   }
   
+  li.root {
+    > span.name { font-style:italic; }
+  }
+  
   li {
     background-color:#f5ecec;
     border-top:solid 1px #c0c0c0;
     cursor:default;
-    span.name { padding-left:24px; }
+    span.name { padding-left:30px; }
     
     li {
-      span.name { padding-left:34px; }
+      span.name { padding-left:40px; }
   
       li {
-        span.name { padding-left:44px; }
+        span.name { padding-left:50px; }
         
         li {
-          span.name { padding-left:54px; }
+          span.name { padding-left:60px; }
           
           li {
-            span.name { padding-left:64px; }
+            span.name { padding-left:70px; }
+            
+            li {
+              span.name { padding-left:80px; }
+            }
           }
         }
       }

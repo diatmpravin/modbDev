@@ -23,13 +23,14 @@
   <div class="clear spacer"></div>
 
   <div class="groupList">
-    <% group_tree(current_user.groups.of_devices) do |group, level| %>
-      <span class="edit"><%= link_to 'Edit', edit_group_path(group), :title => 'Edit Group' %></span>
-      <span class="handle" title="Move Group"></span>
-      <span class="checkbox"></span>
+    <% group_tree(current_user.device_group, :include_parent => true) do |group, level| %>
+      <% if level > 0 -%>
+        <span class="edit"><%= link_to 'Edit', edit_group_path(group), :title => 'Edit Group' %></span>
+        <span class="checkbox"></span>
+        <span class="handle" title="Move Group"></span>
+      <% end -%>
       <span class="collapsible closed"></span>
       <span class="name"><%= group.name %></span>
-      <!--<span><%= link_to 'Edit', edit_group_path(group), :class => 'edit' %></span>-->
     <% end %>
   </div>
   
