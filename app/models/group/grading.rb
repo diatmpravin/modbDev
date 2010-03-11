@@ -14,6 +14,14 @@ class Group < ActiveRecord::Base
       :last_end_time
     ]
 
+    # Mark which parameters should be handled
+    # in the reverse order, aka bigger is good, 
+    # smaller is bad
+    PARAM_REVERSED = Hash.new(false).merge({
+      :mpg => true,
+      :last_end_time => true
+    })
+
     PASS = 0
     WARN = 1
     FAIL = 2
@@ -54,12 +62,26 @@ class Group < ActiveRecord::Base
 
     return Grade::PASS unless equation
 
-    if test > equation[:fail].to_i
-      Grade::FAIL
-    elsif test < equation[:fail].to_i && test > equation[:pass].to_i
-      Grade::WARN
+    if Grade::PARAM_REVERSED[key]
+
+      if test >= equation[:pass].to_i
+        Grade::PASS
+      elsif test < equation[:pass].to_i && test > equation[:fail].to_i
+        Grade::WARN
+      else
+        Grade::FAIL
+      end
+
     else
-      Grade::PASS
+
+      if test > equation[:fail].to_i
+        Grade::FAIL
+      elsif test < equation[:fail].to_i && test > equation[:pass].to_i
+        Grade::WARN
+      else
+        Grade::PASS
+      end
+
     end
   end
 

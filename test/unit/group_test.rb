@@ -137,5 +137,24 @@ describe "Group", ActiveSupport::TestCase do
 
     end
 
+    context "Reversed parameters" do
+
+      setup do
+        @north.grading.merge!({:mpg => {:fail => 20, :pass => 40}})
+        @north.save
+      end
+
+      specify "certain parameters are graded in a reverse fashion" do
+        @north.grade(:mpg, 30).should.equal Group::Grade::WARN
+
+        @north.grade(:mpg, 40).should.equal Group::Grade::PASS
+        @north.grade(:mpg, 50).should.equal Group::Grade::PASS
+
+        @north.grade(:mpg, 20).should.equal Group::Grade::FAIL
+        @north.grade(:mpg, 10).should.equal Group::Grade::FAIL
+      end
+
+    end
+
   end
 end
