@@ -44,11 +44,11 @@
     <%= duration_format(report.data[:duration]) -%>
   </td>
   <td>
-    <%= mpg_format report.data[:miles] -%>
+    <%= report.data[:miles] -%>
   </td>
   <td>
     <%= status_icon report.data[:report_card][:mpg] -%>
-    <%= report.data[:mpg] -%>
+    <%= mpg_format report.data[:mpg] -%>
   </td>
   <td>
     <%= status_icon report.data[:report_card][:speed_events] -%>
