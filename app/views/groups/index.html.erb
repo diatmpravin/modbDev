@@ -24,10 +24,12 @@
 
   <div class="groupList">
     <% group_tree(current_user.groups.of_devices) do |group, level| %>
-      <span class="handle"></span>
+      <span class="edit"><%= link_to 'Edit', edit_group_path(group), :title => 'Edit Group' %></span>
+      <span class="handle" title="Move Group"></span>
       <span class="checkbox"></span>
       <span class="collapsible closed"></span>
       <span class="name"><%= group.name %></span>
+      <!--<span><%= link_to 'Edit', edit_group_path(group), :class => 'edit' %></span>-->
     <% end %>
   </div>
   
@@ -50,4 +52,7 @@
     <%= hidden_field_tag 'group[parent_id]', '', :class => 'parent_id' %>
   <% end -%>
   <p>This will move the group "<span class="from"></span>" under "<span class="to"></span>". Are you sure?</p>
+</div>
+
+<div id="editGroup" class="dialog" title="Edit group">
 </div>

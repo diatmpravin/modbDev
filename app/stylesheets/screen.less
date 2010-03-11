@@ -882,19 +882,38 @@ div.groupList {
     margin-top:-1px;
   }
   
+  span.edit {
+    background:transparent url(/images/hover_edit.png) no-repeat center center;
+    cursor:pointer;
+    display:none;
+    float:left;
+    height:27px;
+    margin-left:-23px;
+    margin-top:-1px;
+    width:23px;
+    
+    a { display:none; }
+  }
+  
   span.handle {
     background:transparent url(/images/group_move.png) no-repeat center center;
     cursor:move;
     display:none;
     float:left;
-    height:1.75em;
-    width:17px;
+    height:25px;
+    width:20px;
   }
+  
+  /*span.checkbox {
+    background:transparent url(/images/unchecked.png) no-repeat center center;
+    float:left;
+    width:19px;
+  }*/
   
   span.name {
     display:block;
-    height:1.75em;
-    line-height:1.75em;
+    height:25px;
+    line-height:25px;
   }
   
   li.dropHover {
@@ -904,19 +923,20 @@ div.groupList {
   li {
     background-color:#f5ecec;
     border-top:solid 1px #c0c0c0;
-    span.name { padding-left:20px; }
+    cursor:default;
+    span.name { padding-left:24px; }
     
     li {
-      span.name { padding-left:28px; }
+      span.name { padding-left:34px; }
   
       li {
-        span.name { padding-left:36px; }
+        span.name { padding-left:44px; }
         
         li {
-          span.name { padding-left:44px; }
+          span.name { padding-left:54px; }
           
           li {
-            span.name { padding-left:52px; }
+            span.name { padding-left:64px; }
           }
         }
       }

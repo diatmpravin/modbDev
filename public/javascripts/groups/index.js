@@ -2,16 +2,25 @@
  * Groups
  *
  * Constants and functions used on the Group Settings page.
+ *
+ * Note: ideally, the editing would be in a pop-up, but Jason+I would have been stepping
+ * on each others' toes. So for now it is an extra page.
  */
 Groups = {
-
+  dragging: false,
+  
   init: function() {
 
     q('a.delete').live('click', function() {
       q('#removeGroup').find('form').attr('action', this.href).end()
-                        .dialog('open');
+                       .dialog('open');
       return false;
     });
+    
+    q('span.edit').live('click', function() {
+      location.href = q(this).find('a').attr('href');
+    });
+    /*q('a.edit').live('click', Groups.edit); TODO*/
     
     q("#removeGroup").dialog({
       title: 'Remove Group',
@@ -36,6 +45,17 @@ Groups = {
       }
     });
     
+    /*q('#editGroup').dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Save': Groups.save,
+        'Cancel': function() { q(this).dialog('close').errors(); }
+      }
+    }); TODO */
+    
     q(".viewDetails").live('click', Groups.toggleDetails);
     
     new Reports.Form({
@@ -44,7 +64,13 @@ Groups = {
       getSelection: function() { return Groups.getSelected(); }
     });
     
-    q('.groupList li').draggable({helper: 'clone', handle: 'span.handle', opacity:0.8});
+    q('.groupList li').draggable({
+      helper: 'clone',
+      handle: 'span.handle',
+      opacity:0.8,
+      start: function() { Groups.dragging = true; },
+      stop: function() { Groups.dragging = false; }
+    });
     q('.groupList li').droppable({
       hoverClass: 'dropHover',
       greedy: true,
@@ -55,10 +81,13 @@ Groups = {
     });
     
     q('.groupList li').mouseover(function() {
-      q(this).children('span.handle').show();
+      if (!Groups.dragging) {
+        q(this).children('span.edit,span.handle').show();
+      }
+      
       return false;
     }).mouseout(function() {
-      q('span.handle').hide();
+      q('span.handle,span.edit').hide();
     });
   }
   ,
@@ -151,6 +180,39 @@ Groups = {
     return false;
   }
   ,
+  /*edit: function() {
+    q('#editGroup').html('Please wait...').dialog('open').dialogLoader(true);
+    
+    q.get(this.href, function(html) {
+      q('#editGroup').html(html).dialogLoader(false);
+    });
+    
+    return false;
+  }
+  ,
+  update: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() {
+        self.dialogLoader(true);
+      },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          // blargh
+        } else {
+          // blargh
+          self.errors(json.error);
+        }
+      }
+    });
+  } 
+  , TODO */
   /**
    * Return a list of currently selected groups.
    *
