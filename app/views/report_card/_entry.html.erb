@@ -24,7 +24,7 @@
   </td>
   <td class="overall">
     <% display_value = vehicle && report.data[:first_start_time] -%>
-    <%# status_icon group, :first_start_time, report.data[:first_start_time], 1,
+    <%= status_icon report.data[:report_card][:first_start_time],
       :class => display_value ? "status" : "", :show_green => true -%>
 
     <% if display_value -%>
@@ -33,7 +33,7 @@
   </td>
   <td class="overall">
     <% display_value = vehicle && report.data[:last_end_time] -%>
-    <%# status_icon group, :last_end_time, report.data[:last_end_time], 1,
+    <%= status_icon report.data[:report_card][:last_end_time],
       :class => display_value ? "status" : "", :show_green => true -%>
 
     <% if display_value -%>

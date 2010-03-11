@@ -62,14 +62,14 @@ class GroupVehiclesReport < Report
         :idle_events => data.idle_events,
         :aggressive_events => data.aggressive_events,
         :after_hours_events => data.after_hours_events,
-        :first_start_time => data.first_start_time,
-        :last_end_time => data.last_end_time,
+        :first_start_time => data.first_start_time.in_time_zone(data.time_zone),
+        :last_end_time => data.last_end_time.in_time_zone(data.time_zone),
         :report_card => {}
       }
 
       Group::Grade::VALID_PARAMS.each do |param|
         tmp[:report_card][param] =
-          case @group.grade(param, data.send(param), days)
+          case @group.grade(param, tmp[param], days)
           when Group::Grade::PASS
             "pass"
           when Group::Grade::WARN

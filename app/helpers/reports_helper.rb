@@ -9,7 +9,7 @@ module ReportsHelper
   end
 
   def mpg_format(mpg)
-    "%.1f" % mpg
+    "%.1f" % (mpg || 0).to_f
   end
 
   def average(report, col, rows)

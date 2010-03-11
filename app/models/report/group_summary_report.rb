@@ -86,9 +86,10 @@ class GroupSummaryReport < Report
 
         data = device.daily_data_over(self.start, self.end)
 
-        aggregate[:first_start_time] << data.first_start_time
-        aggregate[:last_end_time] << data.last_end_time
-        aggregate[:mpg] << data.mpg unless data.mpg <= 0
+        aggregate[:first_start_time] << data.first_start_time.in_time_zone(data.time_zone)
+        aggregate[:last_end_time] << data.last_end_time.in_time_zone(data.time_zone)
+
+        aggregate[:mpg] << data.mpg
         aggregate[:duration] += data.duration
         aggregate[:miles] += data.miles
         aggregate[:speed_events] += data.speed_events
@@ -100,8 +101,9 @@ class GroupSummaryReport < Report
         # Report card grading
         report_card[:count] += 1
         Group::Grade::VALID_PARAMS.each do |param|
+          val = aggregate[param].is_a?(Array) ? aggregate[param].last : aggregate[param]
           report_card[param] +=
-            case @group.grade(param, data.send(param), days)
+            case @group.grade(param, val, days)
             when Group::Grade::PASS
               1
             when Group::Grade::WARN
@@ -129,6 +131,8 @@ class GroupSummaryReport < Report
           end
       end
     end
+
+    aggregate[:mpg] = 0 if aggregate[:mpg].is_a?(Array) && aggregate[:mpg].empty?
 
     aggregate[:first_start_time] = aggregate[:first_start_time].compact.sort.first
     aggregate[:last_end_time] = aggregate[:last_end_time].compact.sort.last

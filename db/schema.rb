@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100310204329) do
+ActiveRecord::Schema.define(:version => 20100311164254) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20100310204329) do
     t.time    "first_start_time"
     t.time    "last_end_time"
     t.float   "mpg"
+    t.string  "time_zone",          :default => "Eastern Time (US & Canada)"
   end
 
   create_table "device_profiles", :force => true do |t|

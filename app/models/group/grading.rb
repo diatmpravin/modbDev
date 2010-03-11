@@ -17,10 +17,16 @@ class Group < ActiveRecord::Base
     # Mark which parameters should be handled
     # in the reverse order, aka bigger is good, 
     # smaller is bad
-    PARAM_REVERSED = Hash.new(false).merge({
+    PARAM_REVERSED = {
       :mpg => true,
       :last_end_time => true
-    })
+    }
+
+    # Mark which parameters are time entries
+    TIME_PARAMS = {
+      :first_start_time => true,
+      :last_end_time => true
+    }
 
     PASS = 0
     WARN = 1
@@ -30,6 +36,7 @@ class Group < ActiveRecord::Base
   class GradeProxy
     def initialize(group)
       @group = group
+      @group.grading ||= {}
     end
 
     Group::Grade::VALID_PARAMS.each do |param|
@@ -50,7 +57,12 @@ class Group < ActiveRecord::Base
   # Given an attribute in key and a current value,
   # grade the value according to rules that have been given to this Group.
   def grade(key, value, days = 1)
-    return Grade::PASS if value.is_a?(Time) || value.nil?
+    return Grade::PASS unless value
+
+    # Turn any Time values into an integer representing minutes since midnight
+    if Grade::TIME_PARAMS[key]
+      value = value.seconds_since_midnight / 60
+    end
 
     test = days > 1 ? value / days : value
 
