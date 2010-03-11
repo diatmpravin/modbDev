@@ -88,7 +88,7 @@ class Group < ActiveRecord::Base
 
       if test > equation[:fail].to_i
         Grade::FAIL
-      elsif test < equation[:fail].to_i && test > equation[:pass].to_i
+      elsif test <= equation[:fail].to_i && test > equation[:pass].to_i
         Grade::WARN
       else
         Grade::PASS
