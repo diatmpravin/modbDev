@@ -71,7 +71,7 @@ class GroupVehiclesReport < Report
 
       Group::Grade::VALID_PARAMS.each do |param|
         tmp[:report_card][param] =
-          case @group.grade(param, tmp[param], days)
+          case @group.grade(param, tmp[param], Group::Grade::AVERAGE_PARAMS[param] ? 1 : days)
           when Group::Grade::PASS
             "pass"
           when Group::Grade::WARN

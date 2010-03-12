@@ -22,6 +22,12 @@ class Group < ActiveRecord::Base
       :last_end_time => true
     }
 
+    AVERAGE_PARAMS = {
+      :mpg => true,
+      :first_start_time => true,
+      :last_end_time => true
+    }
+
     # Mark which parameters are time entries
     TIME_PARAMS = {
       :first_start_time => true,
