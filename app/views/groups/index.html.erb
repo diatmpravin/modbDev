@@ -24,19 +24,21 @@
 
   <div class="groupList">
     <% group_tree(current_user.device_group, :include_parent => true) do |group, level| %>
-      <% if level > 0 -%>
-        <span class="tab hover-only">
-          <span class="handle" title="Move Group"></span>
-        </span>
-        <span class="checkbox"></span>
-      <% end -%>
-      <span class="collapsible closed"></span>
-      <% if level > 0 -%>
-        <%= link_to 'Delete', group_path(group), :class => 'delete hover-only', :title => 'Remove Group' %>
-        <%= link_to 'Edit', edit_group_path(group), :class => 'edit hover-only', :title => 'Edit Group' %>
-        <%= link_to 'Live Look', live_look_group_path(group), :class => 'liveLook hover-only', :title => 'Live Look' %>
-      <% end -%>
-      <span class="name"><%= group.name %></span>
+      <div class="group" id="<%= dom_id(group) %>">
+        <% if level > 0 -%>
+          <span class="tab hover-only">
+            <span class="handle" title="Move Group"></span>
+          </span>
+          <span class="checkbox"></span>
+        <% end -%>
+        <span class="collapsible closed"></span>
+        <% if level > 0 -%>
+          <%= link_to 'Delete', group_path(group), :class => 'delete hover-only', :title => 'Remove Group' %>
+          <%= link_to 'Edit', edit_group_path(group), :class => 'edit hover-only', :title => 'Edit Group' %>
+          <%= link_to 'Live Look', live_look_group_path(group), :class => 'liveLook hover-only', :title => 'Live Look' %>
+        <% end -%>
+        <span class="name"><%= group.name %></span>
+      </div>
     <% end %>
   </div>
   

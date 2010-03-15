@@ -38,7 +38,7 @@ module GroupsHelper
         group.children.map {|g| group_tree(g, options, level + 1, &block)}.join,
         level > options[:close_level] ? {:style => 'display:none'} : {}
       ) : nil
-      ].join, li_options.merge(:id => dom_id(group))
+      ].join, li_options
     )
     
     level > 0 ? html : concat(content_tag(:ol, html))

@@ -17,9 +17,6 @@ Groups = {
       return false;
     });
     
-    q('span.edit').live('click', function() {
-      location.href = q(this).find('a').attr('href');
-    });
     /*q('a.edit').live('click', Groups.edit); TODO*/
     
     q("#removeGroup").dialog({
@@ -64,7 +61,7 @@ Groups = {
       getSelection: function() { return Groups.getSelected(); }
     });
     
-    q('.groupList li').draggable({
+    q('div.group').draggable({
       helper: 'clone',
       handle: 'span.handle',
       opacity: 0.8,
@@ -72,7 +69,7 @@ Groups = {
       stop: function() { Groups.dragging = false; }
     });
     
-    q('.groupList li').droppable({
+    q('div.group').droppable({
       hoverClass: 'drop-hover',
       greedy: true,
       //tolerance: 'pointer',
@@ -81,7 +78,7 @@ Groups = {
       }
     });
     
-    q('.groupList li').mouseover(function() {
+    q('div.group').mouseover(function() {
       if (!Groups.dragging) {
         q(this).addClass('hover');
       }
@@ -159,18 +156,21 @@ Groups = {
         if (json.status == 'success') {
           self.dialog('close');
           
+          var dropGroupElement = self.data('dropGroup').parent();
+          var dragGroupElement = self.data('dragGroup').parent();
+          
           // Get the sub-list, or create it if it isn't there
-          var list = self.data('dropGroup').find('ol');
+          var list = dropGroupElement.find('ol');
           if (list.length == 0) {
-            list = q('<ol></ol>').appendTo(self.data('dropGroup'));
+            list = q('<ol></ol>').appendTo(dropGroupElement);
           }
           
           // Append the dropped element to the list, then sort alphabetically
-          self.data('dragGroup').hide().appendTo(list);
+          dragGroupElement.hide().appendTo(list);
           list.sort(function(a,b) {
-            return q(a).children('span.name').text() > q(b).children('span.name').text() ? 1 : -1
+            return q(a).children('div').children('span.name').text() > q(b).children('div').children('span.name').text() ? 1 : -1
           });
-          self.data('dragGroup').show().effect('highlight', {}, 'slow');
+          dragGroupElement.show().effect('highlight', {}, 'slow');
         } else {
           self.errors(json.error);
         }

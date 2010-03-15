@@ -733,7 +733,7 @@ input.tagEntry {
 /*************
  * Groups
  *************/
-#groupsWrapper {
+/*#groupsWrapper {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -777,7 +777,7 @@ input.tagEntry {
   border-top: none;
   padding: 1em;
   padding-right: 5px;
-}
+}*/
 
 /* Group Select Widget */
 div.groupSelect {
@@ -873,6 +873,14 @@ div.groupList {
   border:solid 1px #c0c0c0;
   width:500px;
   
+  div.group {
+    background-color:#f5ecec;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    width:500px;
+  }
+  
   ol {
     list-style:none;
     margin:0;
@@ -892,10 +900,23 @@ div.groupList {
     display:none;
   }
   
-  li.hover {
+  div.hover {
     background-color:#eddede;
     
     > .hover-only {
+      display:block;
+    }
+  }
+  
+  div.drop-hover {
+    background-color:#bcebf3;
+  }
+  
+  div.ui-draggable-dragging {
+    border-bottom:solid 1px #c0c0c0;
+    border-right:solid 1px #c0c0c0;
+    
+    span.tab {
       display:block;
     }
   }
@@ -936,18 +957,13 @@ div.groupList {
     line-height:25px;
   }
   
-  li.drop-hover {
-    background-color:#bcebf3;
-  }
-  
   li.root {
-    > span.name { font-style:italic; }
+    > div {
+      span.name { font-style:italic; }
+    }
   }
   
   li {
-    background-color:#f5ecec;
-    border-top:solid 1px #c0c0c0;
-    cursor:default;
     span.name { padding-left:30px; }
     
     li {
