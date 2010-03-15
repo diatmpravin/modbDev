@@ -20,8 +20,10 @@ module ReportCardHelper
         "red"
       end
 
-    content_tag :div, {:class => "status"}.merge(options) do
-      image_tag "grade/#{image}.png"
+    if image
+      content_tag :div, {:class => "status"}.merge(options) do
+        image_tag "grade/#{image}.png"
+      end
     end
   end
 end

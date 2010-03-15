@@ -24,6 +24,10 @@ class DeviceDataPerDay < ActiveRecord::Base
   default_value_for :aggressive_events, 0
   default_value_for :after_hours_events, 0
 
+  def zone
+    ActiveSupport::TimeZone[self[:time_zone]]
+  end
+
   # Merge another instance of this class into this instance
   def merge!(other)
     return unless other

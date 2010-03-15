@@ -56,13 +56,13 @@ class GroupSummaryReport < Report
       :first_start_time => [],
       :last_end_time => [],
       :mpg => [],
-      :duration => 0,
-      :miles => 0,
-      :speed_events => 0,
-      :geofence_events => 0,
-      :idle_events => 0,
-      :aggressive_events => 0,
-      :after_hours_events => 0,
+      :duration => [],
+      :miles => [],
+      :speed_events => [],
+      :geofence_events => [],
+      :idle_events => [],
+      :aggressive_events => [],
+      :after_hours_events => [],
     }
 
     report_card = {
@@ -86,22 +86,26 @@ class GroupSummaryReport < Report
 
         data = device.daily_data_over(self.start, self.end)
 
-        aggregate[:first_start_time] << data.first_start_time
-        aggregate[:last_end_time] << data.last_end_time
-        aggregate[:mpg] << data.mpg unless data.mpg <= 0
-        aggregate[:duration] += data.duration
-        aggregate[:miles] += data.miles
-        aggregate[:speed_events] += data.speed_events
-        aggregate[:geofence_events] += data.geofence_events
-        aggregate[:idle_events] += data.idle_events
-        aggregate[:aggressive_events] += data.aggressive_events
-        aggregate[:after_hours_events] += data.after_hours_events
+        aggregate[:first_start_time] << (data.first_start_time ? 
+          data.first_start_time.in_time_zone(data.time_zone) : nil)
+        aggregate[:last_end_time] << (data.last_end_time ? 
+          data.last_end_time.in_time_zone(data.time_zone) : nil)
+
+        aggregate[:mpg] << data.mpg
+        aggregate[:duration] << data.duration
+        aggregate[:miles] << data.miles
+        aggregate[:speed_events] << data.speed_events
+        aggregate[:geofence_events] << data.geofence_events
+        aggregate[:idle_events] << data.idle_events
+        aggregate[:aggressive_events] << data.aggressive_events
+        aggregate[:after_hours_events] << data.after_hours_events
 
         # Report card grading
         report_card[:count] += 1
         Group::Grade::VALID_PARAMS.each do |param|
+          val = aggregate[param].last
           report_card[param] +=
-            case @group.grade(param, data.send(param), days)
+            case @group.grade(param, val, Group::Grade::AVERAGE_PARAMS[param] ? 1 : days)
             when Group::Grade::PASS
               1
             when Group::Grade::WARN
@@ -112,6 +116,17 @@ class GroupSummaryReport < Report
         end
       end
     end
+
+    aggregate[:duration] = aggregate[:duration].sum
+    aggregate[:miles] = aggregate[:miles].sum
+    aggregate[:speed_events] = aggregate[:speed_events].sum
+    aggregate[:geofence_events] = aggregate[:geofence_events].sum
+    aggregate[:idle_events] = aggregate[:idle_events].sum
+    aggregate[:aggressive_events] = aggregate[:aggressive_events].sum
+    aggregate[:after_hours_events] = aggregate[:after_hours_events].sum
+
+    aggregate[:first_start_time] = aggregate[:first_start_time].compact.sort.first
+    aggregate[:last_end_time] = aggregate[:last_end_time].compact.sort.last
 
     if report_card[:count] > 0
       aggregate[:mpg] = 
@@ -130,8 +145,7 @@ class GroupSummaryReport < Report
       end
     end
 
-    aggregate[:first_start_time] = aggregate[:first_start_time].compact.sort.first
-    aggregate[:last_end_time] = aggregate[:last_end_time].compact.sort.last
+    aggregate[:mpg] = 0 if aggregate[:mpg].is_a?(Array) && aggregate[:mpg].empty?
 
     self.data = aggregate.merge(:name => @group.name)
   end

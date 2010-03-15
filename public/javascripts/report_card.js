@@ -79,25 +79,30 @@
      */
     requestSubgroupData: function(href, row, callback) {
       var range_type = $("#range_type").val();
-      $.ajax({
-        url: href + "&range_type=" + range_type,
-        beforeSend: function() {
-          row.find("span").hide();
-          row.find(".busy").show();
-        },
-        complete: function() {
-          row.find(".busy").hide();
-        },
-        error: function() {
-          row.find(".expand").show();
-        },
-        success: function(html) {
-          row.after(html);
-          row.data("filled", true);
+      if(!row.data("running")) {
+        $.ajax({
+          url: href + "&range_type=" + range_type,
+          beforeSend: function() {
+            row.data("running", true);
 
-          callback();
-        }
-      });
+            row.find("span").hide();
+            row.find(".busy").show();
+          },
+          complete: function() {
+            row.data("running", false);
+            row.find(".busy").hide();
+          },
+          error: function() {
+            row.find(".expand").show();
+          },
+          success: function(html) {
+            row.after(html);
+            row.data("filled", true);
+
+            callback();
+          }
+        });
+      }
     }
   };
 

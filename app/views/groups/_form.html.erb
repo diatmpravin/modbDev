@@ -23,10 +23,12 @@
 
   <% proxy = group.grade_proxy -%>
   <h3>Group Parameters</h3>
+  <p>Values shown here are [key] [pass] - [fail]</p>
+  <p>The values that are reversed (aka, less is fail, more is pass) are <strong><%= Group::Grade::PARAM_REVERSED.keys.join(", ") -%></strong></p>
   <% Group::Grade::VALID_PARAMS.each do |param| -%>
     <div>
       <span><%= param.to_s.humanize.titleize -%></span> <span class="pass"></span> - <span class="fail"></span>
-      <div id="<%= param -%>_events_slider" class="slider">
+      <div id="<%= param -%>_events_slider" class="<%= Group::Grade::TIME_PARAMS[param] ? "time-slider" : "slider" -%> <%= Group::Grade::PARAM_REVERSED[param] ? "reversed" : "" -%>">
         <%= hidden_field_tag "group[grading][#{param}][fail]", proxy.send(param)[:fail], :class => "fail" -%>
         <%= hidden_field_tag "group[grading][#{param}][pass]", proxy.send(param)[:pass], :class => "pass" -%>
       </div>

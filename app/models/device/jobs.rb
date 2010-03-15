@@ -23,6 +23,7 @@ class Device < ActiveRecord::Base
 
     self.daily_data.create(
       :date => day.to_date,
+      :time_zone => self.time_zone,
       :miles => day_trips.map {|t| t.miles}.sum,
       :duration => day_trips.map {|t| t.duration}.sum,
       :mpg => day_trips.size > 0 ? day_trips.map {|t| t.average_mpg}.sum / day_trips.size.to_f : 0,
