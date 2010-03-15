@@ -888,31 +888,44 @@ div.groupList {
     height:25px;
   }
   
-  span.edit {
-    background:transparent url(/images/hover_edit.png) no-repeat center center;
-    cursor:pointer;
+  .hover-only {
     display:none;
-    float:left;
+  }
+  
+  li.hover {
+    background-color:#eddede;
+    
+    > .hover-only {
+      display:block;
+    }
+  }
+  
+  span.tab {
+    background:transparent url(/images/list_hover_tab.png) no-repeat center center;
     height:27px;
+    float:left;
     margin-left:-23px;
     margin-top:-1px;
     width:23px;
-    
-    a { display:none; }
   }
   
   span.handle {
     background:transparent url(/images/group_move.png) no-repeat center center;
     cursor:move;
-    display:none;
-    float:left;
-    width:20px;
+    height:27px;
+    width:23px;
   }
   
   span.checkbox {
     background:transparent url(/images/unchecked.png) no-repeat center center;
     float:left;
     width:19px;
+  }
+  
+  a.edit, a.delete, a.liveLook {
+    float:right;
+    height:25px;
+    width:22px;
   }
   
   span.collapsible {
@@ -923,7 +936,7 @@ div.groupList {
     line-height:25px;
   }
   
-  li.dropHover {
+  li.drop-hover {
     background-color:#bcebf3;
   }
   
@@ -1111,16 +1124,18 @@ td.buttons a {
   float:left;
   margin:0 4px 0 4px;
 }
+
 a.edit {
-  background:transparent url(/images/edit.png) no-repeat top left;
+  background:transparent url(/images/edit.png) no-repeat center center;
   width:16px;
   height:16px;
   display:block;
   text-indent:-999em;
   overflow:hidden;
 }
+
 a.delete {
-  background:transparent url(/images/delete.png) no-repeat top left;
+  background:transparent url(/images/delete.png) no-repeat center center;
   width:16px;
   height:16px;
   display:block;
@@ -1129,7 +1144,7 @@ a.delete {
 }
 
 a.liveLook {
-  background:transparent url(/images/globe.png) no-repeat top left;
+  background:transparent url(/images/globe.png) no-repeat center center;
   width:16px;
   height:16px;
   display:block;

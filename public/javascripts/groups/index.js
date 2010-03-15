@@ -67,14 +67,15 @@ Groups = {
     q('.groupList li').draggable({
       helper: 'clone',
       handle: 'span.handle',
-      opacity:0.8,
+      opacity: 0.8,
       start: function() { Groups.dragging = true; },
       stop: function() { Groups.dragging = false; }
     });
+    
     q('.groupList li').droppable({
-      hoverClass: 'dropHover',
+      hoverClass: 'drop-hover',
       greedy: true,
-      tolerance: 'pointer',
+      //tolerance: 'pointer',
       drop: function(event, ui) {
         Groups.confirmMove(ui.draggable, q(this));
       }
@@ -82,12 +83,12 @@ Groups = {
     
     q('.groupList li').mouseover(function() {
       if (!Groups.dragging) {
-        q(this).children('span.edit,span.handle').show();
+        q(this).addClass('hover');
       }
       
       return false;
     }).mouseout(function() {
-      q('span.handle,span.edit').hide();
+      q('.hover').removeClass('hover');
     });
   }
   ,
@@ -142,7 +143,6 @@ Groups = {
     q('#moveGroup span.to').text(dropGroup.children('span.name').text());
     
     q('#moveGroup').dialog('open');
-    q('span.handle').hide();
   }
   ,
   move: function() {
