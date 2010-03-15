@@ -90,7 +90,22 @@ module TestShell
       Dispatcher.cleanup_application
       Dispatcher.reload_application
       Test::Spec::CONTEXTS.clear
-      $LOAD_FAIL_TABLE = {}
+      
+      # Hopefully, this solves the problem with namespaces?
+      #loaded_files = Dir.glob('../app/**/*.rb') + Dir.glob('../lib/**/*.rb')
+      #loaded_files.map! {|x| File.expand_path(x)}
+      
+      #loaded_files.each do |file|
+      #  $".delete(file)
+      #end
+      
+      #$".select {|x| x =~ /#{Regexp.escape(project_path)}/}.reject {|x| x =~ /vendor/}.each do |loaded|
+        #$".delete(loaded)
+      #end
+      
+      # Check it out: this keeps track of classes and modules that "failed" to load.
+      # Usually, that means they are namespaced models or controllers.
+      #@@failed_loads = {}
     end
 
     # VERY EXPERIMENTAL. This is an attempt to handle migrated tables/models
@@ -118,14 +133,7 @@ module TestShell
       # TODO: What about those pesky namespaced models and controllers?
     end
     
-    # These are the guts. Reload, load the desired tests, run them, and return.
-    #
-    # Approach #1:
-    #   run_tests_for(:alert_recipient_test)
-    #
-    # Approach #2:
-    #   run_tests_for('*', [list of directories], 'Suite Title')
-    #
+    # The guts. Reload, load the given pattern, and run.
     def run_tests_for(test_pattern)
       reload!
       
@@ -144,13 +152,18 @@ module TestShell
         title = 'Integration Tests'
         pattern = 'integration/**/*'
       else
+        # A title of "nil" will be filled in after the tests are loaded
         title = nil
         pattern = test_pattern.gsub(':', '/')
       end
       
       files = Dir.glob("#{pattern}.rb")
-      files.each {|file| load file}
+      files.each do |file|
+        load file
+        print '.'
+      end
       
+      # No title yet? Pull the "best" title out of the list of contexts
       if !title
         if Test::Spec::CONTEXTS.any?
           title = Test::Spec::CONTEXTS.keys.sort.first
@@ -166,6 +179,7 @@ module TestShell
         suite << container.testcase.suite
       end
       
+      # Run the test suite and return true/false
       Test::Unit::UI::Console::TestRunner.run(suite).passed?
     end
     
