@@ -6,6 +6,8 @@ describe "Maps Controller", ActionController::TestCase do
   setup do
     login_as :quentin
     @account = accounts(:quentin)
+
+    Tracker.any_instance.stubs(:async_configure)
   end
   
   context "Main maps page" do
