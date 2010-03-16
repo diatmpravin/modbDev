@@ -128,6 +128,19 @@ a:hover {
   clear:both;
 }
 
+/* clearfix - semantic? valid? who cares? */
+.clearfix {
+  zoom:1;
+}
+.clearfix:after {
+  clear:both;
+  content:" ";
+  display:block;
+  font-size:0;
+  height:0;
+  visibility:hidden;
+}
+
 .center {
   text-align:center;
 }
