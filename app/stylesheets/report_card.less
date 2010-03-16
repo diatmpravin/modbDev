@@ -1,7 +1,7 @@
 /**
  * Styles for the report card page
  */
-#report_card {
+/*#report_card {
 
   table {
     width: 100%;
@@ -87,5 +87,26 @@
   .busy,
   .collapse {
     display: none;
+  }
+}*/
+
+#report_card {
+  min-width:900px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  
+  #content {
+    padding-bottom:0;
+  }
+  
+  #frame {
+    background-color:red;
+    color:white;
+    width:100%;
+    
+    #data_pane {
+      height:100%;
+      overflow-y:scroll;
+    }
   }
 }

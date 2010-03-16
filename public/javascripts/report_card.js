@@ -5,7 +5,9 @@
 
   ReportCard = {
     init: function() {
-
+      $('#frame').fitWindow(function(width, height) {
+        $('#frame').height(height - 32);
+      });
     }
     ,
     toggleGroup: function() {
