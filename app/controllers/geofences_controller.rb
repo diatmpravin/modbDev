@@ -47,7 +47,11 @@ class GeofencesController < ApplicationController
   def destroy
     current_account.geofences.destroy(params[:id])
 
-    redirect_to geofences_path(@group)
+    unless @group.nil?  
+      redirect_to group_geofences_path(@group)
+    else
+      redirect_to geofences_path
+    end
   end
 
   protected
@@ -77,7 +81,11 @@ class GeofencesController < ApplicationController
     params[:geofence]['device_group_ids'] ||= []
     
     if @geofence.update_attributes(params[:geofence])
-      redirect_to geofences_path(@group)
+      unless @group.nil?
+        redirect_to group_geofences_path(@group)
+      else
+        redirect_to geofences_path
+      end
     else
       render :action => @geofence.new_record? ? 'new' : 'edit'
     end
