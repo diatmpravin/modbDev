@@ -964,6 +964,32 @@ describe "Device", ActiveSupport::TestCase do
       @device.save
       @device.save
     end
+
+    specify "doesn't attempt to update if no tracker present" do
+      @device.tracker = nil
+      @device.speed_threshold = 80
+      @device.rpm_threshold = 6000
+      @device.idle_threshold = 20
+
+      Tracker.any_instance.expects(:async_configure).never
+      @device.save      
+    end
+
+    specify "if settings are unchanged, but a tracker is added, updates are sent" do
+      @device.tracker = nil
+      @device.speed_threshold = 80
+      @device.rpm_threshold = 6000
+      @device.idle_threshold = 20
+ 
+      # save with no tracker
+      @device.save
+
+      # now make no modifications, but add a tracker
+      @device.tracker = trackers(:quentin_tracker)
+      Tracker.any_instance.expects(:async_configure)
+      @device.save
+    end
+
   end
 
   context "Calculating and storing daily data" do

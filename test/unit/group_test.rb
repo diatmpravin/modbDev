@@ -5,6 +5,8 @@ describe "Group", ActiveSupport::TestCase do
     Group.rebuild!
     @account = accounts(:quentin)
     @north = groups(:north)
+
+    Tracker.any_instance.stubs(:async_configure)
   end
 
   specify "belongs to an account" do

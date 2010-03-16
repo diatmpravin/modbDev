@@ -49,6 +49,30 @@ describe "Geofences Controller", ActionController::TestCase do
       assigns(:geofences).length.should.be 1
     end
 
+    specify "works nested for a group" do
+      Group.rebuild!
+
+      parent_group = groups(:north)
+      child_group = Group.generate! :name => "child"
+      child_group.move_to_child_of parent_group
+
+      parent_fence = Geofence.generate! :name => "parent_geo"
+      parent_fence.device_groups << parent_group #unless parent_fence.device_groups.include? parent_group
+      parent_fence.should.save
+
+      child_fence = Geofence.generate! :name => "child_geo"
+      child_fence.device_groups << child_group
+      child_fence.should.save
+
+
+      get :index, :group_id => child_group.id
+      template.should.be 'index'
+
+      assigns(:group).should.equal child_group
+      assigns(:geofences).length.should.equal 2
+      assigns(:geofences).should.include? parent_fence
+      assigns(:geofences).should.include? child_fence
+    end
   end
   
 #  context "Index - JSON" do

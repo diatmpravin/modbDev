@@ -36,6 +36,7 @@
           <%= link_to 'Delete', group_path(group), :class => 'delete hover-only', :title => 'Remove Group' %>
           <%= link_to 'Edit', edit_group_path(group), :class => 'edit hover-only', :title => 'Edit Group' %>
           <%= link_to 'Live Look', live_look_group_path(group), :class => 'liveLook hover-only', :title => 'Live Look' %>
+          <%= link_to 'Geofences', group_geofences_path(group), :class => 'geofence hover-only', :title => 'Geofences' %>
         <% end -%>
         <span class="name"><%= group.name %></span>
       </div>
