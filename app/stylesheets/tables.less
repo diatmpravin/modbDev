@@ -1,0 +1,71 @@
+/*
+--------------------------------------------------------------------------------
+What:	"Oranges in the sky" Styles(Table data design)
+Who:	Krasimir Makaveev(krasi [at] makaveev [dot] com)
+When:	15.09.2005(created)
+
+only slightly modified, and then a little bit more modified, and then lessified
+--------------------------------------------------------------------------------
+*/
+
+table.data {
+	border-left:1px solid #ccc;
+	border-top:1px solid #ccc;
+	color:#333;
+  
+  thead {
+    tr {
+      th {
+        background:#e2e2e2;
+        text-align:left;
+      }
+      
+      th.csv {
+        background:#f6f6f6;
+        text-align:left;
+      }
+    }
+    
+    td, th {
+      border-right:1px solid #ccc;
+	    border-bottom:1px solid #ccc;
+	    padding:5px;
+	    vertical-align:top;
+      text-align:left;
+    }
+    
+    tr.odd {
+      td, th {
+        background:#efefef;
+      }
+    }
+    
+    td.checkbox, th.checkbox {
+      text-align:center;
+      width:2em;
+    }
+  }
+}
+
+/* this part will go away, no more "new row" New Buttons */
+tr.newRow {
+  td {
+    background-color:#c9f5c3;
+    
+    a {
+      /*background-color:#c9f5c3;*/
+      color:black;
+      display:block;
+      text-align:center;
+      width:100%;
+      
+      :hover {
+        text-decoration:none;
+      }
+    }
+    
+    :hover {
+      background-color:#a6ec9c;
+    }
+  }
+}

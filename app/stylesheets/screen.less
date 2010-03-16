@@ -63,15 +63,18 @@ label.checkbox {
 ul {
   padding-left:16px;
 }
+
 ul label {
   float:none;
   padding:0;
 }
+
 input[type=text], select, textarea {
   border:1px solid #bbb;
   margin:1px 0;
   padding:1px 1px;
 }
+
 select {
   vertical-align:middle;
 }
@@ -120,28 +123,37 @@ a:hover {
   color: red;
   font-weight: bold;
 }
+
 .clear {
   clear:both;
 }
+
 .center {
   text-align:center;
 }
+
 .spacer {
   padding-bottom:16px;
 }
+
 .break {
   border-top:solid 1px #1a1a1a;
 }
+
 img.busy {
   display: none;
   vertical-align: middle;
 }
+
 .key { text-align: right; }
+
 .value { font-weight: bold; }
+
 .note {
   font-style:italic;
   font-size:86%;
 }
+
 .seperator {
   border-bottom: 1px solid #1a1a1a;
   width: 95%;
@@ -226,7 +238,6 @@ a.close {
   color:black;
   float:right;
 }
-
 
 /* basic containers */
 #layout {
@@ -1602,121 +1613,6 @@ ul.summary li.summary7 { background-position:0 -150px; }
   margin-bottom: 2em;
 }
 
-/* Phone Finder */
-#phoneFinder {
-  float:right;
-  width:362px;
-  background-color:white;
-  margin:16px;
-}
-#phoneFinder h2 {
-  font-size:120%;
-  font-weight:bold;
-  margin-bottom:16px;
-}
-#phoneFinder .loading {
-  position:absolute;
-  z-index:5;
-  background-image:url(/images/phone_finder/big-spinner.gif);
-  width:32px;
-  height:32px;
-  padding:0;
-  margin:0;
-}
-#phoneFinderContent {
-  height:298px;
-  padding:16px;
-}
-#phoneFinder .content {
-  height:280px;
-}
-#phoneFinder div.back {
-  position:relative;
-  bottom:0px;
-  clear:both;
-}
-#phoneFinder div.back a {
-  background:url(/images/phone_finder/back_arrow.gif) no-repeat left center;
-  padding-left:12px;
-}
-#phoneFinder .carrierContainer {
-  background:transparent url(/images/phone_finder/one.gif) no-repeat 0 16px;
-  padding:32px 0px 0px 64px;
-  min-height:100px;
-}
-#phoneFinder .searchContainer {
-  background:transparent url(/images/phone_finder/two.gif) no-repeat 0 16px;
-  padding:32px 0px 0px 64px;
-  min-height:100px;
-}
-#phoneFinder #or {
-  font-style:italic;
-  font-weight:bold;
-  padding:16px 0px 16px 48px;
-}
-#phoneFinder .listContainer {
-  background:transparent url(/images/phone_finder/three.gif) no-repeat 0 16px;
-  padding:32px 0px 0px 64px;
-  min-height:100px;
-}
-#phoneFinder .phoneList {
-  overflow:auto;
-  height:200px;
-}
-#phoneFinder .phoneList .phone a {
-  text-decoration:none;
-  display:block;
-  border:solid 1px #fff;
-  height:16px;
-}
-#phoneFinder .phoneList .phone a:hover {
-  text-decoration:none;
-  height:70px;
-  border:solid 1px #ccc;
-}
-#phoneFinder .phoneList .phone a img {
-  height:100%;
-  vertical-align:middle;
-  padding-right:66px;
-}
-#phoneFinder .phoneList .phone a:hover img {
-  padding-right:34px;
-}
-#phoneFinder .phoneContainer {
-}
-#phoneFinder .green-box {
-  margin-bottom:5px;
-  min-height:25px;
-  padding:8px 16px 4px 52px;
-  border:1px solid #DFDEDE;
-  background: url(/images/phone_finder/green.gif) no-repeat 10px center #F0FAE3;
-  color:#393939;
-}
-#phoneFinder .yellow-box {
-  margin-bottom:5px;
-  min-height:25px;
-  padding:8px 16px 4px 52px;
-  border:1px solid #DFDEDE;
-  background:#FFFACB url(/images/phone_finder/yellow.gif) no-repeat 10px center;
-  color:#393939;
-}
-#phoneFinder .red-box {
-  margin-bottom:5px;
-  min-height:25px;
-  padding:8px 16px 4px 52px;
-  border:1px solid #DFDEDE;
-  background:#FFF1EA url(/images/phone_finder/red.gif) no-repeat 10px center;
-  color:#393939;
-}
-#phoneFinder .info-box {
-  margin-bottom:5px;
-  min-height:25px;
-  padding:8px 16px 4px 16px;
-  border:1px solid #DFDEDE;
-  background:#f1f5fa;
-  color:#393939;
-}
-
 /* Contacts page */
 #contacts #settingsContainer {
   margin: auto;
@@ -1760,159 +1656,6 @@ ul.summary li.summary7 { background-position:0 -150px; }
   margin: 0 -4px 0 0;
 }
 
-/* Superfish - drop-down menu styling */
-@import "superfish";
-
-/* Custom MapQuest View Control */
-.moshiViewControl {
-  position:absolute;
-  z-index:176;
-  width:210px;
-  height:22px;
-  margin:0;
-  padding:0;
-}
-.moshiViewControl ul {
-  margin:0;
-  padding:0;
-}
-.moshiViewControl li {
-  display:block;
-  position:relative;
-  overflow:hidden;
-  float:left;
-  width:70px;
-  height:22px;
-  margin:0;
-  padding:0;
-  list-style-type:none;
-}
-.moshiViewControl li img {
-  position:absolute;
-  cursor:pointer;
-  _cursor:hand;
-}
-.streetView img, .aerialView img, .hybridView img {
-  top:-1px;
-}
-.streetView img.hover, .aerialView img.hover, .hybridView img.hover {
-  top:-24px;
-}
-.streetView img.selected, .aerialView img.selected, .hybridView img.selected {
-  top:-47px;
-  cursor:default;
-  _cursor:default;
-}
-
-/* Custom MapQuest Zoom Control */
-.moshiZoomControl {
-  position:absolute;
-  z-index:175;
-  width:56px;
-  height:309px;
-  margin:0;
-  padding:0;
-}
-.moshiZoomControl > div {
-  position:absolute;
-}
-.moshiZoomControl ul {
-  z-index:176;
-  width:40px;
-  margin:0;
-  padding:8px 6px 0 6px;
-}
-.moshiZoomControl li {
-  margin:0;
-  padding:0;
-  list-style-type:none;
-}
-.compass {
-  position:relative;
-  overflow:hidden;
-  width:40px;
-  height:40px;
-}
-.compassMap {
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:105;
-  width:40px;
-  height:40px;
-}
-.compass img {
-  position:absolute;
-  top:0;
-  left:0;
-  width:200px;
-  height:40px;
-}
-.compass img.n {
-  left:-40px;
-}
-.compass img.e {
-  left:-80px;
-}
-.compass img.s {
-  left:-120px;
-}
-.compass img.w {
-  left:-160px;
-}
-.zoom {
-  position:relative;
-  padding-top:5px;
-}
-.zoom img {
-  cursor: pointer;
-  _cursor: hand;
-}
-.zoomIn, .zoomOut {
-  position:relative;
-  left:10px;
-  overflow:hidden;
-  width:20px;
-  height:20px;
-}
-.zoomIn img, .zoomOut img {
-  position:absolute;
-  width:40px;
-  height:20px;
-}
-.zoomIn img.hover, .zoomOut img.hover {
-  left:-20px;
-}
-.zoomOut {
-  margin-top:4px;
-}
-.zoomBox {
-  display:block;
-  position:relative;
-  width:24px;
-  height:175px;
-  margin:7px 0 0 9px;
-  overflow:hidden;
-}
-.zoomBox img {
-  position:absolute;
-  width:408px;
-  height:175px;
-}
-.zoomBox img.zoomLinks {
-  width:24px;
-  height:175px;
-  left:0;
-  top:0;
-}
-.zoomBox img.zoomOn {
-  left:0;
-  top:0;
-  width:24px;
-  height:9px;
-  z-index:3;
-}
-
 /* Shape Chooser */
 #shapeChooser {
   width:111px;
@@ -1943,7 +1686,6 @@ ul.summary li.summary7 { background-position:0 -150px; }
   background-image:url(/images/shape_select_polygon.gif);
 }
 
-
 /* Admin Portal Styles */
 
 .tracker .field label {
@@ -1959,71 +1701,6 @@ ul.summary li.summary7 { background-position:0 -150px; }
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
- 
-@import "navigation.less";
-@import "filter.less";
-@import "import.less";
-@import "report_card.less";
-
-/*
---------------------------------------------------------------------------------
-What:	"Oranges in the sky" Styles(Table data design)
-Who:	Krasimir Makaveev(krasi [at] makaveev [dot] com)
-When:	15.09.2005(created)
-
-only slightly modified
---------------------------------------------------------------------------------
-*/
-
-table.data {
-	border-left:1px solid #ccc;
-	border-top:1px solid #ccc;
-	color:#333;
-}
-table.data thead tr th {
-	background:#e2e2e2;
-  text-align:left;
-}
-table.data thead tr th.csv {
-  background:#f6f6f6;
-  text-align:left;
-}
-table.data td, table.data th {
-	border-right:1px solid #ccc;
-	border-bottom:1px solid #ccc;
-	padding:5px;
-	vertical-align:top;
-  text-align:left;
-}
-table.data tr.odd th, table.data tr.odd td {
-	background:#efefef;
-}
-table.data th.checkbox, table.data td.checkbox {
-  text-align:center;
-  width:2em;
-}
-tr.newRow {
-  td {
-    background-color:#c9f5c3;
-    
-    a {
-      /*background-color:#c9f5c3;*/
-      color:black;
-      display:block;
-      text-align:center;
-      width:100%;
-      
-      :hover {
-        text-decoration:none;
-      }
-    }
-    
-    :hover {
-      background-color:#a6ec9c;
-    }
-  }
-}
-
 
 /* Auto-complete drop-down styles */
 .ac_results {
@@ -2112,3 +1789,12 @@ div.pagination span.disabled {
   border: 1px solid #EEE;
   color: #DDD; 
 }
+
+/* Additional Styles */
+@import "superfish.less";
+@import "mapquest_custom.less";
+@import "navigation.less";
+@import "filter.less";
+@import "import.less";
+@import "report_card.less";
+@import "tables.less";
