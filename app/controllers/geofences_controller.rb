@@ -1,12 +1,20 @@
 class GeofencesController < ApplicationController
   before_filter :new_geofence, :only => [:new, :create]
   before_filter :set_geofence, :only => [:edit, :update]
+  before_filter :set_group, :only => [:index, :destroy, :update, :create]
   
   layout :set_layout
 
   def index
-    @geofences = search_on Geofence do
-      current_account.geofences.paginate(:page => params[:page], :per_page => 30)
+    unless @group.nil?
+      list = @group.self_and_ancestors.map(&:id)
+      
+      group_geofences = current_account.geofences.all(:conditions => {:geofence_device_groups => {:group_id => list} }, :joins => :device_groups)
+      @geofences = group_geofences.paginate(:page=>params[:page], :per_page => 30)
+    else
+      @geofences = search_on Geofence do
+        current_account.geofences.paginate(:page => params[:page], :per_page => 30)
+      end
     end
 
     respond_to do |format|
@@ -38,7 +46,8 @@ class GeofencesController < ApplicationController
   # Remove a geofence from the system
   def destroy
     current_account.geofences.destroy(params[:id])
-    redirect_to geofences_path
+
+    redirect_to geofences_path(@group)
   end
 
   protected
@@ -49,6 +58,12 @@ class GeofencesController < ApplicationController
   
   def set_geofence
     @geofence = current_account.geofences.find(params[:id])
+  end
+
+  def set_group
+    if (params[:group_id])
+      @group = current_account.groups.find(params[:group_id])
+    end
   end
   
   def set_layout
@@ -62,7 +77,7 @@ class GeofencesController < ApplicationController
     params[:geofence]['device_group_ids'] ||= []
     
     if @geofence.update_attributes(params[:geofence])
-      redirect_to geofences_path
+      redirect_to geofences_path(@group)
     else
       render :action => @geofence.new_record? ? 'new' : 'edit'
     end

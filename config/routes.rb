@@ -71,10 +71,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :filter
 
   # Groups
-  map.resources :groups, 
-    :member => {
+  map.resources :groups, :member => {
       :live_look => :get
-    }
+  } do |group|
+    group.resources :geofences, :controller => 'geofences'
+  end
   
   # Subscriptions
   map.resource :subscription, :controller => 'subscription',
