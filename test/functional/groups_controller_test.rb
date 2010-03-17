@@ -5,6 +5,7 @@ describe "GroupsController", ActionController::TestCase do
   setup do
     use_controller GroupsController
     login_as :quentin
+    Tracker.any_instance.stubs(:async_configure)
   end
 
   context "Index" do

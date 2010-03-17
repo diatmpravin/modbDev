@@ -8,7 +8,7 @@ class Landmark < ActiveRecord::Base
   validates_presence_of :longitude
   validates_numericality_of :longitude, :allow_nil => true
   
-  attr_accessible :account, :name, :latitude, :longitude, :radius
+  attr_accessible :account, :name, :latitude, :longitude, :radius, :alert_on_exit, :alert_on_entry
 
   ##
   # Concerns
