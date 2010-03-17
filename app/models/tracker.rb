@@ -68,11 +68,11 @@ class Tracker < ActiveRecord::Base
   def set_idle_threshold!(time)
     time = time.to_i
 
-    if(time != 0 || time < 10)
+    if time != 0 && time < 10
       raise ArgumentError, "time must be >= 10 minutes"
     end
 
-    if(time % 5 != 0)
+    if time % 5 != 0
       raise ArgumentError, "time must be in 5 minute increments"
     end
 
