@@ -25,6 +25,18 @@
         q(this).removeClass('hover');
       });
       
+      q('span.collapsible').live('click', function() {
+        var self = q(this);
+        if (self.closest('li').children('ol').toggle().css('display') == 'none') {
+          self.addClass('closed');
+        } else {
+          self.removeClass('closed');
+        }
+      });
+      
+      // Hide the collapse/expand arrow for leaf rows
+      q(this).find('li:not(:has(li)) span.collapsible').hide();
+      
     }
     ,
     toggleGroup: function() {
