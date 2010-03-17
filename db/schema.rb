@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100311164254) do
+ActiveRecord::Schema.define(:version => 20100317191518) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -189,13 +189,15 @@ ActiveRecord::Schema.define(:version => 20100311164254) do
 
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"
-    t.decimal  "latitude",                 :precision => 8, :scale => 5
-    t.decimal  "longitude",                :precision => 8, :scale => 5
-    t.integer  "radius",                                                 :default => 100
-    t.string   "name",       :limit => 30
+    t.decimal  "latitude",                     :precision => 8, :scale => 5
+    t.decimal  "longitude",                    :precision => 8, :scale => 5
+    t.integer  "radius",                                                     :default => 100
+    t.string   "name",           :limit => 30
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "delta",                                                  :default => true, :null => false
+    t.boolean  "delta",                                                      :default => true,  :null => false
+    t.boolean  "alert_on_exit",                                              :default => false
+    t.boolean  "alert_on_entry",                                             :default => false
   end
 
   add_index "landmarks", ["account_id"], :name => "index_landmarks_on_account_id"

@@ -17,6 +17,15 @@
     <%= error_message_on landmark, :longitude, :prepend_text => '* Longitude ' %>
   </div>
   
+  <div class="field">
+    <%= f.check_box :alert_on_entry %>
+    <%= f.label :alert_on_entry, 'Send alert on entry?' %>
+  </div>
+  <div class="field">
+    <%= f.check_box :alert_on_exit %>
+    <%= f.label :alert_on_exit, 'Send alert on exit?' %>
+  </div>
+
   <div class="clear spacer"></div>
   <div class="buttons">
     <%= submit_tag "Save" %>
