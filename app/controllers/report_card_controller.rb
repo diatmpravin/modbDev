@@ -6,10 +6,12 @@ class ReportCardController < ApplicationController
   # Main view of the report card
   def show
     @root = current_user.device_group
-  
+    
+    #@report_card = group_reports(@root ? @root.children : current_account.groups.of_devices.roots)
   
     # template = "list"
-    # @range_type = (params[:range_type] || 1).to_i
+    
+    @range_type = (params[:range_type] || 1).to_i
 
     # @report_card = 
       # if params[:group_id]
