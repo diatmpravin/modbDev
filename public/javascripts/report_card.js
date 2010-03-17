@@ -5,7 +5,26 @@
 
   ReportCard = {
     init: function() {
-
+      $('#frame').fitWindow(function(width, height) {
+        $('#frame').height(height - 32);
+      });
+      
+      /*q('#data_pane').scroll(function(e) {
+        
+        var desired = Math.floor(q(this).scrollTop() / 25) * 25;
+        if (desired != q(this).scrollTop()) {
+          q(this).stop(true).animate({scrollTop: desired}, {duration: 'fast', queue: false});
+        }
+      });*/
+      
+      q('div.row').hover(function() {
+        if (true) {
+          q(this).addClass('hover');
+        }
+      }, function() {
+        q(this).removeClass('hover');
+      });
+      
     }
     ,
     toggleGroup: function() {

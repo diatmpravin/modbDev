@@ -1,0 +1,151 @@
+/* Custom MapQuest View Control */
+
+.moshiViewControl {
+  position:absolute;
+  z-index:176;
+  width:210px;
+  height:22px;
+  margin:0;
+  padding:0;
+}
+.moshiViewControl ul {
+  margin:0;
+  padding:0;
+}
+.moshiViewControl li {
+  display:block;
+  position:relative;
+  overflow:hidden;
+  float:left;
+  width:70px;
+  height:22px;
+  margin:0;
+  padding:0;
+  list-style-type:none;
+}
+.moshiViewControl li img {
+  position:absolute;
+  cursor:pointer;
+  _cursor:hand;
+}
+.streetView img, .aerialView img, .hybridView img {
+  top:-1px;
+}
+.streetView img.hover, .aerialView img.hover, .hybridView img.hover {
+  top:-24px;
+}
+.streetView img.selected, .aerialView img.selected, .hybridView img.selected {
+  top:-47px;
+  cursor:default;
+  _cursor:default;
+}
+
+/* Custom MapQuest Zoom Control */
+
+.moshiZoomControl {
+  position:absolute;
+  z-index:175;
+  width:56px;
+  height:309px;
+  margin:0;
+  padding:0;
+}
+.moshiZoomControl > div {
+  position:absolute;
+}
+.moshiZoomControl ul {
+  z-index:176;
+  width:40px;
+  margin:0;
+  padding:8px 6px 0 6px;
+}
+.moshiZoomControl li {
+  margin:0;
+  padding:0;
+  list-style-type:none;
+}
+.compass {
+  position:relative;
+  overflow:hidden;
+  width:40px;
+  height:40px;
+}
+.compassMap {
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:105;
+  width:40px;
+  height:40px;
+}
+.compass img {
+  position:absolute;
+  top:0;
+  left:0;
+  width:200px;
+  height:40px;
+}
+.compass img.n {
+  left:-40px;
+}
+.compass img.e {
+  left:-80px;
+}
+.compass img.s {
+  left:-120px;
+}
+.compass img.w {
+  left:-160px;
+}
+.zoom {
+  position:relative;
+  padding-top:5px;
+}
+.zoom img {
+  cursor: pointer;
+  _cursor: hand;
+}
+.zoomIn, .zoomOut {
+  position:relative;
+  left:10px;
+  overflow:hidden;
+  width:20px;
+  height:20px;
+}
+.zoomIn img, .zoomOut img {
+  position:absolute;
+  width:40px;
+  height:20px;
+}
+.zoomIn img.hover, .zoomOut img.hover {
+  left:-20px;
+}
+.zoomOut {
+  margin-top:4px;
+}
+.zoomBox {
+  display:block;
+  position:relative;
+  width:24px;
+  height:175px;
+  margin:7px 0 0 9px;
+  overflow:hidden;
+}
+.zoomBox img {
+  position:absolute;
+  width:408px;
+  height:175px;
+}
+.zoomBox img.zoomLinks {
+  width:24px;
+  height:175px;
+  left:0;
+  top:0;
+}
+.zoomBox img.zoomOn {
+  left:0;
+  top:0;
+  width:24px;
+  height:9px;
+  z-index:3;
+}

@@ -1,7 +1,7 @@
 /**
  * Styles for the report card page
  */
-#report_card {
+/*#report_card {
 
   table {
     width: 100%;
@@ -88,4 +88,97 @@
   .collapse {
     display: none;
   }
+}*/
+
+@listing_width: 280px;
+
+#report_card {
+  min-width:900px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  
+  #content {
+    padding-bottom:0;
+  }
+  
+  #frame {
+    background-color:red;
+    width:100%;
+    
+    #data_pane {
+      border:solid 1px #c0c0c0;
+      height:100%;
+      overflow-y:scroll;
+      
+      > ol {
+        margin-top:-1px;
+      }
+    }
+  }
+  
+  ol {
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  
+  /* Note the relationship between row's padding-right, listing's width, and
+     data's margin-right. We are using the floating negative margin trick so
+     that the data div can resize as the browser grows while the listing div
+     stays the same size. */
+  div.row {
+    background-color:#f5ecec;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    padding-right:@listing_width;
+    
+    span {
+      display:block;
+      float:left;
+      height:25px;
+      line-height:25px;
+    }
+    
+    div.listing {
+      float:left;
+      width:@listing_width;
+    }
+    
+    div.data {
+      float:left;
+      margin-right:0px - @listing_width;
+      width:100%;
+      
+      span {
+        border-left:solid 1px #c0c0c0;
+        width:10%;
+      }
+    }
+  }
+  
+  /* IE7 is fucked up! Cleared rows have a 2-pixel gap! */
+  
+  .hover-only {
+    display:none;
+  }
+  
+  div.hover {
+    background-color:#eddede;
+    
+    .hover-only {
+      display:block;
+    }
+  }
+  
+  /* Nested Spacing */
+  li                span.name { padding-left:20px; }
+  li li             span.name { padding-left:30px; }
+  li li li          span.name { padding-left:40px; }
+  li li li li       span.name { padding-left:50px; }
+  li li li li li    span.name { padding-left:60px; }
+  li li li li li li span.name { padding-left:70px; }
 }
+
+
+
