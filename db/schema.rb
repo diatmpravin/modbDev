@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100317191518) do
+ActiveRecord::Schema.define(:version => 20100317202525) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -185,6 +185,11 @@ ActiveRecord::Schema.define(:version => 20100317191518) do
     t.integer  "lft"
     t.integer  "rgt"
     t.text     "grading"
+  end
+
+  create_table "landmark_device_groups", :id => false, :force => true do |t|
+    t.integer "landmark_id"
+    t.integer "group_id"
   end
 
   create_table "landmarks", :force => true do |t|
