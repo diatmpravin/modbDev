@@ -1,0 +1,73 @@
+<%# This view is used for both groups and vehicles, thus the logic here at the top -%>
+<% group ||= report.group -%>
+<% vehicle ||= false -%>
+<%
+  if vehicle
+    id = ""
+    parent = dom_id(group)
+  else
+    id = dom_id(group)
+    parent = group.parent ? dom_id(group.parent) : ""
+  end
+ -%>
+<tr id="<%= id -%>" class="<%= cycle('even', 'odd') %> entry <%= parent -%>">
+  <td class="box"><%= check_box_tag "apply", 1 -%></td>
+  <td class="name" style="padding-left: <%= group.level + (vehicle ? 2 : 1) -%>em">
+    <% if expandable?(group) && !vehicle -%>
+      <span class="expand"><%= image_tag "report_card_closed.png" -%></span>
+      <span class="collapse"><%= image_tag "report_card_open.png" -%></span>
+      <span class="busy"><%= image_tag "spinner.gif" -%></span>
+      <%= link_to h(report.data[:name]), report_card_path(:group_id => group.id), :class => "toggleGroup" -%>
+    <% else -%>
+      <%= h report.data[:name] -%>
+    <% end -%>
+  </td>
+  <td class="overall">
+    <% display_value = vehicle && report.data[:first_start_time] -%>
+    <%= status_icon report.data[:report_card][:first_start_time],
+      :class => display_value ? "status" : "", :show_green => true -%>
+
+    <% if display_value -%>
+      <%= report.data[:first_start_time].in_time_zone(current_user.zone).to_s(:local) -%>
+    <% end -%>
+  </td>
+  <td class="overall">
+    <% display_value = vehicle && report.data[:last_end_time] -%>
+    <%= status_icon report.data[:report_card][:last_end_time],
+      :class => display_value ? "status" : "", :show_green => true -%>
+
+    <% if display_value -%>
+      <%= report.data[:last_end_time].in_time_zone(current_user.zone).to_s(:local) -%>
+    <% end -%>
+  </td>
+  <td>
+    <%= duration_format(report.data[:duration]) -%>
+  </td>
+  <td>
+    <%= report.data[:miles] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:mpg] -%>
+    <%= mpg_format report.data[:mpg] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:speed_events] -%>
+    <%= report.data[:speed_events] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:geofence_events] -%>
+    <%= report.data[:geofence_events] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:idle_events] -%>
+    <%= report.data[:idle_events] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:aggressive_events] -%>
+    <%= report.data[:aggressive_events] -%>
+  </td>
+  <td>
+    <%= status_icon report.data[:report_card][:after_hours_events] -%>
+    <%= report.data[:after_hours_events] -%>
+  </td>
+</tr>

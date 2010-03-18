@@ -7,6 +7,9 @@
       <th>Name</th>
       <th>Latitude</th>
       <th>Longitude</th>
+      <th>Alert on Entry?</th>
+      <th>Alert on Exit?</th>
+      <th>Groups</th>
       <th></th>
     </tr>
   </thead>
@@ -16,6 +19,9 @@
       <td><%= h landmark.name -%></td>
       <td><%= h landmark.latitude -%></td>
       <td><%= h landmark.longitude -%></td>
+      <td><%= landmark.alert_on_entry ? "true" : "false" %></td>
+      <td><%= landmark.alert_on_exit ? "true" : "false" %></td>
+      <td><%= landmark.device_group_names %></td>
       <td class="buttons">
         <%= link_to 'Edit', edit_landmark_path(landmark), :class => 'edit', :title => 'Edit' %>
         <%= link_to 'Delete', landmark_path(landmark), :class => 'delete', :title => 'Remove' %>

@@ -1,3 +1,7 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "landmarks/form" %>
+<% end -%>
+
 <% form_for landmark, :html => {:autocomplete => 'off'} do |f| -%>
   <div class="field">
     <%= f.label :name %>
@@ -17,6 +21,29 @@
     <%= error_message_on landmark, :longitude, :prepend_text => '* Longitude ' %>
   </div>
   
+  <div class="field">
+    <%= f.check_box :alert_on_entry %>
+    <%= f.label :alert_on_entry, 'Send alert on entry?' %>
+  </div>
+  <div class="field">
+    <%= f.check_box :alert_on_exit %>
+    <%= f.label :alert_on_exit, 'Send alert on exit?' %>
+  </div>
+
+  <h3>Vehicle Groups</h3>
+  <fieldset>
+    <div class="groupSelect">
+      <% group_tree(current_user.device_group, :close_level => 0) do |group, level| -%>
+        <% if level > 0 -%>
+          <%= check_box_tag 'landmark[device_group_ids][]', group.id, landmark.device_groups.include?(group) %>
+          <span class="checkbox"></span>
+        <% end -%>
+        <span class="collapsible closed"></span>
+        <span class="name"><%= group.name %></span>
+      <% end -%>
+    </div>
+  </fieldset>
+
   <div class="clear spacer"></div>
   <div class="buttons">
     <%= submit_tag "Save" %>

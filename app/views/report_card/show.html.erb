@@ -2,25 +2,42 @@
   <%= javascript_include_tag "report_card" -%>
 <% end -%>
 
+          <% form_tag report_card_path, :method => :get do -%>
+            Viewing Report Card for: 
+            <%= select_tag :range_type, options_for_select(range_options_report_card, @range_type) %>
+            <%= submit_tag "Update" -%>
+          <% end -%>
+          
+     <!--     
+          <% new_tree(@root) do |node, level| -%>
+            <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
+          <% end -%>
+        -->
+          
 <div id="frame">
   <div id="data_pane">
     <% group_tree(@root, :include_parent => true) do |group, level| -%>
       <div class="row clear" id="group_<%= dom_id(group) %>">
         <div class="listing">
           <span class="tab"></span>
+          <span class="collapsible open"></span>
           <span class="name"><%= group.name %></span>
-          <span class="collapsible closed"></span>
         </div>
-        <div class="data">
-          <span class="data">Good</span>
-          <span class="data">12:45</span>
-          <span class="data">2652</span>
-          <span class="data">105</span>
-          <span class="data">0</span>
-          <span class="data">57</span>
-          <span class="data">78</span>
-          <span class="data">54</span>
-        </div>
+        
+        <% if level > 0 -%>
+          <% report = group_report(group) %>
+          
+          <div class="data">
+            <span class="data">Good</span>
+            <span class="data"><%= duration_format(report.data[:duration]) %></span>
+            <span class="data"><%= report.data[:miles] %></span>
+            <span class="data"><%= status_icon report.data[:report_card][:mpg] %> <%= mpg_format report.data[:mpg] %></span>
+            <span class="data"><%= status_icon report.data[:report_card][:speed_events] %> <%= report.data[:speed_events] %></span>
+            <span class="data">57</span>
+            <span class="data">78</span>
+            <span class="data">54</span>
+          </div>
+        <% end -%>
       </div>
     <% end -%>
   </div>
