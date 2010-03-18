@@ -7,7 +7,13 @@
             <%= select_tag :range_type, options_for_select(range_options_report_card, @range_type) %>
             <%= submit_tag "Update" -%>
           <% end -%>
-
+          
+     <!--     
+          <% new_tree(@root) do |node, level| -%>
+            <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
+          <% end -%>
+        -->
+          
 <div id="frame">
   <div id="data_pane">
     <% group_tree(@root, :include_parent => true) do |group, level| -%>

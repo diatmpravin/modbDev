@@ -1,5 +1,53 @@
 module GroupsHelper
 
+  def expandable?(group)
+    (group.children + group.devices).length > 0
+  end
+  
+  # Using the provided group, iterate non-recursively through its children and
+  # construct a tree of groups and vehicles. The provided HTML block (required)
+  # will be called with groups and vehicles as the list is created.
+  #
+  # Options:
+  #   :close_level => which "level" to close. 0 is the root node.
+  #   :stop_level => which "level" to stop traversing at. 0 is the root node.
+  #   
+  def new_tree(group, options = {}, &block)
+    options[:close_level] = 99
+    options[:stop_level] = 99
+    
+    if !group
+      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.groups.roots, [])
+    end
+    
+    pending = [:ol, :li, group, :nli, :nol]
+    html = [[]]
+    level = 0
+    
+    while node = pending.shift
+      case node
+      when :ol, :li
+        html << []
+      when :nli
+        content = content_tag(:li, html.pop.join)
+        html.last << content
+      when :nol
+        content = content_tag(:ol, html.pop.join)
+        html.last << content
+      else
+        html.last << capture(node, level, &block)
+      end
+      
+      if !node.is_a?(Symbol) && !node.is_a?(Device)
+        children = [:ol, (node.children + node.devices).map {|c| [:li, c, :nli]}, :nol]
+        pending.unshift *(children.flatten)
+      end
+    end
+    
+    concat(html.to_s)
+  end
+  
+  
   # Create a group tree by passing a parent group (or nil) and a block defining
   # how each element of the tree will look. The block will be passed a group object
   # and the current "level" of the tree. Level "0" is always the root node.

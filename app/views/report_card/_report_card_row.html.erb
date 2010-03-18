@@ -1,0 +1,34 @@
+<% if node.is_a?(Device) -%>
+  <div class="row clear" id="device_<%= dom_id(node) %>">
+    <div class="listing">
+      <span class="tab"></span>
+      <span class="name"><%= node.name %></span>
+    </div>
+    <div class="data">
+      <span class="data">Good</span>
+    </div>
+  </div>
+<% else -%>
+  <div class="row clear" id="group_<%= dom_id(node) %>">
+    <div class="listing">
+      <span class="tab"></span>
+      <span class="collapsible open"></span>
+      <span class="name"><%= node.name %></span>
+    </div>
+    
+    <% if level > 0 -%>
+      <% report = group_report(node) %>
+      
+      <div class="data">
+        <span class="data">Good</span>
+        <span class="data"><%= duration_format(report.data[:duration]) %></span>
+        <span class="data"><%= report.data[:miles] %></span>
+        <span class="data"><%= status_icon report.data[:report_card][:mpg] %> <%= mpg_format report.data[:mpg] %></span>
+        <span class="data"><%= status_icon report.data[:report_card][:speed_events] %> <%= report.data[:speed_events] %></span>
+        <span class="data">57</span>
+        <span class="data">78</span>
+        <span class="data">54</span>
+      </div>
+    <% end -%>
+  </div>
+<% end -%>
