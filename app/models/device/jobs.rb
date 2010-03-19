@@ -20,6 +20,8 @@ class Device < ActiveRecord::Base
 
     first_start_time = day_trips.any? ? day_trips.first.start : nil
     last_end_time = day_trips.any? ? day_trips.last.finish : nil
+    first_start = day_trips.any? ? day_trips.first.start - start : nil
+    last_stop = day_trips.any? ? finish - day_trips.last.finish : nil
 
     self.daily_data.create(
       :date => day.to_date,
@@ -40,7 +42,9 @@ class Device < ActiveRecord::Base
       ].sum,
       :after_hours_events => events[Event::AFTER_HOURS] || 0,
       :first_start_time => first_start_time,
-      :last_end_time => last_end_time
+      :last_end_time => last_end_time,
+      :first_start => first_start,
+      :last_stop => last_stop
     )
   end
 

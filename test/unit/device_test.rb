@@ -997,17 +997,25 @@ describe "Device", ActiveSupport::TestCase do
     setup do
       t = @device.trips.create
       l = t.legs.create
+      @point0 = l.points.create(
+        :event => DeviceReport::Event::PERIODIC_IGNITION_ON, :latitude => 33.64512, :longitude => -84.44697,
+        :occurred_at => Time.parse("01/01/2009 01:00:00 AM EST"), :miles => 100,
+        :device => @device)
       @point1 = l.points.create(
-        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :event => DeviceReport::Event::PERIODIC_IGNITION_ON, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 11:30:00 AM EST"), :miles => 100,
         :device => @device)
       @point2 = l.points.create(
-        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :event => DeviceReport::Event::PERIODIC_IGNITION_ON, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 11:50:30 AM EST"), :miles => 200,
         :device => @device)
       @point3 = l.points.create(
-        :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
+        :event => DeviceReport::Event::PERIODIC_IGNITION_ON, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST"), :miles => 300,
+        :device => @device)
+      @point4 = l.points.create(
+        :event => DeviceReport::Event::PERIODIC_IGNITION_OFF, :latitude => 33.64512, :longitude => -84.44697,
+        :occurred_at => Time.parse("01/01/2009 11:29:59 PM EST"), :miles => 300,
         :device => @device)
     end
 
@@ -1020,8 +1028,20 @@ describe "Device", ActiveSupport::TestCase do
 
       data.should.not.be.nil
       data.miles.should.equal 200
-      data.duration.should.equal 3600
+      data.duration.should.equal 80999
       data.date.should.equal Date.parse("01/01/2009")
+    end
+
+    specify "start and stop is correct" do
+      DeviceDataPerDay.should.differ(:count).by(1) do
+        @device.calculate_data_for(Date.parse("01/01/2009"))
+      end
+      
+      data = @device.daily_data.for(Date.parse("01/01/2009")).first
+
+      data.should.not.be.nil
+      data.first_start.should.equal 3600
+      data.last_stop.should.equal 1800
     end
 
     context "Resque job" do
