@@ -6,6 +6,7 @@ class Account < ActiveRecord::Base
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
   has_many :device_profiles, :order => 'name', :dependent => :destroy
+  has_many :device_groups, :order => 'name ASC', :dependent => :destroy
   has_many :trackers, :dependent => :nullify
   
   accepts_nested_attributes_for :users
@@ -25,12 +26,11 @@ class Account < ActiveRecord::Base
   # List accessible attributes here
   attr_accessible :devices, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
-    :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number
+    :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number,
+    :device_groups
 
   # This line must appear later than the above attr_accessible line
   acts_as_nested_set :order => 'name', :dependent => nil
-
-  has_many :groups, :order => "name ASC"
 
   # Work around bug:
   # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include

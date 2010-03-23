@@ -1,6 +1,5 @@
 quentin_device:
   account: quentin
-  user: quentin
   name: "Quentin's Device"
   tracker: quentin_tracker
 aaron_device:

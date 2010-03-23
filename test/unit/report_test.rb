@@ -3,7 +3,7 @@ require 'test_helper'
 describe "Report", ActiveSupport::TestCase do
   setup do
     @user = users(:quentin)
-    @devices = @user.devices
+    @devices = [devices(:quentin_device)]
   end
 
   context "All Reports" do

@@ -1,10 +1,8 @@
 class Landmark < ActiveRecord::Base
   belongs_to :account
   
-  has_and_belongs_to_many :device_groups,
-    :class_name => 'Group',
-    :join_table => :landmark_device_groups,
-    :uniq => true
+  has_many :device_group_links, :as => :link
+  has_many :device_groups, :through => :device_group_links
 
   validates_presence_of :name
   validates_length_of :name, :maximum => 30, :allow_nil => true, :allow_blank => true
@@ -21,6 +19,12 @@ class Landmark < ActiveRecord::Base
   ##
   concerned_with :sphinx
 
+  def device_group_ids=(list)
+    self.device_groups = account.device_groups.find(
+      list.reject {|a| a.blank?}
+    )
+  end
+  
   def device_group_names
     self.device_groups.map(&:name).join(', ')
   end

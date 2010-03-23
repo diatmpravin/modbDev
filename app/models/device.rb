@@ -1,8 +1,8 @@
 class Device < ActiveRecord::Base
   belongs_to :account
-  belongs_to :user
   belongs_to :tracker
   belongs_to :device_profile
+  belongs_to :group, :class_name => 'DeviceGroup'
   has_many :points, :order => 'occurred_at'
   has_many :trips, :order => 'start'
   has_many :device_alert_recipients, :dependent => :delete_all
@@ -24,13 +24,6 @@ class Device < ActiveRecord::Base
   # Virtual attribute for imei
   attr_accessor :imei_number
 
-  # Link to groups
-  has_and_belongs_to_many :groups,
-    :join_table => :group_links,
-    :foreign_key => :link_id,
-    :order => "name ASC",
-    :uniq => true
-
   VALID_SPEED_THRESHOLDS = [50, 55, 60, 65, 70, 75, 80, 85]
   VALID_RPM_THRESHOLDS = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000]
   VALID_IDLE_THRESHOLDS = [10, 15, 20, 25, 30]
@@ -51,9 +44,9 @@ class Device < ActiveRecord::Base
     :alert_on_aggressive, :alert_recipients, :alert_on_idle, :alert_on_reset,
     :alert_on_after_hours, :idle_threshold, :after_hours_start,
     :after_hours_end, :alert_recipient_ids, :alert_recipients, :vin_number,
-    :odometer, :user, :time_zone, :detect_pitstops, :pitstop_threshold,
+    :odometer, :time_zone, :detect_pitstops, :pitstop_threshold,
     :tags, :tag_names, :device_profile, :device_profile_id, :lock_vin,
-    :groups, :imei_number
+    :group, :group_id, :imei_number
 
   before_save :prefill_profile_fields, :convert_imei_to_tracker, :update_thresholds
 
@@ -72,9 +65,9 @@ class Device < ActiveRecord::Base
   TRIP_REPORT_CUTOFF = 75.minutes
   NOT_REPORTING_THRESHOLD = 130.minutes
 
-  # Build an array that contains all group names this device is a part of
-  def group_names
-    self.groups.map {|g| g.name }
+  # Return the group name
+  def group_name
+    group ? group.name : ''
   end
 
   # Shortcut for IMEI number
@@ -101,6 +94,11 @@ class Device < ActiveRecord::Base
     self.device_profile = value.blank? ? nil : account.device_profiles.find(value)
   end
 
+  # Safe group_id=
+  def group_id=(value)
+    self.group = value.blank? ? nil : account.groups.find(value)
+  end
+  
   def zone
     ActiveSupport::TimeZone[self[:time_zone] || "Eastern Time (US & Canada)"]
   end

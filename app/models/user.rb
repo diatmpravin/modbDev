@@ -1,22 +1,8 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
   belongs_to :account
-  has_many :devices, :include => :tracker
   
-  belongs_to :device_group, :class_name => 'Group'
-  
-  # This is a link from a User to their list of Device Groups, which controls
-  # which vehicles they are allowed to see.
-  #
-  # This is not the same as a list of "User Groups", which doesn't exist
-  # yet but will probably be added at some point.
-  #has_and_belongs_to_many :device_groups,
-    #:class_name => 'Group',
-    #:join_table => :user_device_groups,
-    #:association_foreign_key => 'group_id',
-    #:conditions => {:of => 'Device'},
-    #:order => 'name ASC',
-    #:uniq => true
+  belongs_to :device_group
   
   ##
   # Concerns
@@ -52,22 +38,16 @@ class User < ActiveRecord::Base
   
   # List accessible attributes here
   attr_accessible :login, :email, :password, :password_confirmation,
-    :account, :current_password, :roles, :name, :time_zone, :devices,
+    :account, :current_password, :roles, :name, :time_zone,
     :device_group, :device_group_id
   
   before_validation_on_create :lock_password
   before_save                 :encrypt_password
   after_create                :send_set_password
   
-  # Work around bug:
-  # https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2896-collection_singular_ids-breaks-when-used-with-include
-  def device_ids
-    Device.find_by_sql(["select d.id from devices d where user_id = ?", self.id]).map(&:id)
-  end
-  
   # Allow device_group_id=, but enforce account ownership and group type
   def device_group_id=(value)
-    self.device_group = value.blank? ? nil : account.groups.of_devices.find(value)
+    self.device_group = value.blank? ? nil : account.device_groups.find(value)
   end
   
   class Role

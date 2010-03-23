@@ -17,7 +17,7 @@ module GroupsHelper
     options[:stop_level] = 99
     
     if !group
-      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.groups.roots, [])
+      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.device_groups.roots, [])
     end
     
     pending = [:ol, :li, group, :nli, :nol]
@@ -67,7 +67,7 @@ module GroupsHelper
     options[:include_parent] ||= true
     
     if !group
-      group = Struct.new(:id, :name, :children).new('', 'Root', current_account.groups.roots)
+      group = Struct.new(:id, :name, :children).new('', 'Root', current_account.device_groups.roots)
     end
     
     #if level == 0 && !options[:include_parent]

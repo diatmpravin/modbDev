@@ -7,8 +7,8 @@ class GroupsController < ApplicationController
   # GET /groups
   # Show the list of device groups
   def index
-    @groups = search_on Group do
-      current_account.groups.of_devices.paginate :page => params[:page], :per_page => 30
+    @groups = search_on DeviceGroup do
+      current_account.device_groups.paginate :page => params[:page], :per_page => 30
     end
   end
 
@@ -21,14 +21,14 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # New group form
   def new
-    @group = Group.new
+    @group = current_account.device_groups.new
   end
 
   # POST /groups
   # Create a new group
   def create
-    @group = current_account.groups.of_devices.build(params[:group])
-    @group.parent = current_account.groups.find_by_id(params[:group][:parent_id])
+    @group = current_account.device_groups.build(params[:group])
+    @group.parent = current_account.device_groups.find_by_id(params[:group][:parent_id])
     @group.save
     
     redirect_to groups_path
@@ -67,7 +67,7 @@ class GroupsController < ApplicationController
   # DELETE /groups/:id
   # Destroy the given group
   def destroy
-    current_account.groups.of_devices.destroy(params[:id])
+    current_account.device_groups.destroy(params[:id])
     redirect_to groups_path
   end
 
@@ -86,7 +86,7 @@ class GroupsController < ApplicationController
   protected
 
   def set_group
-    @group = current_account.groups.of_devices.find(params[:id])
+    @group = current_account.device_groups.find(params[:id])
   end
 
 end

@@ -79,12 +79,12 @@ describe "Reports Controller", ActionController::TestCase do
         r.expects(:[]=).times(3)
       })
       
-      devices(:quentin_device).groups << groups(:north)
+      devices(:quentin_device).update_attributes(:group => device_groups(:north))
     end
     
     def report_params(report_type)
       {
-        :group_ids => groups(:north).id.to_s,
+        :group_ids => device_groups(:north).id.to_s,
         :report => {
           :type => "#{report_type}",
           :range => {

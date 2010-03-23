@@ -50,10 +50,10 @@ describe "Geofences Controller", ActionController::TestCase do
     end
 
     specify "works nested for a group" do
-      Group.rebuild!
+      DeviceGroup.rebuild!
 
-      parent_group = groups(:north)
-      child_group = Group.generate! :name => "child"
+      parent_group = device_groups(:north)
+      child_group = DeviceGroup.generate! :name => "child"
       child_group.move_to_child_of parent_group
 
       parent_fence = Geofence.generate! :name => "parent_geo"

@@ -2,6 +2,8 @@ require 'test_helper'
 
 describe "User", ActiveSupport::TestCase do
   setup do
+    DeviceGroup.rebuild!
+    
     @account = accounts(:quentin)
     @user = users(:quentin)
   end
@@ -11,13 +13,9 @@ describe "User", ActiveSupport::TestCase do
       @user.account.should.equal accounts(:quentin)
     end
     
-    specify "has many devices" do
-      @user.devices.should.equal [devices(:quentin_device)]
-    end
-    
     specify "belongs to a device group" do
-      @user.update_attributes(:device_group => groups(:north))
-      @user.reload.device_group.should.equal groups(:north)
+      @user.update_attributes(:device_group => device_groups(:north))
+      @user.reload.device_group.should.equal device_groups(:north)
     end
   end
   
@@ -216,15 +214,10 @@ describe "User", ActiveSupport::TestCase do
   end
   
   specify "allows device_group_id=, but enforces account ownership and group type" do
-    @user.update_attributes(:device_group_id => groups(:north).id)
-    
-    # Wrong group type
-    should.raise(ActiveRecord::RecordNotFound) do
-      @user.update_attributes(:device_group_id => groups(:west).id)
-    end
+    @user.update_attributes(:device_group_id => device_groups(:north).id)
     
     # Wrong account
-    bad = accounts(:aaron).groups.of_devices.create!(:name => 'Aaron Group')
+    bad = accounts(:aaron).device_groups.create!(:name => 'Aaron Group')
     should.raise(ActiveRecord::RecordNotFound) do
       @user.update_attributes(:device_group_id => bad.id)
     end
@@ -276,26 +269,22 @@ describe "User", ActiveSupport::TestCase do
   end
   
   specify "a user can edit a device if it is in the right group" do
-    # Ensure nested sets are working
-    Group.rebuild!
-    
     # User with no group can edit all vehicles
     @device = devices(:quentin_device)
     assert @user.can_edit?(@device)
     
     # User with a group can't edit this vehicle
-    @user.update_attributes(:device_group => groups(:north))
+    @user.update_attributes(:device_group => device_groups(:north))
     assert !@user.can_edit?(@device)
     
     # Device is in the user's assigned group
-    @device.update_attributes(:groups => [groups(:north)])
+    @device.update_attributes(:group => device_groups(:north))
     assert @user.can_edit?(@device)
     
     # Device is in a subgroup of the user's assigned group
-    group = @account.groups.of_devices.create(:name => 'North Child')
-    group.move_to_child_of(groups(:north))
-    @device.update_attributes(:groups => [group])
+    group = @account.device_groups.create(:name => 'North Child')
+    group.move_to_child_of(device_groups(:north))
+    @device.update_attributes(:group => group)
     assert @user.can_edit?(@device)
   end
 end
-
