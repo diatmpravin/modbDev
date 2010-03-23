@@ -1,7 +1,8 @@
 <% if node.is_a?(Device) -%>
-  <div class="row clear" id="device_<%= dom_id(node) %>">
+  <div class="row device clear" id="device_<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
+      <span class="collapsible"></span>
       <span class="name"><%= node.name %></span>
     </div>
     <div class="data">
@@ -18,7 +19,7 @@
     </div>
   </div>
 <% else -%>
-  <div class="row clear" id="group_<%= dom_id(node) %>">
+  <div class="row group clear" id="group_<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
       <span class="collapsible open"></span>
