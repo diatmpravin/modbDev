@@ -43,6 +43,17 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
 
+  context "Scopes" do
+    specify "ungrouped scope includes only devices with no group" do
+      assert @account.devices.ungrouped.include?(@device)
+      
+      device_groups(:north).devices << @device
+      @device.reload
+      
+      assert !@account.devices.ungrouped.include?(@device)
+    end
+  end
+  
   context "Groups" do
     setup do
       @group = device_groups(:north)
