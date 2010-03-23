@@ -4,7 +4,7 @@ class DeviceDataPerDay < ActiveRecord::Base
 
   attr_accessible :date, :mpg, :duration, :miles, :speed_events, :geofence_events,
       :idle_events, :aggressive_events, :after_hours_events, :first_start_time,
-      :last_end_time
+      :last_end_time, :first_start, :last_stop
 
   # Get the device data for a given day
   named_scope :for, lambda {|date|
