@@ -37,6 +37,11 @@
       // Hide the collapse/expand arrow for leaf rows
       q(this).find('li:not(:has(li)) span.collapsible').hide();
       
+      // Scrollbar fix?
+      q('.scrollbar-fix').css('padding-right', function() {
+        return parseInt(q(this).css('padding-right')) + 17;
+      });
+      
     }
     ,
     toggleGroup: function() {

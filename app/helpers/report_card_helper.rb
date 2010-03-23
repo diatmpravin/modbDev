@@ -28,6 +28,10 @@ module ReportCardHelper
   end
 
   def group_report(group)
-    GroupSummaryReport.new(current_user, :group => group, :range => {:type => @range_type}).tap {|g| g.run }
+    if group.is_a?(Device)
+      VehicleSummaryReport.new(current_user, :devices => [group], :range => {:type => @range_type}).tap {|g| g.run}
+    else
+      GroupSummaryReport.new(current_user, :group => group, :range => {:type => @range_type}).tap {|g| g.run }
+    end
   end
 end

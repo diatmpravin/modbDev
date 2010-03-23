@@ -6,6 +6,15 @@
     </div>
     <div class="data">
       <span class="data">Good</span>
+      <span class="data">Good</span>
+      <span class="data">50</span>
+      <span class="data">75</span>
+      <span class="data">BAD</span>
+      <span class="data">OK</span>
+      <span class="data">57</span>
+      <span class="data">78</span>
+      <span class="data">54</span>
+      <span class="after_hours">70</span>
     </div>
   </div>
 <% else -%>
@@ -17,17 +26,19 @@
     </div>
     
     <% if level > 0 -%>
-      <% report = group_report(node) %>
+      <% #report = group_report(node) -%>
       
       <div class="data">
         <span class="data">Good</span>
-        <span class="data"><%= duration_format(report.data[:duration]) %></span>
-        <span class="data"><%= report.data[:miles] %></span>
-        <span class="data"><%= status_icon report.data[:report_card][:mpg] %> <%= mpg_format report.data[:mpg] %></span>
-        <span class="data"><%= status_icon report.data[:report_card][:speed_events] %> <%= report.data[:speed_events] %></span>
+        <span class="data">Good</span>
+        <span class="data">50</span>
+        <span class="data">75</span>
+        <span class="data">OK</span>
+        <span class="data">BAD</span>
         <span class="data">57</span>
         <span class="data">78</span>
         <span class="data">54</span>
+        <span class="after_hours">70</span>
       </div>
     <% end -%>
   </div>

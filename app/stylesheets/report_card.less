@@ -123,6 +123,8 @@
     padding:0;
   }
   
+  .scrollbar-fix {}
+  
   /* Note the relationship between row's padding-right, listing's width, and
      data's margin-right. We are using the floating negative margin trick so
      that the data div can resize as the browser grows while the listing div
@@ -171,7 +173,15 @@
         border-left:solid 1px #c0c0c0;
         width:10%;
       }
+      
+      span.after_hours {
+        width:7%;
+      }
     }
+  }
+  
+  #report_card_header {
+    
   }
   
   /* IE7 is fucked up! Cleared rows have a 2-pixel gap! */
