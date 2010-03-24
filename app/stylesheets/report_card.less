@@ -108,12 +108,21 @@
     #data_pane {
       background-color:#f5ecec;
       border:solid 1px #c0c0c0;
+      float:left;
       height:100%;
+      overflow-x:hidden;
       overflow-y:scroll;
+      width:100%;
       
       > ol {
         margin-top:-1px;
       }
+    }
+    
+    #edit_pane {
+      background-color:white;
+      height:100%;
+      overflow-y:auto;
     }
   }
   
@@ -159,6 +168,12 @@
       float:none;
     }
     
+    a.edit, a.delete, a.liveLook, a.geofence {
+      float:right;
+      height:25px;
+      width:22px;
+    }
+    
     div.listing {
       float:left;
       width:@listing_width;
@@ -185,7 +200,8 @@
   }
   
   #report_card_header {
-    
+    background-color:#c7dce4;
+    border:solid 1px black;
   }
   
   /* IE7 is fucked up! Cleared rows have a 2-pixel gap! */
