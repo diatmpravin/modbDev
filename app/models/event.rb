@@ -46,7 +46,7 @@ class Event < ActiveRecord::Base
     EXIT_LANDMARK => 'Exit Landmark'
   }
   
-  attr_accessible :event_type, :geofence_name, :speed_threshold, :point, :landmark, :geofence
+  attr_accessible :event_type, :geofence_name, :speed_threshold, :point, :landmark, :geofence,
     :occurred_at
   
   def type_text
