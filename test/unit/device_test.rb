@@ -43,6 +43,17 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
 
+  context "Scopes" do
+    specify "ungrouped scope includes only devices with no group" do
+      assert @account.devices.ungrouped.include?(@device)
+      
+      device_groups(:north).devices << @device
+      @device.reload
+      
+      assert !@account.devices.ungrouped.include?(@device)
+    end
+  end
+  
   context "Groups" do
     setup do
       @group = device_groups(:north)
@@ -378,6 +389,9 @@ describe "Device", ActiveSupport::TestCase do
     context "Landmark checking" do
       setup do
         @landmark = landmarks(:quentin)
+        @landmark.device_groups << device_groups(:north)
+        @device.update_attributes(:group => device_groups(:north))
+        @device.reload
       end
 
       specify "points outside the landmark do not get events" do
@@ -385,21 +399,54 @@ describe "Device", ActiveSupport::TestCase do
         @device.points.reload.last.events.should.be.empty
       end
 
-      specify "points inside the landmark do get events" do
-        # Sanity check
-        @landmark.radius.should.equal 100
-        @landmark.latitude.should.equal BigDecimal.new('40.22222')
-        @landmark.longitude.should.equal BigDecimal.new('-86.33333')
+      specify "entry alert works" do
+        @landmark.update_attributes(:alert_on_entry => true)
+#        Landmark.any_instance.expects(:contain? ).times(1).returns(true)
 
-        # Test
+        # process a point NOT near the landmark
+        @device.process(@example_location)
+
+        # now process a point that is near the landmark
         @example_location[:latitude] = '40.223'
         @example_location[:longitude] = '-86.33333'
 
         @device.process(@example_location)
-        point = @device.points.reload.last
 
+        point = @device.points.reload.last
         point.events.should.not.be.empty
-        point.events.first.event_type.should.equal Event::AT_LANDMARK
+        point.events.last.event_type.should.equal Event::ENTER_LANDMARK
+
+        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.first.body.should =~ /Quentin's Device entered area Store X/
+      end
+
+      specify "exit alert works" do
+        @landmark.update_attributes(:alert_on_exit => true)
+
+        # process a point NOT near the landmark
+        @example_location[:time] = '09:19:54',
+        @device.process(@example_location)
+
+        # now process a point that is near the landmark
+        @example_location[:latitude] = '40.223'
+        @example_location[:longitude] = '-86.33333'
+        @example_location[:time] = '09:20:54',
+        @device.process(@example_location)
+
+        Mailer.deliveries.length.should.be 0
+
+        # now process a point that is again not near the landmark
+        @example_location[:latitude] = '42.223'
+        @example_location[:longitude] = '-85.33333'
+        @example_location[:time] = '09:21:54',
+        @device.process(@example_location)
+
+        point = @device.points.reload.last
+        point.events.should.not.be.empty
+        point.events.last.event_type.should.equal Event::EXIT_LANDMARK
+
+        Mailer.deliveries.length.should.be 1
+        Mailer.deliveries.first.body.should =~ /Quentin's Device exited area Store X/
       end
     end
 

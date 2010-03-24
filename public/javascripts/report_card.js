@@ -1,12 +1,24 @@
 /**
  * Handling for the Report Card page
  */
+if (typeof(ReportCard) == 'undefined') {
+  ReportCard = {};
+}
+
+ReportCardGroup = {
+  edit: function() {
+    q('#data_pane').animate({width:281}, {duration: 'fast'});
+    q('#edit_pane').html('Hello, hello, hello?');
+    return false;
+  }
+};
+ 
 (function($) {
 
   ReportCard = {
     init: function() {
       $('#frame').fitWindow(function(width, height) {
-        $('#frame').height(height - 32);
+        $('#frame').height(height - 32 - 2);
       });
       
       /*q('#data_pane').scroll(function(e) {
@@ -25,7 +37,7 @@
         q(this).removeClass('hover');
       });
       
-      q('span.collapsible').live('click', function() {
+      q('div.group span.collapsible').live('click', function() {
         var self = q(this);
         if (self.closest('li').children('ol').toggle().css('display') == 'none') {
           self.addClass('closed');
@@ -35,7 +47,14 @@
       });
       
       // Hide the collapse/expand arrow for leaf rows
-      q(this).find('li:not(:has(li)) span.collapsible').hide();
+      q(this).find('li:not(:has(li)) div.group span.collapsible').hide();
+      
+      // Scrollbar fix?
+      q('.scrollbar-fix').css('padding-right', function() {
+        return parseInt(q(this).css('padding-right')) + 17;
+      });
+      
+      q('div.group a.edit').live('click', ReportCardGroup.edit);
       
     }
     ,

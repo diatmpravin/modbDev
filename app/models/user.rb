@@ -116,7 +116,7 @@ class User < ActiveRecord::Base
   end
 
   def groups
-    device_group.nil? ? account.groups : device_group.self_and_descendants
+    device_group.nil? ? account.device_groups : device_group.self_and_descendants
   end
   
   def group_name
