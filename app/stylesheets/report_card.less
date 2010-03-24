@@ -20,7 +20,7 @@
   }
   
   div.row {
-    background-color:#f5ecec;
+    background:#f5ecec none repeat-y 11px top;
     border-top:solid 1px #c0c0c0;
     cursor:default;
     height:25px;
@@ -36,9 +36,14 @@
     div.listing {
       float:left;
       width:@listing_width;
-        
+      
+      span.indent {
+        margin:0;
+        padding:0;
+      }
+      
       span.collapsible {
-        background:transparent url(/images/report_card_open.png) no-repeat right center;
+        background:transparent url(/images/report_card_open.png) no-repeat center center;
         cursor:pointer;
         width:15px;
       }
@@ -49,7 +54,8 @@
       }
       
       span.name {
-        float:none;
+        float:left;
+        padding-left:4px;
       }
       
       a.edit, a.delete, a.liveLook, a.geofence {
@@ -119,6 +125,12 @@
     > ol {
       margin-top:-1px;
     }
+    
+    div.device {
+      span.collapsible {
+        display:none;
+      }
+    }
   }
 
   /**
@@ -169,26 +181,21 @@
     }
   }*/
   
-  
   /* Nested Spacing */
-  li                span.collapsible { padding-left:4px + 14px * 0; }
-  li li             span.collapsible { padding-left:4px + 14px * 1; }
-  li li li          span.collapsible { padding-left:4px + 14px * 2; }
-  li li li li       span.collapsible { padding-left:4px + 14px * 3; }
-  li li li li li    span.collapsible { padding-left:4px + 14px * 4; }
-  li li li li li li span.collapsible { padding-left:4px + 14px * 5; }
-  li                span.name { padding-left:24px + 14px * 0; }
-  li li             span.name { padding-left:24px + 14px * 1; }
-  li li li          span.name { padding-left:24px + 14px * 2; }
-  li li li li       span.name { padding-left:24px + 14px * 3; }
-  li li li li li    span.name { padding-left:24px + 14px * 4; }
-  li li li li li li span.name { padding-left:24px + 14px * 5; }
+  li                   span.indent { width:4px + 14px * 0; }
+  li li                span.indent { width:4px + 14px * 1; }
+  li li li             span.indent { width:4px + 14px * 2; }
+  li li li li          span.indent { width:4px + 14px * 3; }
+  li li li li li       span.indent { width:4px + 14px * 4; }
+  li li li li li li    span.indent { width:4px + 14px * 5; }
+  li li li li li li li span.indent { width:4px + 14px * 6; }
   
-  /* Nested Grouplines */
-  li li             { background:transparent url(/images/report_card_tree_line.png) repeat-y 11px center; }
-  li li li          { background-position: 25px center; }
-  li li li li       { background-position: 39px center; }
-  li li li li li    { background-position: 53px center; }
-  li li li li li li { background-position: 67px center; }
+  /* Nested Indent Lines */
+  li li                div.row { background-image:url(/images/report_card_tree_1.png); }
+  li li li             div.row { background-image:url(/images/report_card_tree_2.png); }
+  li li li li          div.row { background-image:url(/images/report_card_tree_3.png); }
+  li li li li li       div.row { background-image:url(/images/report_card_tree_4.png); }
+  li li li li li li    div.row { background-image:url(/images/report_card_tree_5.png); }
+  li li li li li li li div.row { background-image:url(/images/report_card_tree_6.png); }
 }
 

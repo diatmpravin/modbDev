@@ -2,7 +2,7 @@
   <div class="row device clear" id="device_<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
-      <span class="collapsible"></span>
+      <span class="indent"></span>
       <span class="name"><%= node.name %></span>
     </div>
     <div class="data">
@@ -22,6 +22,7 @@
   <div class="row group clear" id="group_<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
+      <span class="indent"></span>
       <span class="collapsible open"></span>
       <% if level > 0 -%>
         <%= link_to 'Delete', group_path(node), :class => 'delete hover-only', :title => 'Remove Group' %>
