@@ -1,5 +1,7 @@
 class Landmark < ActiveRecord::Base
   belongs_to :account
+
+  has_many :events
   
   has_and_belongs_to_many :device_groups,
     :class_name => 'Group',

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100319144746) do
+ActiveRecord::Schema.define(:version => 20100324201505) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -147,6 +147,8 @@ ActiveRecord::Schema.define(:version => 20100319144746) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "occurred_at"
+    t.integer  "geofence_id"
+    t.integer  "landmark_id"
   end
 
   add_index "events", ["point_id"], :name => "index_events_on_point_id"
