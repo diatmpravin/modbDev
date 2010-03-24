@@ -20,22 +20,6 @@ class GroupSummaryReport < Report
     end
   end
 
-  def to_csv
-    self.data.rename_columns(
-      :name => "Group Name",
-      :duration => "Operating Time (s)",
-      :mpg => "MPG",
-      :miles => "Miles",
-      :speed_events => "Speed Events",
-      :geofence_events => "Geofence Events",
-      :idle_events => "Idle Events",
-      :aggressive_events => "Aggressive Events",
-      :after_hours_events => "After Hours Events",
-      :first_start_time => "First Start Time"
-    )
-    super
-  end
-
   def run
     self.data = Ruport::Data::Table(
       :name,
@@ -47,14 +31,14 @@ class GroupSummaryReport < Report
       :idle_events,
       :aggressive_events,
       :after_hours_events,
-      :first_start_time,
-      :last_end_time
+      :first_start,
+      :last_stop
     )
 
     aggregate = {
       :report_card => {},
-      :first_start_time => [],
-      :last_end_time => [],
+      :first_start => [],
+      :last_stop => [],
       :mpg => [],
       :duration => [],
       :miles => [],
@@ -75,8 +59,8 @@ class GroupSummaryReport < Report
       :idle_events => 0,
       :aggressive_events => 0,
       :after_hours_events => 0,
-      :first_start_time => 0,
-      :last_end_time => 0
+      :first_start => 0,
+      :last_stop => 0
     }
 
     days = (self.end - self.start).to_i + 1
@@ -86,11 +70,8 @@ class GroupSummaryReport < Report
 
         data = device.daily_data_over(self.start, self.end)
 
-        aggregate[:first_start_time] << (data.first_start_time ? 
-          data.first_start_time.in_time_zone(data.time_zone) : nil)
-        aggregate[:last_end_time] << (data.last_end_time ? 
-          data.last_end_time.in_time_zone(data.time_zone) : nil)
-
+        aggregate[:first_start] << data.first_start
+        aggregate[:last_stop] << data.last_stop
         aggregate[:mpg] << data.mpg
         aggregate[:duration] << data.duration
         aggregate[:miles] << data.miles
@@ -102,15 +83,15 @@ class GroupSummaryReport < Report
 
         # Report card grading
         report_card[:count] += 1
-        Group::Grade::VALID_PARAMS.each do |param|
+        DeviceGroup::Grade::VALID_PARAMS.each do |param|
           val = aggregate[param].last
           report_card[param] +=
-            case @group.grade(param, val, Group::Grade::AVERAGE_PARAMS[param] ? 1 : days)
-            when Group::Grade::PASS
+            case @group.grade(param, val)
+            when DeviceGroup::Grade::PASS
               1
-            when Group::Grade::WARN
+            when DeviceGroup::Grade::WARN
               0.4
-            when Group::Grade::FAIL
+            when DeviceGroup::Grade::FAIL
               -1
             end
         end
@@ -125,14 +106,17 @@ class GroupSummaryReport < Report
     aggregate[:aggressive_events] = aggregate[:aggressive_events].sum
     aggregate[:after_hours_events] = aggregate[:after_hours_events].sum
 
-    aggregate[:first_start_time] = aggregate[:first_start_time].compact.sort.first
-    aggregate[:last_end_time] = aggregate[:last_end_time].compact.sort.last
-
     if report_card[:count] > 0
       aggregate[:mpg] = 
         aggregate[:mpg].length > 0 ?  aggregate[:mpg].sum.to_f / aggregate[:mpg].length.to_f : 0
 
-      Group::Grade::VALID_PARAMS.each do |param|
+      aggregate[:first_start] = 
+        aggregate[:first_start].length > 0 ? aggregate[:first_start].sum / aggregate[:first_start].length : 0
+
+      aggregate[:last_stop] = 
+        aggregate[:last_stop].length > 0 ? aggregate[:last_stop].sum / aggregate[:last_stop].length : 0
+
+      DeviceGroup::Grade::VALID_PARAMS.each do |param|
         score = report_card[param] / report_card[:count]
         aggregate[:report_card][param] =
           if score >= 0.8
@@ -146,6 +130,8 @@ class GroupSummaryReport < Report
     end
 
     aggregate[:mpg] = 0 if aggregate[:mpg].is_a?(Array) && aggregate[:mpg].empty?
+    aggregate[:last_stop] = 0 if aggregate[:last_stop].is_a?(Array) && aggregate[:last_stop].empty?
+    aggregate[:first_start] = 0 if aggregate[:first_start].is_a?(Array) && aggregate[:first_start].empty?
 
     self.data = aggregate.merge(:name => @group.name)
   end

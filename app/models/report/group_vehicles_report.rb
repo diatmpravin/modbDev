@@ -17,21 +17,6 @@ class GroupVehiclesReport < Report
     "Group Vehicles Report - #{self.start} through #{self.end}"
   end
 
-  def to_csv
-    self.data.rename_columns(
-      :name => "Name",
-      :duration => "Operating Time (s)",
-      :miles => "Miles",
-      :mpg => "MPG",
-      :speed_events => "Speed Events",
-      :geofence_events => "Geofence Events",
-      :idle_events => "Idle Events",
-      :aggressive_events => "Aggressive Events",
-      :after_hours_events => "After Hours Events"
-    )
-    super
-  end
-
   def run
     report = Ruport::Data::Table(
       :name,
@@ -43,8 +28,8 @@ class GroupVehiclesReport < Report
       :idle_events,
       :aggressive_events,
       :after_hours_events,
-      :first_start_time,
-      :last_end_time
+      :first_start,
+      :last_stop
     )
 
     days = (self.end - self.start).to_i + 1
@@ -62,21 +47,19 @@ class GroupVehiclesReport < Report
         :idle_events => data.idle_events,
         :aggressive_events => data.aggressive_events,
         :after_hours_events => data.after_hours_events,
-        :first_start_time => (data.first_start_time ? 
-                              data.first_start_time.in_time_zone(data.time_zone) : nil),
-        :last_end_time => (data.last_end_time ? 
-                           data.last_end_time.in_time_zone(data.time_zone) : nil),
+        :first_start => data.first_start,
+        :last_start => data.last_stop,
         :report_card => {}
       }
 
-      Group::Grade::VALID_PARAMS.each do |param|
+      DeviceGroup::Grade::VALID_PARAMS.each do |param|
         tmp[:report_card][param] =
-          case @group.grade(param, tmp[param], Group::Grade::AVERAGE_PARAMS[param] ? 1 : days)
-          when Group::Grade::PASS
+          case @group.grade(param, tmp[param])
+          when DeviceGroup::Grade::PASS
             "pass"
-          when Group::Grade::WARN
+          when DeviceGroup::Grade::WARN
             "warn"
-          when Group::Grade::FAIL
+          when DeviceGroup::Grade::FAIL
             "fail"
           end
       end

@@ -10,8 +10,8 @@ class DeviceGroup < ActiveRecord::Base
       :idle_events,
       :aggressive_events,
       :after_hours_events,
-      :first_start_time,
-      :last_end_time
+      :first_start,
+      :last_stop
     ]
 
     # Mark which parameters should be handled
@@ -19,19 +19,7 @@ class DeviceGroup < ActiveRecord::Base
     # smaller is bad
     PARAM_REVERSED = {
       :mpg => true,
-      :last_end_time => true
-    }
-
-    AVERAGE_PARAMS = {
-      :mpg => true,
-      :first_start_time => true,
-      :last_end_time => true
-    }
-
-    # Mark which parameters are time entries
-    TIME_PARAMS = {
-      :first_start_time => true,
-      :last_end_time => true
+      :last_stop => true
     }
 
     PASS = 0
@@ -62,15 +50,8 @@ class DeviceGroup < ActiveRecord::Base
 
   # Given an attribute in key and a current value,
   # grade the value according to rules that have been given to this Group.
-  def grade(key, value, days = 1)
+  def grade(key, value)
     return Grade::PASS unless value
-
-    # Turn any Time values into an integer representing minutes since midnight
-    if Grade::TIME_PARAMS[key]
-      value = value.seconds_since_midnight / 60
-    end
-
-    test = days > 1 ? value / days : value
 
     if self.grading.nil?
       self.update_attribute(:grading, {})
@@ -82,9 +63,9 @@ class DeviceGroup < ActiveRecord::Base
 
     if Grade::PARAM_REVERSED[key]
 
-      if test >= equation[:pass].to_i
+      if value >= equation[:pass].to_i
         Grade::PASS
-      elsif test < equation[:pass].to_i && test > equation[:fail].to_i
+      elsif value < equation[:pass].to_i && value > equation[:fail].to_i
         Grade::WARN
       else
         Grade::FAIL
@@ -92,9 +73,9 @@ class DeviceGroup < ActiveRecord::Base
 
     else
 
-      if test > equation[:fail].to_i
+      if value > equation[:fail].to_i
         Grade::FAIL
-      elsif test <= equation[:fail].to_i && test > equation[:pass].to_i
+      elsif value <= equation[:fail].to_i && value > equation[:pass].to_i
         Grade::WARN
       else
         Grade::PASS
