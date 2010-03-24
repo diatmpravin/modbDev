@@ -19,7 +19,7 @@
       <td><%= h(device.imei_number) %></td>
       <td><%= h(device.vin_number || '-') %></td>
       <td><%= device.device_profile ? h(device.device_profile.name) : 'None' %></td>
-      <td><%= device.group_names.join(", ") -%></td>
+      <td><%= device.group_name -%></td>
       <td class="buttons">
         <% requires_role(User::Role::FLEET) do -%>
           <% if current_user.can_edit?(device) -%>
