@@ -1,12 +1,24 @@
 /**
  * Handling for the Report Card page
  */
+if (typeof(ReportCard) == 'undefined') {
+  ReportCard = {};
+}
+
+ReportCardGroup = {
+  edit: function() {
+    q('#data_pane').animate({width:281}, {duration: 'fast'});
+    q('#edit_pane').html('Hello, hello, hello?');
+    return false;
+  }
+};
+ 
 (function($) {
 
   ReportCard = {
     init: function() {
       $('#frame').fitWindow(function(width, height) {
-        $('#frame').height(height - 32);
+        $('#frame').height(height - 32 - 2);
       });
       
       /*q('#data_pane').scroll(function(e) {
@@ -41,6 +53,8 @@
       q('.scrollbar-fix').css('padding-right', function() {
         return parseInt(q(this).css('padding-right')) + 17;
       });
+      
+      q('div.group a.edit').live('click', ReportCardGroup.edit);
       
     }
     ,

@@ -8,27 +8,69 @@
   <%= submit_tag "Update" -%>
 <% end -%>
 
-<div id="frame">
-  <div class="row clear scrollbar-fix" id="report_card_header">
+<div id="report_card_header">
+  <div class="row scrollbar-fix">
     <div class="listing">
       <span class="name">Name</span>
     </div>
     <div class="data">
-      <span class="data">Start Time</span>
-      <span class="data">End Time</span>
-      <span class="data">Operating Time</span>
-      <span class="data">Miles Driven</span>
-      <span class="data">MPG (Avg)</span>
+      <span class="data">Start</span>
+      <span class="data">End</span>
+      <span class="data">Time</span>
+      <span class="data">Miles</span>
+      <span class="data">MPG</span>
       <span class="data">Speed</span>
       <span class="data">Geofence</span>
       <span class="data">Idle</span>
       <span class="data">Aggressive</span>
-      <span class="after_hours">After Hours</span>
+      <span class="after_hours">After</span>
     </div>
   </div>
+</div>
+<div id="frame">
   <div id="data_pane">
     <% new_tree(@root) do |node, level| -%>
       <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
     <% end -%>
+  </div>
+  <div id="edit_pane">
+    <div class="loading"></div>
+    <div class="edit">
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
+    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    </div>
   </div>
 </div>
