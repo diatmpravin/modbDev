@@ -9,7 +9,7 @@ class GeofencesController < ApplicationController
     unless @group.nil?
       list = @group.self_and_ancestors.map(&:id)
       
-      group_geofences = current_account.geofences.all(:conditions => {:geofence_device_groups => {:group_id => list} }, :joins => :device_groups)
+      group_geofences = current_account.geofences.all(:conditions => {:device_group_links => {:device_group_id => list} }, :joins => :device_groups)
       @geofences = group_geofences.paginate(:page=>params[:page], :per_page => 30)
     else
       @geofences = search_on Geofence do
@@ -66,7 +66,7 @@ class GeofencesController < ApplicationController
 
   def set_group
     if (params[:group_id])
-      @group = current_account.groups.find(params[:group_id])
+      @group = current_account.device_groups.find(params[:group_id])
     end
   end
   

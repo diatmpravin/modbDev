@@ -1,19 +1,11 @@
 north:
   account: quentin
   name: North
-  of: Device
 
 south:
   account: quentin
   name: South
-  of: Device
-
-west:
-  account: quentin
-  name: West
-  of: Geofence
 
 aaron:
   account: aaron
   name: Aaron Group
-  of: Device

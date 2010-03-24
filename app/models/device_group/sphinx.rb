@@ -1,4 +1,4 @@
-class Group < ActiveRecord::Base
+class DeviceGroup < ActiveRecord::Base
 
   ##
   # Sphinx Index Definitions

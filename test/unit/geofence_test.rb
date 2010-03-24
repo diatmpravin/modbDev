@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe "Geofence", ActiveSupport::TestCase do
   setup do
-    Group.rebuild!
+    DeviceGroup.rebuild!
     
     @account = accounts(:quentin)
     @geofence = geofences(:quentin_geofence)
@@ -15,12 +15,14 @@ describe "Geofence", ActiveSupport::TestCase do
     end
     
     specify "has many device groups" do
-      @geofence.update_attributes(:device_groups => [groups(:north)])
-      @geofence.reload.device_groups.should.equal [groups(:north)]
+      @geofence.device_groups.should.equal []
+      @geofence.device_groups << device_groups(:north) << device_groups(:south)
+      assert @geofence.reload.device_groups.include?(device_groups(:north))
+      assert @geofence.reload.device_groups.include?(device_groups(:south))
     end
 
     specify "updates associated group delta" do
-      device_group = groups(:north)
+      device_group = device_groups(:north)
       device_group.delta = false
       device_group.save
       
@@ -103,38 +105,32 @@ describe "Geofence", ActiveSupport::TestCase do
     @geofence.update_attributes(:device_group_ids => [])
     @geofence.device_groups.should.be.empty
     
-    @geofence.update_attributes(:device_group_ids => [groups(:north).id])
-    @geofence.device_groups.should.include(groups(:north))
+    @geofence.update_attributes(:device_group_ids => [device_groups(:north).id])
+    @geofence.device_groups.should.include(device_groups(:north))
     
-    # Wrong group type
+    bad = accounts(:aaron).device_groups.create!(:name => 'Aaron Group')
     should.raise(ActiveRecord::RecordNotFound) do
-      @geofence.update_attributes(:device_group_ids => [groups(:west).id])
-    end
-    
-    # Wrong account
-    bad = accounts(:aaron).groups.of_devices.create!(:name => 'Aaron Group')
-    should.raise(ActiveRecord::RecordNotFound) do
-      @geofence.update_attributes(:device_group_ids => [bad])
+      @geofence.update_attributes(:device_group_ids => [bad.id])
     end
   end
   
   specify "when setting device groups, weeds out groups already included in the tree" do
-    child = @account.groups.of_devices.create(:name => 'North Child')
-    child.move_to_child_of(groups(:north))
+    child = @account.device_groups.create(:name => 'North Child')
+    child.move_to_child_of(device_groups(:north))
     
-    @geofence.update_attributes(:device_groups => [child, groups(:south)])
-    assert @geofence.device_groups.include?(groups(:south))
+    @geofence.update_attributes(:device_groups => [child, device_groups(:south)])
+    assert @geofence.device_groups.include?(device_groups(:south))
     assert @geofence.device_groups.include?(child)
     
-    @geofence.update_attributes(:device_groups => [groups(:north), groups(:south), child])
-    assert @geofence.device_groups.include?(groups(:north))
-    assert @geofence.device_groups.include?(groups(:south))
+    @geofence.update_attributes(:device_groups => [device_groups(:north), device_groups(:south), child])
+    assert @geofence.device_groups.include?(device_groups(:north))
+    assert @geofence.device_groups.include?(device_groups(:south))
     assert !@geofence.device_groups.include?(child)
   end
   
   context "Testing if a point is within a geofence" do
     specify "inside rectangular geofences" do
-      @geofence.geofence_type = Geofence::Type::RECTANGLE;
+      @geofence.geofence_type = Geofence::Type::RECTANGLE
       @geofence.coordinates = [
         {:latitude => 80.0, :longitude => -40.0},
         {:latitude => 86.0, :longitude => -35.0}

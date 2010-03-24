@@ -11,8 +11,7 @@ class ReportsController < ApplicationController
       )
     elsif params[:group_ids]
       params[:report][:devices] = current_account.devices.all(
-        :joins => :groups,
-        :conditions => {:groups => {:id => params[:group_ids].split(',')}}
+        :conditions => {:group_id => params[:group_ids].split(',')}
       )
     end
     

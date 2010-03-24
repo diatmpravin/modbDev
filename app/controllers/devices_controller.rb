@@ -2,7 +2,7 @@ class DevicesController < ApplicationController
   before_filter :require_role,   :only => [:create, :update, :destroy,
                                            :apply_profile, :apply_group, :remove_group]
   before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
-  before_filter :new_device,     :only => [:new, :create ]
+  before_filter :new_device,     :only => [:new, :create]
   before_filter :set_devices,    :only => [:index]
   before_filter :require_access
   
@@ -52,8 +52,6 @@ class DevicesController < ApplicationController
   end
   
   def create
-    @device.user = current_user
-
 	 if @device.update_attributes(params[:device])
       flash[:notice] = 'Vehicle added'
       redirect_to :action => 'index'
@@ -189,7 +187,7 @@ class DevicesController < ApplicationController
   end
 
   def new_device
-    @device = current_account.devices.build(:name => params[:name])
+    @device = current_account.devices.new
   end
   
   def set_device

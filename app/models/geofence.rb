@@ -3,10 +3,8 @@ class Geofence < ActiveRecord::Base
 
   has_many :events
   
-  has_and_belongs_to_many :device_groups,
-    :class_name => 'Group',
-    :join_table => :geofence_device_groups,
-    :uniq => true
+  has_many :device_group_links, :as => :link
+  has_many :device_groups, :through => :device_group_links
   
   # Coordinates are stored in the form [{:latitude => N, :longitude => N}, ...]
   serialize :coordinates, Array
@@ -36,7 +34,7 @@ class Geofence < ActiveRecord::Base
   end
   
   def device_group_ids=(list)
-    self.device_groups = account.groups.of_devices.find(
+    self.device_groups = account.device_groups.find(
       list.reject {|a| a.blank?}
     )
   end
@@ -132,7 +130,7 @@ class Geofence < ActiveRecord::Base
   end
   
   def update_associated_deltas
-      Group.update_all({:delta => true}, {:id => device_groups.map(&:id)})
+    DeviceGroup.update_all({:delta => true}, {:id => device_groups.map(&:id)})
   end
   
   # Weed out group linkings that aren't necessary, because they have parents

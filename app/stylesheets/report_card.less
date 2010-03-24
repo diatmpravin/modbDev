@@ -123,6 +123,8 @@
     padding:0;
   }
   
+  .scrollbar-fix {}
+  
   /* Note the relationship between row's padding-right, listing's width, and
      data's margin-right. We are using the floating negative margin trick so
      that the data div can resize as the browser grows while the listing div
@@ -171,7 +173,19 @@
         border-left:solid 1px #c0c0c0;
         width:10%;
       }
+      
+      span.after_hours {
+        width:7%;
+      }
     }
+  }
+  
+  div.device span.collapsible {
+    background:transparent url(/images/report_card_vehicle.png) no-repeat right center;
+  }
+  
+  #report_card_header {
+    
   }
   
   /* IE7 is fucked up! Cleared rows have a 2-pixel gap! */
@@ -181,7 +195,11 @@
   }
   
   div.hover {
-    background-color:#eddede;
+    background:transparent url(/images/report_card_hover.png) repeat-y 0 0;
+    
+    div.data {
+      background-color:#eddede;
+    }
     
     .hover-only {
       display:block;
@@ -189,25 +207,25 @@
   }
   
   /* Nested Spacing */
-  li                span.collapsible { padding-left:4px + 12px * 0; }
-  li li             span.collapsible { padding-left:4px + 12px * 1; }
-  li li li          span.collapsible { padding-left:4px + 12px * 2; }
-  li li li li       span.collapsible { padding-left:4px + 12px * 3; }
-  li li li li li    span.collapsible { padding-left:4px + 12px * 4; }
-  li li li li li li span.collapsible { padding-left:4px + 12px * 5; }
-  li                span.name { padding-left:24px + 12px * 0; }
-  li li             span.name { padding-left:24px + 12px * 1; }
-  li li li          span.name { padding-left:24px + 12px * 2; }
-  li li li li       span.name { padding-left:24px + 12px * 3; }
-  li li li li li    span.name { padding-left:24px + 12px * 4; }
-  li li li li li li span.name { padding-left:24px + 12px * 5; }
+  li                span.collapsible { padding-left:4px + 14px * 0; }
+  li li             span.collapsible { padding-left:4px + 14px * 1; }
+  li li li          span.collapsible { padding-left:4px + 14px * 2; }
+  li li li li       span.collapsible { padding-left:4px + 14px * 3; }
+  li li li li li    span.collapsible { padding-left:4px + 14px * 4; }
+  li li li li li li span.collapsible { padding-left:4px + 14px * 5; }
+  li                span.name { padding-left:24px + 14px * 0; }
+  li li             span.name { padding-left:24px + 14px * 1; }
+  li li li          span.name { padding-left:24px + 14px * 2; }
+  li li li li       span.name { padding-left:24px + 14px * 3; }
+  li li li li li    span.name { padding-left:24px + 14px * 4; }
+  li li li li li li span.name { padding-left:24px + 14px * 5; }
   
   /* Nested Grouplines */
-  li li { background:transparent url(/images/report_card_tree_line.png) repeat-y 11px center; }
-  li li li { background-position: 23px center; }
-  li li li li { background-position: 35px center; }
-  li li li li li { background-position: 47px center; }
-  li li li li li li { background-position: 59px center; }
+  li li             { background:transparent url(/images/report_card_tree_line.png) repeat-y 11px center; }
+  li li li          { background-position: 25px center; }
+  li li li li       { background-position: 39px center; }
+  li li li li li    { background-position: 53px center; }
+  li li li li li li { background-position: 67px center; }
 }
 
 

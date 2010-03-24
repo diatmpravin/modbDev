@@ -38,7 +38,6 @@ Factory.define :geofence do |geofence|
   geofence.name "Geofence"
 end
 
-Factory.define :group do |group|
+Factory.define :device_group do |group|
   group.account { Account.find_by_number(10001) }
-  group.of "Device"
 end

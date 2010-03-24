@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe "Device", ActiveSupport::TestCase do
   setup do
-    Group.rebuild!
+    DeviceGroup.rebuild!
     @account = accounts(:quentin)
     @device = devices(:quentin_device)
 
@@ -43,28 +43,38 @@ describe "Device", ActiveSupport::TestCase do
     end
   end
 
+  context "Scopes" do
+    specify "ungrouped scope includes only devices with no group" do
+      assert @account.devices.ungrouped.include?(@device)
+      
+      device_groups(:north).devices << @device
+      @device.reload
+      
+      assert !@account.devices.ungrouped.include?(@device)
+    end
+  end
+  
   context "Groups" do
-
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
       @group.devices << @device
       @device.reload
     end
 
-    specify "belongs to many groups" do
-      @device.groups.should.equal [groups(:north)]
+    specify "belongs to a group" do
+      @device.group.should.equal device_groups(:north)
 
-      groups(:south).devices << @device
+      device_groups(:south).devices << @device
       @device.reload
 
-      @device.groups.should.equal [groups(:north), groups(:south)]
+      @device.group.should.equal device_groups(:south)
     end
 
     specify "can get a list of group names" do
-      groups(:south).devices << @device
+      device_groups(:south).devices << @device
       @device.reload
 
-      @device.group_names.should.equal ["North", "South"]
+      @device.group_name.should.equal 'South'
     end
   end
 
@@ -257,7 +267,7 @@ describe "Device", ActiveSupport::TestCase do
         Point.find(:last).leg.trip.device_id.should.equal @device.id
       end
 
-      specify "creeates a new trip anytime it receives IGNITION_ON" do
+      specify "creates a new trip anytime it receives IGNITION_ON" do
         @device.process(@example_location)
         @example_location[:time] = '20:18:54'
         @example_location[:event] = '6011'
@@ -332,15 +342,17 @@ describe "Device", ActiveSupport::TestCase do
     context "Geofence checking" do
       setup do
         @geofence = geofences(:quentin_geofence)
-        @geofence.device_groups << groups(:north)
-        @device.groups << groups(:north)
+        @geofence.device_groups << device_groups(:north)
+        @device.update_attributes(:group => device_groups(:north))
         @device.reload
-        
       end
 
       specify "no alerts sent if no flags are set" do
         @geofence.update_attributes(:alert_on_entry => false, :alert_on_exit => false)
         Geofence.any_instance.expects(:contain? ).times(2).returns(true, false)
+        
+        @device.group.should.equal device_groups(:north)
+        @device.group.geofences.should.equal [geofences(:quentin_geofence)]
         
         @device.process(@example_location)        
         Mailer.deliveries.length.should.be 0
@@ -377,8 +389,8 @@ describe "Device", ActiveSupport::TestCase do
     context "Landmark checking" do
       setup do
         @landmark = landmarks(:quentin)
-        @landmark.device_groups << groups(:north)
-        @device.groups << groups(:north)
+        @landmark.device_groups << device_groups(:north)
+        @device.update_attributes(:group => device_groups(:north))
         @device.reload
       end
 
@@ -581,14 +593,13 @@ describe "Device", ActiveSupport::TestCase do
         )
 
         # update the time of the last point so that we don't cause NOT_REPORTING events
-		  @device.points.last.occurred_at = Time.parse("02/05/2009 22:15:00")	  
+		    @device.points.last.occurred_at = Time.parse("02/05/2009 22:15:00")	  
       end
 
       ##
       ## NOTE: All times merged into @example_location are given in
       ##       GMT and the account we're working with is EST - 5
       ##
-
       specify "sets event and alert when trip crosses after-hour boundary" do
         # Point right before       
         Event.should.differ(:count).by(0) do
@@ -1008,7 +1019,7 @@ describe "Device", ActiveSupport::TestCase do
       @device.idle_threshold = 20
 
       Tracker.any_instance.expects(:async_configure).never
-      @device.save      
+      @device.save
     end
 
     specify "if settings are unchanged, but a tracker is added, updates are sent" do

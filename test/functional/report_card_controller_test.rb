@@ -5,7 +5,7 @@ describe "ReportCardController", ActionController::TestCase do
 
   setup do
     login_as :quentin
-    Group.rebuild!
+    DeviceGroup.rebuild!
   end
 
   it "should show the report card" do

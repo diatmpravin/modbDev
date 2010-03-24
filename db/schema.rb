@@ -74,6 +74,24 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
     t.integer "last_stop"
   end
 
+  create_table "device_group_links", :force => true do |t|
+    t.integer "device_group_id"
+    t.integer "link_id"
+    t.string  "link_type"
+  end
+
+  create_table "device_groups", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "name",       :limit => 30
+    t.boolean  "delta",                    :default => true
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.text     "grading"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "device_profiles", :force => true do |t|
     t.integer  "account_id"
     t.boolean  "alert_on_speed",                     :default => false
@@ -124,7 +142,6 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
     t.integer  "tracker_id"
     t.boolean  "to_be_deleted"
     t.integer  "odometer"
-    t.integer  "user_id"
     t.string   "time_zone",            :limit => 64, :default => "Eastern Time (US & Canada)"
     t.boolean  "detect_pitstops",                    :default => false
     t.integer  "pitstop_threshold",                  :default => 10
@@ -132,12 +149,12 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
     t.integer  "device_profile_id"
     t.boolean  "lock_vin",                           :default => false
     t.boolean  "alert_on_reset",                     :default => false
+    t.integer  "group_id"
   end
 
   add_index "devices", ["account_id"], :name => "index_devices_on_account_id"
   add_index "devices", ["delta"], :name => "index_devices_on_delta"
   add_index "devices", ["tracker_id"], :name => "index_devices_on_tracker_id"
-  add_index "devices", ["user_id"], :name => "index_devices_on_user_id"
 
   create_table "events", :force => true do |t|
     t.integer  "point_id"
@@ -153,11 +170,6 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
 
   add_index "events", ["point_id"], :name => "index_events_on_point_id"
 
-  create_table "geofence_device_groups", :id => false, :force => true do |t|
-    t.integer "geofence_id"
-    t.integer "group_id"
-  end
-
   create_table "geofences", :force => true do |t|
     t.integer  "geofence_type"
     t.text     "coordinates"
@@ -172,29 +184,6 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
   end
 
   add_index "geofences", ["account_id"], :name => "index_geofences_on_account_id"
-
-  create_table "group_links", :id => false, :force => true do |t|
-    t.integer "group_id"
-    t.integer "link_id"
-  end
-
-  create_table "groups", :force => true do |t|
-    t.integer  "account_id"
-    t.string   "name"
-    t.string   "of"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "delta",      :default => true
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.text     "grading"
-  end
-
-  create_table "landmark_device_groups", :id => false, :force => true do |t|
-    t.integer "landmark_id"
-    t.integer "group_id"
-  end
 
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"
@@ -223,13 +212,6 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
   end
 
   add_index "legs", ["trip_id"], :name => "index_legs_on_trip_id"
-
-  create_table "phone_devices", :force => true do |t|
-    t.integer  "phone_id"
-    t.integer  "device_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "points", :force => true do |t|
     t.integer  "event"

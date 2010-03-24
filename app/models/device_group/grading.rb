@@ -1,6 +1,6 @@
-# Methods of Group handling the grading of various values on vehicles
+# Methods of DeviceGroup handling the grading of various values on vehicles
 # in a group or it's subgroups
-class Group < ActiveRecord::Base
+class DeviceGroup < ActiveRecord::Base
 
   module Grade
     VALID_PARAMS = [
@@ -45,7 +45,7 @@ class Group < ActiveRecord::Base
       @group.grading ||= {}
     end
 
-    Group::Grade::VALID_PARAMS.each do |param|
+    DeviceGroup::Grade::VALID_PARAMS.each do |param|
       define_method(param) do
         @group.grading[param] ||= {}
       end

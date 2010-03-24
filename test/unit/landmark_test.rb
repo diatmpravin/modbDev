@@ -12,6 +12,13 @@ describe "Landmark", ActiveSupport::TestCase do
       @landmark.should.respond_to(:account)
       @landmark.account.should.equal @account
     end
+    
+    specify "has many device groups" do
+      @landmark.device_groups.should.equal []
+      @landmark.device_groups << device_groups(:north) << device_groups(:south)
+      assert @landmark.reload.device_groups.include?(device_groups(:north))
+      assert @landmark.reload.device_groups.include?(device_groups(:south))
+    end
   end
   
   context "Validations" do

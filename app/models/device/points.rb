@@ -82,19 +82,19 @@ class Device < ActiveRecord::Base
       end
       
       # Handle boundary testing for geofences and landmarks linked to any of this vehicle's groups.
-      geofences_to_test = account.geofences.all(
+      geofences_to_test = group ? account.geofences.all(
         :joins => :device_groups,
-        :conditions => { :geofence_device_groups => {
-          :group_id => groups.map(&:self_and_ancestors).flatten.map(&:id)
+        :conditions => { :device_group_links => {
+          :device_group_id => group.self_and_ancestors.flatten.map(&:id)
         }}
-      )
+      ) : []
 
-      landmarks_to_test = account.landmarks.all(
+      landmarks_to_test = group ? account.landmarks.all(
         :joins => :device_groups,
-        :conditions => { :landmark_device_groups => {
-          :group_id => groups.map(&:self_and_ancestors).flatten.map(&:id)
+        :conditions => { :device_group_links => {
+          :device_group_id => group.self_and_ancestors.flatten.map(&:id)
         }}
-      )
+      ) : []
 
       if last_point
         geofences_to_test.each do |fence|

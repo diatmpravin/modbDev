@@ -14,11 +14,11 @@ describe "GroupsController", ActionController::TestCase do
       get :index
       template.should.equal "index"
 
-      assigns(:groups).should.equal [ groups(:north), groups(:south) ]
+      assigns(:groups).should.equal [ device_groups(:north), device_groups(:south) ]
     end
 
     specify "handles pagination" do
-      g = groups(:north)
+      g = device_groups(:north)
       50.times { g.clone.save}
 
       get :index
@@ -34,14 +34,14 @@ describe "GroupsController", ActionController::TestCase do
 
     specify "takes into account Group filter parameters" do
       set_filter Device, "get_vehicle"
-      set_filter Group, "get_groupin"
+      set_filter DeviceGroup, "get_groupin"
 
-      Group.expects(:search).with(
+      DeviceGroup.expects(:search).with(
         "get_groupin", :conditions => {},
         :page => nil, :per_page => 30,
         :with => {:account_id => accounts(:quentin).id},
         :mode => :extended
-      ).returns(accounts(:quentin).groups)
+      ).returns(accounts(:quentin).device_groups)
 
       get :index
       template.should.be 'index'
@@ -52,16 +52,16 @@ describe "GroupsController", ActionController::TestCase do
   context "Show" do
 
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
     end
 
     specify "shows vehicles in the group" do
       @group.devices << devices(:quentin_device)
 
-      xhr :get, :show, :id => groups(:north).id
+      xhr :get, :show, :id => device_groups(:north).id
       template.should.be "show"
 
-      assigns(:group).should.equal groups(:north)
+      assigns(:group).should.equal device_groups(:north)
       assigns(:devices).should.equal [devices(:quentin_device)]
     end
 
@@ -84,16 +84,15 @@ describe "GroupsController", ActionController::TestCase do
       post :create, :group => {:name => "New Groupzor"}
       should.redirect_to groups_path
 
-      g = accounts(:quentin).groups.first
+      g = accounts(:quentin).device_groups.first
       g.name.should.equal "New Groupzor"
-      g.of.should.equal "Device"
     end
 
   end
 
   context "Edit" do
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
     end
 
     specify "shows the form" do
@@ -107,7 +106,7 @@ describe "GroupsController", ActionController::TestCase do
 
   context "Update" do
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
     end
 
     specify "updates a group" do
@@ -119,7 +118,7 @@ describe "GroupsController", ActionController::TestCase do
     end
 
     specify "cannot edit a group account doesn't own" do
-      g = accounts(:aaron).groups.create :name => "Aaron"
+      g = accounts(:aaron).device_groups.create :name => "Aaron"
 
       put :update, :id => g.id, :group => {:name => "Bad"}
       should.redirect_to groups_path
@@ -132,31 +131,33 @@ describe "GroupsController", ActionController::TestCase do
 
   context "Destroy" do
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
     end
 
     specify "can remove a group" do
       delete :destroy, :id => @group.id
       should.redirect_to groups_path
 
-      assert !Group.exists?(@group.id)
+      assert !DeviceGroup.exists?(@group.id)
     end
 
   end
 
   context "Live Look" do
     setup do
-      @group = groups(:north)
+      @group = device_groups(:north)
     end
 
     specify "gather up device ids for this group and forward to live look" do
       d = devices(:quentin_device)
       d2 = Device.generate!
+      
+      # Note: devices now ordered by name in group, so order is [d2, d]
       @group.devices << d
       @group.devices << d2
 
       get :live_look, :id => @group.id
-      should.redirect_to live_look_devices_path(:device_ids => "#{d.id},#{d2.id}")
+      should.redirect_to live_look_devices_path(:device_ids => "#{d2.id},#{d.id}")
     end
 
     specify "if group is empty, redirect w/ message" do
