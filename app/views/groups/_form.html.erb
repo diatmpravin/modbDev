@@ -3,7 +3,7 @@
   <%= javascript_include_tag "groups/edit" -%>
 <% end -%>
 
-<% form_for group, :url => group_path(group) do |f| %>
+<% form_for group, :url => device_groups_path(group) do |f| %>
   <div>
     <h3>Group Details</h3>
     
@@ -36,7 +36,7 @@
   <% end -%>
 
   <div class="buttons">
-    <%= link_to 'Cancel', groups_path %>
+    <%= link_to 'Cancel', device_groups_path %>
     <%= submit_tag 'Save', :class => 'button' %> 
   </div>
 

@@ -71,7 +71,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :filter
 
   # Groups
-  map.resources :groups, :member => {
+  map.resources :device_groups, :as => 'groups', :controller => 'groups', :member => {
       :live_look => :get
   } do |group|
     group.resources :geofences, :controller => 'geofences'

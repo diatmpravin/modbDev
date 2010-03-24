@@ -113,8 +113,8 @@ class RoutesTest < ActionController::IntegrationTest
   end
 
   test "groups resource" do
-    assert_equal "/groups", groups_path
-    assert_equal "/groups/3/live_look", live_look_group_path(3)
+    assert_equal "/groups", device_groups_path
+    assert_equal "/groups/3/live_look", live_look_device_group_path(3)
   end
 
   test "import vehicles resource" do

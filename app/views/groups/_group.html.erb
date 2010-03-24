@@ -7,13 +7,13 @@
     <h1><%= check_box_tag :apply_to, group.id, false, :id => "apply_to_#{group.id}" -%>&nbsp;&nbsp;<%= group.name -%></h1>
 
     <div class="actions">
-      <%= link_to 'Live Look', live_look_group_path(group), :class => 'liveLook', :title => 'Live Look' %>
-      <%= link_to 'Edit', edit_group_path(group), :class => 'edit', :title => 'Edit' %>
-      <%= link_to 'Delete', group_path(group), :class => 'delete', :title => 'Remove' %>
+      <%= link_to 'Live Look', live_look_device_group_path(group), :class => 'liveLook', :title => 'Live Look' %>
+      <%= link_to 'Edit', edit_device_group_path(group), :class => 'edit', :title => 'Edit' %>
+      <%= link_to 'Delete', device_group_path(group), :class => 'delete', :title => 'Remove' %>
     </div>
 
     <div class="view">
-      <%= link_to "Group Details", group_path(group), :class => 'viewDetails' -%>
+      <%= link_to "Group Details", device_group_path(group), :class => 'viewDetails' -%>
       <div class="loading"></div> 
     </div>
   </div>
