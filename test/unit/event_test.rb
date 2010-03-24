@@ -21,7 +21,7 @@ describe "Event", ActiveSupport::TestCase do
         @event4 = Event.create(:occurred_at => Time.parse('02/04/2009 00:00:00 EST'))
       end
       
-      xspecify "works" do
+      specify "works" do
         zone = ActiveSupport::TimeZone['Eastern Time (US & Canada)']
         list = Event.in_range(Date.parse('02/02/2009'), Date.parse('02/03/2009'), zone)
         list.should.not.include(@event1)
@@ -30,7 +30,7 @@ describe "Event", ActiveSupport::TestCase do
         list.should.not.include(@event4)
       end
       
-      xspecify "respects time zone changes" do
+      specify "respects time zone changes" do
         zone = ActiveSupport::TimeZone['Central Time (US & Canada)']
         list = Event.in_range(Date.parse('02/02/2009'), Date.parse('02/03/2009'), zone)
         list.should.not.include(@event1)
