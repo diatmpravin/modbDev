@@ -13,6 +13,11 @@ class DeviceGroup < ActiveRecord::Base
       :first_start,
       :last_stop
     ]
+     # Mark which parameters are time entries
+     TIME_PARAMS = {
+       :first_start => true,
+       :last_stop => true
+     }
 
     # Mark which parameters should be handled
     # in the reverse order, aka bigger is good, 
