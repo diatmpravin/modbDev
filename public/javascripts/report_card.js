@@ -18,7 +18,7 @@ ReportCardGroup = {
   ReportCard = {
     init: function() {
       $('#frame').fitWindow(function(width, height) {
-        $('#frame').height(height - 32);
+        $('#frame').height(height - 32 - 2);
       });
       
       /*q('#data_pane').scroll(function(e) {

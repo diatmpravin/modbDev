@@ -1,97 +1,11 @@
 /**
- * Styles for the report card page
+ * Report Card
  */
-/*#report_card {
-
-  table {
-    width: 100%;
-
-    th {
-      border:solid 1px black;
-      background-color: #CCC;
-      font-weight:bold;
-      text-align:center;
-      padding:2px;
-    }
-
-    th.empty {
-      border: none;
-      border-left: 1px solid white;
-      background-color: white;
-    }
-
-    tr {
-      border-left: 1px solid #888;
-      border-right: 1px solid #888;
-    }
-
-    td {
-      color: black;
-      border: solid 1px #888;
-      text-align: right;
-      line-height: 175%;
-
-      padding-left: 1em;
-      padding-right: 1.0em;
-    }
-
-    td.left {
-      text-align: left;
-      padding-left: 2em;
-
-      img {
-        vertical-align: middle;
-      }
-    }
-
-    td.overall {
-      text-align: center;
-    }
-
-    td.name {
-      text-align: left;
-    }
-
-    td.box {
-      text-align: center;
-      padding: 0;
-    }
-
-    div.warning {
-      float: right;
-    }
-
-    div.status {
-      float: left;
-    }
-
-    tr.odd,
-    tr.odd td {
-      background-color: #CCC;
-    }
-
-    tr.active,
-    tr.active td {
-      background-color: #9db5ce;
-    }
-
-    tr.active a {
-      background-color: white;
-    }
-  }
-
-  .expand {
-
-  }
-
-  .busy,
-  .collapse {
-    display: none;
-  }
-}*/
-
 @listing_width: 280px;
 
+/**
+ * Report Card - Page & Data Row Styles
+ */
 #report_card {
   min-width:900px;
   overflow-x:auto;
@@ -99,47 +13,14 @@
   
   #content {
     padding-bottom:0;
-  }
-  
-  #frame {
-    background-color:red;
-    width:100%;
     
-    #data_pane {
-      background-color:#f5ecec;
-      border:solid 1px #c0c0c0;
-      float:left;
-      height:100%;
-      overflow-x:hidden;
-      overflow-y:scroll;
-      width:100%;
-      
-      > ol {
-        margin-top:-1px;
-      }
-    }
-    
-    #edit_pane {
-      background-color:white;
-      height:100%;
-      overflow-y:auto;
+    .content {
+      padding-bottom:0;
     }
   }
   
-  ol {
-    list-style:none;
-    margin:0;
-    padding:0;
-  }
-  
-  .scrollbar-fix {}
-  
-  /* Note the relationship between row's padding-right, listing's width, and
-     data's margin-right. We are using the floating negative margin trick so
-     that the data div can resize as the browser grows while the listing div
-     stays the same size. */
   div.row {
-    //background-color:#f5ecec;
+    background-color:#f5ecec;
     border-top:solid 1px #c0c0c0;
     cursor:default;
     height:25px;
@@ -152,33 +33,32 @@
       line-height:25px;
     }
     
-    span.collapsible {
-      background:transparent url(/images/report_card_open.png) no-repeat right center;
-      cursor:pointer;
-      width:15px;
-    }
-    
-    span.closed {
-      background:transparent url(/images/report_card_closed.png) no-repeat right center;
-      
-      width:15px;
-    }
-    
-    span.name {
-      float:none;
-    }
-    
-    a.edit, a.delete, a.liveLook, a.geofence {
-      float:right;
-      height:25px;
-      width:22px;
-    }
-    
     div.listing {
       float:left;
       width:@listing_width;
+        
+      span.collapsible {
+        background:transparent url(/images/report_card_open.png) no-repeat right center;
+        cursor:pointer;
+        width:15px;
+      }
+      
+      span.closed {
+        background:transparent url(/images/report_card_closed.png) no-repeat right center;
+        width:15px;
+      }
+      
+      span.name {
+        float:none;
+      }
+      
+      a.edit, a.delete, a.liveLook, a.geofence {
+        float:right;
+        height:25px;
+        width:22px;
+      }
     }
-    
+
     div.data {
       float:left;
       margin-right:0px - @listing_width;
@@ -194,33 +74,101 @@
       }
     }
   }
+}
+
+/**
+ * Report Card - Header
+ */
+#report_card_header {
+  border:solid 1px #999;
+  border-bottom:none;
   
-  div.device span.collapsible {
-    background:transparent url(/images/report_card_vehicle.png) no-repeat right center;
+  div.row {
+    border-top:none;
+  }
+}
+
+/**
+ * Report Card - Framework
+ */
+#frame {
+  background-color:red;
+  border:solid 1px #999;
+  position:relative;
+  
+  ol {
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+
+  /**
+   * Data Pane
+   */
+  #data_pane {
+    background:#303030 url(/images/frame_bg.png) repeat 0 0;
+    height:100%;
+    left:0px;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    position:absolute;
+    top:0px;
+    width:100%;
+    z-index:5;
+    
+    > ol {
+      margin-top:-1px;
+    }
+  }
+
+  /**
+   * Edit Pane
+   */
+  #edit_pane {
+    background-color:white;
+    height:100%;
+    left:0px;
+    overflow-x:hidden;
+    overflow-y:auto;
+    position:absolute;
+    top:0px;
+    width:100%;
+    z-index:3;
+    
+    div.loading {
+      background-position:center center;
+      padding:240px 0 0 280px;
+    }
+    
+    div.edit {
+      padding:32px 32px 32px 312px;
+    }
   }
   
-  #report_card_header {
-    background-color:#c7dce4;
-    border:solid 1px black;
-  }
-  
-  /* IE7 is fucked up! Cleared rows have a 2-pixel gap! */
-  
+  /**
+   * Support for hover elements
+   */
   .hover-only {
     display:none;
   }
   
-  div.hover {
-    background:transparent url(/images/report_card_hover.png) repeat-y 0 0;
-    
-    div.data {
-      background-color:#eddede;
-    }
+  div.row:hover {
+    background-color:#eddede;
     
     .hover-only {
       display:block;
     }
   }
+  
+  /* Delete as soon as tabs are working properly */
+  /*div.hover {
+    background-color:#eddede;
+    
+    .hover-only {
+      display:block;
+    }
+  }*/
+  
   
   /* Nested Spacing */
   li                span.collapsible { padding-left:4px + 14px * 0; }
@@ -243,6 +191,4 @@
   li li li li li    { background-position: 53px center; }
   li li li li li li { background-position: 67px center; }
 }
-
-
 
