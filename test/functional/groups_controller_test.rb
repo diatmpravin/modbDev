@@ -81,7 +81,7 @@ describe "GroupsController", ActionController::TestCase do
   context "Create" do
 
     specify "build a new device group" do
-      post :create, :group => {:name => "New Groupzor"}
+      post :create, :device_group => {:name => "New Groupzor"}
       should.redirect_to device_groups_path
 
       g = accounts(:quentin).device_groups.first
@@ -110,7 +110,7 @@ describe "GroupsController", ActionController::TestCase do
     end
 
     specify "updates a group" do
-      put :update, :id => @group.id, :group => {:name => "Oh yeah"}
+      put :update, :id => @group.id, :device_group => {:name => "Oh yeah"}
       should.redirect_to device_groups_path
 
       @group.reload
@@ -120,7 +120,7 @@ describe "GroupsController", ActionController::TestCase do
     specify "cannot edit a group account doesn't own" do
       g = accounts(:aaron).device_groups.create :name => "Aaron"
 
-      put :update, :id => g.id, :group => {:name => "Bad"}
+      put :update, :id => g.id, :device_group => {:name => "Bad"}
       should.redirect_to device_groups_path
 
       g.reload

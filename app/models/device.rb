@@ -140,13 +140,7 @@ class Device < ActiveRecord::Base
   # over a given range
   def daily_data_over(from, to)
     from = from.to_date; to = to.to_date
-    #aggregate = DeviceDataPerDay.new
 
-    #self.daily_data.for_range(from, to).each do |data|
-    #  aggregate.merge!(data)
-    #end
-
-    #aggregate
     DeviceDataPerDay.all(:select => "AVG(duration) as duration_avg,
                                      AVG(miles) as miles_avg,
                                      AVG(speed_events) as speed_events_avg,
