@@ -50,8 +50,8 @@
       slider.slider({
         range: true,
         min: 0,
-        max: 1440,
-        step: 15,
+        max: 86399,
+        step: 300,
         values: Groups.initialValues(slider, input_pass.val(), input_fail.val()),
         slide: function(e, ui) {
           var pass = ui.values[0], fail = ui.values[1];
@@ -105,10 +105,10 @@
     }
     ,
     convertToTime: function(value) {
-      var hours = Math.floor(value / 60),
-          minutes = value - (hours * 60);
+      var hours = Math.floor(value / 3600),
+          minutes = (value - (hours * 3600))/60;
 
-      if(minutes == 0) minutes = '0' + minutes;
+      if(minutes < 10) minutes = '0' + minutes;
 
       return hours + ':' + minutes;
     }
