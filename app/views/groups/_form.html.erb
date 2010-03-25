@@ -3,7 +3,7 @@
   <%= javascript_include_tag "groups/edit" -%>
 <% end -%>
 
-<% form_for group, :url => device_groups_path(group) do |f| %>
+<% form_for group, :url => device_group_path(group) do |f| %>
   <div>
     <h3>Group Details</h3>
     
@@ -29,8 +29,8 @@
     <div>
       <span><%= param.to_s.humanize.titleize -%></span> <span class="pass"></span> - <span class="fail"></span>
       <div id="<%= param -%>_events_slider" class="<%= DeviceGroup::Grade::TIME_PARAMS[param] ? "time-slider" : "slider" -%> <%= DeviceGroup::Grade::PARAM_REVERSED[param] ? "reversed" : "" -%>">
-        <%= hidden_field_tag "group[grading][#{param}][fail]", proxy.send(param)[:fail], :class => "fail" -%>
-        <%= hidden_field_tag "group[grading][#{param}][pass]", proxy.send(param)[:pass], :class => "pass" -%>
+        <%= hidden_field_tag "device_group[grading][#{param}][fail]", proxy.send(param)[:fail], :class => "fail" -%>
+        <%= hidden_field_tag "device_group[grading][#{param}][pass]", proxy.send(param)[:pass], :class => "pass" -%>
       </div>
     </div>
   <% end -%>

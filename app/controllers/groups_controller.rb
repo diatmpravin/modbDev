@@ -27,8 +27,8 @@ class GroupsController < ApplicationController
   # POST /groups
   # Create a new group
   def create
-    @group = current_account.device_groups.build(params[:group])
-    @group.parent = current_account.device_groups.find_by_id(params[:group][:parent_id])
+    @group = current_account.device_groups.build(params[:device_group])
+    @group.parent = current_account.device_groups.find_by_id(params[:device_group][:parent_id])
     @group.save
     
     redirect_to device_groups_path
@@ -45,12 +45,12 @@ class GroupsController < ApplicationController
     # TODO: Add error handling
     # I believe "name already taken" and "group move invalid" are the two possible errors
     #
-    @group.update_attributes(params[:group])
-    if params[:group][:parent_id]
-      if params[:group][:parent_id].blank?
+    @group.update_attributes(params[:device_group])
+    if params[:device_group][:parent_id]
+      if params[:device_group][:parent_id].blank?
         @group.move_to_root
       else
-        @group.move_to_child_of(params[:group][:parent_id].to_i)
+        @group.move_to_child_of(params[:device_group][:parent_id].to_i)
       end
     end
     
