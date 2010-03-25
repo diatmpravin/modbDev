@@ -1,5 +1,5 @@
 <% if node.is_a?(Device) -%>
-  <div class="row device clear" id="device_<%= dom_id(node) %>">
+  <div class="row device clear" id="<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
       <span class="indent"></span>
@@ -19,7 +19,7 @@
     </div>
   </div>
 <% else -%>
-  <div class="row group clear" id="group_<%= dom_id(node) %>">
+  <div class="row group clear" id="<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
       <span class="indent"></span>

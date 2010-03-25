@@ -48,9 +48,11 @@ ReportCard.DataPane = {
       }
     });
     
+    // Allow user to create groups
+    q('a.newGroup').button().live('click', ReportCard.Group.newGroup);
+    
     // Allow user to edit groups
     q('div.group a.edit').live('click', ReportCard.Group.edit);
-    
     
     // Allow user to delete groups
     q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
@@ -82,9 +84,31 @@ ReportCard.DataPane = {
     // "Unfix" the width of the report card table so it can be resized
     q('#data_pane > ol').css('width', 'auto');
     
-    // Always "clear" the edit pane so it is ready to be used again
+    return this;
+  }
+};
+
+/**
+ * Report Card Edit Pane
+ */
+ReportCard.EditPane = {
+  /**
+   * Hide and remove anything currently in the edit pane, then show the
+   * loading spinner.
+   */
+  clear: function() {
     q('#edit_pane').find('.edit').hide().empty()
                    .siblings('.loading').show();
+    
+    return this;
+  },
+  
+  /**
+   * Hide any loading spinner and display whatever is in the edit form.
+   */
+  show: function() {
+    q('#edit_pane').find('.loading').hide()
+                   .siblings('.edit').show();
     
     return this;
   },
@@ -155,13 +179,26 @@ ReportCard.Group = {
   },
   
   /**
+   * Show the edit form for a new group.
+   */
+  newGroup: function() {
+    ReportCard.EditPane.clear().title('Create Group');
+    ReportCard.DataPane.close();
+    
+    q.get(q(this).attr('href'), function(html) {
+      ReportCard.Group.initPane(html);
+      ReportCard.EditPane.show();
+    });
+    
+    return false;
+  },
+  
+  /**
    * Show the edit form for the selected group.
    */
   edit: function() {
-    q('#edit_pane').find('.edit').hide().end()
-                   .find('.loading').show();
-    
-    ReportCard.DataPane.close().title('Edit Group');
+    ReportCard.EditPane.clear().title('Edit Group');
+    ReportCard.DataPane.close();
     
     q.get(q(this).attr('href'), function(html) {
       q('#edit_pane').find('.loading').hide();
@@ -183,7 +220,8 @@ ReportCard.Group = {
       beforeSubmit: function() { },
       success: function(json) {
         if (json.status == 'success') {
-          ReportCard.DataPane.open().title();
+          ReportCard.DataPane.open();
+          ReportCard.EditPane.title();
         } else {
           ReportCard.Group.initPane(json.html);
         }
@@ -197,7 +235,8 @@ ReportCard.Group = {
    * Close the group edit form without saving.
    */
   cancel: function() {
-    ReportCard.DataPane.open().title();
+    ReportCard.DataPane.open();
+    ReportCard.EditPane.title();
                     
     return false;
   },
