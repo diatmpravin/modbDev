@@ -83,7 +83,7 @@ ReportCard.DataPane = {
     q('#data_pane > ol').css('width', function() { return q(this).width() + 'px'; });
     
     // Collapse the data pane
-    q('#data_pane').animate({width:280}, {duration:'fast'});
+    q('#data_pane').animate({width:280}, {duration:'normal'});
     
     return this;
   },
@@ -94,7 +94,7 @@ ReportCard.DataPane = {
    */
   open: function() {
     // Open the data pane
-    q('#data_pane').animate({width:'100%'}, {duration:'fast'});
+    q('#data_pane').animate({width:'100%'}, {duration:'normal'});
     
     // "Unfix" the width of the report card table so it can be resized
     q('#data_pane > ol').css('width', 'auto');
@@ -186,9 +186,13 @@ ReportCard.Group = {
       q('#edit_pane .edit').html(html);
     }
     
+    // Pretty & clickable buttons
     q('#edit_pane .buttons').find('a, input').button();
     q('#edit_pane .buttons .cancel').click(ReportCard.Group.cancel);
     q('#edit_pane .buttons .save').click(ReportCard.Group.save);
+    
+    // Get the sliders ready (temporarily using a different file)
+    Groups.init();
     
     return q('#edit_pane .edit');
   },
@@ -346,8 +350,7 @@ ReportCard.Group = {
         if (json.status == 'success') {
           self.dialog('close');
           
-          // The application will return a new "tree" for our direct ancestor,
-          // and tell us where to put it.
+          // The application will return a new tree and tell us where to put it
           q('#' + json.id).closest('li').replaceWith(json.html);
           ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
         } else {

@@ -29,20 +29,19 @@ class GroupsController < ApplicationController
   def create
     @group = current_account.device_groups.build(params[:device_group])
     @group.parent = current_account.device_groups.find_by_id(params[:device_group][:parent_id])
-    @group.save
     
-    root = current_user.device_group_or_root
-    
-    respond_to do |format|
-      format.html {
-        redirect_to device_groups_path
+    if @group.save
+      root = current_user.device_group_or_root
+      
+      render :json => {
+        :status => 'success',
+        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+        :id => dom_id(root)
       }
-      format.json {
-        render :json => {
-          :status => 'success',
-          :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-          :id => dom_id(root)
-        }
+    else
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:group => @group})
       }
     end
   end
@@ -67,12 +66,18 @@ class GroupsController < ApplicationController
       end
     end
     
-    respond_to do |format|
-      format.html {
-        redirect_to device_groups_path
+    if true
+      root = current_user.device_group_or_root
+      
+      render :json => {
+        :status => 'success',
+        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+        :id => dom_id(root)
       }
-      format.json {
-        render :json => {:status => 'success'}
+    else
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:group => @group})
       }
     end
   end
@@ -80,8 +85,15 @@ class GroupsController < ApplicationController
   # DELETE /groups/:id
   # Destroy the given group
   def destroy
-    current_account.device_groups.destroy(params[:id])
-    redirect_to device_groups_path
+    current_account.device_groups.find(params[:id]).destroy_and_rollup
+    
+    root = current_user.device_group_or_root
+    
+    render :json => {
+      :status => 'success',
+      :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+      :id => dom_id(root)
+    }
   end
 
   # GET /groups/:id/live_look

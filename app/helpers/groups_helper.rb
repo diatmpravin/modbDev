@@ -19,13 +19,14 @@ module GroupsHelper
     options[:close_level] ||= 99
     options[:stop_level] ||= 99
     
+    html = [[]]
     if options[:root_ol]
       pending = [:ol, :li, group, :nli, :nol]
+      level = -1
     else
       pending = [:li, group, :nli]
+      level = 0
     end
-    html = [[]]
-    level = -1
     
     while node = pending.shift
       case node
