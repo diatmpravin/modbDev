@@ -65,7 +65,7 @@ class Device < ActiveRecord::Base
 
       point.save
       self.reload # force "points.last" to be the newly added point
-      
+
       # Handle odometer
       if self.odometer && point.miles && last_point.miles
         miles = point.miles - last_point.miles
@@ -81,36 +81,51 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::VIN_MISMATCH)
       end
       
-      # Handle boundary testing for geofences linked to any of this vehicle's groups.
+      # Handle boundary testing for geofences and landmarks linked to any of this vehicle's groups.
       geofences_to_test = group ? account.geofences.all(
         :joins => :device_groups,
         :conditions => { :device_group_links => {
           :device_group_id => group.self_and_ancestors.flatten.map(&:id)
         }}
       ) : []
-      
+
+      landmarks_to_test = group ? account.landmarks.all(
+        :joins => :device_groups,
+        :conditions => { :device_group_links => {
+          :device_group_id => group.self_and_ancestors.flatten.map(&:id)
+        }}
+      ) : []
+
       if last_point
         geofences_to_test.each do |fence|
           if fence.contain?(point) && !fence.contain?(last_point)
-            point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name)
+            point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name, :geofence => fence)
             if fence.alert_on_entry?
               send_alert("#{self.name} entered area #{fence.name}")
             end
           elsif !fence.contain?(point) && fence.contain?(last_point)
-            point.events.create(:event_type => Event::EXIT_BOUNDARY, :geofence_name => fence.name)
+            point.events.create(:event_type => Event::EXIT_BOUNDARY, :geofence_name => fence.name, :geofence => fence)
             if fence.alert_on_exit?
               send_alert("#{self.name} exited area #{fence.name}")
             end
           end
         end
-      end
 
-      # Handle boundary testing for landmarks
-      account.landmarks.each do |landmark|
-        if landmark.contain?(point)
-          point.events.create(:event_type => Event::AT_LANDMARK, :geofence_name => landmark.name)
+        landmarks_to_test.each do |landmark|
+          if landmark.contain?(point) && !landmark.contain?(last_point)
+            point.events.create(:event_type => Event::ENTER_LANDMARK, :geofence_name => landmark.name, :landmark => landmark)
+            if landmark.alert_on_entry?
+              send_alert("#{self.name} entered area #{landmark.name}")
+            end
+          elsif !landmark.contain?(point) && landmark.contain?(last_point)
+            point.events.create(:event_type => Event::EXIT_LANDMARK, :geofence_name => landmark.name, :landmark => landmark)
+            if landmark.alert_on_exit?
+              send_alert("#{self.name} exited area #{landmark.name}")
+            end
+          end
         end
       end
+
       
       # Handle various other vehicle tests
 

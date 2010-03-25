@@ -1,5 +1,7 @@
 class Event < ActiveRecord::Base
   belongs_to :point
+  belongs_to :geofence
+  belongs_to :landmark
   
   before_create :default_occurred_at
   
@@ -22,10 +24,11 @@ class Event < ActiveRecord::Base
   RAPID_DECEL = 6
   IDLE = 7
   AFTER_HOURS = 8
-  AT_LANDMARK = 9
   VIN_MISMATCH = 10
   RESET = 11
   NOT_REPORTING = 12  
+  ENTER_LANDMARK = 13
+  EXIT_LANDMARK = 14
 
   TEXT = {
     ENTER_BOUNDARY => 'Enter Boundary',
@@ -36,13 +39,14 @@ class Event < ActiveRecord::Base
     RAPID_DECEL => 'Decel Exceed',
     IDLE => 'Idle',
     AFTER_HOURS => 'After Hours',
-    AT_LANDMARK => 'At Landmark',
     VIN_MISMATCH => 'VIN Mismatch',
     RESET => 'Device Power Reset',
-    NOT_REPORTING => 'Device Not Reporting'
+    NOT_REPORTING => 'Device Not Reporting',
+    ENTER_LANDMARK => 'Enter Landmark',
+    EXIT_LANDMARK => 'Exit Landmark'
   }
   
-  attr_accessible :event_type, :geofence_name, :speed_threshold, :point,
+  attr_accessible :event_type, :geofence_name, :speed_threshold, :point, :landmark, :geofence,
     :occurred_at
   
   def type_text

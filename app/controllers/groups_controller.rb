@@ -31,7 +31,7 @@ class GroupsController < ApplicationController
     @group.parent = current_account.device_groups.find_by_id(params[:group][:parent_id])
     @group.save
     
-    redirect_to groups_path
+    redirect_to device_groups_path
   end
 
   # GET /groups/:id/edit
@@ -56,7 +56,7 @@ class GroupsController < ApplicationController
     
     respond_to do |format|
       format.html {
-        redirect_to groups_path
+        redirect_to device_groups_path
       }
       format.json {
         render :json => {:status => 'success'}
@@ -68,7 +68,7 @@ class GroupsController < ApplicationController
   # Destroy the given group
   def destroy
     current_account.device_groups.destroy(params[:id])
-    redirect_to groups_path
+    redirect_to device_groups_path
   end
 
   # GET /groups/:id/live_look
@@ -77,7 +77,7 @@ class GroupsController < ApplicationController
     ids = @group.device_ids
     if ids.empty?
       flash[:warning] = "Group must have at least one vehicle to view it in live look"
-      redirect_to groups_path
+      redirect_to device_groups_path
     else
       redirect_to live_look_devices_path(:device_ids => ids.join(","))
     end

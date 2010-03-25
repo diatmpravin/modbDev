@@ -110,8 +110,13 @@ class User < ActiveRecord::Base
     end
   end
   
+  def devices
+    device_group.nil? ? account.devices : account.devices.all(:conditions => {:group_id => device_group.self_and_descendants.map(&:id)})
+    #account.devices.all(:joins => :device_group, :conditions => {:group => {:lft => device_group.lft..device_group.rgt }})
+  end
+
   def groups
-    device_group.nil? ? account.groups : device_group.self_and_descendants
+    device_group.nil? ? account.device_groups : device_group.self_and_descendants
   end
   
   def group_name

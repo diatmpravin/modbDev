@@ -1,5 +1,7 @@
 class Geofence < ActiveRecord::Base
   belongs_to :account
+
+  has_many :events
   
   has_many :device_group_links, :as => :link
   has_many :device_groups, :through => :device_group_links

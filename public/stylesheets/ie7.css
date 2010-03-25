@@ -12,3 +12,8 @@
 #settings .devices .device .view {
   width: 100%;
 }
+
+/* IE7 List Element Vertical Whitespace Fix */
+#report_card #frame li {
+  display:inline;
+}

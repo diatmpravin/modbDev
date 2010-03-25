@@ -82,7 +82,7 @@ describe "GroupsController", ActionController::TestCase do
 
     specify "build a new device group" do
       post :create, :group => {:name => "New Groupzor"}
-      should.redirect_to groups_path
+      should.redirect_to device_groups_path
 
       g = accounts(:quentin).device_groups.first
       g.name.should.equal "New Groupzor"
@@ -111,7 +111,7 @@ describe "GroupsController", ActionController::TestCase do
 
     specify "updates a group" do
       put :update, :id => @group.id, :group => {:name => "Oh yeah"}
-      should.redirect_to groups_path
+      should.redirect_to device_groups_path
 
       @group.reload
       @group.name.should.equal "Oh yeah"
@@ -121,7 +121,7 @@ describe "GroupsController", ActionController::TestCase do
       g = accounts(:aaron).device_groups.create :name => "Aaron"
 
       put :update, :id => g.id, :group => {:name => "Bad"}
-      should.redirect_to groups_path
+      should.redirect_to device_groups_path
 
       g.reload
       g.name.should.not.equal "Bad"
@@ -136,7 +136,7 @@ describe "GroupsController", ActionController::TestCase do
 
     specify "can remove a group" do
       delete :destroy, :id => @group.id
-      should.redirect_to groups_path
+      should.redirect_to device_groups_path
 
       assert !DeviceGroup.exists?(@group.id)
     end
@@ -162,7 +162,7 @@ describe "GroupsController", ActionController::TestCase do
 
     specify "if group is empty, redirect w/ message" do
       get :live_look, :id => @group.id
-      should.redirect_to groups_path
+      should.redirect_to device_groups_path
 
       flash[:warning].should.not.be.nil
     end

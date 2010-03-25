@@ -17,16 +17,19 @@ module GroupsHelper
     options[:stop_level] = 99
     
     if !group
-      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.device_groups.roots, [])
+      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.device_groups.roots, current_account.devices.ungrouped)
     end
     
     pending = [:ol, :li, group, :nli, :nol]
     html = [[]]
-    level = 0
+    level = -1
     
     while node = pending.shift
       case node
-      when :ol, :li
+      when :ol
+        html << []
+        level += 1
+      when :li
         html << []
       when :nli
         content = content_tag(:li, html.pop.join)
@@ -34,6 +37,7 @@ module GroupsHelper
       when :nol
         content = content_tag(:ol, html.pop.join)
         html.last << content
+        level -= 1
       else
         html.last << capture(node, level, &block)
       end
@@ -55,7 +59,7 @@ module GroupsHelper
   # Example:
   #   <% group_list(my_group) do |group, level| -%>
   #     <strong><%= group.name %></strong>
-  #     <%= link_to 'Edit', edit_group_path(group) if level > 0 %>
+  #     <%= link_to 'Edit', edit_device_group_path(group) if level > 0 %>
   #   <% end -%>
   #
   # Options:

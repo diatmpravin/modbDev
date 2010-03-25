@@ -49,7 +49,7 @@
     <% form_tag apply_group_devices_path do -%>
       <p>Add the selected vehicles to a group.</p>
       <br/>
-      <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %> 
+      <%= select_tag 'group_id', options_from_collection_for_select(current_account.device_groups, :id, :name) %> 
       or new: <%= text_field_tag "group_name" -%>
       <%= hidden_field_tag 'apply_ids', '' %>
       <div style='text-align: right'>
@@ -63,7 +63,7 @@
     <% form_tag remove_group_devices_path do -%>
       <p>Remove each selected vehicle from a given group.</p>
       <br/>
-      <%= select_tag 'group_id', options_from_collection_for_select(current_account.groups.of_devices, :id, :name) %>
+      <%= select_tag 'group_id', options_from_collection_for_select(current_account.device_groups, :id, :name) %>
       <%= hidden_field_tag 'apply_ids', '' %>
       <%= submit_tag 'Remove' %>
       <%= button_tag 'Cancel', :class => 'cancel' %>

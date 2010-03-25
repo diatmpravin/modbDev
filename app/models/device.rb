@@ -50,9 +50,9 @@ class Device < ActiveRecord::Base
 
   before_save :prefill_profile_fields, :convert_imei_to_tracker, :update_thresholds
 
-  # Get the list of all the NON marked-for-deletion cars
-  named_scope :active, {:conditions => "to_be_deleted IS NULL OR to_be_deleted = FALSE"}
-
+  # Devices that aren't currently in any group
+  named_scope :ungrouped, {:conditions => {:group_id => nil}}
+  
   ##
   # Concerns
   ##
