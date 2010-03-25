@@ -82,6 +82,10 @@ ReportCard.DataPane = {
     // "Unfix" the width of the report card table so it can be resized
     q('#data_pane > ol').css('width', 'auto');
     
+    // Always "clear" the edit pane so it is ready to be used again
+    q('#edit_pane').find('.edit').hide().empty()
+                   .siblings('.loading').show();
+    
     return this;
   },
   
@@ -135,6 +139,22 @@ ReportCard.Group = {
   },
   
   /**
+   * Prepare the fancy sliders, buttons, and events for the edit pane. If
+   * provided, load up the pane first with the given HTML.
+   */
+  initPane: function(html) {
+    if (typeof(html) != 'undefined') {
+      q('#edit_pane .edit').html(html);
+    }
+    
+    q('#edit_pane .buttons').find('a, input').button();
+    q('#edit_pane .buttons .cancel').click(ReportCard.Group.cancel);
+    q('#edit_pane .buttons .save').click(ReportCard.Group.save);
+    
+    return q('#edit_pane .edit');
+  },
+  
+  /**
    * Show the edit form for the selected group.
    */
   edit: function() {
@@ -144,10 +164,30 @@ ReportCard.Group = {
     ReportCard.DataPane.close().title('Edit Group');
     
     q.get(q(this).attr('href'), function(html) {
-      q('#edit_pane').find('.loading').hide().end()
-                     .find('.edit').html(html).show();
+      q('#edit_pane').find('.loading').hide();
       
-      q('#edit_pane a.cancel').click(ReportCard.Group.cancel);
+      ReportCard.Group.initPane(html).show();
+    });
+    
+    return false;
+  },
+  
+  /**
+   * Save the group and close the group edit form.
+   */
+  save: function() {
+    var self = q(this);
+    
+    q('#edit_pane form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { },
+      success: function(json) {
+        if (json.status == 'success') {
+          ReportCard.DataPane.open().title();
+        } else {
+          ReportCard.Group.initPane(json.html);
+        }
+      }
     });
     
     return false;
@@ -158,9 +198,6 @@ ReportCard.Group = {
    */
   cancel: function() {
     ReportCard.DataPane.open().title();
-    
-    q('#edit_pane').find('.edit').hide().empty().end()
-                   .find('.loading').show();
                     
     return false;
   },
@@ -181,6 +218,8 @@ ReportCard.Group = {
     q('#moveGroup span.to').text(dropGroup.children('span.name').text());
     
     q('#moveGroup').dialog('open');
+    
+    return false;
   },
   
   /**
@@ -257,6 +296,8 @@ ReportCard.Group = {
         }
       }
     });
+    
+    return false;
   }
 };
 
