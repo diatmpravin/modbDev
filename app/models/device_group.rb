@@ -15,6 +15,18 @@ class DeviceGroup < ActiveRecord::Base
     {}
   end
   
+  # This class represents a "root" group, which isn't actually in the database
+  class Root
+    attr_accessor :id, :name, :children, :devices
+    
+    def initialize(options = {})
+      self.id = options[:id] || 0
+      self.name = options[:name] || 'Root'
+      self.children = options[:children] || []
+      self.devices = options[:devices] || []
+    end
+  end
+  
   ##
   # Concerns
   ##

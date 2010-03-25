@@ -33,6 +33,7 @@
   </div>
 </div>
 <div id="frame">
+  <div id="tab"></div>
   <div id="data_pane">
     <% new_tree(@root) do |node, level| -%>
       <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
@@ -79,6 +80,7 @@
     </div>
   </div>
 </div>
+
 
 <div id="moveGroup" class="dialog" title="Move group?">
   <% form_tag device_groups_path, :method => :put do -%>

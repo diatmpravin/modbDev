@@ -50,6 +50,14 @@ class User < ActiveRecord::Base
     self.device_group = value.blank? ? nil : account.device_groups.find(value)
   end
   
+  # Return device group OR this account's "root" group
+  def device_group_or_root
+    device_group || DeviceGroup::Root.new(
+      :children => account.device_groups.roots,
+      :devices => account.devices.ungrouped
+    )
+  end
+  
   class Role
     # Defined as bit positions
     ADMIN    = 0
