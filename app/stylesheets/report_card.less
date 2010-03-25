@@ -71,6 +71,13 @@
         height:25px;
         width:22px;
       }
+      
+      span.handle {
+        background:transparent url(/images/group_move.png) no-repeat center center;
+        cursor:move;
+        float:right;
+        width:22px;
+      }
     }
 
     div.data {
@@ -192,16 +199,12 @@
   /**
    * Support for hover elements
    */
-  .hover-only {
+  div.row .hover-only {
     display:none;
   }
   
   div.row:hover {
     background-color:#eddede;
-    
-    span.tab {
-      background:white url(/images/list_hover_tab.png) no-repeat center center;
-    }
     
     .hover-only {
       display:block;

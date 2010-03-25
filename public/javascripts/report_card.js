@@ -54,7 +54,7 @@ ReportCard.DataPane = {
     // Allow user to delete groups
     q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
     
-    ReportCard.DataPane.updated(q('#data_pane'));
+    ReportCard.DataPane.updated('#data_pane');
     
     //q('#frame div.row:first').position().top + q('#frame').offset().top
     // Setup hover tab
@@ -66,11 +66,32 @@ ReportCard.DataPane = {
   },
   
   /**
-   * Setup any fancy events, drag/drops, etc.
+   * Setup any fancy events, drag/drops, etc. Will be called when the page is
+   * first loaded and whenever an action updates the group tree.
    */
   updated: function(element) {
+    var self = q(element);
+    
     // Hide collapsible arrows for empty groups
-    q('li:not(:has(li)) span.collapsible').hide();
+    self.find('li:not(:has(li)) span.collapsible').hide();
+    
+    // Allow user to drag groups around
+    self.find('div.group').draggable({
+      helper: 'clone',
+      handle: 'span.handle',
+      opacity: 0.8,
+      start: function() { ReportCard.Group.dragging = true; },
+      stop: function() { ReportCard.Group.dragging = false; }
+    });
+    
+    // Allow user to drop groups onto other groups
+    self.find('div.group').droppable({
+      hoverClass: 'drop-hover',
+      greedy: true,
+      drop: function(event, ui) {
+        ReportCard.Group.confirmMove(ui.draggable, q(this));
+      }
+    });
   },
   
   /**
