@@ -22,6 +22,7 @@ ReportCard.Frame = {
     });
     
     ReportCard.DataPane.init();
+    ReportCard.Group.init();
   }
 };
 
@@ -49,6 +50,10 @@ ReportCard.DataPane = {
     
     // Allow user to edit groups
     q('div.group a.edit').live('click', ReportCard.Group.edit);
+    
+    
+    // Allow user to delete groups
+    q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
   },
   
   /**
@@ -103,6 +108,33 @@ ReportCard.DataPane = {
  */
 ReportCard.Group = {
   /**
+   * Setup group dialog boxes and drag/drop events.
+   */
+  init: function() {
+    q('#moveGroup').dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': ReportCard.Group.move,
+        'Cancel': function() { q(this).dialog('close'); }
+      }
+    });
+    
+    q("#removeGroup").dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 450,
+      buttons: {
+        'Delete': ReportCard.Group.remove,
+        'Cancel': function() { q(this).dialog('close'); }
+      }
+    });
+  },
+  
+  /**
    * Show the edit form for the selected group.
    */
   edit: function() {
@@ -131,6 +163,100 @@ ReportCard.Group = {
                    .find('.loading').show();
                     
     return false;
+  },
+  
+  /**
+   * Show the move confirmation dialog box.
+   */
+  confirmMove: function(dragGroup, dropGroup) {
+    // Store references to the "dragged" and "dropped" groups, and update the
+    // the move form so it can submit the correct ids.
+    q('#moveGroup').data('dragGroup', dragGroup)
+      .data('dropGroup', dropGroup)
+      .find('form').attr('action', '/groups/' + dragGroup.attr('id').split('_')[1])
+      .find('input.parent_id').val(dropGroup.attr('id').split('_')[1]);
+    
+    // Insert the names of the two groups in some placeholder spans.
+    q('#moveGroup span.from').text(dragGroup.children('span.name').text());
+    q('#moveGroup span.to').text(dropGroup.children('span.name').text());
+    
+    q('#moveGroup').dialog('open');
+  },
+  
+  /**
+   * Move a group from one position to another.
+   */
+  move: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { self.dialogLoader(true); },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          var dropGroupElement = self.data('dropGroup').parent();
+          var dragGroupElement = self.data('dragGroup').parent();
+          
+          // Get the sub-list, or create it if it isn't there
+          var list = dropGroupElement.find('ol');
+          if (list.length == 0) {
+            list = q('<ol></ol>').appendTo(dropGroupElement);
+          }
+          
+          // Append the dropped element to the list, then sort alphabetically
+          dragGroupElement.hide().appendTo(list);
+          list.sort(function(a,b) {
+            return q(a).children('div').children('span.name').text() > q(b).children('div').children('span.name').text() ? 1 : -1
+          });
+          dragGroupElement.show().effect('highlight', {}, 'slow');
+        } else {
+          self.errors(json.error);
+        }
+      }
+    });
+    
+    return false;
+  },
+  
+  /**
+   * Show the remove confirmation dialog box.
+   */
+  confirmRemove: function() {
+    q('#removeGroup').find('form').attr('action', this.href).end()
+                     .dialog('open');
+    
+    return false;
+  },
+  
+  /**
+   * Remove the selected group from the list.
+   */
+  remove: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { self.dialogLoader(true); },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          // The application will return a new "tree" for our direct ancestor,
+          // and tell us where to put it.
+          q('#' + json.id).replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id));
+          
+        } else {
+          self.errors(json.error);
+        }
+      }
+    });
   }
 };
 
