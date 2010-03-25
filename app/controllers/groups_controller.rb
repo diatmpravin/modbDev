@@ -31,7 +31,20 @@ class GroupsController < ApplicationController
     @group.parent = current_account.device_groups.find_by_id(params[:device_group][:parent_id])
     @group.save
     
-    redirect_to device_groups_path
+    root = current_user.device_group_or_root
+    
+    respond_to do |format|
+      format.html {
+        redirect_to device_groups_path
+      }
+      format.json {
+        render :json => {
+          :status => 'success',
+          :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+          :id => dom_id(root)
+        }
+      }
+    end
   end
 
   # GET /groups/:id/edit

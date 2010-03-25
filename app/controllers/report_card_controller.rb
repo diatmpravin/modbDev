@@ -5,7 +5,7 @@ class ReportCardController < ApplicationController
   # GET /report_card
   # Main view of the report card
   def show
-    @root = current_user.device_group
+    @root = current_user.device_group_or_root
     
     #@report_card = group_reports(@root ? @root.children : current_account.groups.of_devices.roots)
   

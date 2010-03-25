@@ -35,9 +35,6 @@ ReportCard.DataPane = {
    * the report card table.
    */
   init: function() {
-    // Startup: hide collapsible arrows for empty groups
-    q('li:not(:has(li)) span.collapsible').hide();
-  
     // Allow user to toggle collapsible groups open and closed
     q('span.collapsible').live('click', function() {
       var self = q(this);
@@ -56,6 +53,24 @@ ReportCard.DataPane = {
     
     // Allow user to delete groups
     q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
+    
+    ReportCard.DataPane.updated(q('#data_pane'));
+    
+    //q('#frame div.row:first').position().top + q('#frame').offset().top
+    // Setup hover tab
+    /*q('div.row').hover(function() {
+      q('#tab').css('top',q(this).position().top).show();
+    }, function() {
+      q('#tab').hide();
+    });*/
+  },
+  
+  /**
+   * Setup any fancy events, drag/drops, etc.
+   */
+  updated: function(element) {
+    // Hide collapsible arrows for empty groups
+    q('li:not(:has(li)) span.collapsible').hide();
   },
   
   /**
@@ -220,6 +235,12 @@ ReportCard.Group = {
       beforeSubmit: function() { },
       success: function(json) {
         if (json.status == 'success') {
+          // The application will return a new tree and tell us where to put it
+          q('#' + json.id).closest('li').replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
+          
+          //self.dialogLoader(false);
+          
           ReportCard.DataPane.open();
           ReportCard.EditPane.title();
         } else {
@@ -327,9 +348,8 @@ ReportCard.Group = {
           
           // The application will return a new "tree" for our direct ancestor,
           // and tell us where to put it.
-          q('#' + json.id).replaceWith(json.html);
-          ReportCard.DataPane.updated(q('#' + json.id));
-          
+          q('#' + json.id).closest('li').replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
         } else {
           self.errors(json.error);
         }

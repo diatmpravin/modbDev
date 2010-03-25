@@ -11,14 +11,19 @@ module GroupsHelper
   # The group given should be a DeviceGroup or DeviceGroup::Root object.
   #
   # Options:
-  #   :close_level => which "level" to close. 0 is the root node.
-  #   :stop_level => which "level" to stop traversing at. 0 is the root node.
-  #
+  #   :close_level => which "level" to close. 0 is the root node
+  #   :stop_level => which "level" to stop traversing at. 0 is the root node
+  #   :root_ol => include root ol, default true
   def new_tree(group, options = {}, &block)
-    options[:close_level] = 99
-    options[:stop_level] = 99
+    options[:root_ol] = true if options[:root_ol].nil?
+    options[:close_level] ||= 99
+    options[:stop_level] ||= 99
     
-    pending = [:ol, :li, group, :nli, :nol]
+    if options[:root_ol]
+      pending = [:ol, :li, group, :nli, :nol]
+    else
+      pending = [:li, group, :nli]
+    end
     html = [[]]
     level = -1
     

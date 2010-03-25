@@ -37,6 +37,14 @@
       float:left;
       width:@listing_width;
       
+      span.tab {
+        background:white;
+        display:none;
+        height:27px;
+        margin:-1px 0;
+        width:23px;
+      }
+      
       span.indent {
         margin:0;
         padding:0;
@@ -118,7 +126,7 @@
     margin:0;
     padding:0;
   }
-
+  
   /**
    * Data Pane
    */
@@ -170,6 +178,17 @@
     }
   }
   
+  #tab {
+    width:23px;
+    height:27px;
+    background-color:red;
+    position:absolute;
+    display:none;
+    left:5px;
+    top:32px;
+    z-index:7;
+  }
+  
   /**
    * Support for hover elements
    */
@@ -180,19 +199,14 @@
   div.row:hover {
     background-color:#eddede;
     
-    .hover-only {
-      display:block;
+    span.tab {
+      background:white url(/images/list_hover_tab.png) no-repeat center center;
     }
-  }
-  
-  /* Delete as soon as tabs are working properly */
-  /*div.hover {
-    background-color:#eddede;
     
     .hover-only {
       display:block;
     }
-  }*/
+  }
   
   /* Nested Spacing */
   li                   span.indent { width:4px + 14px * 0; }
