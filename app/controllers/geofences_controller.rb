@@ -48,7 +48,7 @@ class GeofencesController < ApplicationController
     current_account.geofences.destroy(params[:id])
 
     unless @group.nil?  
-      redirect_to group_geofences_path(@group)
+      redirect_to  device_group_geofences_path(@group)
     else
       redirect_to geofences_path
     end
@@ -82,7 +82,7 @@ class GeofencesController < ApplicationController
     
     if @geofence.update_attributes(params[:geofence])
       unless @group.nil?
-        redirect_to group_geofences_path(@group)
+        redirect_to  device_group_geofences_path(@group)
       else
         redirect_to geofences_path
       end

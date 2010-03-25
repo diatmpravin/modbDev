@@ -59,7 +59,7 @@ module GroupsHelper
   # Example:
   #   <% group_list(my_group) do |group, level| -%>
   #     <strong><%= group.name %></strong>
-  #     <%= link_to 'Edit', edit_group_path(group) if level > 0 %>
+  #     <%= link_to 'Edit', edit_device_group_path(group) if level > 0 %>
   #   <% end -%>
   #
   # Options:
