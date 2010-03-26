@@ -1,8 +1,11 @@
 <% if node.is_a?(Device) -%>
-  <div class="row device clear" id="device_<%= dom_id(node) %>">
+  <div class="row device clear" id="<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
       <span class="indent"></span>
+      <%= link_to 'Delete', device_path(node), :class => 'delete hover-only', :title => 'Remove Vehicle' %>
+      <%= link_to 'Edit', edit_device_path(node), :class => 'edit hover-only', :title => 'Edit Vehicle' %>
+      <span class="handle hover-only"></span>
       <span class="name"><%= node.name %></span>
     </div>
     <div class="data">
@@ -19,7 +22,7 @@
     </div>
   </div>
 <% else -%>
-  <div class="row group clear" id="group_<%= dom_id(node) %>">
+  <div class="row group clear" id="<%= dom_id(node) %>">
     <div class="listing">
       <span class="tab"></span>
       <span class="indent"></span>
@@ -27,6 +30,7 @@
       <% if level > 0 -%>
         <%= link_to 'Delete', device_group_path(node), :class => 'delete hover-only', :title => 'Remove Group' %>
         <%= link_to 'Edit', edit_device_group_path(node), :class => 'edit hover-only', :title => 'Edit Group' %>
+        <span class="handle hover-only"></span>
         <!-- <%= link_to 'Live Look', live_look_device_group_path(node), :class => 'liveLook hover-only', :title => 'Live Look' %> -->
         <!-- <%= link_to 'Geofences',  device_group_geofences_path(node), :class => 'geofence hover-only', :title => 'Geofences' %> -->
       <% end -%>

@@ -40,6 +40,30 @@ describe "Device Group", ActiveSupport::TestCase do
     end
   end
   
+  context "Validations" do
+    specify "name must be present" do
+      @north.name = nil
+      @north.should.not.be.valid
+      @north.errors.on(:name).should.equal "can't be blank"
+      
+      @north.name = ''
+      @north.should.not.be.valid
+      @north.errors.on(:name).should.equal "can't be blank"
+      
+      @north.name = '1'
+      @north.should.be.valid
+    end
+    
+    specify "name must be less than 30 characters" do
+      @north.name = '1234567890123456789012345678901'
+      @north.should.not.be.valid
+      @north.errors.on(:name).should.equal 'is too long (maximum is 30 characters)'
+      
+      @north.name = '123456789012345678901234567890'
+      @north.should.be.valid
+    end
+  end
+  
   context "Destroy" do
     specify "destroys group and nullifies device's group_id" do
       device = devices(:quentin_device)
@@ -60,7 +84,6 @@ describe "Device Group", ActiveSupport::TestCase do
       sub_child1 = child1.children.create(:name => "sub_child1", :account => @account)
 
       parent.reload; child1.reload
-
       parent.descendants.should.include child1
       parent.descendants.should.include child2
       parent.descendants.should.include sub_child1
@@ -153,5 +176,25 @@ describe "Device Group", ActiveSupport::TestCase do
       end
     end
   end
- 
+  
+  context "Moving to a new parent during update" do
+    specify "works as expected" do
+      device_groups(:north).children.length.should.equal 0
+      
+      # Move to a new device group
+      device_groups(:south).update_attributes(:parent_id => device_groups(:north).id)
+      device_groups(:north).reload.children.length.should.equal 1
+      device_groups(:south).reload.parent.should.equal device_groups(:north)
+      
+      # Move nowhere
+      device_groups(:south).update_attributes(:name => 'Groups R Us')
+      device_groups(:north).reload.children.length.should.equal 1
+      device_groups(:south).reload.parent.should.equal device_groups(:north)
+      
+      # Move to root
+      device_groups(:south).update_attributes(:parent_id => '')
+      device_groups(:north).reload.children.length.should.equal 0
+      device_groups(:south).reload.parent.should.equal nil
+    end
+  end
 end

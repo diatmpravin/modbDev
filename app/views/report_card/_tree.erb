@@ -1,0 +1,3 @@
+<% new_tree(node, :root_ol => false) do |node, level| -%>
+  <%= render :partial => 'report_card/report_card_row', :locals => {:node => node, :level => level} %>
+<% end -%>

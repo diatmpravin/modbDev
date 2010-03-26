@@ -2,17 +2,34 @@ class DeviceGroup < ActiveRecord::Base
   belongs_to :account
   has_many :devices, :foreign_key => :group_id, :order => 'name ASC', :dependent => :nullify
   
-  attr_accessible :account, :name, :grading
+  attr_accessible :account, :name, :grading, :parent_id
   
   acts_as_nested_set :scope => :account
   
   validates_presence_of :account
   validate :belongs_to_parent_account
-
+  validates_presence_of :name
+  validates_length_of :name, :maximum => 30,
+    :allow_nil => true, :allow_blank => true
+  
   serialize :grading
 
   default_value_for :grading do
     {}
+  end
+  
+  #after_save :move_to_new_parent
+  
+  # This class represents a "root" group, which isn't actually in the database
+  class Root
+    attr_accessor :id, :name, :children, :devices
+    
+    def initialize(options = {})
+      self.id = options[:id] || 0
+      self.name = options[:name] || 'Root'
+      self.children = options[:children] || []
+      self.devices = options[:devices] || []
+    end
   end
   
   ##

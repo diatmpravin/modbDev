@@ -1,8 +1,8 @@
 class DevicesController < ApplicationController
   before_filter :require_role,   :only => [:create, :update, :destroy,
                                            :apply_profile, :apply_group, :remove_group]
-  before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
   before_filter :new_device,     :only => [:new, :create]
+  before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
   before_filter :set_devices,    :only => [:index]
   before_filter :require_access
   
@@ -23,7 +23,7 @@ class DevicesController < ApplicationController
           :include => {
             :position => {
               :methods => :time_of_day
-            }            
+            }
           }
         )
       }
@@ -52,46 +52,23 @@ class DevicesController < ApplicationController
   end
   
   def create
-	 if @device.update_attributes(params[:device])
-      flash[:notice] = 'Vehicle added'
-      redirect_to :action => 'index'
-    else
-      render :action => 'new'
-    end
+    update_record
   end
   
   def edit
-    respond_to do |format|
-      format.html
-      format.json {
-        render :json => { :partial => render_to_string(:partial => 'form', :locals => {:device => @device}) }
-      }
-    end
   end
   
   def update
-    params[:device][:alert_recipient_ids] ||= []
-
-    if @device.update_attributes(params[:device])
-      # Presumably, this needs to return to index with the CORRECT FILTER
-      # and the CORRECT PAGE.
-      redirect_to :action => 'index'
-    else
-      render :action => 'edit'
-    end
+    update_record
   end
   
   def destroy
     @device.destroy
     
-    respond_to do |format|
-      format.html {
-        redirect_to :action => 'index'
-      }
-      format.json {
-        render :json => {:status => 'success'}
-      }
-    end
+    render :json => {
+      :status => 'success',
+      :html => 'huh?'
+    }
   end
   
   def position
@@ -197,6 +174,25 @@ class DevicesController < ApplicationController
   def set_devices
     @devices = search_on Device do
       current_account.devices.paginate :page => params[:page], :per_page => 30
+    end
+  end
+  
+  def update_record
+    params[:device][:alert_recipient_ids] ||= []
+
+    if @device.update_attributes(params[:device])
+      root = current_user.device_group_or_root
+      
+      render :json => {
+        :status => 'success',
+        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+        :id => dom_id(root)
+      }
+    else
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:device => @device})
+      }
     end
   end
 end

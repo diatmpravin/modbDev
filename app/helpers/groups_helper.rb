@@ -8,21 +8,25 @@ module GroupsHelper
   # construct a tree of groups and vehicles. The provided HTML block (required)
   # will be called with groups and vehicles as the list is created.
   #
+  # The group given should be a DeviceGroup or DeviceGroup::Root object.
+  #
   # Options:
-  #   :close_level => which "level" to close. 0 is the root node.
-  #   :stop_level => which "level" to stop traversing at. 0 is the root node.
-  #   
+  #   :close_level => which "level" to close. 0 is the root node
+  #   :stop_level => which "level" to stop traversing at. 0 is the root node
+  #   :root_ol => include root ol, default true
   def new_tree(group, options = {}, &block)
-    options[:close_level] = 99
-    options[:stop_level] = 99
+    options[:root_ol] = true if options[:root_ol].nil?
+    options[:close_level] ||= 99
+    options[:stop_level] ||= 99
     
-    if !group
-      group = Struct.new(:id, :name, :children, :devices).new('', 'Root', current_account.device_groups.roots, current_account.devices.ungrouped)
-    end
-    
-    pending = [:ol, :li, group, :nli, :nol]
     html = [[]]
-    level = -1
+    if options[:root_ol]
+      pending = [:ol, :li, group, :nli, :nol]
+      level = -1
+    else
+      pending = [:li, group, :nli]
+      level = 0
+    end
     
     while node = pending.shift
       case node

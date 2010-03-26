@@ -1,5 +1,6 @@
 <% content_for :javascript do -%>
-  <%= javascript_include_tag "report_card" -%>
+  <%= javascript_include_tag 'report_card' -%>
+  <%= javascript_include_tag 'groups/edit' -%>
 <% end -%>
 
 <% form_tag report_card_path, :method => :get do -%>
@@ -7,6 +8,9 @@
   <%= select_tag :range_type, options_for_select(range_options_report_card, @range_type) %>
   <%= submit_tag "Update" -%>
 <% end -%>
+
+<%= link_to 'Create Group', new_device_group_path, :class => 'newGroup' %>
+<%= link_to 'Create Vehicle', new_device_path, :class => 'newDevice' %>
 
 <div id="report_card_header">
   <div class="row scrollbar-fix">
@@ -31,6 +35,7 @@
   </div>
 </div>
 <div id="frame">
+  <div id="tab"></div>
   <div id="data_pane">
     <% new_tree(@root) do |node, level| -%>
       <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
@@ -78,11 +83,24 @@
   </div>
 </div>
 
+<div id="moveDevice" class="dialog" title="Move vehicle?">
+  <% form_tag devices_path, :method => :put do -%>
+    <%= hidden_field_tag 'device[group_id]', '', :class => 'group_id' %>
+  <% end -%>
+  <p>This will move the vehicle "<span class="from"></span>" into the "<span class="to"></span>" group. Are you sure?</p>
+</div>
+
+<div id="removeDevice" class="dialog" title="Remove vehicle?">
+  <% form_tag devices_path, :method => :delete do -%>
+  <% end -%>
+  <p>This will permanently remove the vehicle from the system. Are you sure?</p>
+</div>
+
 <div id="moveGroup" class="dialog" title="Move group?">
   <% form_tag device_groups_path, :method => :put do -%>
-    <%= hidden_field_tag 'group[parent_id]', '', :class => 'parent_id' %>
+    <%= hidden_field_tag 'device_group[parent_id]', '', :class => 'parent_id' %>
   <% end -%>
-  <p>This will move the group "<span class="from"></span>" under "<span class="to"></span>". Are you sure?</p>
+  <p>This will move the group "<span class="from"></span>" into the "<span class="to"></span>" group. Are you sure?</p>
 </div>
 
 <div id="removeGroup" class="dialog" title="Remove group?">

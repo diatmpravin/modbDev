@@ -195,7 +195,8 @@ describe "Devices Controller", ActionController::TestCase do
         }
       }
       
-      should.redirect_to :action => 'index'
+      json['status'].should.equal 'success'
+      
       @device.reload
       @device.name.should.equal 'Updated name'
       @device.rpm_threshold.should.equal 3017
@@ -209,7 +210,8 @@ describe "Devices Controller", ActionController::TestCase do
         }
       }
       
-      template.should.equal 'edit'
+      json['status'].should.equal 'failure'
+      
       assigns(:device).name.should.equal "I'm a name that's 31 characters"
       assigns(:device).errors.on(:name).should.equal "is too long (maximum is 30 characters)"
     end
@@ -261,7 +263,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       end
       
-      should.redirect_to :action => 'index'
+      json['status'].should.equal 'success'
       @account.reload.devices.should.be.empty
     end
 

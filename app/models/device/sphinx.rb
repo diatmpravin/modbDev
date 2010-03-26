@@ -14,7 +14,7 @@ class Device < ActiveRecord::Base
 
     indexes tags(:name),              :as => :tag
 
-    has :account_id, :user_id, :created_at, :updated_at
+    has :account_id, :created_at, :updated_at
 
     set_property :delta => true
   end

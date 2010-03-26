@@ -1,17 +1,1 @@
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'alert_recipients' -%>
-  <%= javascript_include_tag 'devices/edit' -%>
-  <%= javascript_include_tag 'tags' %>
-  <%= preload_tags_json %>
-<% end %>
-
 <%= render :partial => 'form', :locals => {:device => @device} %>
-<div class="clear"></div>
-
-<div id="newAlertRecipient" class="dialog">
-  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
-</div>
-
-<div id="tagDialog" class="dialog">
-  <%= render :partial => 'tags/form', :locals => {:tag => current_account.tags.new} %>
-</div>
