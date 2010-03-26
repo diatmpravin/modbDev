@@ -35,36 +35,33 @@ class GroupReportCard < Object
       :last_stop => 0
     }
 
-    @group.self_and_descendants.each do |g|
-      g.devices.each do |device|
+    @group.self_and_descendants_devices.each do |device|
+      data = device.daily_data_over(self.start, self.end)[0]
 
-        data = device.daily_data_over(self.start, self.end)[0]
+      aggregate[:first_start] << data.first_start_avg.to_f
+      aggregate[:last_stop] << data.last_stop_avg.to_f
+      aggregate[:mpg] << data.mpg_avg.to_f
+      aggregate[:duration] << data.duration_avg.to_f
+      aggregate[:miles] << data.miles_avg.to_f
+      aggregate[:speed_events] << data.speed_events_avg.to_f
+      aggregate[:geofence_events] << data.geofence_events_avg.to_f
+      aggregate[:idle_events] << data.idle_events_avg.to_f
+      aggregate[:aggressive_events] << data.aggressive_events_avg.to_f
+      aggregate[:after_hours_events] << data.after_hours_events_avg.to_f
 
-        aggregate[:first_start] << data.first_start_avg.to_f
-        aggregate[:last_stop] << data.last_stop_avg.to_f
-        aggregate[:mpg] << data.mpg_avg.to_f
-        aggregate[:duration] << data.duration_avg.to_f
-        aggregate[:miles] << data.miles_avg.to_f
-        aggregate[:speed_events] << data.speed_events_avg.to_f
-        aggregate[:geofence_events] << data.geofence_events_avg.to_f
-        aggregate[:idle_events] << data.idle_events_avg.to_f
-        aggregate[:aggressive_events] << data.aggressive_events_avg.to_f
-        aggregate[:after_hours_events] << data.after_hours_events_avg.to_f
-
-        # Report card grading
-        report_card[:count] += 1
-        DeviceGroup::Grade::VALID_PARAMS.each do |param|
-          val = aggregate[param].last
-          report_card[param] +=
-            case @group.grade(param, val)
-            when DeviceGroup::Grade::PASS
-              1
-            when DeviceGroup::Grade::WARN
-              0.4
-            when DeviceGroup::Grade::FAIL
-              -1
-            end
-        end
+      # Report card grading
+      report_card[:count] += 1
+      DeviceGroup::Grade::VALID_PARAMS.each do |param|
+        val = aggregate[param].last
+        report_card[param] +=
+          case @group.grade(param, val)
+          when DeviceGroup::Grade::PASS
+            1
+          when DeviceGroup::Grade::WARN
+            0.4
+          when DeviceGroup::Grade::FAIL
+            -1
+          end
       end
     end
 

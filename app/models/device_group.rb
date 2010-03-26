@@ -48,9 +48,14 @@ class DeviceGroup < ActiveRecord::Base
     destroy
   end
   
+  def self_and_descendants_devices
+    account.devices.all(:joins => :group, :conditions => {:device_groups => {:lft => self.lft..self.rgt }})
+  end
+
   protected
   
   def belongs_to_parent_account
     errors.add :parent_id, 'account mismatch' if parent && account_id != parent.account_id
   end
+
 end
