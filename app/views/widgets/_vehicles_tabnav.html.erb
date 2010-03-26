@@ -13,11 +13,6 @@ render_tabnav :vehicles, :html => {:class => 'tabnav'} do
   end
   
   add_tab do |t|
-    t.named 'Groups'
-    t.links_to :controller => device_groups_path
-  end
-  
-  add_tab do |t|
     t.named 'Profiles'
     t.links_to :controller => device_profiles_path
   end

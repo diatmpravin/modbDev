@@ -2,20 +2,10 @@ class GroupsController < ApplicationController
   before_filter :new_group, :only => [:new, :create]
   before_filter :set_group, :only => [:show, :edit, :update, :live_look]
 
-  layout except_ajax('groups')
-
-  # GET /groups
-  # Show the list of device groups
+  layout nil
+  
   def index
-    @groups = search_on DeviceGroup do
-      current_account.device_groups.paginate :page => params[:page], :per_page => 30
-    end
-  end
-
-  # GET /groups/:id
-  # Show all vehicles in this group
-  def show
-    @devices = @group.devices.paginate :page => params[:page], :per_page => 30
+    redirect_to report_card_path
   end
   
   def new
@@ -78,15 +68,15 @@ class GroupsController < ApplicationController
 
   # GET /groups/:id/live_look
   # Show all vehicles in this group on live look
-  def live_look
-    ids = @group.device_ids
-    if ids.empty?
-      flash[:warning] = "Group must have at least one vehicle to view it in live look"
-      redirect_to device_groups_path
-    else
-      redirect_to live_look_devices_path(:device_ids => ids.join(","))
-    end
-  end
+  # def live_look
+    # ids = @group.device_ids
+    # if ids.empty?
+      # flash[:warning] = "Group must have at least one vehicle to view it in live look"
+      # redirect_to device_groups_path
+    # else
+      # redirect_to live_look_devices_path(:device_ids => ids.join(","))
+    # end
+  # end
 
   protected
 

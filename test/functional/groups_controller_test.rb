@@ -12,57 +12,10 @@ describe "GroupsController", ActionController::TestCase do
     @group = device_groups(:north)
   end
 
-  context "Index" do
-
-    specify "show list of device groups, alphabetical order" do
-      get :index
-      template.should.equal "index"
-
-      assigns(:groups).should.equal [ device_groups(:north), device_groups(:south) ]
-    end
-
-    specify "handles pagination" do
-      g = device_groups(:north)
-      50.times { g.clone.save}
-
-      get :index
-      template.should.be 'index'
-
-      assigns(:groups).length.should.equal 30
-
-      get :index, :page => 2
-      template.should.be 'index'
-
-      assigns(:groups).length.should.equal 22
-    end
-
-    specify "takes into account Group filter parameters" do
-      set_filter Device, "get_vehicle"
-      set_filter DeviceGroup, "get_groupin"
-
-      DeviceGroup.expects(:search).with(
-        "get_groupin", :conditions => {},
-        :page => nil, :per_page => 30,
-        :with => {:account_id => accounts(:quentin).id},
-        :mode => :extended
-      ).returns(accounts(:quentin).device_groups)
-
-      get :index
-      template.should.be 'index'
-    end
-
-  end
-
-  context "Show" do
-    specify "shows vehicles in the group" do
-      @group.devices << devices(:quentin_device)
-
-      xhr :get, :show, :id => device_groups(:north).id
-      template.should.be "show"
-
-      assigns(:group).should.equal device_groups(:north)
-      assigns(:devices).should.equal [devices(:quentin_device)]
-    end
+  specify "has no index page" do
+    get :index
+    
+    should.redirect_to report_card_path
   end
 
   context "Creating a device group" do
@@ -149,28 +102,28 @@ describe "GroupsController", ActionController::TestCase do
     end
   end
 
-  context "Live Look" do
-    setup do
-      @group = device_groups(:north)
-    end
+  # context "Live Look" do
+    # setup do
+      # @group = device_groups(:north)
+    # end
 
-    specify "gather up device ids for this group and forward to live look" do
-      d = devices(:quentin_device)
-      d2 = Device.generate!
+    # specify "gather up device ids for this group and forward to live look" do
+      # d = devices(:quentin_device)
+      # d2 = Device.generate!
       
-      # Note: devices now ordered by name in group, so order is [d2, d]
-      @group.devices << d
-      @group.devices << d2
+      # # Note: devices now ordered by name in group, so order is [d2, d]
+      # @group.devices << d
+      # @group.devices << d2
 
-      get :live_look, :id => @group.id
-      should.redirect_to live_look_devices_path(:device_ids => "#{d2.id},#{d.id}")
-    end
+      # get :live_look, :id => @group.id
+      # should.redirect_to live_look_devices_path(:device_ids => "#{d2.id},#{d.id}")
+    # end
 
-    specify "if group is empty, redirect w/ message" do
-      get :live_look, :id => @group.id
-      should.redirect_to device_groups_path
+    # specify "if group is empty, redirect w/ message" do
+      # get :live_look, :id => @group.id
+      # should.redirect_to device_groups_path
 
-      flash[:warning].should.not.be.nil
-    end
-  end
+      # flash[:warning].should.not.be.nil
+    # end
+  # end
 end
