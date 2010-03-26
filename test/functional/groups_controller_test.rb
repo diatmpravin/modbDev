@@ -1,9 +1,11 @@
 require 'test_helper'
 
 describe "GroupsController", ActionController::TestCase do
-
+  use_controller GroupsController
+  
   setup do
-    use_controller GroupsController
+    DeviceGroup.rebuild!
+    
     login_as :quentin
     Tracker.any_instance.stubs(:async_configure)
     
@@ -52,11 +54,6 @@ describe "GroupsController", ActionController::TestCase do
   end
 
   context "Show" do
-
-    setup do
-      @group = device_groups(:north)
-    end
-
     specify "shows vehicles in the group" do
       @group.devices << devices(:quentin_device)
 
@@ -66,7 +63,6 @@ describe "GroupsController", ActionController::TestCase do
       assigns(:group).should.equal device_groups(:north)
       assigns(:devices).should.equal [devices(:quentin_device)]
     end
-
   end
 
   context "Creating a device group" do
@@ -117,11 +113,33 @@ describe "GroupsController", ActionController::TestCase do
       g.reload
       g.name.should.not.equal "Bad"
     end
+    
+    specify "can move a group" do
+      @other = device_groups(:south)
+      
+      @group.parent.should.be.nil
+      
+      put :update, :id => @group.id, :device_group => {:parent_id => @other.id}
+      
+      json['status'].should.equal 'success'
+      
+      @group.reload.parent.should.equal @other
+      @other.reload.children.should.equal [@group]
+    end
+    
+    specify "errors gracefully if a move is invalid" do
+      @other = device_groups(:south)
+      @other.move_to_child_of(@group)
+      
+      put :update, :id => @group.id, :device_group => {:parent_id => @other.id}
+      
+      json['status'].should.equal 'failure'
+      json['error'].should =~ /Cannot move/
+    end
   end
 
   context "Destroying a device group" do
     specify "can remove a group" do
-      @group = device_groups(:north)
       delete :destroy, :id => @group.id
       
       json['status'].should.equal 'success'
@@ -154,7 +172,5 @@ describe "GroupsController", ActionController::TestCase do
 
       flash[:warning].should.not.be.nil
     end
-
   end
-
 end

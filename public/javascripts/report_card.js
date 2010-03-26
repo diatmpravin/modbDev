@@ -55,6 +55,14 @@ ReportCard.DataPane = {
     // Allow user to delete groups
     q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
     
+    // Allow user to create devices
+    q('a.newDevice').button();
+    
+    // Allow user to edit devices
+    q('div.device a.edit').live('click', ReportCard.Device.edit);
+    
+    
+    
     ReportCard.DataPane.updated('#data_pane');
     
     //q('#frame div.row:first').position().top + q('#frame').offset().top
@@ -308,7 +316,7 @@ ReportCard.Group = {
     q('#moveGroup span.from').text(dragGroup.find('span.name').text());
     q('#moveGroup span.to').text(dropGroup.find('span.name').text());
     
-    q('#moveGroup').dialog('open');
+    q('#moveGroup').errors().dialog('open');
     
     return false;
   },
@@ -374,6 +382,60 @@ ReportCard.Group = {
       }
     });
     
+    return false;
+  }
+};
+
+/**
+ * Report Card Device
+ */
+ReportCard.Device = {
+  /**
+   * Setup device dialog boxes and drag/drop events.
+   */
+  init: function() {
+  },
+  
+  /**
+   * Prepare the fancy sliders, buttons, and events for the edit pane. If
+   * provided, load up the pane first with the given HTML.
+   */
+  initPane: function(html) {
+    if (typeof(html) != 'undefined') {
+      q('#edit_pane .edit').html(html);
+    }
+    
+    // Pretty & clickable buttons
+    q('#edit_pane .buttons').find('a, input').button();
+    q('#edit_pane .buttons .cancel').click(ReportCard.Device.cancel);
+    q('#edit_pane .buttons .save').click(ReportCard.Device.save);
+    
+    return q('#edit_pane .edit');
+  },
+  
+  /**
+   * Show the edit form for the selected device.
+   */
+  edit: function() {
+    ReportCard.EditPane.clear().title('Edit Vehicle');
+    ReportCard.DataPane.close();
+    
+    q.get(q(this).attr('href'), function(html) {
+      q('#edit_pane').find('.loading').hide();
+      
+      ReportCard.Device.initPane(html).show();
+    });
+    
+    return false;
+  },
+  
+  /**
+   * Close the device edit form without saving.
+   */
+  cancel: function() {
+    ReportCard.DataPane.open();
+    ReportCard.EditPane.title();
+                    
     return false;
   }
 };
