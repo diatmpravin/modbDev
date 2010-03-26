@@ -2,7 +2,7 @@ class DeviceGroup < ActiveRecord::Base
   belongs_to :account
   has_many :devices, :foreign_key => :group_id, :order => 'name ASC', :dependent => :nullify
   
-  attr_accessible :account, :name, :grading
+  attr_accessible :account, :name, :grading, :parent_id
   
   acts_as_nested_set :scope => :account
   
@@ -17,6 +17,8 @@ class DeviceGroup < ActiveRecord::Base
   default_value_for :grading do
     {}
   end
+  
+  #after_save :move_to_new_parent
   
   # This class represents a "root" group, which isn't actually in the database
   class Root
@@ -68,4 +70,21 @@ class DeviceGroup < ActiveRecord::Base
   def belongs_to_parent_account
     errors.add :parent_id, 'account mismatch' if parent && account_id != parent.account_id
   end
+  
+  # Move this group underneath the specified parent, catching awesome_nested's
+  # exceptions and turning them into errors.
+  # def move_to_new_parent
+    # Moving "nowhere" is always OK
+    # return true unless new_parent_id
+    # puts "-in move_to_new_parent-"
+    # if new_parent_id.blank?
+      # puts "-move to root-"
+      # move_to_root
+    # else
+      # puts "-move to child of-"
+      # move_to_child_of new_parent_id.to_i
+    # end
+  # rescue ActiveRecord::ActiveRecordError => e
+    # errors.add_to_base e.to_s
+  # end
 end

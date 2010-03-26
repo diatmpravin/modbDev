@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-
+  before_filter :new_group, :only => [:new, :create]
   before_filter :set_group, :only => [:show, :edit, :update, :live_look]
 
   layout except_ajax('groups')
@@ -17,20 +17,12 @@ class GroupsController < ApplicationController
   def show
     @devices = @group.devices.paginate :page => params[:page], :per_page => 30
   end
-
-  # GET /groups/new
-  # New group form
+  
   def new
-    @group = current_account.device_groups.new
   end
-
-  # POST /groups
-  # Create a new group
+  
   def create
-    @group = current_account.device_groups.build(params[:device_group])
-    @group.parent = current_account.device_groups.find_by_id(params[:device_group][:parent_id])
-    
-    if @group.save
+    if @group.update_attributes(params[:device_group])
       root = current_user.device_group_or_root
       
       render :json => {
@@ -46,27 +38,11 @@ class GroupsController < ApplicationController
     end
   end
 
-  # GET /groups/:id/edit
-  # Show the edit form for this group
   def edit
   end
 
-  # PUT /groups/:id
-  # Update the given group
   def update
-    # TODO: Add error handling
-    # I believe "name already taken" and "group move invalid" are the two possible errors
-    #
-    @group.update_attributes(params[:device_group])
-    if params[:device_group][:parent_id]
-      if params[:device_group][:parent_id].blank?
-        @group.move_to_root
-      else
-        @group.move_to_child_of(params[:device_group][:parent_id].to_i)
-      end
-    end
-    
-    if true
+    if @group.update_attributes(params[:device_group])
       root = current_user.device_group_or_root
       
       render :json => {
@@ -82,8 +58,6 @@ class GroupsController < ApplicationController
     end
   end
   
-  # DELETE /groups/:id
-  # Destroy the given group
   def destroy
     current_account.device_groups.find(params[:id]).destroy_and_rollup
     
@@ -110,8 +84,11 @@ class GroupsController < ApplicationController
 
   protected
 
+  def new_group
+    @group = current_account.device_groups.new
+  end
+  
   def set_group
     @group = current_account.device_groups.find(params[:id])
   end
-
 end

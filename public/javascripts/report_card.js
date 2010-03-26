@@ -302,7 +302,7 @@ ReportCard.Group = {
     q('#moveGroup').data('dragGroup', dragGroup)
       .data('dropGroup', dropGroup)
       .find('form').attr('action', '/groups/' + dragId)
-      .find('input.parent_id').val(dropId);
+      .find('input.new_parent_id').val(dropId);
     
     // Insert the names of the two groups in some placeholder spans.
     q('#moveGroup span.from').text(dragGroup.find('span.name').text());
