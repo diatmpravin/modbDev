@@ -6,6 +6,8 @@ describe "GroupsController", ActionController::TestCase do
     use_controller GroupsController
     login_as :quentin
     Tracker.any_instance.stubs(:async_configure)
+    
+    @group = device_groups(:north)
   end
 
   context "Index" do
@@ -67,80 +69,66 @@ describe "GroupsController", ActionController::TestCase do
 
   end
 
-  context "New" do
-
-    specify "show the form" do
+  context "Creating a device group" do
+    specify "shows the new group form" do
       get :new
       template.should.equal "new"
 
       assigns(:group).should.not.be.nil
     end
-
-  end
-
-  context "Create" do
-
-    specify "build a new device group" do
+    
+    specify "can create a new device group (json)" do
       post :create, :device_group => {:name => "New Groupzor"}
-      should.redirect_to device_groups_path
+      
+      json['status'].should.equal 'success'
+      json['html'].should =~ /New Groupzor/
 
       g = accounts(:quentin).device_groups.first
       g.name.should.equal "New Groupzor"
     end
-
   end
 
-  context "Edit" do
-    setup do
-      @group = device_groups(:north)
-    end
-
-    specify "shows the form" do
+  context "Editing a device group" do
+    specify "shows the edit group form" do
       get :edit, :id => @group.id
       template.should.equal "edit"
 
       assigns(:group).should.equal @group
     end
 
-  end
-
-  context "Update" do
-    setup do
-      @group = device_groups(:north)
-    end
-
-    specify "updates a group" do
+    specify "can update a group" do
       put :update, :id => @group.id, :device_group => {:name => "Oh yeah"}
-      should.redirect_to device_groups_path
+      
+      json['status'].should.equal 'success'
+      json['html'].should =~ /Oh yeah/
 
       @group.reload
       @group.name.should.equal "Oh yeah"
     end
 
-    specify "cannot edit a group account doesn't own" do
+    specify "cannot edit a group this account doesn't own" do
       g = accounts(:aaron).device_groups.create :name => "Aaron"
 
       put :update, :id => g.id, :device_group => {:name => "Bad"}
+      
+      #json['status'].should.equal 'failure'
       should.redirect_to device_groups_path
 
       g.reload
       g.name.should.not.equal "Bad"
     end
-
   end
 
-  context "Destroy" do
-    setup do
-      @group = device_groups(:north)
-    end
-
+  context "Destroying a device group" do
     specify "can remove a group" do
+      @group = device_groups(:north)
       delete :destroy, :id => @group.id
-      should.redirect_to device_groups_path
+      
+      json['status'].should.equal 'success'
+      json['html'].should.not.be.nil
 
       assert !DeviceGroup.exists?(@group.id)
     end
-
   end
 
   context "Live Look" do
