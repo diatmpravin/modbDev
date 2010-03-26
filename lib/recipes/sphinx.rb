@@ -57,7 +57,7 @@ namespace :sphinx do
 end
 
 after 'deploy:setup', 'sphinx:setup'
-after 'deploy:update_code', 'sphinx:configure'
+after 'deploy:migrations', 'sphinx:configure'
 
 # Link over the shared search database
 after 'deploy:update_code' do
