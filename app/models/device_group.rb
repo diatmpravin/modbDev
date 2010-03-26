@@ -8,7 +8,10 @@ class DeviceGroup < ActiveRecord::Base
   
   validates_presence_of :account
   validate :belongs_to_parent_account
-
+  validates_presence_of :name
+  validates_length_of :name, :maximum => 30,
+    :allow_nil => true, :allow_blank => true
+  
   serialize :grading
 
   default_value_for :grading do
