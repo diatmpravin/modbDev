@@ -44,4 +44,7 @@ class ReportCardController < ApplicationController
     end
   end
 
+  def group_report(group)
+    GroupSummaryReport.new(current_user, :group => g, :range => {:type => @range_type}).tap {|g| g.run }
+  end
 end

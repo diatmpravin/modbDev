@@ -139,7 +139,7 @@ class Device < ActiveRecord::Base
   # Get a single aggregate object that pulls in all data
   # over a given range
   def daily_data_over(from, to)
-    from = from.to_date; to = to.to_date
+    #from = from.to_date; to = to.to_date
 
     DeviceDataPerDay.all(:select => "AVG(duration) as duration_avg,
                                      AVG(miles) as miles_avg,
@@ -151,6 +151,7 @@ class Device < ActiveRecord::Base
                                      AVG(mpg) as mpg_avg,
                                      AVG(first_start) as first_start_avg,
                                      AVG(last_stop) as last_stop_avg",
+                         #:conditions => { :device_id => self.id})
                          :conditions => {:date => from..to, :device_id => self.id})
   end
 

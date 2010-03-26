@@ -1,39 +1,43 @@
 # This report is basically identical to the VehicleSummaryReport, but instead
 # it aggregates the summary across all vehicles in a group and this group's
 # sub-groups
-class GroupSummaryReport < Report
+class GroupSummaryReport < Object
 
   attr_accessor :group
 
-  def initialize(user, options = {})
-    @group = options.delete(:group)
+#  def initialize(user, options = {})
+#    @group = options.delete(:group)
+#
+#    # We do our own device handling
+#    super(user, options.merge(:devices => []))
+#  end
 
-    # We do our own device handling
-    super(user, options.merge(:devices => []))
-  end
+#  def title
+#    if self.start == self.end
+#      self.start.to_s
+#    else
+#      "#{self.start} through #{self.end}"
+#    end
+#  end
 
-  def title
-    if self.start == self.end
-      self.start.to_s
-    else
-      "#{self.start} through #{self.end}"
-    end
+  def initialize(group)
+    @group = group
   end
 
   def run
-    self.data = Ruport::Data::Table(
-      :name,
-      :duration,
-      :miles,
-      :mpg,
-      :speed_events,
-      :geofence_events,
-      :idle_events,
-      :aggressive_events,
-      :after_hours_events,
-      :first_start,
-      :last_stop
-    )
+    #self.data = Ruport::Data::Table(
+    #  :name,
+    #  :duration,
+    #  :miles,
+    #  :mpg,
+    #  :speed_events,
+    #  :geofence_events,
+    #  :idle_events,
+    #  :aggressive_events,
+    #  :after_hours_events,
+    #  :first_start,
+    #  :last_stop
+    #)
 
     aggregate = {
       :report_card => {},
@@ -133,7 +137,8 @@ class GroupSummaryReport < Report
     aggregate[:last_stop] = 0 if aggregate[:last_stop].is_a?(Array) && aggregate[:last_stop].empty?
     aggregate[:first_start] = 0 if aggregate[:first_start].is_a?(Array) && aggregate[:first_start].empty?
 
-    self.data = aggregate.merge(:name => @group.name)
+    #self.data = aggregate.merge(:name => @group.name)
+    aggregate.merge(:name => @group.name)
   end
 
 end
