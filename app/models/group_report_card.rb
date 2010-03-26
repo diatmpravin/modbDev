@@ -4,6 +4,8 @@ class GroupReportCard < Object
 
   def initialize(group)
     @group = group
+    self.start = Date.yesterday
+    self.end = Date.yesterday
   end
 
   def run

@@ -31,7 +31,11 @@ module ReportCardHelper
     if group.is_a?(Device)
       VehicleSummaryReport.new(current_user, :devices => [group], :range => {:type => @range_type}).tap {|g| g.run}
     else
-      GroupSummaryReport.new(current_user, :group => group, :range => {:type => @range_type}).tap {|g| g.run }
+      #GroupSummaryReport.new(current_user, :group => group, :range => {:type => @range_type}).tap {|g| g.run }
+      grc = GroupReportCard.new(group)
+      grc.start = Date.yesterday
+      grc.end = Date.yesterday
+      grc.run
     end
   end
 end
