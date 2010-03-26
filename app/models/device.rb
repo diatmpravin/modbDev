@@ -96,7 +96,7 @@ class Device < ActiveRecord::Base
 
   # Safe group_id=
   def group_id=(value)
-    self.group = value.blank? ? nil : account.groups.find(value)
+    self.group = value.blank? ? nil : account.device_groups.find(value)
   end
   
   def zone

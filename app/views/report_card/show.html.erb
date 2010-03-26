@@ -83,11 +83,24 @@
   </div>
 </div>
 
+<div id="moveDevice" class="dialog" title="Move vehicle?">
+  <% form_tag devices_path, :method => :put do -%>
+    <%= hidden_field_tag 'device[group_id]', '', :class => 'group_id' %>
+  <% end -%>
+  <p>This will move the vehicle "<span class="from"></span>" into the "<span class="to"></span>" group. Are you sure?</p>
+</div>
+
+<div id="removeDevice" class="dialog" title="Remove vehicle?">
+  <% form_tag devices_path, :method => :delete do -%>
+  <% end -%>
+  <p>This will permanently remove the vehicle from the system. Are you sure?</p>
+</div>
+
 <div id="moveGroup" class="dialog" title="Move group?">
   <% form_tag device_groups_path, :method => :put do -%>
-    <%= hidden_field_tag 'device_group[parent_id]', '', :class => 'new_parent_id' %>
+    <%= hidden_field_tag 'device_group[parent_id]', '', :class => 'parent_id' %>
   <% end -%>
-  <p>This will move the group "<span class="from"></span>" under "<span class="to"></span>". Are you sure?</p>
+  <p>This will move the group "<span class="from"></span>" into the "<span class="to"></span>" group. Are you sure?</p>
 </div>
 
 <div id="removeGroup" class="dialog" title="Remove group?">

@@ -24,6 +24,7 @@ ReportCard.Frame = {
     
     ReportCard.DataPane.init();
     ReportCard.Group.init();
+    ReportCard.Device.init();
   }
 };
 
@@ -56,12 +57,13 @@ ReportCard.DataPane = {
     q('div.group a.delete').live('click', ReportCard.Group.confirmRemove);
     
     // Allow user to create devices
-    q('a.newDevice').button();
+    q('a.newDevice').button().live('click', ReportCard.Device.newDevice);
     
     // Allow user to edit devices
     q('div.device a.edit').live('click', ReportCard.Device.edit);
     
-    
+    // Allow user to delete devices
+    q('div.device a.delete').live('click', ReportCard.Device.confirmRemove);
     
     ReportCard.DataPane.updated('#data_pane');
     
@@ -85,7 +87,7 @@ ReportCard.DataPane = {
     self.find('li:not(:has(li)) span.collapsible').hide();
     
     // Allow user to drag groups around
-    self.find('div.group').draggable({
+    self.find('div.row').draggable({
       helper: 'clone',
       handle: 'span.handle',
       opacity: 0.8,
@@ -98,7 +100,11 @@ ReportCard.DataPane = {
       hoverClass: 'drop-hover',
       greedy: true,
       drop: function(event, ui) {
-        ReportCard.Group.confirmMove(ui.draggable, q(this));
+        if (ui.draggable.hasClass('group')) {
+          ReportCard.Group.confirmMove(ui.draggable, q(this));
+        } else {
+          ReportCard.Device.confirmMove(ui.draggable, q(this));
+        }
       }
     });
   },
@@ -394,6 +400,27 @@ ReportCard.Device = {
    * Setup device dialog boxes and drag/drop events.
    */
   init: function() {
+    q('#moveDevice').dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': ReportCard.Device.move,
+        'Cancel': function() { q(this).dialog('close'); }
+      }
+    });
+    
+    q('#removeDevice').dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 450,
+      buttons: {
+        'Remove': ReportCard.Device.remove,
+        'Cancel': function() { q(this).dialog('close'); }
+      }
+    });
   },
   
   /**
@@ -414,6 +441,21 @@ ReportCard.Device = {
   },
   
   /**
+   * Show the edit form for a new device.
+   */
+  newDevice: function() {
+    ReportCard.EditPane.clear().title('Create Vehicle');
+    ReportCard.DataPane.close();
+    
+    q.get(q(this).attr('href'), function(html) {
+      ReportCard.Device.initPane(html);
+      ReportCard.EditPane.show();
+    });
+    
+    return false;
+  },
+  
+  /**
    * Show the edit form for the selected device.
    */
   edit: function() {
@@ -430,12 +472,127 @@ ReportCard.Device = {
   },
   
   /**
+   * Save the device and close the device edit form.
+   */
+  save: function() {
+    var self = q(this);
+    
+    q('#edit_pane form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { },
+      success: function(json) {
+        if (json.status == 'success') {
+          // The application will return a new tree and tell us where to put it
+          q('#' + json.id).closest('li').replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
+          
+          //self.dialogLoader(false);
+          
+          ReportCard.DataPane.open();
+          ReportCard.EditPane.title();
+        } else {
+          ReportCard.Device.initPane(json.html);
+        }
+      }
+    });
+    
+    return false;
+  },
+  
+  /**
    * Close the device edit form without saving.
    */
   cancel: function() {
     ReportCard.DataPane.open();
     ReportCard.EditPane.title();
                     
+    return false;
+  },
+  
+  /**
+   * Show the move confirmation dialog box.
+   */
+  confirmMove: function(dragDevice, dropGroup) {
+    var dragId = dragDevice.attr('id').match(/.+_(\d*)/)[1]
+    var dropId = dropGroup.attr('id').match(/.+_(\d*)/)[1]
+    
+    // Store references to the "dragged" and "dropped" groups, and update the
+    // the move form so it can submit the correct ids.
+    q('#moveDevice').data('dragDevice', dragDevice)
+      .data('dropGroup', dropGroup)
+      .find('form').attr('action', '/devices/' + dragId)
+      .find('input.group_id').val(dropId);
+    
+    // Insert the names of the two groups in some placeholder spans.
+    q('#moveDevice span.from').text(dragDevice.find('span.name').text());
+    q('#moveDevice span.to').text(dropGroup.find('span.name').text());
+    
+    q('#moveDevice').errors().dialog('open');
+    
+    return false;
+  },
+  
+  /**
+   * Move a group from one position to another.
+   */
+  move: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { self.dialogLoader(true); },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          // The application will return a new tree and tell us where to put it
+          q('#' + json.id).closest('li').replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
+        } else {
+          self.errors(json.error);
+        }
+      }
+    });
+    
+    return false;
+  },
+  
+  /**
+   * Show the remove confirmation dialog box.
+   */
+  confirmRemove: function() {
+    q('#removeDevice').find('form').attr('action', this.href).end()
+                     .dialog('open');
+    
+    return false;
+  },
+  
+  /**
+   * Remove the selected device from the list.
+   */
+  remove: function() {
+    var self = q(this);
+    
+    self.find('form').ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function() { self.dialogLoader(true); },
+      success: function(json) {
+        self.dialogLoader(false);
+        
+        if (json.status == 'success') {
+          self.dialog('close');
+          
+          // The application will return a new tree and tell us where to put it
+          q('#' + json.id).closest('li').replaceWith(json.html);
+          ReportCard.DataPane.updated(q('#' + json.id).closest('li'));
+        } else {
+          self.errors(json.error);
+        }
+      }
+    });
+    
     return false;
   }
 };
