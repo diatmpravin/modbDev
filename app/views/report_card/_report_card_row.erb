@@ -3,6 +3,9 @@
     <div class="listing">
       <span class="tab"></span>
       <span class="indent"></span>
+      <%= link_to 'Delete', device_path(node), :class => 'delete hover-only', :title => 'Remove Vehicle' %>
+      <%= link_to 'Edit', edit_device_path(node), :class => 'edit hover-only', :title => 'Edit Vehicle' %>
+      <span class="handle hover-only"></span>
       <span class="name"><%= node.name %></span>
     </div>
     <div class="data">

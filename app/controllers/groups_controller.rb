@@ -53,9 +53,15 @@ class GroupsController < ApplicationController
     else
       render :json => {
         :status => 'failure',
-        :html => render_to_string(:partial => 'form', :locals => {:group => @group})
+        :html => render_to_string(:partial => 'form', :locals => {:group => @group}),
+        :error => @group.errors.map {|e| "#{e.first.capitalize} #{e.last}"}
       }
     end
+  rescue ActiveRecord::ActiveRecordError
+    render :json => {
+      :status => 'failure',
+      :error => 'Cannot move group inside its own subgroups.'
+    }
   end
   
   def destroy

@@ -196,13 +196,5 @@ describe "Device Group", ActiveSupport::TestCase do
       device_groups(:north).reload.children.length.should.equal 0
       device_groups(:south).reload.parent.should.equal nil
     end
-    
-    specify "display failed moves as AR errors, instead of exceptions" do
-      parent   = accounts(:quentin).device_groups.create(:name => "parent")
-      child    = parent.children.create(:name => "child1", :account => @account)
-      subchild = child.children.create(:name => "child2", :account => @account)
-      
-      # Do a test!
-    end
   end
 end

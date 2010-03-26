@@ -84,7 +84,7 @@
 
 <div id="moveGroup" class="dialog" title="Move group?">
   <% form_tag device_groups_path, :method => :put do -%>
-    <%= hidden_field_tag 'device_group[new_parent_id]', '', :class => 'new_parent_id' %>
+    <%= hidden_field_tag 'device_group[parent_id]', '', :class => 'new_parent_id' %>
   <% end -%>
   <p>This will move the group "<span class="from"></span>" under "<span class="to"></span>". Are you sure?</p>
 </div>

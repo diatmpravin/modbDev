@@ -70,21 +70,4 @@ class DeviceGroup < ActiveRecord::Base
   def belongs_to_parent_account
     errors.add :parent_id, 'account mismatch' if parent && account_id != parent.account_id
   end
-  
-  # Move this group underneath the specified parent, catching awesome_nested's
-  # exceptions and turning them into errors.
-  # def move_to_new_parent
-    # Moving "nowhere" is always OK
-    # return true unless new_parent_id
-    # puts "-in move_to_new_parent-"
-    # if new_parent_id.blank?
-      # puts "-move to root-"
-      # move_to_root
-    # else
-      # puts "-move to child of-"
-      # move_to_child_of new_parent_id.to_i
-    # end
-  # rescue ActiveRecord::ActiveRecordError => e
-    # errors.add_to_base e.to_s
-  # end
 end
