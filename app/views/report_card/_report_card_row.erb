@@ -12,9 +12,9 @@
       <% report = group_report(node) -%>
       <span class="data"><%= report[:report_card][:first_start] %></span>
       <span class="data"><%= report[:report_card][:last_stop] %></span>
-      <span class="data"><%= report[:duration] %></span>
-      <span class="data"><%= report[:miles] %></span>
-      <span class="data"><%= report[:mpg] %></span>
+      <span class="data"><%= operating_time report[:duration] %></span>
+      <span class="data"><%= "%.1f" % report[:miles] %></span>
+      <span class="data"><%= "%.1f" % report[:mpg] %></span>
       <span class="data"><%= report[:speed_events] %></span>
       <span class="data"><%= report[:geofence_events] %></span>
       <span class="data"><%= report[:idle_events] %></span>
@@ -44,9 +44,9 @@
       <div class="data">
         <span class="data"><%= report[:report_card][:first_start] %></span>
         <span class="data"><%= report[:report_card][:last_stop] %></span>
-        <span class="data"><%= report[:duration] %></span>
-        <span class="data"><%= report[:miles] %></span>
-        <span class="data"><%= report[:mpg] %></span>
+        <span class="data"><%= operating_time report[:duration] %></span>
+        <span class="data"><%= "%.1f" % report[:miles] %></span>
+        <span class="data"><%= "%.1f" % report[:mpg] %></span>
         <span class="data"><%= report[:speed_events] %></span>
         <span class="data"><%= report[:geofence_events] %></span>
         <span class="data"><%= report[:idle_events] %></span>
