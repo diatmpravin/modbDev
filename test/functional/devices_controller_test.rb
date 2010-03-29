@@ -4,6 +4,7 @@ describe "Devices Controller", ActionController::TestCase do
   use_controller DevicesController
   
   setup do
+    DeviceGroup.rebuild!
     users(:quentin).update_attributes(:roles => [User::Role::FLEET])
     login_as :quentin
     @account = accounts(:quentin)

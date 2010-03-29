@@ -1,11 +1,20 @@
-class GroupReportCard < Object
+class GroupReportCard < Report
 
-  attr_accessor :start, :end
+  attr_accessor :group
 
-  def initialize(group)
-    @group = group
-    self.start = Date.yesterday
-    self.end = Date.yesterday
+  def initialize(user, options = {})
+    @group = options.delete(:group)
+
+    # We do our own device handling
+    super(user, options.merge(:devices => []))
+  end
+
+  def title
+    if self.start == self.end
+      self.start.to_s
+    else
+      "#{self.start} through #{self.end}"
+    end
   end
 
   def run
