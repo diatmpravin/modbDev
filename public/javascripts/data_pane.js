@@ -10,12 +10,12 @@ DataPane.dragging = false;
  */
 DataPane.init = function() {
   // Allow user to toggle collapsible groups open and closed
-  q('span.collapsible').live('click', function() {
+  q('div.listing').live('click', function() {
     var self = q(this);
     if (self.closest('li').children('ol').toggle().css('display') == 'none') {
-      self.addClass('closed');
+      self.find('span.collapsible').addClass('closed');
     } else {
-      self.removeClass('closed');
+      self.find('span.collapsible').removeClass('closed');
     }
   });
   
@@ -103,12 +103,13 @@ DataPane.close = function() {
  */
 DataPane.open = function() {
   // Open the data pane
-  q('#data_pane').animate({width:'100%'}, {duration:'normal'});
-  
-  // TODO: Duh! This should be a callback! (prevent flashes, etc.)
-  
-  // "Unfix" the width of the report card table so it can be resized
-  q('#data_pane > ol').css('width', 'auto');
+  q('#data_pane').animate({width:'100%'}, {
+    duration:'normal',
+    complete: function() {
+      // "Unfix" the width of the report card table so it can be resized
+      q('#data_pane > ol').css('width', 'auto');
+    }
+  });
   
   return this;
 };
