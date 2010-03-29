@@ -1,7 +1,13 @@
 <% content_for :javascript do -%>
-  <%= javascript_include_tag 'frame', 'data_pane', 'edit_pane', 'edit_pane/device', 'edit_pane/group' -%>
-  <%= javascript_include_tag 'groups/edit' -%>
-  <%= javascript_include_tag 'device_profiles/form' -%>
+  <%= javascript_include_tag 'frame', 'data_pane', 'edit_pane', 'map_pane', 'edit_pane/device', 'edit_pane/group' %>
+  <%= javascript_include_tag 'groups/edit' %>
+  <%= javascript_include_tag 'device_profiles/form' %>
+  
+  <%= mapquest_include_tags %>
+  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
+  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
+  <%= javascript_include_tag 'moshimap' %>
+  <%= javascript_include_tag 'maps/view' %>
 <% end -%>
 
 <% form_tag report_card_path, :method => :get do -%>
@@ -44,42 +50,11 @@
   </div>
   <div id="edit_pane">
     <div class="loading"></div>
-    <div class="edit">
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
-    <p>lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat
-    lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat lorem ipsum reliquat</p>
+    <div class="edit"></div>
+  </div>
+  <div id="map_pane">
+    <div class="mapContainer">
+      <div class="map"></div>
     </div>
   </div>
 </div>
