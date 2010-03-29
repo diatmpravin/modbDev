@@ -38,7 +38,9 @@ Global = {
       }
     });
     
-    Global.initTabs();
+    if (q('#report_card').length == 0) {
+      Global.initTabs();
+    }
   }
   ,
   closeNotice: function() {
