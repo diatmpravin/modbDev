@@ -54,6 +54,8 @@ EditPane.Device = {
     
     // Setup device profile stuff
     DeviceProfile.Form.initPane('#edit_pane');
+    
+    return q('#edit_pane .edit');
   },
   
   /**
