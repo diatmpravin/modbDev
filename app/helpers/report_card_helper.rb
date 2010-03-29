@@ -21,9 +21,10 @@ module ReportCardHelper
       end
 
     if image
-      content_tag :div, {:class => "status"}.merge(options) do
-        image_tag "grade/#{image}.png"
-      end
+      image_tag "grade/#{image}.png"
+      # content_tag :div, {:class => "status"}.merge(options) do
+      #   image_tag "grade/#{image}.png"
+      # end
     end
   end
 
@@ -38,4 +39,17 @@ module ReportCardHelper
   def operating_time(seconds)
     [seconds/3600, seconds/60 % 60].map{|t| t.to_s.rjust(2,'0')}.join(':')
   end
+
+  def grade_class(data, field, options = {})
+    grade_only = options.delete(:grade_only) || false
+
+    g = data[:report_card][field]
+   
+    if (grade_only && !g.nil?) 
+      g + "_only"
+    else
+      g == "pass" ? "" : g
+    end
+  end
+
 end

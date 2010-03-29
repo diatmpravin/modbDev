@@ -84,7 +84,12 @@
       float:left;
       margin-right:0px - @listing_width;
       width:100%;
+      text-align:right;
       
+      img {
+        float:left;
+      }
+
       span {
         border-left:solid 1px #c0c0c0;
         width:10%;
@@ -92,6 +97,30 @@
       
       span.after_hours {
         width:7%;
+      }
+
+      span.pass {
+        background:transparent url(/images/grade/green.png) no-repeat 2% 50%;
+      }
+
+      span.warn {
+        background:transparent url(/images/grade/yellow.png) no-repeat 2% 50%;
+      }
+
+      span.fail {
+        background:transparent url(/images/grade/red.png) no-repeat 2% 50%;
+      }
+
+      span.pass_only {
+        background:transparent url(/images/grade/green.png) no-repeat 50% 50%;
+      }
+
+      span.warn_only {
+        background:transparent url(/images/grade/yellow.png) no-repeat 50% 50%;
+      }
+
+      span.fail_only {
+        background:transparent url(/images/grade/red.png) no-repeat 50% 50%;
       }
     }
   }
