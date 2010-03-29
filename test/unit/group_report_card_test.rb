@@ -6,6 +6,7 @@ describe "Device Group", ActiveSupport::TestCase do
     Tracker.any_instance.stubs(:async_configure)
 
     @account = accounts(:quentin)
+    @user = users(:quentin)
     @north = device_groups(:north)
     
     @quentin_device = devices(:quentin_device)
@@ -55,9 +56,14 @@ describe "Device Group", ActiveSupport::TestCase do
 
   context "run" do
     specify "works" do
-      grc = GroupReportCard.new(@north)
-      grc.start = Date.parse('01/01/2009')
-      grc.end = Date.parse('01/10/2009')
+
+      range_type = {
+        :type => Report::DateRange::CUSTOM,
+        :start => '01/01/2009',
+        :end => '01/10/2009',
+      }
+      
+      grc = GroupReportCard.new(@user, :group => @north, :range => range_type)
 
       rc = grc.run
 
@@ -71,9 +77,13 @@ describe "Device Group", ActiveSupport::TestCase do
         :mpg => {:fail => 10, :pass => 20}
       })
       
-      grc = GroupReportCard.new(@north)
-      grc.start = Date.parse('01/01/2009')
-      grc.end = Date.parse('01/10/2009')
+      range_type = {
+        :type => Report::DateRange::CUSTOM,
+        :start => '01/01/2009',
+        :end => '01/10/2009'
+      }
+      
+      grc = GroupReportCard.new(@user, :group => @north, :range => range_type)
 
       rc = grc.run
 
