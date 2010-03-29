@@ -242,5 +242,36 @@ describe "Report", ActiveSupport::TestCase do
       report.errors.should.include 'You must choose one or more vehicles to run this report'
     end
   end
-  
+
+  context "Landmark summary report" do
+    specify "works" do
+      report = LandmarkSummaryReport.new(@user, {
+        :devices => @devices,
+        :range => {
+          :type => Report::DateRange::CUSTOM,
+          :start => '02/01/2009',
+          :end => '02/10/2009'
+        }
+      })
+      report.validate
+      report.should.be.valid
+
+      report.run
+    end
+
+    specify "requires at least one vehicle" do
+      report = LandmarkSummaryReport.new(@user, {
+        :devices => [],
+        :range => {
+          :type => Report::DateRange::CUSTOM,
+          :start => '02/01/2009',
+          :end => '02/10/2009'
+        }
+      })
+      report.validate
+      
+      report.should.not.be.valid
+      report.errors.should.include 'You must choose one or more vehicles to run this report'
+    end
+  end  
 end
