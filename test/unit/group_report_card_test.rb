@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe "Device Group", ActiveSupport::TestCase do
+describe "Group Report Card Test", ActiveSupport::TestCase do
   setup do
     DeviceGroup.rebuild!
     Tracker.any_instance.stubs(:async_configure)
