@@ -113,6 +113,14 @@ describe "Reports Controller", ActionController::TestCase do
       assigns(:report).should.be.an.instance_of TripDetailReport
     end
 
+    specify "Landmark Summary Report" do
+      post :create, report_params(Report::LANDMARK_SUMMARY_REPORT)
+
+      json['status'].should.equal 'success'
+      json['report_id'].should =~ /[0-9a-f]{32}/
+      assigns(:report).should.be.an.instance_of LandmarkSummaryReport
+    end
+
     specify "Fuel Summary Report" do
       post :create, report_params(Report::FUEL_SUMMARY_REPORT)
 

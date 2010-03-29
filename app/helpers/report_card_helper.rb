@@ -21,18 +21,35 @@ module ReportCardHelper
       end
 
     if image
-      content_tag :div, {:class => "status"}.merge(options) do
-        image_tag "grade/#{image}.png"
-      end
+      image_tag "grade/#{image}.png"
+      # content_tag :div, {:class => "status"}.merge(options) do
+      #   image_tag "grade/#{image}.png"
+      # end
     end
   end
 
   def group_report(group)
     if group.is_a?(Device)
-      #VehicleSummaryReport.new(current_user, :devices => [group], :range => {:type => @range_type}).tap {|g| g.run}
       VehicleReportCard.new(current_user, :device => group, :range => {:type => @range_type}).run
     else
       GroupReportCard.new(current_user, :group => group, :range => {:type => @range_type}).run 
     end
   end
+
+  def operating_time(seconds)
+    [seconds/3600, seconds/60 % 60].map{|t| t.to_s.rjust(2,'0')}.join(':')
+  end
+
+  def grade_class(data, field, options = {})
+    grade_only = options.delete(:grade_only) || false
+
+    g = data[:report_card][field]
+   
+    if (grade_only && !g.nil?) 
+      g + "_only"
+    else
+      g == "pass" ? "" : g
+    end
+  end
+
 end

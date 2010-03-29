@@ -112,6 +112,7 @@ end
   DailySummaryReport,
   FuelEconomyReport,
   TripDetailReport,
+  LandmarkSummaryReport,
   FuelSummaryReport
 ].tap do |reports|
   Report::REPORTS = reports.freeze
