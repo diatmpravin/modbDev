@@ -1,7 +1,8 @@
 /**
  * Data Pane
  */
-if (typeof DataPane == 'undefined') { DataPane = {}; }
+if (typeof DataPane == 'undefined') { DataPane = {}; };
+DataPane.dragging = false;
 
 /**
  * Initialize the "data pane", which contains the group tree and
@@ -9,12 +10,12 @@ if (typeof DataPane == 'undefined') { DataPane = {}; }
  */
 DataPane.init = function() {
   // Allow user to toggle collapsible groups open and closed
-  q('span.collapsible').live('click', function() {
+  q('div.listing').live('click', function() {
     var self = q(this);
     if (self.closest('li').children('ol').toggle().css('display') == 'none') {
-      self.addClass('closed');
+      self.find('span.collapsible').addClass('closed');
     } else {
-      self.removeClass('closed');
+      self.find('span.collapsible').removeClass('closed');
     }
   });
   
@@ -57,13 +58,14 @@ DataPane.updated = function(element) {
   // Hide collapsible arrows for empty groups
   self.find('li:not(:has(li)) span.collapsible').hide();
   
-  // Allow user to drag groups around
+  // Allow user to drag groups and vehicles around
   self.find('div.row').draggable({
     helper: 'clone',
-    handle: 'span.handle',
+    handle: 'div.listing',
     opacity: 0.8,
-    start: function() { ReportCard.Group.dragging = true; },
-    stop: function() { ReportCard.Group.dragging = false; }
+    distance: 8,
+    start: function() { DataPane.dragging = true; },
+    stop: function() { DataPane.dragging = false; }
   });
   
   // Allow user to drop groups onto other groups
@@ -72,9 +74,9 @@ DataPane.updated = function(element) {
     greedy: true,
     drop: function(event, ui) {
       if (ui.draggable.hasClass('group')) {
-        ReportCard.Group.confirmMove(ui.draggable, q(this));
+        EditPane.Group.confirmMove(ui.draggable, q(this));
       } else {
-        ReportCard.Device.confirmMove(ui.draggable, q(this));
+        EditPane.Device.confirmMove(ui.draggable, q(this));
       }
     }
   });
@@ -101,12 +103,13 @@ DataPane.close = function() {
  */
 DataPane.open = function() {
   // Open the data pane
-  q('#data_pane').animate({width:'100%'}, {duration:'normal'});
-  
-  // TODO: Duh! This should be a callback! (prevent flashes, etc.)
-  
-  // "Unfix" the width of the report card table so it can be resized
-  q('#data_pane > ol').css('width', 'auto');
+  q('#data_pane').animate({width:'100%'}, {
+    duration:'normal',
+    complete: function() {
+      // "Unfix" the width of the report card table so it can be resized
+      q('#data_pane > ol').css('width', 'auto');
+    }
+  });
   
   return this;
 };

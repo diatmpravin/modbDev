@@ -208,3 +208,6 @@ EditPane.Group = {
     return false;
   }
 };
+
+/* Initializer */
+jQuery(EditPane.Group.init);

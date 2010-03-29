@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Vehicle</th>
+      <th>Landmark</th> 
+      <th>Arrival</th>
+      <th>Departure</th>
+      <th>Stop Time</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each do |row| -%>
+    <tr class="<%= cycle('even', 'odd') %>">
+      <td><%= h(row[:name]) %></td>
+      <td><%= h(row[:landmark]) %></td>
+      <td><%= h(row[:arrival]) %></td>
+      <td><%= h(row[:departure]) %></td>
+      <td><%= h(row[:stop_time]) %></td>
+    </tr>
+  <% end -%>
+  </tbody>
+</table>
