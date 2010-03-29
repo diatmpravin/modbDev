@@ -13,6 +13,7 @@
 VehiclesView = {
   vehicleCollection: new MQA.ShapeCollection(),
   vehicles: null,
+  lookup: {},
   
   init: function(vehicleToggleField, labelToggleField) {
     VehiclesView.vehicleCollection.setName('vehicles');
@@ -26,6 +27,10 @@ VehiclesView = {
         VehiclesView.buildVehicles();
       });
     }
+    
+    // Add them at the beginning and make sure they are displayed
+    MoshiMap.moshiMap.map.addShapeCollection(VehiclesView.vehicleCollection);
+    MoshiMap.moshiMap.bestFit();
     
     if (vehicleToggleField) {
       vehicleToggleField.click(VehiclesView.toggleVisibility)
@@ -68,6 +73,8 @@ VehiclesView = {
         }
         
         VehiclesView.vehicleCollection.add(point);
+        
+        VehiclesView.lookup[vehicle.id] = point;
       }
     }
   }

@@ -13,6 +13,27 @@ Frame = {
     q('.scrollbar-fix').css('padding-right', function() {
       return parseInt(q(this).css('padding-right')) + scrollbarSize;
     });
+    
+    // Allow user to switch to the Report Card
+    q('#frame_tabs .data_pane').click(function() {
+      q(this).addClass('active')
+             .siblings().removeClass('active');
+      
+      EditPane.title();
+      DataPane.open(function() {
+        MapPane.close();
+      });
+    });
+    
+    // Allow user to switch to the Map View
+    q('#frame_tabs .map_pane').click(function() {
+      q(this).addClass('active')
+             .siblings().removeClass('active');
+      
+      MapPane.open();
+      DataPane.close();
+      EditPane.title('');
+    });
   },
   
   /**

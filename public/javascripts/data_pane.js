@@ -19,6 +19,13 @@ DataPane.init = function() {
     }
   });
   
+  // Show dots!
+  q('.map-mode div.device').live('click', function() {
+    var id = q(this).attr('id').match(/.+_(\d*)/)[1];
+    
+    MapPane.panToDeviceId(id);
+  });
+  
   // Allow user to create groups
   q('a.newGroup').button().live('click', EditPane.Group.newGroup);
   
@@ -94,20 +101,33 @@ DataPane.close = function() {
   // Collapse the data pane
   q('#data_pane').animate({width:280}, {duration:'normal'});
   
+  // Disable editing, removing, drag/drop, etc.
+  q('#data_pane').removeClass('edit-mode');
+  
   return this;
 };
 
 /**
  * Open the data pane, hiding any existing panes and showing the report card
  * table.
+ *
+ * Optionally, pass a callback to be run after the data pane is open.
  */
-DataPane.open = function() {
+DataPane.open = function(callback) {
   // Open the data pane
   q('#data_pane').animate({width:'100%'}, {
     duration:'normal',
     complete: function() {
       // "Unfix" the width of the report card table so it can be resized
       q('#data_pane > ol').css('width', 'auto');
+      
+      // Enable editing, removing, drag/drop, etc.
+      q('#data_pane').addClass('edit-mode');
+      
+      // Callbacks?
+      if (q.isFunction(callback)) {
+        callback();
+      }
     }
   });
   

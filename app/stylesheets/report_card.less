@@ -121,6 +121,27 @@
 }
 
 /**
+ * Report Card - Tabs
+ */
+#frame_tabs {
+  ul {
+    list-style:none;
+    
+    li {
+      cursor:pointer;
+      float:left;
+      width:150px;
+      height:25px;
+      line-height:25px;
+    }
+    
+    li.active {
+      background-color:#f5ecec;
+    }
+  }
+}
+
+/**
  * Report Card - Framework
  */
 #frame {
@@ -223,7 +244,7 @@
     display:none;
   }
   
-  div.row:hover {
+  .edit-mode div.row:hover {
     background-color:#eddede;
     
     .hover-only {
@@ -231,11 +252,11 @@
     }
   }
   
-  div.drop-hover {
+  .edit-mode div.drop-hover {
     background-color:#89dca8;
   }
   
-  div.ui-draggable-dragging, div.ui-draggable-dragging:hover {
+  .edit-mode div.ui-draggable-dragging, .edit-mode div.ui-draggable-dragging:hover {
     background-image:none;
     cursor:move;
     width:300px;

@@ -8,6 +8,7 @@
   <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'maps/view' %>
+  <%= javascript_include_tag 'vehicles_view' %>
 <% end -%>
 
 <% form_tag report_card_path, :method => :get do -%>
@@ -19,6 +20,13 @@
 <%= link_to 'Create Group', new_device_group_path, :class => 'newGroup' %>
 <%= link_to 'Create Vehicle', new_device_path, :class => 'newDevice' %>
 
+
+<div id="frame_tabs" class="clearfix">
+  <ul>
+    <li class="data_pane">Report Card</li>
+    <li class="map_pane">Map</li>
+  </ul>
+</div>
 <div id="report_card_header">
   <div class="row scrollbar-fix">
     <div class="listing">
@@ -43,7 +51,7 @@
 </div>
 <div id="frame">
   <div id="tab"></div>
-  <div id="data_pane">
+  <div id="data_pane" class="edit-mode">
     <% new_tree(@root) do |node, level| -%>
       <%= render :partial => 'report_card_row', :locals => {:node => node, :level => level} %>
     <% end -%>

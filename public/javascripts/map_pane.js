@@ -16,6 +16,8 @@ MapPane.init = function() {
   // Whenever the frame is resized, resize our map as well
   Frame.resize(MapPane.resize);
   MapPane.resize();
+  
+  VehiclesView.init();
 };
 
 /**
@@ -36,6 +38,7 @@ MapPane.resize = function() {
  */
 MapPane.open = function() {
   q('#map_pane').show();
+  q('#data_pane').addClass('map-mode');
   
   MapPane.resize();
 };
@@ -46,4 +49,19 @@ MapPane.open = function() {
  */
 MapPane.close = function() {
   q('#map_pane').hide();
+  q('#data_pane').removeClass('map-mode');
 };
+
+/**
+ * Show the point specified by the given id.
+ */
+MapPane.panToDeviceId = function(id) {
+  var point = VehiclesView.lookup[parseInt(id)];
+  
+  if (point) {
+    MoshiMap.moshiMap.map.panToLatLng(point.latLng);
+  }
+};
+
+/* Initializer */
+jQuery(MapPane.init);

@@ -376,8 +376,8 @@ MoshiProxy = {
     // Save the lat/long position the cursor is currently scrolling over, and
     // adjust the map after zoom so that the cursor is over the same lat/long.
 
-    var scrollX = event.pageX - MoshiMap.moshiMap.mapContainer.position().left,
-        scrollY = event.pageY - MoshiMap.moshiMap.mapContainer.position().top,
+    var scrollX = event.pageX - MoshiMap.moshiMap.mapContainer.offset().left,
+        scrollY = event.pageY - MoshiMap.moshiMap.mapContainer.offset().top,
         centerX = MoshiMap.moshiMap.mapContainer.width() / 2,
         centerY = MoshiMap.moshiMap.mapContainer.height() / 2;
 

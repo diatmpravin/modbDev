@@ -32,6 +32,11 @@ class GroupsController < ApplicationController
   end
 
   def update
+    if params[:device_group][:parent_id] == '0'
+      # Root
+      params[:device_group][:parent_id] = nil
+    end
+    
     if @group.update_attributes(params[:device_group])
       root = current_user.device_group_or_root
       
