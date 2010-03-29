@@ -44,4 +44,10 @@ class ReportCardController < ApplicationController
     end
   end
 
+  def group_report(group)
+    grc = GroupReportCard.new(group)
+    grc.start = Date.yesterday
+    grc.end = Date.yesterday
+    grc.run
+  end
 end

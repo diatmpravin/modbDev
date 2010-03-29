@@ -1111,5 +1111,15 @@ describe "Device", ActiveSupport::TestCase do
 
     end
 
+    specify "daily data over" do
+      @device.calculate_data_for(Date.parse("01/01/2009"))
+
+      data = @device.daily_data_over(Date.parse("01/01/2009"), Date.parse("01/01/2009"))
+
+      data.should.not.be.nil
+      data[0].first_start_avg.should.be.close 3600, 0
+      data[0].last_stop_avg.should.be.close 1800, 0
+      data[0].miles_avg.should.be.close 200, 0
+    end
   end
 end

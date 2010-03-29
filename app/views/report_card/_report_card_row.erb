@@ -38,19 +38,19 @@
     </div>
     
     <% if level > 0 -%>
-      <% #report = group_report(node) -%>
+      <% report = group_report(node) -%>
       
       <div class="data">
-        <span class="data">Good</span>
-        <span class="data">Good</span>
-        <span class="data">50</span>
-        <span class="data">75</span>
-        <span class="data">OK</span>
-        <span class="data">BAD</span>
-        <span class="data">57</span>
-        <span class="data">78</span>
-        <span class="data">54</span>
-        <span class="after_hours">70</span>
+        <span class="data"><%= report[:report_card][:first_start] %></span>
+        <span class="data"><%= report[:report_card][:last_stop] %></span>
+        <span class="data"><%= report[:duration] %></span>
+        <span class="data"><%= report[:miles] %></span>
+        <span class="data"><%= report[:mpg] %></span>
+        <span class="data"><%= report[:speed_events] %></span>
+        <span class="data"><%= report[:geofence_events] %></span>
+        <span class="data"><%= report[:idle_events] %></span>
+        <span class="data"><%= report[:aggressive_events] %></span>
+        <span class="after_hours"><%= report[:after_hours_events] %></span>
       </div>
     <% end -%>
   </div>
