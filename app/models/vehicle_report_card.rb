@@ -53,15 +53,20 @@ class VehicleReportCard < Report
       }
 
       DeviceGroup::Grade::VALID_PARAMS.each do |param|
-        tmp[:report_card][param] =
-          case @device.group.grade(param, tmp[param])
-          when DeviceGroup::Grade::PASS
-            "pass"
-          when DeviceGroup::Grade::WARN
-            "warn"
-          when DeviceGroup::Grade::FAIL
-            "fail"
-          end
+        # TODO: cannot currently grade a vehicle without a group!
+        if @device.group.nil? 
+          "pass"
+        else
+          tmp[:report_card][param] =
+            case @device.group.grade(param, tmp[param])
+            when DeviceGroup::Grade::PASS
+              "pass"
+            when DeviceGroup::Grade::WARN
+              "warn"
+            when DeviceGroup::Grade::FAIL
+              "fail"
+            end
+        end
       end
 
       #report << tmp
