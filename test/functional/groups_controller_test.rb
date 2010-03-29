@@ -89,6 +89,19 @@ describe "GroupsController", ActionController::TestCase do
       json['status'].should.equal 'failure'
       json['error'].should =~ /Cannot move/
     end
+    
+    specify "can move to root by specifying parent_id of 0" do
+      @other = device_groups(:south)
+      @group.move_to_child_of(@other)
+      
+      @group.reload.parent.should.equal @other
+      
+      put :update, :id => @group.id, :device_group => {:parent_id => '0'}
+      
+      json['status'].should.equal 'success'
+      
+      @group.reload.parent.should.be.nil
+    end
   end
 
   context "Destroying a device group" do
