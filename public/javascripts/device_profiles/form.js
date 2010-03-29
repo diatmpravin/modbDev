@@ -1,20 +1,28 @@
 /**
- * Device Profiles - Form
+ * Device Profile - Form
  */
-if (typeof DeviceProfiles == 'undefined') {
-  DeviceProfiles = {};
-};
-DeviceProfiles.Form = {
+if (typeof DeviceProfile == 'undefined') { DeviceProfile = {}; };
+
+DeviceProfile.Form = {
+  /**
+   * Prepare any global page stuff.
+   */
   init: function() {
     q('input.alert').live('click', function() {
       q(this).siblings('.extra').toggle(this.checked);
       
-      DeviceProfiles.Form.initTimepickr(q(this).parent());
+      // This "re-init" prevents an alignment bug
+      DeviceProfile.Form.initTimepickr(q(this).parent());
     });
-    
-    DeviceProfiles.Form.initTimepickr();
-  }
-  ,
+  },
+  
+  /**
+   * Init pane stuff.
+   */
+  initPane: function(element) {
+    DeviceProfile.Form.initTimepickr(element);
+  },
+  
   /**
    * Initialize a jQuery Timepickr for any inputs with a class of 'timepick'
    * in the given container. If no container is specified, initializes the
@@ -30,4 +38,4 @@ DeviceProfiles.Form = {
 };
 
 /* Initializer */
-jQuery(DeviceProfiles.Form.init);
+jQuery(DeviceProfile.Form.init);
