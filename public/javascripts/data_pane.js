@@ -1,7 +1,8 @@
 /**
  * Data Pane
  */
-if (typeof DataPane == 'undefined') { DataPane = {}; }
+if (typeof DataPane == 'undefined') { DataPane = {}; };
+DataPane.dragging = false;
 
 /**
  * Initialize the "data pane", which contains the group tree and
@@ -57,13 +58,14 @@ DataPane.updated = function(element) {
   // Hide collapsible arrows for empty groups
   self.find('li:not(:has(li)) span.collapsible').hide();
   
-  // Allow user to drag groups around
+  // Allow user to drag groups and vehicles around
   self.find('div.row').draggable({
     helper: 'clone',
-    handle: 'span.handle',
+    handle: 'div.listing',
     opacity: 0.8,
-    start: function() { ReportCard.Group.dragging = true; },
-    stop: function() { ReportCard.Group.dragging = false; }
+    distance: 8,
+    start: function() { DataPane.dragging = true; },
+    stop: function() { DataPane.dragging = false; }
   });
   
   // Allow user to drop groups onto other groups
@@ -72,9 +74,9 @@ DataPane.updated = function(element) {
     greedy: true,
     drop: function(event, ui) {
       if (ui.draggable.hasClass('group')) {
-        ReportCard.Group.confirmMove(ui.draggable, q(this));
+        EditPane.Group.confirmMove(ui.draggable, q(this));
       } else {
-        ReportCard.Device.confirmMove(ui.draggable, q(this));
+        EditPane.Device.confirmMove(ui.draggable, q(this));
       }
     }
   });
