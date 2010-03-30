@@ -127,7 +127,7 @@ AlertRecipients = {
         '<option value="' + _id.val() + '">' + _alert.find('span').html() + '</option>'
       );
     }
-    _alert.hide('normal', function() {
+    _alert.hide('fast', function() {
       _alert.remove();
     });
     
