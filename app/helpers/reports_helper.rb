@@ -50,7 +50,6 @@ module ReportsHelper
 
   def range_options_report_card
     @@range_options_report_card ||= [
-      ['Today',      Report::DateRange::TODAY],
       ['Yesterday',  Report::DateRange::YESTERDAY],
       ['This Week',  Report::DateRange::THIS_WEEK],
       ['Last Week',  Report::DateRange::LAST_WEEK],
