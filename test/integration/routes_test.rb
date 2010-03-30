@@ -8,7 +8,7 @@ class RoutesTest < ActionController::IntegrationTest
   end
 
   test "report card is root" do
-    assert_equal "/", path_for(:controller => "report_card", :action => "index")
+    assert_equal "/", path_for(:controller => "report_card", :action => "show")
   end
   
   test "accounts resources" do
