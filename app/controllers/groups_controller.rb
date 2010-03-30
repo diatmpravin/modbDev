@@ -12,20 +12,7 @@ class GroupsController < ApplicationController
   end
   
   def create
-    if @group.update_attributes(params[:device_group])
-      root = current_user.device_group_or_root
-      
-      render :json => {
-        :status => 'success',
-        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-        :id => dom_id(root)
-      }
-    else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:partial => 'form', :locals => {:group => @group})
-      }
-    end
+    update_record
   end
 
   def edit
@@ -37,21 +24,7 @@ class GroupsController < ApplicationController
       params[:device_group][:parent_id] = nil
     end
     
-    if @group.update_attributes(params[:device_group])
-      root = current_user.device_group_or_root
-      
-      render :json => {
-        :status => 'success',
-        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-        :id => dom_id(root)
-      }
-    else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:partial => 'form', :locals => {:group => @group}),
-        :error => @group.errors.map {|e| "#{e.first.capitalize} #{e.last}"}
-      }
-    end
+    update_record
   rescue ActiveRecord::ActiveRecordError
     render :json => {
       :status => 'failure',
@@ -91,5 +64,23 @@ class GroupsController < ApplicationController
   
   def set_group
     @group = current_account.device_groups.find(params[:id])
+  end
+  
+  def update_record
+    if @group.update_attributes(params[:device_group])
+      root = current_user.device_group_or_root
+      
+      render :json => {
+        :status => 'success',
+        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
+        :id => dom_id(root)
+      }
+    else
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:group => @group}),
+        :error => @group.errors.map {|e| "#{e.first.capitalize} #{e.last}"}
+      }
+    end
   end
 end

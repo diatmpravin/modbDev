@@ -59,6 +59,11 @@ class DevicesController < ApplicationController
   end
   
   def update
+    if params[:device][:group_id] == '0'
+      # Root
+      params[:device][:group_id] = nil
+    end
+    
     update_record
   end
   
