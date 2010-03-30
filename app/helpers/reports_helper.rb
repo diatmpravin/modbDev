@@ -16,6 +16,12 @@ module ReportsHelper
     rows == 0 ? 0 : report.data.sum(col) / rows
   end
   
+  def landmark_report_options
+    @@landmark_report_options ||= [
+      ['Landmark Summary Report', Report::LANDMARK_BY_LANDMARK_SUMMARY_REPORT],
+    ].freeze
+  end
+  
   def vehicle_report_options
     @@vehicle_report_options ||= [
       ['Vehicle Summary Report', Report::VEHICLE_SUMMARY_REPORT],

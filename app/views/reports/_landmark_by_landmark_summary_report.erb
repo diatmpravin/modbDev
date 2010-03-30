@@ -1,8 +1,8 @@
 <table>
   <thead>
     <tr>
-      <th>Vehicle</th>
       <th>Landmark</th> 
+      <th>Vehicle</th>
       <th>Arrival</th>
       <th>Departure</th>
       <th>Stop Time (hours:minutes)</th>
@@ -11,8 +11,8 @@
   <tbody>
   <% report.data.each do |row| -%>
     <tr class="<%= cycle('even', 'odd') %>">
-      <td><%= h(row[:name]) %></td>
       <td><%= h(row[:landmark]) %></td>
+      <td><%= h(row[:name]) %></td>
       <td><%= h(row[:arrival]) %></td>
       <td><%= h(row[:departure]) %></td>
       <td><%= h(row[:stop_time]) %></td>

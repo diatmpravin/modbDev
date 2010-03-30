@@ -1,0 +1,45 @@
+<% form_for :report, report, :url => reports_path, :html => { :class => 'multiSubmit', :method => :post } do |f| -%>
+  <% report.errors.each do |error| -%>
+    <div class="error"><%= error %></div>
+  <% end -%>
+
+  <div class="col">
+    <div class="field">
+      <%= f.label :type %>
+      <%= f.select :type, landmark_report_options %>
+    </div>
+
+    <% f.fields_for :range, report.range do |f_r| -%>
+      <div class="field">
+        <%= f_r.label :type, 'Date Range' %>
+        <%= f_r.select :type, range_options %>
+      </div>
+
+      <div id="date_select" class="field" style="display:none">
+        <%= label_tag '' %>
+        <%= f_r.text_field :start, :size => 10, :maxlength => 10 %>
+        &nbsp; through &nbsp;
+        <%= f_r.text_field :end, :size => 10, :maxlength => 10 %>
+      </div>
+    <% end -%>
+    
+    <%= hidden_field_tag 'landmark_ids', '' %>
+  </div>
+
+  <div class="col description">
+    <div class="report_description" id="report_0_description">
+      The Landmark Summary Report shows arrivals and departures from landmarks. Report data includes:
+      Arrival date/time, Departure date/time, stop time
+      <br/><br/>
+      To create a report, select a Date Range, select the desired Vehicles and then click "Run Report".
+    </div>
+  </div>
+
+  <div class="clear"></div>
+  <div class="buttons">
+    <div class="loading"></div>
+    <%= submit_tag 'Run Report' %>
+    <%= button_tag 'Cancel', :class => 'cancel' %>
+  </div>
+  <div class="clear"></div>
+<% end -%>

@@ -15,7 +15,7 @@
   </thead>
   <% landmarks.each do |landmark| -%>
     <tr class="<%=cycle('','odd')%>">
-      <td><%= check_box_tag :apply_to, landmark.id, false, :id => dom_id(landmark) %></td>
+      <td><%= check_box_tag :apply_to, landmark.id, false, :id => "apply_to_#{landmark.id}" %></td>
       <td><%= h landmark.name -%></td>
       <td><%= h landmark.latitude -%></td>
       <td><%= h landmark.longitude -%></td>

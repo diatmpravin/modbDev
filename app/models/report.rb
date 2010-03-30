@@ -1,11 +1,12 @@
 require 'set'
 
 class Report
-  attr_accessor :user, :type, :devices, :range, :errors, :data
+  attr_accessor :user, :type, :devices, :range, :errors, :data, :landmarks
   
   def initialize(user, opts = {})
     @user      = user
     @devices   = opts[:devices] || user.devices
+    @landmarks = opts[:landmarks] || Array.new
     @type      = opts[:type].to_i || 0
     @errors    = Set.new
     @range     = DateRange.new(self, opts[:range] || {})
@@ -113,6 +114,7 @@ end
   FuelEconomyReport,
   TripDetailReport,
   LandmarkSummaryReport,
+  LandmarkByLandmarkSummaryReport,
   FuelSummaryReport
 ].tap do |reports|
   Report::REPORTS = reports.freeze
