@@ -6,6 +6,8 @@ class Landmark < ActiveRecord::Base
   has_many :device_group_links, :as => :link
   has_many :device_groups, :through => :device_group_links
 
+  before_save :consolidate_device_groups
+
   validates_presence_of :name
   validates_length_of :name, :maximum => 30, :allow_nil => true, :allow_blank => true
   validates_presence_of :latitude
@@ -36,5 +38,13 @@ class Landmark < ActiveRecord::Base
                         longitude, 
                         point.latitude,
                         point.longitude) <= radius
+  end
+
+  # Weed out group linkings that aren't necessary, because they have parents
+  # that are already linked to this object.
+  def consolidate_device_groups
+    if self.device_groups.length > 1
+      self.device_groups -= self.device_groups.map(&:descendants).flatten
+    end
   end
 end
