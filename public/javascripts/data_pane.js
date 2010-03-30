@@ -99,7 +99,7 @@ DataPane.close = function() {
   q('#data_pane > ol').css('width', function() { return q(this).width() + 'px'; });
   
   // Collapse the data pane
-  q('#data_pane').animate({width:280}, {duration:'normal'});
+  q('#data_pane').animate({width:280}, {duration:400});
   
   // Disable editing, removing, drag/drop, etc.
   q('#data_pane').removeClass('edit-mode');
