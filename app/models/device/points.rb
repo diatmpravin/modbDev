@@ -90,6 +90,7 @@ class Device < ActiveRecord::Base
       ) : []
 
       landmarks_to_test = group ? account.landmarks.all(
+        :select => 'DISTINCT landmarks.*',
         :joins => :device_groups,
         :conditions => { :device_group_links => {
           :device_group_id => group.self_and_ancestors.flatten.map(&:id)

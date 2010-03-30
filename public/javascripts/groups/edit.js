@@ -50,7 +50,7 @@
       slider.slider({
         range: true,
         min: 0,
-        max: 86399,
+        max: 86100,
         step: 300,
         values: Groups.initialValues(slider, input_pass.val(), input_fail.val()),
         slide: function(e, ui) {
