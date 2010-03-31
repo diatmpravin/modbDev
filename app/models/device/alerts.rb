@@ -7,8 +7,9 @@ class Device < ActiveRecord::Base
   end
   
   def send_alert(message, at = nil)
+    at = (at || Time.now).in_time_zone(self.zone)
     self.alert_recipients.each do |r|
-      r.alert(message, at || self.zone.now)
+      r.alert(message, at)
     end
   end
   
