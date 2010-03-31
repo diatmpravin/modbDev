@@ -14,8 +14,10 @@ class LandmarkSummaryReport < Report
     self.data.rename_columns(
       :name => "Name",
       :landmark => "Landmark",
-      :arrival => "Arrival",
-      :departure => "Departure",
+      :arrival_date => "Arrival Date",
+      :arrival_time => "Arrival Time",
+      :departure_date => "Departure Date",
+      :departure_time => "Departure Time",
       :stop_time => "Stop Time"
     )
     super
@@ -25,8 +27,10 @@ class LandmarkSummaryReport < Report
     report = Ruport::Data::Table(
       :name,
       :landmark,
-      :arrival,
-      :departure,
+      :arrival_date,
+      :arrival_time,
+      :departure_date,
+      :departure_time,
       :stop_time
     )
 
@@ -47,6 +51,8 @@ class LandmarkSummaryReport < Report
           row_partial[event.landmark_id] = { 
                                :name => device.name,
                                :landmark => event.landmark.name,
+                               :arrival_date => event.occurred_at.in_time_zone(self.user.zone).to_date.to_s(:default),
+                               :arrival_time => event.occurred_at.in_time_zone(self.user.zone).to_s(:local),
                                :arrival => event.occurred_at.in_time_zone(self.user.zone)
                                 }
 
@@ -55,6 +61,8 @@ class LandmarkSummaryReport < Report
           row.merge!( {
                       :name => device.name,
                       :landmark => event.landmark.name,
+                      :departure_date => event.occurred_at.in_time_zone(self.user.zone).to_date.to_s(:default),
+                      :departure_time => event.occurred_at.in_time_zone(self.user.zone).to_s(:local),
                       :departure => event.occurred_at.in_time_zone(self.user.zone)
                      })
 
