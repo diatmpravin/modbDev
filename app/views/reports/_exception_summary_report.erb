@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Vehicle</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Event</th>
+      <th>Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each do |row| -%>
+    <tr class="<%= cycle('even', 'odd') %>">
+      <td><%= row[:vehicle] %></td>
+      <td><%= row[:date] %></td>
+      <td><%= row[:time] %></td>
+      <td><%= row[:event] %></td>
+      <td><%= row[:detail] %></td>
+    </tr>
+  <% end -%>
+  </tbody>
+</table>

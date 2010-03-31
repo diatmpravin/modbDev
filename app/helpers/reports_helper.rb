@@ -29,6 +29,7 @@ module ReportsHelper
       ['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
       ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
       ['Landmark Report', Report::LANDMARK_SUMMARY_REPORT],
+      ['Exception Summary Report', Report::EXCEPTION_SUMMARY_REPORT],
       ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
     ].freeze
   end
