@@ -27,7 +27,7 @@ class Device < ActiveRecord::Base
       first_start_time = day_trips.any? ? day_trips.first.start : nil
       last_end_time = day_trips.any? ? day_trips.last.finish : nil
       first_start = day_trips.any? ? day_trips.first.start - start : nil
-      last_stop = day_trips.any? ? finish - day_trips.last.finish : nil
+      last_stop = day_trips.any? ? day_trips.last.finish - start : nil
 
       daily_data[:miles] = day_trips.map {|t| t.miles}.sum
       daily_data[:duration] = day_trips.map {|t| t.duration}.sum

@@ -10,6 +10,10 @@
     </div>
     <div class="data">
       <% report = group_report(node) -%>
+        <% if false %> 
+        <span class="<%= grade_class(report, :first_start, :grade_only => false) %>"><%= field(report, :first_start) %></span>
+        <span class="<%= grade_class(report, :last_stop, :grade_only => false) %>"><%= field(report, :last_stop) %></span>
+        <% end %>
         <span class="<%= grade_class(report, :first_start, :grade_only => true) %>"></span>
         <span class="<%= grade_class(report, :last_stop, :grade_only => true) %>"></span>
         <span class="<%= grade_class(report, :duration) %>"><%= field(report, :duration) %></span>

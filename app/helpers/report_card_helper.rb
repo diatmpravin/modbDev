@@ -57,9 +57,13 @@ module ReportCardHelper
   def field(data, name)
     return '-' unless data[:duration] > 0
 
+    return 'err' unless data[name] != nil
+
     case name
     when :miles then "%.1f" % data[name]
     when :mpg then "%.1f" % data[name]
+    when :first_start then operating_time(data[name].to_i)
+    when :last_stop then operating_time(data[name].to_i)
     when :duration then operating_time(data[name])
     else data[name]
     end
