@@ -1088,7 +1088,7 @@ describe "Device", ActiveSupport::TestCase do
 
       data.should.not.be.nil
       data.first_start.should.equal 3600
-      data.last_stop.should.equal 1800
+      data.last_stop.should.equal 84599
     end
 
     context "Resque job" do
@@ -1118,7 +1118,7 @@ describe "Device", ActiveSupport::TestCase do
 
       data.should.not.be.nil
       data[0].first_start_avg.should.be.close 3600, 0
-      data[0].last_stop_avg.should.be.close 1800, 0
+      data[0].last_stop_avg.should.be.close 84599, 0
       data[0].miles_avg.should.be.close 200, 0
     end
   end
