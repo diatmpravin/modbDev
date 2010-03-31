@@ -12,14 +12,14 @@
       <% report = group_report(node) -%>
         <span class="<%= grade_class(report, :first_start, :grade_only => true) %>"></span>
         <span class="<%= grade_class(report, :last_stop, :grade_only => true) %>"></span>
-        <span class="<%= grade_class(report, :duration) %>"><%= operating_time report[:duration] %></span>
-        <span class="<%= grade_class(report, :miles) %>"><%= "%.1f" % report[:miles] %></span>
-        <span class="<%= grade_class(report, :mpg) %>"><%= "%.1f" % report[:mpg] %></span>
-        <span class="<%= grade_class(report, :speed_events) %>"><%= report[:speed_events] %></span>
-        <span class="<%= grade_class(report, :geofence_events) %>"><%= report[:geofence_events] %></span>
-        <span class="<%= grade_class(report, :idle_events) %>"><%= report[:idle_events] %></span>
-        <span class="<%= grade_class(report, :aggressive_events) %>"><%= report[:aggressive_events] %></span>
-        <span class="<%= grade_class(report, :after_hours_events) %> after_hours"><%= report[:after_hours_events] %></span>
+        <span class="<%= grade_class(report, :duration) %>"><%= field(report, :duration) %></span>
+        <span class="<%= grade_class(report, :miles) %>"><%= field(report, :miles) %></span>
+        <span class="<%= grade_class(report, :mpg) %>"><%= field(report, :mpg) %></span>
+        <span class="<%= grade_class(report, :speed_events) %>"><%= field(report, :speed_events) %></span>
+        <span class="<%= grade_class(report, :geofence_events) %>"><%= field(report, :geofence_events) %></span>
+        <span class="<%= grade_class(report, :idle_events) %>"><%= field(report, :idle_events) %></span>
+        <span class="<%= grade_class(report, :aggressive_events) %>"><%= field(report, :aggressive_events) %></span>
+        <span class="<%= grade_class(report, :after_hours_events) %> after_hours"><%= field(report, :after_hours_events) %></span>
     </div>
   </div>
 <% else -%>
@@ -43,14 +43,14 @@
         <% report = group_report(node) -%>
         <span class="<%= grade_class(report, :first_start, :grade_only => true) %>"></span>
         <span class="<%= grade_class(report, :last_stop, :grade_only => true) %>"></span>
-        <span class="<%= grade_class(report, :duration) %>"><%= operating_time report[:duration] %></span>
-        <span class="<%= grade_class(report, :miles) %>"><%= "%.1f" % report[:miles] %></span>
-        <span class="<%= grade_class(report, :mpg) %>"><%= "%.1f" % report[:mpg] %></span>
-        <span class="<%= grade_class(report, :speed_events) %>"><%= report[:speed_events] %></span>
-        <span class="<%= grade_class(report, :geofence_events) %>"><%= report[:geofence_events] %></span>
-        <span class="<%= grade_class(report, :idle_events) %>"><%= report[:idle_events] %></span>
-        <span class="<%= grade_class(report, :aggressive_events) %>"><%= report[:aggressive_events] %></span>
-        <span class="<%= grade_class(report, :after_hours_events) %> after_hours"><%= report[:after_hours_events] %></span>
+        <span class="<%= grade_class(report, :duration) %>"><%= field(report, :duration) %></span>
+        <span class="<%= grade_class(report, :miles) %>"><%= field(report, :miles) %></span>
+        <span class="<%= grade_class(report, :mpg) %>"><%= field(report, :mpg) %></span>
+        <span class="<%= grade_class(report, :speed_events) %>"><%= field(report, :speed_events) %></span>
+        <span class="<%= grade_class(report, :geofence_events) %>"><%= field(report, :geofence_events) %></span>
+        <span class="<%= grade_class(report, :idle_events) %>"><%= field(report, :idle_events) %></span>
+        <span class="<%= grade_class(report, :aggressive_events) %>"><%= field(report, :aggressive_events) %></span>
+        <span class="<%= grade_class(report, :after_hours_events) %> after_hours"><%= field(report, :after_hours_events) %></span>
       </div>
     <% end -%>
   </div>

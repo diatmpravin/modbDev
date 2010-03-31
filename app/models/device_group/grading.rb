@@ -69,9 +69,6 @@ class DeviceGroup < ActiveRecord::Base
       return Grade::PASS
     end
 
-    #return Grade::PASS unless equation 
-    #return Grade::PASS unless equation[:fail] != ""
-
     if Grade::PARAM_REVERSED[key]
 
       if value >= equation[:pass].to_i
