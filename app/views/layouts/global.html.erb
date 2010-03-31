@@ -11,13 +11,28 @@
       <%= stylesheet_link_tag 'ie7.css', :media => 'screen, project' %>
     <![endif]-->
     <%= yield :stylesheet %>
+    <!-- Head Scripts -->
     <%= jquery_include_tag %>
-    <%= jquery_authenticity_token %>
     <%= javascript_include_tag 'jquery/jquery.noconflict' %>
+    
+    <%= javascript_include_tag 'fleet' %>
+    <script type="text/javascript">
+      jQuery(function() {
+        //Fleet.loading();
+      });
+    </script>
+    <!-- End Head Scripts -->
+  </head>
+  <% content_tag :body, :id => body_id do %>   
+    <div id="layout">
+      <%= yield %>
+    </div>
+    
+    <!-- Tail Scripts -->
+    <%= javascript_include_tag 'jquery/jquery-ui-1.8.custom.min' %>
     <%= javascript_include_tag 'jquery/jquery.form' %>
     <%= javascript_include_tag 'jquery/jquery.corners.min' %>
     <%= javascript_include_tag 'jquery/jquery.cookie' %>
-    <%= javascript_include_tag 'jquery/jquery-ui-1.8.custom.min' %>
     <%= javascript_include_tag 'jquery/jquery.mousewheel' %>
     <%= javascript_include_tag 'jquery/superfish' %>
     <%= javascript_include_tag 'jquery/jquery.strings' %>
@@ -28,11 +43,7 @@
     <%= javascript_include_tag 'global' %>
     <%= javascript_include_tag 'moshitime' %>
     <%= yield :javascript %>
-  </head>
-  <% content_tag :body, :id => body_id do %>   
-    <div id="layout">
-      <%= yield %>
-    </div>
+    <!-- End Tail Scripts -->
   <% end -%>
   <%= analytics -%>
 </html>
