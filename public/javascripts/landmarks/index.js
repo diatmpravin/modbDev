@@ -30,6 +30,12 @@ Landmarks.Index = {
                         .dialog('open');
       return false;
     });
+
+    new Reports.Form({
+      container: '#runReportForm',
+      deviceField: 'input[name=landmark_ids]',
+      getSelection: function() { return Landmarks.Index.listView.getSelected(); }
+    });
   }
   ,
   /**

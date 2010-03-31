@@ -1,6 +1,7 @@
 <% content_for :javascript do -%>
   <%= javascript_include_tag "list_view" -%>
   <%= javascript_include_tag "landmarks/index" -%>
+  <%= javascript_include_tag "reports/form" -%>
   <%= javascript_include_tag 'jquery/jquery.blockUI' %>
 <% end -%>
 
@@ -9,9 +10,21 @@
 <%= messages -%>
 
 <div class="landmarks">
-  <div class="buttons">
+  <div style="float:right">
+    <span id="selectedCount">
+    </span>
+
+    <%= button_tag 'Run Report', :class => 'runReport' %>
+  </div>
+
+  <div class="buttonsLeft">
     <%= button_to 'Add Landmark', new_landmark_path, :method => :get %>
   </div>
+
+  <div id="runReportForm" class="massApplyForm reportSettings">
+    <%= render :partial => 'reports/landmarkform', :locals => {:report => Report.new(current_user)} %>
+  </div>
+
   <div class="clear spacer"></div>
 
   <div id="landmarksList">

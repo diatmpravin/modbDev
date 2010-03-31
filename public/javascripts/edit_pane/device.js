@@ -55,6 +55,9 @@ EditPane.Device = {
     // Setup device profile stuff
     DeviceProfile.Form.initPane('#edit_pane');
     
+    // Alert Recipient
+    AlertRecipients.prepare('#edit_pane');
+    
     return q('#edit_pane .edit');
   },
   

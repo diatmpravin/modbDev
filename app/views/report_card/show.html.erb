@@ -1,6 +1,7 @@
 <% content_for :javascript do -%>
   <%= javascript_include_tag 'frame', 'data_pane', 'edit_pane', 'map_pane', 'edit_pane/device', 'edit_pane/group' %>
   <%= javascript_include_tag 'groups/edit' %>
+  <%= javascript_include_tag 'alert_recipients.js' %>
   <%= javascript_include_tag 'device_profiles/form' %>
   
   <%= mapquest_include_tags %>
@@ -9,6 +10,7 @@
   <%= javascript_include_tag 'moshimap' %>
   <%= javascript_include_tag 'maps/view' %>
   <%= javascript_include_tag 'vehicles_view' %>
+  
 <% end -%>
 
 <% form_tag report_card_path, :method => :get do -%>
@@ -91,4 +93,8 @@
   <% form_tag device_groups_path, :method => :delete do -%>
   <% end -%>
   <p>This will permanently remove the group from the system. Are you sure?</p>
+</div>
+
+<div id="newAlertRecipient" class="dialog">
+  <%= render :partial => 'alert_recipients/form', :locals => {:alert_recipient => current_account.alert_recipients.new} %>
 </div>
