@@ -125,6 +125,30 @@ describe "Device Group", ActiveSupport::TestCase do
       # Devices moved up
       parent.devices.count.should.equal 3
     end
+    
+    specify "destroy_and_rollup does not delete subgroups" do
+      parent = @account.device_groups.create :name => 'parent'
+      group = parent.children.create(:name => 'my group', :account => @account)
+      
+      group.devices << Device.generate!
+      
+      parent.destroy_and_rollup
+      
+      group.reload.should.not.be.nil
+      group.parent.should.be.nil
+      group.devices.length.should.equal 1
+    end
+    
+    specify "destroy_and_rollup will nullify linked group ids if there is no parent" do
+      device = Device.generate!
+      @north.devices << device
+      
+      device.reload.group_id.should.equal @north.id
+      
+      @north.destroy_and_rollup
+      
+      device.reload.group_id.should.be.nil
+    end
   end
 
   context "Grading" do

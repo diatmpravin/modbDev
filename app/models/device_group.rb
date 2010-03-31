@@ -18,8 +18,6 @@ class DeviceGroup < ActiveRecord::Base
     {}
   end
   
-  #after_save :move_to_new_parent
-  
   # This class represents a "root" group, which isn't actually in the database
   class Root
     attr_accessor :id, :name, :children, :devices
@@ -49,18 +47,20 @@ class DeviceGroup < ActiveRecord::Base
   # Destroy this record AND rollup any devices or subgroups to the parent.
   # If this group is a root group, this is the same as a call to destroy.
   def destroy_and_rollup
-    unless self.parent
-      destroy ; return
+    if parent
+      self.children.each do |c|
+        c.move_to_child_of(self.parent)
+      end
+      
+      self.parent.devices   += self.devices
+      self.parent.geofences += self.geofences
+      self.parent.landmarks += self.landmarks
+      self.parent.save
+    else
+      self.children.each do |c|
+        c.move_to_root
+      end
     end
-    
-    self.children.each do |c|
-      c.move_to_child_of(self.parent)
-    end
-    
-    self.parent.devices   += self.devices
-    self.parent.geofences += self.geofences
-    self.parent.landmarks += self.landmarks
-    self.parent.save
     
     destroy
   end
