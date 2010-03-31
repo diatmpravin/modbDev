@@ -3,18 +3,35 @@ class LandmarksController < ApplicationController
   layout except_ajax('landmarks')
   
   def index
-    @landmarks = search_on Landmark do
-      current_account.landmarks.paginate(:page => params[:page], :per_page => 30)
-    end
-    
     respond_to do |format|
-      format.html {
-        if request.xhr? && params[:page]
-          render :partial => "list", :locals => {:landmarks => @landmarks}
-        end
+      format.html
+      
+      format.json {
+      
+    # TODO: Put this somewhere more global
+    ActiveRecord::Base.include_root_in_json = false
+    
+    @landmarks = current_account.landmarks
+    
+    
+        render :json => @landmarks.to_json(index_json_options)
       }
     end
   end
+  
+  # def index
+    # @landmarks = search_on Landmark do
+      # current_account.landmarks.paginate(:page => params[:page], :per_page => 30)
+    # end
+    
+    # respond_to do |format|
+      # format.html {
+        # if request.xhr? && params[:page]
+          # render :partial => "list", :locals => {:landmarks => @landmarks}
+        # end
+      # }
+    # end
+  # end
   
   # GET /landmarks/new
   def new
@@ -58,4 +75,9 @@ class LandmarksController < ApplicationController
     redirect_to landmarks_path
   end
   
+  protected
+  
+  def index_json_options
+    {:only => [:id, :name, :latitude, :longitude]}
+  end
 end

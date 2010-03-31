@@ -9,7 +9,8 @@ Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   var pane,
       container,
-      map;
+      map,
+      collections;
   
   /**
    * init()
@@ -29,6 +30,9 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     
     // .map: what MapQuest will create the map in
     map = container.children('.map');
+    
+    // Our list of MapQuest API "shape collections", which we can use to group points and shapes
+    collections = [];
     
     // Create our MoshiMap (initialize MapQuest)
     map.moshiMap().init();
@@ -78,6 +82,53 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     
     return MapPane;
   };
+  
+  /**
+   * Add a point
+   */
+  
+  /**
+   * Add an individual point to our list of displayed points.
+   *
+   * @param point   a JSONified Point object
+   * @param options an options hash, with the following optional keys:
+   *                  icon
+   *                  title
+   *                  description
+   *                  size
+   *                  offset
+   */
+  MoshiMap.prototype.addPoint = function(point, options) {
+    var mqLoc = new MQA.LatLng(point.latitude, point.longitude);
+    var mqPoi = new MQA.Poi(mqLoc);
+
+    if (options.icon) {
+      mqPoi.setValue('icon', new MQA.Icon(options.icon, options.size[0], options.size[1]));
+      mqPoi.setValue('iconOffset', new MQA.Point(options.offset[0], options.offset[1]));
+      mqPoi.setValue('shadow', new MQA.Icon('/images/blank.gif'));
+    }
+
+    if (options.title) {
+      mqPoi.setValue('rolloverEnabled', true);
+      mqPoi.setValue('infoTitleHTML', options.title);
+    }
+
+    if (options.description) {
+      mqPoi.setValue('infoContentHTML', options.description);
+    }
+
+    if (options.label) {
+      mqPoi.setValue('labelText', options.label);
+      mqPoi.setValue('labelClass', 'mapLabel');
+      mqPoi.setValue('labelVisible', false);
+    }
+
+    mqPoi.moshiPoint = point;
+    this.pointCollection.add(mqPoi);
+
+    return mqPoi;
+  };
+  
   
   /**
    * panToDeviceId(id)

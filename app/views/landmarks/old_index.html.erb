@@ -1,0 +1,29 @@
+<% content_for :javascript do -%>
+  <%= javascript_include_tag "list_view" -%>
+  <%= javascript_include_tag "landmarks/index" -%>
+  <%= javascript_include_tag 'jquery/jquery.blockUI' %>
+  <%= javascript_include_tag 'fleet/frame.js' %>
+<% end -%>
+
+<%= filter -%>
+
+<%= messages -%>
+
+<div class="landmarks">
+  <div class="buttons">
+    <%= button_to 'Add Landmark', new_landmark_path, :method => :get %>
+  </div>
+  <div class="clear spacer"></div>
+
+  <div id="landmarksList">
+    <%= render :partial => "list", :locals => {:landmarks => @landmarks} -%>
+  </div>
+</div>
+
+<div id="removeLandmark" class="dialog">
+  <% form_tag landmarks_path, :method => :delete do -%>
+  <% end -%>
+  <p>If you remove this landmark, it will no longer display on any
+  maps. This action cannot be undone.</p>
+  <p>Are you sure you want to remove this landmark?</p>
+</div>
