@@ -48,7 +48,7 @@ class VehicleReportCard < Report
         :aggressive_events => data.aggressive_events_avg.to_i,
         :after_hours_events => data.after_hours_events_avg.to_i,
         :first_start => data.first_start_avg.to_i,
-        :last_start => data.last_stop_avg.to_i,
+        :last_stop => data.last_stop_avg.to_i,
         :report_card => {}
       }
 

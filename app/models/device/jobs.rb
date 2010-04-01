@@ -18,34 +18,40 @@ class Device < ActiveRecord::Base
     # Hashify
     events = Hash[*events.inject([]) {|arr, elem| arr.concat(elem)}]
 
-    first_start_time = day_trips.any? ? day_trips.first.start : nil
-    last_end_time = day_trips.any? ? day_trips.last.finish : nil
-    first_start = day_trips.any? ? day_trips.first.start - start : nil
-    last_stop = day_trips.any? ? finish - day_trips.last.finish : nil
-
-    self.daily_data.create(
+    daily_data = {
       :date => day.to_date,
       :time_zone => self.time_zone,
-      :miles => day_trips.map {|t| t.miles}.sum,
-      :duration => day_trips.map {|t| t.duration}.sum,
-      :mpg => day_trips.size > 0 ? day_trips.map {|t| t.average_mpg}.sum / day_trips.size.to_f : 0,
-      :speed_events => events[Event::SPEED] || 0,
-      :geofence_events => [
+    }
+    
+    unless day_trips.empty?
+      first_start_time = day_trips.any? ? day_trips.first.start : nil
+      last_end_time = day_trips.any? ? day_trips.last.finish : nil
+      first_start = day_trips.any? ? day_trips.first.start - start : nil
+      last_stop = day_trips.any? ? day_trips.last.finish - start : nil
+
+      daily_data[:miles] = day_trips.map {|t| t.miles}.sum
+      daily_data[:duration] = day_trips.map {|t| t.duration}.sum
+      daily_data[:mpg] = day_trips.size > 0 ? day_trips.map {|t| t.average_mpg}.sum / day_trips.size.to_f : 0
+      daily_data[:speed_events] = events[Event::SPEED] || 0
+      daily_data[:geofence_events] = [
         events[Event::ENTER_BOUNDARY] || 0,
         events[Event::EXIT_BOUNDARY] || 0
-      ].sum,
-      :idle_events => events[Event::IDLE] || 0,
-      :aggressive_events => [
+      ].sum
+      daily_data[:idle_events] = events[Event::IDLE] || 0
+      daily_data[:aggressive_events] = [
         events[Event::RPM] || 0,
         events[Event::RAPID_ACCEL] || 0,
         events[Event::RAPID_DECEL] || 0
-      ].sum,
-      :after_hours_events => events[Event::AFTER_HOURS] || 0,
-      :first_start_time => first_start_time,
-      :last_end_time => last_end_time,
-      :first_start => first_start,
-      :last_stop => last_stop
-    )
+      ].sum
+      daily_data[:after_hours_events] = events[Event::AFTER_HOURS] || 0
+      daily_data[:first_start_time] = first_start_time
+      daily_data[:last_end_time] = last_end_time
+      daily_data[:first_start] = first_start
+      daily_data[:last_stop] = last_stop
+    end
+
+    #puts daily_data
+    self.daily_data.create(daily_data)
   end
 
   # Enqueue a job to run daily data calculations

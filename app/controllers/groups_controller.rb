@@ -13,12 +13,9 @@ class GroupsController < ApplicationController
   
   def create
     if @group.update_attributes(params[:device_group])
-      root = current_user.device_group_or_root
       
       render :json => {
-        :status => 'success',
-        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-        :id => dom_id(root)
+        :status => 'success'
       }
     else
       render :json => {
@@ -38,12 +35,9 @@ class GroupsController < ApplicationController
     end
     
     if @group.update_attributes(params[:device_group])
-      root = current_user.device_group_or_root
       
       render :json => {
-        :status => 'success',
-        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-        :id => dom_id(root)
+        :status => 'success'
       }
     else
       render :json => {
@@ -62,12 +56,8 @@ class GroupsController < ApplicationController
   def destroy
     current_account.device_groups.find(params[:id]).destroy_and_rollup
     
-    root = current_user.device_group_or_root
-    
     render :json => {
-      :status => 'success',
-      :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-      :id => dom_id(root)
+      :status => 'success'
     }
   end
 

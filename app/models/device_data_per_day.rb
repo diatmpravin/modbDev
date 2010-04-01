@@ -15,14 +15,8 @@ class DeviceDataPerDay < ActiveRecord::Base
     {:conditions => {:date => (from..to).to_a}}
   }
 
-  default_value_for :mpg, 0
   default_value_for :duration, 0
   default_value_for :miles, 0
-  default_value_for :speed_events, 0
-  default_value_for :geofence_events, 0
-  default_value_for :idle_events, 0
-  default_value_for :aggressive_events, 0
-  default_value_for :after_hours_events, 0
 
   def zone
     ActiveSupport::TimeZone[self[:time_zone]]

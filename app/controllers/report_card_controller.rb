@@ -31,9 +31,14 @@ class ReportCardController < ApplicationController
       # end
       
 
-    # if request.xhr?
-      # render :partial => template, :locals => {:report_card => @report_card}
-    # end
+     if request.xhr?
+       #render :partial => template, :locals => {:report_card => @report_card}
+       render :json => {
+         :status => 'success',
+         :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => @root}),
+         :id => dom_id(@root)
+       }
+     end
   end
 
   private

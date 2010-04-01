@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+Device.find_each() do |device|
+  for i in (1..60)
+    device.calculate_data_for(i.days.ago(Date.today))
+  end
+end

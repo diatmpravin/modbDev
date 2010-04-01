@@ -103,9 +103,7 @@ EditPane.Device = {
       beforeSubmit: function() { },
       success: function(json) {
         if (json.status == 'success') {
-          // The application will return a new tree and tell us where to put it
-          q('#' + json.id).closest('li').replaceWith(json.html);
-          DataPane.updated(q('#' + json.id).closest('li'));
+          DataPane.update()
           
           //self.dialogLoader(false);
           
@@ -168,9 +166,8 @@ EditPane.Device = {
         if (json.status == 'success') {
           self.dialog('close');
           
-          // The application will return a new tree and tell us where to put it
-          q('#' + json.id).closest('li').replaceWith(json.html);
-          DataPane.updated(q('#' + json.id).closest('li'));
+          //TODO indicate reload somehow?
+          DataPane.update();
         } else {
           self.errors(json.error);
         }
@@ -205,9 +202,7 @@ EditPane.Device = {
         if (json.status == 'success') {
           self.dialog('close');
           
-          // The application will return a new tree and tell us where to put it
-          q('#' + json.id).closest('li').replaceWith(json.html);
-          DataPane.updated(q('#' + json.id).closest('li'));
+          DataPane.update()
         } else {
           self.errors(json.error);
         }

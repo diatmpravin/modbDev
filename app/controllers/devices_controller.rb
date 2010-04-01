@@ -181,12 +181,9 @@ class DevicesController < ApplicationController
     params[:device][:alert_recipient_ids] ||= []
 
     if @device.update_attributes(params[:device])
-      root = current_user.device_group_or_root
       
       render :json => {
-        :status => 'success',
-        :html => render_to_string(:partial => 'report_card/tree', :locals => {:node => root}),
-        :id => dom_id(root)
+        :status => 'success'
       }
     else
       render :json => {
