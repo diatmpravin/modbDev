@@ -69,4 +69,11 @@ module ReportCardHelper
     end
   end
 
+  def disabled_range_options
+    disabled = []
+    
+    disabled << Report::DateRange::THIS_WEEK if Date.today.wday == 1
+    disabled << Report::DateRange::THIS_MONTH if Date.today.day == 1 
+  end
+
 end
