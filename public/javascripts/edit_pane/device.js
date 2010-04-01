@@ -57,6 +57,9 @@ EditPane.Device = {
     
     // Alert Recipient
     AlertRecipients.prepare('#edit_pane');
+
+    // Tags
+    Tags.prepare('#edit_pane');
     
     return q('#edit_pane .edit');
   },
