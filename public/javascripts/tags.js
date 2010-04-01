@@ -45,6 +45,10 @@ Tags = {
    * exists, will highlight it temporarily instead.
    */
   addTag: function(list, text) {
+    // don't allow an empty tag.
+    if (text == '')
+      return;
+
     /* Uses the name of the tag input field to create each new entry. On
        submit, the controller will see this is an array of tag names. */
     var field_name = list.find('.tagEntry').attr('name');
