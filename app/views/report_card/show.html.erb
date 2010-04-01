@@ -15,7 +15,7 @@
 
 <% form_tag report_card_path, :method => :get do -%>
   Viewing Report Card for: 
-  <%= select_tag :range_type, options_for_select(range_options_report_card, @range_type) %>
+  <%= select_tag :range_type, options_for_select(range_options_report_card, :selected => @range_type, :disabled => disabled_range_options) %>
   <%= submit_tag "Update" -%>
 <% end -%>
 
