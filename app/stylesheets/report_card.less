@@ -321,7 +321,6 @@
 #fleet_loading {
   background:white url(/images/spinner.gif) no-repeat center 50px;
   cursor:default;
-  display:none;
   font-size:116%;
   font-style:italic;
   height:100%;
@@ -332,4 +331,45 @@
   top:0;
   width:100%;
   z-index:21;
+}
+
+#landmark_pane {
+  background:#303030 url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:280px;
+  z-index:7;
+  
+  > ol {
+    margin-top:-1px;
+  }
+  
+  li {
+    background-color:#f0f0f0;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    line-height:25px;
+    padding-left:8px;
+  }
+}
+
+#landmark_edit_pane {
+  
+}
+
+#geofence_pane {
+  background:#303030 url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:300px;
+  z-index:7;
 }

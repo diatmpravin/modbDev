@@ -14,18 +14,18 @@
   
   <%= javascript_include_tag 'fleet/frame' %>
   <%= javascript_include_tag 'fleet/frame/map_pane' %>
+  <%= javascript_include_tag 'fleet/frame/landmark_pane' %>
+  <%= javascript_include_tag 'fleet/landmark_controller' %>
   
   <script type="text/javascript">
     jQuery(function() {
       Fleet.Frame.init();
-      Fleet.Frame.MapPane.init();
-      
-      Fleet.Frame.MapPane.open();
+      Fleet.LandmarkController.index();
       Fleet.Frame.open().resize();
       Fleet.loading(false);
     });
   </script>
 <% end -%>
 
-<div id="frame">
-</div>
+<div id="fleet_loading">Please wait...</div>
+<div id="frame"></div>

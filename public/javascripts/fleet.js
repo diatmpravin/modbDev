@@ -4,15 +4,15 @@
  * Contains global methods unique to the Fleet application.
  */
 var Fleet = (function(Fleet, $) {
-  var loadingView = null;
-  
   /**
    * loading(boolean)
    *
    * Show or hide a loading panel. Defaults to true.
    */
   Fleet.loading = function(bool) {
-    if (!loadingView) {
+    var loadingView = $('#fleet_loading');
+    
+    if (loadingView.length == 0) {
       loadingView = $('<div id="fleet_loading">Please wait...</div>').appendTo('#content .content');
     }
     

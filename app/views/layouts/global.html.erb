@@ -14,13 +14,7 @@
     <!-- Head Scripts -->
     <%= jquery_include_tag %>
     <%= javascript_include_tag 'jquery/jquery.noconflict' %>
-    
     <%= javascript_include_tag 'fleet' %>
-    <script type="text/javascript">
-      jQuery(function() {
-        Fleet.loading();
-      });
-    </script>
     <!-- End Head Scripts -->
   </head>
   <% content_tag :body, :id => body_id do %>   

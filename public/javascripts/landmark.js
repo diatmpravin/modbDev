@@ -10,8 +10,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   var pane,
       container,
       map,
-      collections,
-      init = false;
+      collections;
   
   /**
    * init()
@@ -20,10 +19,6 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
    * handlers.
    */
   MapPane.init = function() {
-    if (init) {
-      return MapPane;
-    }
-    
     // Create the map pane
     $('#frame').append('<div id="map_pane"><div class="mapContainer"><div class="map"></div></div></div>');
     
@@ -46,7 +41,6 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     Frame.resize(MapPane.resize);
     MapPane.resize();
     
-    init = true;
     return MapPane;
   };
 
@@ -85,42 +79,6 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
    */
   MapPane.close = function() {
     pane.hide();
-    
-    return MapPane;
-  };
-  
-  /**
-   * slide(newPadding)
-   *
-   * "Slide" the map pane to the new padding provided. Passing 0 would expand
-   * the map pane to the full size of the frame. Passing 250 would shrink (or
-   * expand) the map as necessary so that 250px on the left was available for
-   * a sidebar.
-   */
-  MapPane.slide = function(newPadding) {
-    var oldPadding = parseInt(container.css('padding-left'));
-    
-    if (newPadding > oldPadding) {
-      // Shrinking map - just do the animation and then resize
-      container.animate({paddingLeft: newPadding}, {
-        duration: 400,
-        callback: function() {
-          MapPane.resize();
-        }
-      });
-    } else if (newPadding < oldPadding) {
-      // Expanding map - first generate "extra" map, then animate
-      var predictedWidth = container.width() + oldPadding - newPadding;
-      map.width(predictedWidth)
-         .moshiMap().resizeTo(predictedWidth, container.height());
-      
-      container.animate({paddingLeft: newPadding}, {
-        duration: 400,
-        callback: function() {
-          MapPane.resize();
-        }
-      });
-    }
     
     return MapPane;
   };
@@ -180,9 +138,8 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   /**
    * addPoint(latitude, longitude, options)
    *
-   * Add a point at the given latitude and longitude, then returns the new
-   * point object. Optionally, pass a hash of options containing one
-   * or more of:
+   * Add a point at the given latitude and longitude. Optionally, pass
+   * a hash of options containing one or more of:
    *   icon
    *   size
    *   iconOffset
@@ -226,25 +183,6 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     collection.add(mqPoi);
 
     return mqPoi;
-  };
-  
-  /**
-   * pan(poi)
-   *
-   * Pan the map to the location of the given MapQuest point object.
-   *
-   * pan(latitude, longitude)
-   *
-   * Pan the map to the given latitude and longitude.
-   */
-  MapPane.pan = function(a, b) {
-    if (typeof(a) == 'object') {
-      map.moshiMap.map.panToLatLng(a.latLng);
-    } else {
-      map.moshiMap().map.panToLatLng(new MQA.LatLng(a, b));
-    }
-    
-    return MapPane;
   };
   
   /**
