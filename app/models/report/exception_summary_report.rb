@@ -42,10 +42,16 @@ class ExceptionSummaryReport < Report
           :vehicle => device.name,
           :date => time.to_date,
           :time => time.to_s(:local),
-          :event => Event::TEXT[event.event_type] || event.event_type,
+          :event => Event::TEXT[event.event_type],
           :detail => case event.event_type
                      when Event::SPEED
                        event.point.speed
+                     when Event::RPM
+                       event.point.rpm
+                     when Event::ENTER_LANDMARK, Event::EXIT_LANDMARK
+                       event.geofence_name
+                     when Event::ENTER_BOUNDARY, Event::EXIT_BOUNDARY
+                       event.geofence_name
                      else
                        ''
                      end
