@@ -30,7 +30,6 @@ describe "GroupsController", ActionController::TestCase do
       post :create, :device_group => {:name => "New Groupzor"}
       
       json['status'].should.equal 'success'
-      json['html'].should =~ /New Groupzor/
 
       g = accounts(:quentin).device_groups.first
       g.name.should.equal "New Groupzor"
@@ -49,7 +48,6 @@ describe "GroupsController", ActionController::TestCase do
       put :update, :id => @group.id, :device_group => {:name => "Oh yeah"}
       
       json['status'].should.equal 'success'
-      json['html'].should =~ /Oh yeah/
 
       @group.reload
       @group.name.should.equal "Oh yeah"
@@ -109,7 +107,6 @@ describe "GroupsController", ActionController::TestCase do
       delete :destroy, :id => @group.id
       
       json['status'].should.equal 'success'
-      json['html'].should.not.be.nil
 
       assert !DeviceGroup.exists?(@group.id)
     end

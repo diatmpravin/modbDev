@@ -56,6 +56,45 @@ DataPane.init = function() {
 };
 
 /**
+ * Request an updated report card tree
+ */
+DataPane.update = function() {
+  var self = q(this);
+
+  // what range type?
+  rt = q('#range_type').val();
+
+  // get json for the report card tree
+  q.getJSON('/report_card', { range_type: rt }, function(json) {
+    // The app will return a new tree and tell us where to put it
+    q('#' + json.id).closest('li').replaceWith(json.html);
+    DataPane.updated(q('#' + json.id).closest('li'));
+  }); 
+
+  // need to submit a request containing the current range_type parameters
+  // probably an update call to the report_card
+  //self.find('form').ajaxSubmit({
+  //  dataType: 'json',
+  //  //beforeSubmit: function() { self.dialogLoader(true); },
+  //  success: function(json) {
+  //    self.dialogLoader(false);
+  //    
+  //    if (json.status == 'success') {
+  //      self.dialog('close');
+  //      
+  //      // The application will return a new tree and tell us where to put it
+  //      q('#' + json.id).closest('li').replaceWith(json.html);
+  //      DataPane.updated(q('#' + json.id).closest('li'));
+  //    } else {
+  //      self.errors(json.error);
+  //    }
+  //  }
+  //});
+  
+  return false;
+};
+
+/**
  * Setup any fancy events, drag/drops, etc. Will be called when the page is
  * first loaded and whenever an action updates the group tree.
  */
