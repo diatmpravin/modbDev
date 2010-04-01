@@ -1,0 +1,29 @@
+<table>
+  <thead>
+    <tr>
+      <th>Vehicle</th>
+      <th>Miles Driven</th>
+      <th>Operating Time<br/>(hh:mm)</th>
+      <th>Idle Time<br/>(hh:mm)</th>
+      <th>Idle Percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% report.data.each do |row| -%>
+    <tr class="<%= cycle('even', 'odd') %>">
+      <td><%= h(row[:name]) %></td>
+      <td><%= row[:miles] %></td>
+      <td><%= duration_format(row[:duration]) %></td>
+      <td><%= duration_format(row[:idle_time]) %></td>
+      <td><%= percentage(row[:idle_time], row[:duration]) %></td>
+    </tr>
+  <% end -%>
+    <tr class="total">
+      <td>Total</td>
+      <td><%= report.data.sum(:miles) %></td>
+      <td><%= duration_format(report.data.sum(:duration)) %></td>
+      <td><%= duration_format(report.data.sum(:idle_time)) %></td>
+      <td><%= percentage(report.data.sum(:idle_time), report.data.sum(:duration)) %></td>
+    </tr>
+  </tbody>
+</table>

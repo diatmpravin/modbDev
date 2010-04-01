@@ -116,6 +116,7 @@ end
   LandmarkSummaryReport,
   LandmarkByLandmarkSummaryReport,
   ExceptionSummaryReport,
+  OperatingTimeSummaryReport,
   FuelSummaryReport
 ].tap do |reports|
   Report::REPORTS = reports.freeze

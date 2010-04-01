@@ -12,6 +12,10 @@ module ReportsHelper
     "%.1f" % (mpg || 0).to_f
   end
 
+  def percentage(numerator, denominator) 
+    "%.2f" % (numerator.to_f / denominator.to_f)
+  end
+
   def average(report, col, rows)
     rows == 0 ? 0 : report.data.sum(col) / rows
   end
@@ -30,6 +34,7 @@ module ReportsHelper
       ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
       ['Landmark Report', Report::LANDMARK_SUMMARY_REPORT],
       ['Exception Summary Report', Report::EXCEPTION_SUMMARY_REPORT],
+      ['Operating Time Summary Report', Report::OPERATING_TIME_SUMMARY_REPORT],
       ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
     ].freeze
   end
