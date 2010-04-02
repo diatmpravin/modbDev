@@ -177,6 +177,7 @@
   background-color:red;
   border:solid 1px #999;
   display:none;
+  overflow:hidden;
   position:relative;
   
   ol {
@@ -359,7 +360,17 @@
 }
 
 #landmark_edit_pane {
+  background:#f0f0f0;
+  bottom:16px;
+  height:200px;
+  position:absolute;
+  right:16px;
+  width:200px;
+  z-index:7;
   
+  .content {
+    padding:16px;
+  }
 }
 
 #geofence_pane {

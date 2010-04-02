@@ -3,17 +3,15 @@ class LandmarksController < ApplicationController
   layout except_ajax('landmarks')
   
   def index
+    @landmarks = current_account.landmarks
+    
     respond_to do |format|
       format.html
       
       format.json {
-      
-    # TODO: Put this somewhere more global
-    ActiveRecord::Base.include_root_in_json = false
-    
-    @landmarks = current_account.landmarks
-    
-    
+        # TODO: Put this somewhere more global
+        ActiveRecord::Base.include_root_in_json = false
+        
         render :json => @landmarks.to_json(index_json_options)
       }
     end

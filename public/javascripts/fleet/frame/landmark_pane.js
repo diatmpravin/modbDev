@@ -2,8 +2,6 @@
  * Fleet.Frame.LandmarkPane
  *
  * Represents the landmark pane within our resizable frame.
- *
- * Relies on MapPane.
  */
 var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};

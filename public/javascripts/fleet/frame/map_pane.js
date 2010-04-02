@@ -111,7 +111,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
         duration: 400,
         callback: function() {
           MapPane.resize();
-          if (callback) {
+          if ($.isFunction(callback)) {
             callback();
           }
         }
@@ -126,7 +126,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
         duration: 400,
         callback: function() {
           MapPane.resize();
-          if (callback) {
+          if ($.isFunction(callback)) {
             callback();
           }
         }
@@ -141,17 +141,31 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
    *
    * Return the shape collection with the given name. Missing or null names will
    * return the "default" collection.
+   *
+   * collection(collection)
+   *
+   * Returns the collection passed in. Exists only for consistency.
    */
-  MapPane.collection = function(name) {
-    name = name || 'default';
+  MapPane.collection = function(o) {
+    var c;
     
-    var c = collections[name];
-    if (!c) {
-      c = collections[name] = new MQA.ShapeCollection();
-      c.setName(name);
+    if (typeof(o) == 'object') {
+      if (!collections[o.getName()]) {
+        collections[o.getName()] = o;
+      }
+      
+      return o;
+    } else {
+      o = o || 'default';
+      
+      c = collections[name];
+      if (!c) {
+        c = collections[name] = new MQA.ShapeCollection();
+        c.setName(name);
+      }
+    
+      return c;
     }
-    
-    return c;
   };
   
   /**
