@@ -4,14 +4,13 @@
  * Landmark Controller!
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, $) {
+Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, $) {
   var landmarks = null,
       lookup = null;
   
   /**
    * init()
    */
-   
   
   /**
    * index()
@@ -20,8 +19,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
    * actions on the controller (most likely by the Frame).
    */
   LandmarkController.index = function() {
-    LandmarkPane.init().open();
     MapPane.init().open().showCollection('landmarks');
+    LandmarkPane.init().open();
+    LandmarkEditPane.init().close();
     
     LandmarkController.refresh();
   };
@@ -65,7 +65,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
     }
     
     MapPane.slide(0, function() {
-      LandmarkPane.close();
+      LandmarkPane.close(function() {
+        LandmarkEditPane.open();
+      });
     });
     
     return false;
@@ -77,6 +79,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
    * Transition back to the list view.
    */
   LandmarkController.cancel = function() {
+    LandmarkEditPane.close();
     LandmarkPane.open(function() {
       MapPane.slide(LandmarkPane.width());
     });
@@ -110,4 +113,4 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
   };
   
   return LandmarkController;
-}(Fleet.LandmarkController || {}, Fleet.Frame.LandmarkPane, Fleet.Frame.MapPane, jQuery));
+}(Fleet.LandmarkController || {}, Fleet.Frame.LandmarkPane, Fleet.Frame.LandmarkEditPane, Fleet.Frame.MapPane, jQuery));

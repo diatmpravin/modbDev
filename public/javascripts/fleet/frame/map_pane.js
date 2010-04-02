@@ -90,7 +90,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   };
   
   /**
-   * slide(newPadding)
+   * slide(newPadding, callback)
    *
    * "Slide" the map pane to the new padding provided. Passing 0 would expand
    * the map pane to the full size of the frame. Passing 250 would shrink (or
@@ -109,7 +109,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
       // Shrinking map - just do the animation and then resize
       container.animate({paddingLeft: newPadding}, {
         duration: 400,
-        callback: function() {
+        complete: function() {
           MapPane.resize();
           if ($.isFunction(callback)) {
             callback();
@@ -124,7 +124,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
       
       container.animate({paddingLeft: newPadding}, {
         duration: 400,
-        callback: function() {
+        complete: function() {
           MapPane.resize();
           if ($.isFunction(callback)) {
             callback();

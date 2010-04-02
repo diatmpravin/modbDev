@@ -59,22 +59,40 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
   
   /**
    * open()
+   * open(callback)
    *
-   * Open the landmark pane.
+   * Open the landmark pane. If provided, the callback will be called after
+   * the pane is open.
    */
-  LandmarkPane.open = function() {
-    pane.animate({width: width}, {duration: 400});
+  LandmarkPane.open = function(callback) {
+    if ($.isFunction(callback)) {
+      pane.animate({width: width}, {
+        duration: 400,
+        complete: callback
+      });
+    } else {
+      pane.animate({width: width}, {duration: 400});
+    }
     
     return LandmarkPane;
   };
   
   /**
    * close()
+   * close(callback)
    *
-   * Close the landmark pane.
+   * Close the landmark pane. If provided, the callback will be called after
+   * the pane is closed.
    */
-  LandmarkPane.close = function() {
-    pane.animate({width: 0}, {duration: 400});
+  LandmarkPane.close = function(callback) {
+    if ($.isFunction(callback)) {
+      pane.animate({width: 0}, {
+        duration: 400,
+        complete: callback
+      });
+    } else {
+      pane.animate({width: 0}, {duration: 400});
+    }
     
     return LandmarkPane;
   };
