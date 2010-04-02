@@ -41,6 +41,8 @@ module ReportCardHelper
   end
 
   def grade_class(data, field, options = {})
+    return '' unless data[:duration] > 0
+
     grade_only = options.delete(:grade_only) || false
 
     g = data[:report_card][field]
@@ -50,6 +52,28 @@ module ReportCardHelper
     else
       g == "pass" ? "" : g
     end
+  end
+
+  def field(data, name)
+    return '-' unless data[:duration] > 0
+
+    return 'err' unless data[name] != nil
+
+    case name
+    when :miles then "%.1f" % data[name]
+    when :mpg then "%.1f" % data[name]
+    when :first_start then operating_time(data[name].to_i)
+    when :last_stop then operating_time(data[name].to_i)
+    when :duration then operating_time(data[name])
+    else data[name]
+    end
+  end
+
+  def disabled_range_options
+    disabled = []
+    
+    disabled << Report::DateRange::THIS_WEEK if Date.today.wday == 1
+    disabled << Report::DateRange::THIS_MONTH if Date.today.day == 1 
   end
 
 end

@@ -102,12 +102,12 @@ class Device < ActiveRecord::Base
           if fence.contain?(point) && !fence.contain?(last_point)
             point.events.create(:event_type => Event::ENTER_BOUNDARY, :geofence_name => fence.name, :geofence => fence)
             if fence.alert_on_entry?
-              send_alert("#{self.name} entered area #{fence.name}")
+              send_alert("#{self.name} entered area #{fence.name}", point.occurred_at)
             end
           elsif !fence.contain?(point) && fence.contain?(last_point)
             point.events.create(:event_type => Event::EXIT_BOUNDARY, :geofence_name => fence.name, :geofence => fence)
             if fence.alert_on_exit?
-              send_alert("#{self.name} exited area #{fence.name}")
+              send_alert("#{self.name} exited area #{fence.name}", point.occurred_at)
             end
           end
         end
@@ -116,12 +116,12 @@ class Device < ActiveRecord::Base
           if landmark.contain?(point) && !landmark.contain?(last_point)
             point.events.create(:event_type => Event::ENTER_LANDMARK, :geofence_name => landmark.name, :landmark => landmark)
             if landmark.alert_on_entry?
-              send_alert("#{self.name} entered area #{landmark.name}")
+              send_alert("#{self.name} entered area #{landmark.name}", point.occurred_at)
             end
           elsif !landmark.contain?(point) && landmark.contain?(last_point)
             point.events.create(:event_type => Event::EXIT_LANDMARK, :geofence_name => landmark.name, :landmark => landmark)
             if landmark.alert_on_exit?
-              send_alert("#{self.name} exited area #{landmark.name}")
+              send_alert("#{self.name} exited area #{landmark.name}", point.occurred_at)
             end
           end
         end
@@ -141,7 +141,7 @@ class Device < ActiveRecord::Base
       if point.event == DeviceReport::Event::RESET
         if alert_on_reset?
           point.events.create(:event_type => Event::RESET)
-          send_alert("#{self.name} has reported a power reset")
+          send_alert("#{self.name} has reported a power reset", point.occurred_at)
         end
       end
 
@@ -150,7 +150,7 @@ class Device < ActiveRecord::Base
         point.events.create(:event_type => Event::SPEED, :speed_threshold => speed_threshold)
 
         if !last_point || last_point.speed <= speed_threshold
-          send_alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)")
+          send_alert("#{self.name} speed reached #{point.speed} mph (exceeded limit of #{speed_threshold} mph)", point.occurred_at)
         end
       end
 
@@ -158,21 +158,21 @@ class Device < ActiveRecord::Base
       if point.rpm > rpm_threshold
         point.events.create(:event_type => Event::RPM, :rpm_threshold => rpm_threshold)
         if alert_on_aggressive?
-          send_alert("#{self.name} experienced excessive RPM")
+          send_alert("#{self.name} experienced excessive RPM", point.occurred_at)
         end
       end
 
       if point.event == DeviceReport::Event::ACCELERATING
         point.events.create(:event_type => Event::RAPID_ACCEL)
         if alert_on_aggressive?
-          send_alert("#{self.name} experienced rapid acceleration")
+          send_alert("#{self.name} experienced rapid acceleration", point.occurred_at)
         end
       end
 
       if point.event == DeviceReport::Event::DECELERATING
         point.events.create(:event_type => Event::RAPID_DECEL)
         if alert_on_aggressive?
-          send_alert("#{self.name} experienced rapid deceleration")
+          send_alert("#{self.name} experienced rapid deceleration", point.occurred_at)
         end
       end
 
@@ -180,7 +180,7 @@ class Device < ActiveRecord::Base
       if point.event == DeviceReport::Event::IDLE
         point.events.create(:event_type => Event::IDLE)
         if alert_on_idle?
-          send_alert("#{self.name} idled for an extended period")
+          send_alert("#{self.name} idled for an extended period", point.occurred_at)
         end
       end
 
@@ -195,7 +195,7 @@ class Device < ActiveRecord::Base
         # our alert. Otherwise, we assume the alert has already been sent
         if !last ||
            !last.events.exists?(:event_type => Event::AFTER_HOURS)
-          send_alert("#{self.name} is running after hours")
+          send_alert("#{self.name} is running after hours", point.occurred_at)
         end
       end
 

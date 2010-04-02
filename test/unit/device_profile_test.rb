@@ -53,6 +53,14 @@ describe "DeviceProfile", ActiveSupport::TestCase do
         @profile.errors.on(:time_zone).should.equal 'is not included in the list'
       end
     end
+    
+    specify "validates uniquness of name" do
+      profile = DeviceProfile.new(:name => @profile.name, :account => @account)
+      profile.should.not.save
+
+      profile = DeviceProfile.new(:name => @profile.name, :account => accounts(:aaron))
+      profile.should.save
+    end
   end
 
   context "Automatic Device Updates" do

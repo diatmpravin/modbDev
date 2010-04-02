@@ -58,13 +58,16 @@ class DeviceGroup < ActiveRecord::Base
   def grade(key, value)
     return Grade::PASS unless value
 
+    # default value for should cover this, though
     if self.grading.nil?
       self.update_attribute(:grading, {})
     end
 
     equation = self.grading[key]
 
-    return Grade::PASS unless equation
+    if (equation.nil? or equation[:fail] == "")
+      return Grade::PASS
+    end
 
     if Grade::PARAM_REVERSED[key]
 
