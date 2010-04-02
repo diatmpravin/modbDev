@@ -1,6 +1,8 @@
 /**
- * Fleet.Frame.LandmarkPane
+ * Fleet.Frame.LandmarkEditPane
  *
+ * WORK IN PROGRESS
+ * Represents a landmark 
  * Represents the landmark pane within our resizable frame.
  *
  * Relies on MapPane.

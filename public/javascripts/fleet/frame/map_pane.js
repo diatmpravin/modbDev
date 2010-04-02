@@ -96,8 +96,13 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
    * the map pane to the full size of the frame. Passing 250 would shrink (or
    * expand) the map as necessary so that 250px on the left was available for
    * a sidebar.
+   *
+   * If provided, the callback function will be called after the resize.
+   *
+   * TODO: Can this function "pause" while MapQuest loads new tiles, so bg
+   * color doesn't show through during the resize?
    */
-  MapPane.slide = function(newPadding) {
+  MapPane.slide = function(newPadding, callback) {
     var oldPadding = parseInt(container.css('padding-left'));
     
     if (newPadding > oldPadding) {
@@ -106,6 +111,9 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
         duration: 400,
         callback: function() {
           MapPane.resize();
+          if (callback) {
+            callback();
+          }
         }
       });
     } else if (newPadding < oldPadding) {
@@ -118,6 +126,9 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
         duration: 400,
         callback: function() {
           MapPane.resize();
+          if (callback) {
+            callback();
+          }
         }
       });
     }
@@ -196,7 +207,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     options = options || {};
     
     var mqPoi = new MQA.Poi(new MQA.LatLng(latitude, longitude));
-    var collection = options.collection || MapPane.collection('default');
+    var collection = MapPane.collection(options.collection);
     
     if (options.icon) {
       mqPoi.setValue('icon', new MQA.Icon(options.icon, options.size[0], options.size[1]));
@@ -239,7 +250,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
    */
   MapPane.pan = function(a, b) {
     if (typeof(a) == 'object') {
-      map.moshiMap.map.panToLatLng(a.latLng);
+      map.moshiMap().map.panToLatLng(a.latLng);
     } else {
       map.moshiMap().map.panToLatLng(new MQA.LatLng(a, b));
     }

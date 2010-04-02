@@ -5,6 +5,9 @@ Frame = {
   resizeHandlers: [],
   
   init: function() {
+    // This was added as a "bridge" between OLD and NEW frame implementations.
+    q('#frame').show();
+    
     // When browser window resizes, adjust the size of the report card frame
     q('#frame').fitWindow(Frame.resize);
    

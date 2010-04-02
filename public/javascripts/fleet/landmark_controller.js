@@ -16,11 +16,12 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
   /**
    * index()
    *
-   * Prepare the landmark "index".
+   * Prepare the landmark list. This should always be called before any other
+   * actions on the controller (most likely by the Frame).
    */
   LandmarkController.index = function() {
     LandmarkPane.init().open();
-    MapPane.init().open();
+    MapPane.init().open().showCollection('landmarks');
     
     LandmarkController.refresh();
   };
@@ -43,12 +44,14 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
       }
       
       LandmarkPane.showLandmarks(landmarks);
-      updateMap(landmarks);
+      showLandmarksOnMap(landmarks);
     });
   };
   
   /**
-   * Edit Handler
+   * edit()
+   *
+   * Transition from index into editing a landmark.
    */
   LandmarkController.edit = function() {
     var id, landmark;
@@ -60,6 +63,23 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
       showLandmarkOnMap(lookup[id]);
       MapPane.pan(lookup[id].poi);
     }
+    
+    MapPane.slide(0, function() {
+      LandmarkPane.close();
+    });
+    
+    return false;
+  };
+  
+  /**
+   * cancel()
+   *
+   * Transition back to the list view.
+   */
+  LandmarkController.cancel = function() {
+    LandmarkPane.open(function() {
+      MapPane.slide(LandmarkPane.width());
+    });
     
     return false;
   };
