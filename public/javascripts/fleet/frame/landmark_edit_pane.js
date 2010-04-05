@@ -8,6 +8,7 @@ Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
   var width = 200,
       pane,
+      content,
       init = false;
   
   /**
@@ -21,10 +22,13 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
     }
     
     // Create the landmark edit pane
-    $('#frame').append('<div id="landmark_edit_pane"></div>');
+    $('#frame').append('<div id="landmark_edit_pane"><div class="content"></div></div>');
     
     // Store a permanent reference to the pane
     pane = $('#landmark_edit_pane');
+    
+    // A reference to our content
+    content = pane.children('.content');
     
     init = true;
     return LandmarkEditPane;
@@ -47,10 +51,10 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
    */
   LandmarkEditPane.open = function(html) {
     if (typeof(html) == 'string') {
-      pane.html(html).animate({opacity: 1, right: 16}, {duration: 400});
-    } else {
-      pane.animate({opacity: 1, right: 16}, {duration: 400});
+      content.html(html);
     }
+    
+    pane.animate({opacity: 1, right: 16}, {duration: 400});
     
     return LandmarkEditPane;
   };

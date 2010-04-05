@@ -4,7 +4,7 @@
  * Landmark Controller!
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, $) {
+Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
   var landmarks = null,
       lookup = null;
   
@@ -56,7 +56,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Transition from index into editing a landmark.
    */
   LandmarkController.edit = function() {
-    var id, landmark;
+    var id, landmark, landmarkHtml, groupHtml;
 
     id = $(this).attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
@@ -66,23 +66,37 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       MapPane.pan(lookup[id].poi);
     }
     
-    Header.edit('Edit Landmark',
-      LandmarkController.save,
-      LandmarkController.cancel
-    );
+    Frame.loading(true); Header.loading(true);
     
-    MapPane.slide(0, function() {
-      LandmarkPane.close();
-      GroupPane.open();
-      
-      //LandmarkPane.close(function() {
-      //  LandmarkEditPane.open();
-      //});
-    });
+    // We need to load two ajax requests, then move forward
+    // when both are done.
     
     $.get('/landmarks/' + id + '/edit', function(html) {
-      LandmarkEditPane.open(html);
+      landmarkHtml = html;
+      if (landmarkHtml) {
+        ready();
+      }
     });
+    
+    /*$.get('/landmarks/' + id + '/edit', function(html) {
+      landmarkHtml = html;
+      if (landmarkHtml && groupHtml) {
+        ready();
+      }
+    });*/
+    
+    function ready() {
+      LandmarkEditPane.open(landmarkHtml);
+      LandmarkPane.close();
+      GroupPane.open();
+      Header.edit('Edit Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      Frame.loading(false); Header.loading(false);
+      //MapPane.slide()
+    }
     
     return false;
   };
@@ -160,4 +174,5 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   Fleet.Frame.MapPane,
   Fleet.Frame.GroupPane,
   Fleet.Frame.Header,
+  Fleet.Frame,
   jQuery));

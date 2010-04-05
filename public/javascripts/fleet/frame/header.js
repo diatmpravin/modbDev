@@ -8,6 +8,7 @@ Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.Header = (function(Header, Fleet, $) {
   var header,
       headers,
+      current = null,
       init = false;
   
   /**
@@ -35,6 +36,11 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
         '</span></div>').appendTo(header);
     headers.edit.find('button').button();
     
+    // The special "loader" header, actually an overlay used by all header types
+    headers.loader =
+      $('<div class="loader" style="display:none"><div class="loading"></div></div>').appendTo(header);
+    
+    // Start out with a standard, no-title header
     Header.switch('standard');
     
     init = true;
@@ -77,8 +83,11 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
                  .bind('click.frame_header', options.cancel);
       }
       
-      header.children('div').hide(400);
-      newHeader.show(400);
+      if (current) {
+        current.hide(400);
+      }
+      
+      current = newHeader.show(400);
     }
     
     return Header;
@@ -127,6 +136,25 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    */
   Header.custom = function(html, options) {
     // To be implemented as the need arises.
+  };
+  
+  /**
+   * loading(boolean)
+   *
+   * Show or hide the loading pane that covers ("darkens") the header, along
+   * with the loading gif.
+   */
+  Header.loading = function(bool) {
+    if (bool) {
+      headers.loader.css('opacity', 0).show()
+                    .animate({opacity: 0.3}, {duration: 1500});
+      current.find('button').hide();
+    } else {
+      headers.loader.stop(true, false).hide();
+      current.find('button').show();
+    }
+    
+    return Header;
   };
   
   return Header;
