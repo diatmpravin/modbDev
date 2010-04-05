@@ -15,11 +15,13 @@ class ApplicationController < ActionController::Base
   # See ActionController::Base for details 
   filter_parameter_logging :password
 
-  # Any record-not-found will redirect back to :index
-  # If other logic is required, implement in the appropriate
-  # controller
+  # Multi-purpose record-not-found rescue logic
   rescue_from(ActiveRecord::RecordNotFound) do |error|
-    redirect_to :action => "index"
+    if request.format == Mime::JSON
+      render :json => {:status => 'failure'}
+    else
+      redirect_to :action => 'index'
+    end
   end
 
   def filter_query

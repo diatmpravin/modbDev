@@ -27,9 +27,10 @@ describe "Landmarks Controller", ActionController::TestCase do
       assigns(:landmark).should.not.be.nil
     end
     
-    specify "works" do
+    specify "works (json)" do
       Landmark.should.differ(:count).by(1) do
         post :create, {
+          :format => 'json',
           :landmark => 
             {
               :name => 'My Landmark',
@@ -39,15 +40,16 @@ describe "Landmarks Controller", ActionController::TestCase do
         }
       end
 
-      should.redirect_to landmarks_path
+      json['status'].should.equal 'success'
       
       @account.reload.landmarks.length.should.equal 2
       @account.landmarks.last.latitude.should.equal BigDecimal.new('39.267')
       @account.landmarks.last.longitude.should.equal BigDecimal.new('-86.9074')
     end
     
-    specify "handles errors gracefully" do
+    specify "handles errors gracefully (json)" do
       post :create, {
+        :format => 'json',
         :landmark => 
           {
             :latitude => '39.267',
@@ -55,12 +57,15 @@ describe "Landmarks Controller", ActionController::TestCase do
           }
       }
 
-      template.should.equal "new"
+      json['status'].should.equal 'failure'
+      json['html'].should =~ /<form/
+      
       assigns(:landmark).should.not.be.nil
     end
     
-    specify "correctly handles spaces entered in lat/long" do
+    specify "correctly handles spaces entered in lat/long (json)" do
       post :create, {
+        :format => 'json',
         :id => @landmark.id,
         :landmark => 
           {
@@ -70,7 +75,7 @@ describe "Landmarks Controller", ActionController::TestCase do
           }
       }
 
-      should.redirect_to landmarks_path
+      json['status'].should.equal 'success'
     end
   end
   
@@ -84,43 +89,48 @@ describe "Landmarks Controller", ActionController::TestCase do
       assigns(:landmark).should.equal @landmark
     end
     
-    specify "works" do
+    specify "works (json)" do
       put :update, {
+        :format => 'json',
         :id => @landmark.id,
         :landmark => {
           :name => 'Much Better Name'
         }
       }
       
-      should.redirect_to landmarks_path
+      json['status'].should.equal 'success'
       @landmark.reload.name.should.equal 'Much Better Name'
     end
     
-    specify "handles errors gracefully" do
+    specify "handles errors gracefully (json)" do
       put :update, {
+        :format => 'json',
         :id => @landmark.id,
         :landmark => {
           :name => ''
         }
       }
 
-      template.should.equal "edit"
+      json['status'].should.equal 'failure'
+      json['html'].should =~ /<form/
       assigns(:landmark).should.not.be.nil
     end
     
-    specify "prevents access to other accounts" do
+    specify "prevents access to other accounts (json)" do
       put :update, {
+        :format => 'json',
         :id => landmarks(:aaron).id,
         :landmark => {
           :name => 'Much Better Name'
         }
       }
-
-      should.redirect_to :action => "index"
+      
+      json['status'].should.equal 'failure'
     end
     
-    specify "correctly handles spaces entered in lat/long" do
+    specify "correctly handles spaces entered in lat/long (json)" do
       put :update, {
+        :format => 'json',
         :id => @landmark.id,
         :landmark => {
           :latitude => '   -86.347   ',
@@ -128,27 +138,31 @@ describe "Landmarks Controller", ActionController::TestCase do
         }
       }
       
-      should.redirect_to landmarks_path
+      json['status'].should.equal 'success'
     end
   end
   
   context "Removing a landmark" do
-    specify "works" do
+    specify "works (json)" do
       Landmark.should.differ(:count).by(-1) do
         delete :destroy, {
+          :format => 'json',
           :id => @landmark.id
         }
       end
       
-      should.redirect_to landmarks_path
+      json['status'].should.equal 'success'
     end
     
     specify "prevents access to other accounts" do
       Landmark.should.differ(:count).by(0) do
         delete :destroy, {
+          :format => 'json',
           :id => landmarks(:aaron).id
         }
       end
+      
+      json['status'].should.equal 'failure'
     end
   end
 end
