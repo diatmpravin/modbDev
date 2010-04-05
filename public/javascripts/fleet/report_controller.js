@@ -23,6 +23,10 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $)
     VehiclePane.init().open();
     ReportPane.init().open();
     
+    $.getJSON('/reports', function(json) {
+      ReportPane.initPane(json.html);
+    });
+
     //ReportController.refresh();
   };
   
@@ -48,6 +52,33 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $)
   //    showLandmarksOnMap(landmarks);
   //  });
   //};
-  
+
+  /**
+   * Create a report via ajax, displaying it in a new window if successful.
+   */
+  //ReportPane.createReport = function() {
+  //  var _form = $(this).closest('form');
+  //  var _report = _form.data('report_form');
+  //  
+  //  // Copy the selection list into the form
+  //  _form.find(_report.deviceField).val(_report.getSelection());
+  //  _report.container.errors();
+  //  
+  //  _form.ajaxSubmit({
+  //    dataType: 'json',
+  //    beforeSubmit: function() { _form.find('.loading').show(); },
+  //    complete: function() { _form.find('.loading').hide(); },
+  //    success: function(json) {
+  //      if (json.status == 'success') {
+  //        window.open('/reports/' + json.report_id + '.html');
+  //      } else {
+  //        _report.container.errors(json.errors);
+  //      }
+  //    }
+  //  });
+  //  
+  //  return false;
+  //}
+ 
   return ReportController;
 }(Fleet.ReportController || {}, Fleet.Frame.ReportPane, Fleet.Frame.VehiclePane, jQuery));
