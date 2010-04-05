@@ -35,25 +35,24 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
   };
   
   /**
-   * initPane()
+   * initPane(html)
    *
-   * Initialize fancy buttons.
+   * Replace the pane's content with the given HTML.
    */
-  LandmarkEditPane.initPane = function() {
+  LandmarkEditPane.initPane = function(html) {
+    if (html) {
+      content.html(html);
+    }
+    
+    return LandmarkEditPane;
   };
   
   /**
    * open()
-   * open(html)
    *
-   * Open the landmark edit pane. Replace the contents with the given HTML, if
-   * provided.
+   * Open the landmark edit pane.
    */
-  LandmarkEditPane.open = function(html) {
-    if (typeof(html) == 'string') {
-      content.html(html);
-    }
-    
+  LandmarkEditPane.open = function() {
     pane.animate({opacity: 1, right: 16}, {duration: 400});
     
     return LandmarkEditPane;

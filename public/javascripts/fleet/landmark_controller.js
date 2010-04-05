@@ -70,32 +70,38 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     
     // We need to load two ajax requests, then move forward
     // when both are done.
+    var requests = 2;
     
     $.get('/landmarks/' + id + '/edit', function(html) {
       landmarkHtml = html;
-      if (landmarkHtml) {
-        ready();
-      }
+      
+      ready();
     });
     
-    /*$.get('/landmarks/' + id + '/edit', function(html) {
-      landmarkHtml = html;
-      if (landmarkHtml && groupHtml) {
-        ready();
-      }
-    });*/
+    // Strange "get json.html" because of Legacy Group page (for now)
+    $.getJSON('/groups.json', function(json) {
+      groupHtml = json.html;
+      
+      ready();
+    });
     
     function ready() {
-      LandmarkEditPane.open(landmarkHtml);
+      requests -= 1;
+      
+      if (requests > 0) {
+        // Don't move forward until both requests are complete
+        return;
+      }
+      
       LandmarkPane.close();
-      GroupPane.open();
+      LandmarkEditPane.initPane(landmarkHtml).open();
+      GroupPane.showGroups(groupHtml).open();
       Header.edit('Edit Landmark',
         LandmarkController.save,
         LandmarkController.cancel
       );
       
       Frame.loading(false); Header.loading(false);
-      //MapPane.slide()
     }
     
     return false;

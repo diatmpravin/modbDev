@@ -5,7 +5,16 @@ class GroupsController < ApplicationController
   layout nil
   
   def index
-    redirect_to report_card_path
+    respond_to do |format|
+      format.html {
+        redirect_to report_card_path
+      }
+      format.json {
+        render :json => {
+          :html => render_to_string(:partial => 'list')
+        }
+      }
+    end
   end
   
   def new
@@ -74,5 +83,9 @@ class GroupsController < ApplicationController
         :error => @group.errors.map {|e| "#{e.first.capitalize} #{e.last}"}
       }
     end
+  end
+  
+  def index_json_options
+    {:only => [:id, :name]}
   end
 end

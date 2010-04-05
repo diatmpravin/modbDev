@@ -35,19 +35,24 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
   };
   
   /**
+   * showGroups(html)
    * showGroups(groups)
    *
-   * Take the given list of groups and populate the group list. Clears
-   * any existing group HTML.
+   * Take the given list of groups (or a block of HTML) and populate the
+   * group list. Clears any existing group HTML.
    */
   GroupPane.showGroups = function(groups) {
     var idx, num, html;
     
-    for(idx = 0, num = groups.length, html = ''; idx < num; idx++) {
-      html += '<li id="group_' + groups[idx].id + '">' + groups[idx].name + '</li>';
+    if (typeof(groups) == 'string') {
+      list.html(groups);
+    } else {
+      for(idx = 0, num = groups.length, html = ''; idx < num; idx++) {
+        html += '<li id="group_' + groups[idx].id + '">' + groups[idx].name + '</li>';
+      }
+      
+      list.html(html);
     }
-    
-    list.html(html);
     
     return GroupPane;
   };
