@@ -66,5 +66,17 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
     return LandmarkEditPane;
   };
   
+  /**
+   * submit(options)
+   *
+   * Used by the controller to submit the edit pane form. The options
+   * passed in will be forwarded to the ajaxSubmit method.
+   */
+  LandmarkEditPane.submit = function(options) {
+    pane.find('form:first').ajaxSubmit(options);
+    
+    return LandmarkEditPane;
+  };
+  
   return LandmarkEditPane;
 }(Fleet.Frame.LandmarkEditPane || {}, Fleet, jQuery));

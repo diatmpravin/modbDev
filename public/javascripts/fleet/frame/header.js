@@ -23,13 +23,17 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     header = $('#frame_header');
     headers = {};
     
-    // The plain ol' header
+    // The plain old header
     headers.standard = 
       $('<div class="standard" style="display:none"><span class="title"></span></div>').appendTo(header);
     
     // A header with Save & Cancel buttons
     headers.edit =
-      $('<div class="edit" style="display:none"><span class="title"></span><span class="buttons"></span></div>').appendTo(header);
+      $('<div class="edit" style="display:none"><span class="title"></span><span class="buttons">' +
+        '<button type="button" class="cancel">Cancel</button>' +
+        '<button type="button" class="save">Save</button>' +
+        '</span></div>').appendTo(header);
+    headers.edit.find('button').button();
     
     Header.switch('standard');
     
@@ -73,8 +77,8 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
                  .bind('click.frame_header', options.cancel);
       }
       
-      header.children('div').hide('fast');
-      newHeader.show('fast');
+      header.children('div').hide(400);
+      newHeader.show(400);
     }
     
     return Header;
