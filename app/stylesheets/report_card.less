@@ -350,7 +350,7 @@
   }
   
   li {
-    background-color:#f0f0f0;
+    background-color:#f8f8f8;
     border-top:solid 1px #c0c0c0;
     cursor:default;
     height:25px;
@@ -360,7 +360,7 @@
 }
 
 #landmark_edit_pane {
-  background:#f0f0f0;
+  background:#f8f8f8;
   bottom:16px;
   height:200px;
   position:absolute;
@@ -383,4 +383,21 @@
   top:0;
   width:300px;
   z-index:7;
+}
+
+/**
+ * This is the NEW frame header - the old #report_card_header will
+ * be removed in the near future.
+ */
+#frame_header {
+  background-color:#e0e0e0;
+  border:solid 1px #999;
+  border-bottom:none;
+  height:30px;
+  line-height:30px;
+  
+  span.title {
+    font-weight:bold;
+    padding-left:8px;
+  }
 }

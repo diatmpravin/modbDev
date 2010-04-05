@@ -4,7 +4,7 @@
  * Landmark Controller!
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, $) {
+Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, Header, $) {
   var landmarks = null,
       lookup = null;
   
@@ -22,6 +22,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     MapPane.init().open().showCollection('landmarks');
     LandmarkPane.init().open();
     LandmarkEditPane.init().close();
+    Header.init().standard('Landmarks');
     
     LandmarkController.refresh();
   };
@@ -66,8 +67,12 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     
     MapPane.slide(0, function() {
       LandmarkPane.close(function() {
-        LandmarkEditPane.open();
+        //LandmarkEditPane.open();
       });
+    });
+    
+    $.get('/landmarks/' + id + '/edit', function(html) {
+      LandmarkEditPane.open(html);
     });
     
     return false;
@@ -113,4 +118,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   };
   
   return LandmarkController;
-}(Fleet.LandmarkController || {}, Fleet.Frame.LandmarkPane, Fleet.Frame.LandmarkEditPane, Fleet.Frame.MapPane, jQuery));
+}(Fleet.LandmarkController || {},
+  Fleet.Frame.LandmarkPane,
+  Fleet.Frame.LandmarkEditPane,
+  Fleet.Frame.MapPane,
+  Fleet.Frame.Header,
+  jQuery));

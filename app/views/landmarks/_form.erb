@@ -1,7 +1,3 @@
-<% content_for :javascript do -%>
-  <%= javascript_include_tag "landmarks/form" %>
-<% end -%>
-
 <% form_for landmark, :html => {:autocomplete => 'off'} do |f| -%>
   <div class="field">
     <%= f.label :name %>
@@ -46,7 +42,7 @@
 
   <div class="clear spacer"></div>
   <div class="buttons">
-    <%= submit_tag "Save" %>
-    <%= link_to 'Cancel', landmarks_path %>
+    <%= submit_tag "Save", :class => 'save' %>
+    <%= link_to 'Cancel', landmarks_path, :class => 'cancel' %>
   </div>
 <% end -%>
