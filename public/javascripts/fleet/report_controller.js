@@ -4,8 +4,8 @@
  * Report Controller
  */
 var Fleet = Fleet || {};
-Fleet.ReportController = (function(ReportController, ReportPane, /*GroupPane,*/ $) {
-  //var landmarks = null,
+Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $) {
+  var vehicles = null;
   //    lookup = null;
   
   /**
@@ -16,16 +16,17 @@ Fleet.ReportController = (function(ReportController, ReportPane, /*GroupPane,*/ 
   /**
    * index()
    *
-   * Prepare the landmark list. This should always be called before any other
+   * Prepare the vehicle list. This should always be called before any other
    * actions on the controller (most likely by the Frame).
    */
   ReportController.index = function() {
-    //GroupPane.init().open();
+    VehiclePane.init().open();
     ReportPane.init().open();
     
     //ReportController.refresh();
   };
   
+  //TODO: needs to get vehicles for the VehiclePane.
   /**
    * refresh()
    *
@@ -49,4 +50,4 @@ Fleet.ReportController = (function(ReportController, ReportPane, /*GroupPane,*/ 
   //};
   
   return ReportController;
-}(Fleet.ReportController || {}, Fleet.Frame.ReportPane, /*Fleet.Frame.GroupPane,*/ jQuery));
+}(Fleet.ReportController || {}, Fleet.Frame.ReportPane, Fleet.Frame.VehiclePane, jQuery));

@@ -9,10 +9,6 @@ var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
   var pane,
-      //width = 280,
-      //list,
-      //landmarks = null,
-      //lookup = null,
       init = false;
   
   /**
@@ -26,7 +22,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     }
     
     // Create the report pane
-    $('#frame').append('<div id="report_pane">report pane goes here</div>');
+    $('#frame').append('<div id="report_pane"><div class="report_selection">report pane goes here</div></div>');
     
     // Store a permanent reference to the pane
     pane = $('#report_pane');
@@ -56,15 +52,6 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     
     return ReportPane;
   };
-  
-  /**
-   * width()
-   *
-   * Return the current width of the report pane.
-   */
-  //ReportPane.width = function() {
-  //  return pane.width();
-  //};
   
   return ReportPane;
 }(Fleet.Frame.ReportPane || {}, Fleet, jQuery));
