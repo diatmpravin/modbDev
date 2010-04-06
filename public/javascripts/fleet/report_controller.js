@@ -4,7 +4,7 @@
  * Report Controller
  */
 var Fleet = Fleet || {};
-Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $) {
+Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, Header, $) {
   var vehicles = null,
       report_form;
   
@@ -22,16 +22,15 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $)
    * actions on the controller (most likely by the Frame).
    */
   ReportController.index = function() {
-    VehiclePane.init();
-    ReportPane.init();
+    VehiclePane.init().open();
+    ReportPane.init().open();
+    Header.init().switch('report', {title: 'Reports', run: ReportController.createReport});
   
     report_form = $('#runReportForm')
     $.getJSON('/reports', function(json) {
       ReportPane.initPane(json.html);
     });
 
-    VehiclePane.open();
-    ReportPane.open();
     //ReportController.refresh();
   };
   
@@ -70,4 +69,9 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, $)
   };
  
   return ReportController;
-}(Fleet.ReportController || {}, Fleet.Frame.ReportPane, Fleet.Frame.VehiclePane, jQuery));
+}(Fleet.ReportController || {}, 
+  Fleet.Frame.ReportPane, 
+  Fleet.Frame.VehiclePane, 
+  Fleet.Frame.Header,
+  jQuery));
+
