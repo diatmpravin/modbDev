@@ -68,6 +68,30 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
   };
   
   /**
+   * showLandmark(landmark)
+   *
+   * Take the given landmark and either update its existing row or add
+   * it to the list.
+   */
+  LandmarkPane.showLandmark = function(landmark) {
+    var li = $('#landmark_' + landmark.id);
+    
+    if (li.length > 0) {
+      li.html('<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
+        '<a href="#edit" class="edit hover-only" title="Edit Landmark">Edit</a>' +
+        landmark.name + '</li>');
+    } else {
+      // There are PROBABLY better places to put this brand new landmark than at the bottom of the list -- but where?!?   \(o_o)/
+      list.append('<li id="landmark_' + landmark.id + '">' +
+        '<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
+        '<a href="#edit" class="edit hover-only" title="Edit Landmark">Edit</a>' +
+        landmark.name + '</li>');
+    }
+  
+    return LandmarkPane;
+  };
+  
+  /**
    * open()
    * open(callback)
    *

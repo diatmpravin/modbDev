@@ -94,19 +94,21 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
         button;
     
     if (newHeader) {
-      for(opt in options) {
-        if (opt == 'title') {
-          // If provided, configure the new title
-          
-          newHeader.find('span.title').text(options.title);
-        } else if ($.isFunction(options[opt])) {
-          // If provided, set callbacks for the given button class
-          
-          button = newHeader.find('button.' + opt);
-          
-          if (button.length > 0) {
-            button.unbind('.frame_header')
-                  .bind('click.frame_header', options[opt]);
+      if (options) {
+        for(opt in options) {
+          if (opt == 'title') {
+            // If provided, configure the new title
+            
+            newHeader.find('span.title').text(options.title);
+          } else if ($.isFunction(options[opt])) {
+            // If provided, set callbacks for the given button class
+            
+            button = newHeader.find('button.' + opt);
+            
+            if (button.length > 0) {
+              button.unbind('.frame_header')
+                    .bind('click.frame_header', options[opt]);
+            }
           }
         }
       }

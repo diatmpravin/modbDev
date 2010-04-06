@@ -11,9 +11,6 @@ class LandmarksController < ApplicationController
       format.html
       
       format.json {
-        # TODO: Put this somewhere more global
-        ActiveRecord::Base.include_root_in_json = false
-        
         render :json => @landmarks.to_json(index_json_options)
       }
     end
@@ -38,7 +35,10 @@ class LandmarksController < ApplicationController
   
   def create
     if @landmark.update_attributes(params[:landmark])
-      render :json => {:status => 'success'}
+      render :json => {
+        :status => 'success',
+        :landmark => @landmark
+      }
     else
       render :json => {
         :status => 'failure',
@@ -52,7 +52,10 @@ class LandmarksController < ApplicationController
   
   def update
     if @landmark.update_attributes(params[:landmark])
-      render :json => {:status => 'success'}
+      render :json => {
+        :status => 'success',
+        :landmark => @landmark
+      }
     else
       render :json => {
         :status => 'failure',

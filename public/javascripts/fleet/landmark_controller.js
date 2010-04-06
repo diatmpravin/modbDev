@@ -212,6 +212,12 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         LandmarkController.cancel
       );
       
+      // Make sure our landmark object is up to date, then show it on map
+      var l = LandmarkEditPane.location();
+      landmark.latitude = l.latitude;
+      landmark.longitude = l.longitude;
+      editLandmarkOnMap(landmark);
+      
       loading(false);
     }
     
@@ -221,13 +227,32 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   /**
    * save()
    *
-   * Save the landmark currently being edited.
+   * Save the landmark currently being edited. This handler is used by both New
+   * and Edit Landmark.
    */
   LandmarkController.save = function() {
+    var l;
+    
+    loading(true);
+    
     LandmarkEditPane.submit({
       dataType: 'json',
       success: function(json) {
         if (json.status == 'success') {
+          loading(false);
+          
+          // Handle both the "new" and "updated" cases
+          if (l = lookup[json.landmark.id]) {
+            if (l.poi) {
+              MapPane.removePoint(l.poi, 'landmarks');
+            }
+            l.poi = null;
+          }
+          
+          lookup[json.landmark.id] = json.landmark;
+          showLandmarkOnMap(json.landmark);
+          LandmarkPane.showLandmark(json.landmark);
+          
           closeEditPanes();
         } else {
           LandmarkEditPane.open(json.html);
@@ -284,13 +309,13 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         loading(false);
         if (json.status == 'success') {
           // Remove landmark from list
-          $('#landmark_' + id).hide('fast', function() {
+          $('#landmark_' + id).slideUp(400, function() {
             $(this).remove();
           });
           
           // Remove landmark from map
           if (lookup[id].poi) {
-            MapPane.removePoint(lookup[id].poi);
+            MapPane.removePoint(lookup[id].poi, 'landmarks');
             lookup[id].poi = null;
           }
         } else {
@@ -299,6 +324,20 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       }
     });
   
+    return false;
+  };
+  
+  /**
+   * dragPoint(mqEvent)
+   *
+   * Called from MapQuest's Event Manager whenever a user drags a point on the
+   * map. We will update the edit form with the new lat/long.
+   */
+  LandmarkController.dragPoint = function(mqEvent) {
+    if (activePoint) {
+      LandmarkEditPane.location(activePoint.latLng);
+    }
+    
     return false;
   };
   
@@ -342,6 +381,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       });
     }
     
+    MQA.EventManager.addListener(activePoint, 'mouseup', LandmarkController.dragPoint);
     activePoint.setValue('draggable', true);
     
     MapPane.showCollection('temp');
@@ -349,11 +389,12 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   }
   
   function closeEditPanes() {
-    activePoint = null;
     MapPane.showCollection('landmarks');
     MapPane.hideCollection('temp');
-  
-    Header.standard('Landmarks');
+    MapPane.collection('temp').removeAll();
+    activePoint = null;
+    
+    Header.switch('landmarks');
     GroupPane.close();
     LandmarkEditPane.close();
     LandmarkPane.open(function() {
