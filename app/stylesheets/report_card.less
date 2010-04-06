@@ -241,7 +241,7 @@
    * Map Pane
    */
   #map_pane {
-    background-color:green;
+    background:#ccc url(/images/map_loading.png) repeat 0 0;
     display:none;
     height:100%;
     left:0px;
@@ -509,6 +509,24 @@
       height:25px;
       line-height:25px;
     }
+    
+    span.checkbox {
+      background:transparent url(/images/unchecked.png) no-repeat center center;
+      float:right;
+      width:23px;
+    }
+  }
+  
+  div.active {
+    background-color:#e7f5e3;
+    
+    span.checkbox {
+      background-image:url(/images/checked.png);
+    }
+  }
+  
+  div.group:hover {
+    background-color:#e3ecf5;
   }
 }
 
