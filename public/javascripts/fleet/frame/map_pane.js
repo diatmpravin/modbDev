@@ -158,10 +158,10 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     } else {
       o = o || 'default';
       
-      c = collections[name];
+      c = collections[o];
       if (!c) {
-        c = collections[name] = new MQA.ShapeCollection();
-        c.setName(name);
+        c = collections[o] = new MQA.ShapeCollection();
+        c.setName(o);
       }
     
       return c;
@@ -287,6 +287,15 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     }
     
     return MapPane;
+  };
+  
+  /**
+   * center()
+   *
+   * Return the center of the currently displayed map in lat & long.
+   */
+  MapPane.center = function() {
+    return map.moshiMap().map.getCenter();
   };
   
   /**

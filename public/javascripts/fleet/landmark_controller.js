@@ -8,6 +8,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   var confirmRemoveDialog,
       landmarks = null,
       lookup = null,
+      activePoint = null,
       init = false;
   
   /**
@@ -30,7 +31,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
-  
+    
+    Header.init().define('landmarks',
+      '<span class="title">Landmarks</span><span class="buttons"><button type="button" class="newLandmark">Add New</button></span></div>'
+    );
+    
     init = true;
     return LandmarkController;
   };
@@ -46,7 +51,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkPane.init().open();
     LandmarkEditPane.init().close();
     GroupPane.init().close();
-    Header.init().standard('Landmarks');
+    Header.init().switch('landmarks', {
+      newLandmark: LandmarkController.newLandmark
+    });
     
     LandmarkController.refresh();
   };
@@ -98,6 +105,58 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     if (o) {
       showLandmarkOnMap(o);
       MapPane.pan(o.poi);
+    }
+    
+    return false;
+  };
+  
+  /**
+   * newLandmark()
+   *
+   * Transition from index into creating a landmark.
+   */
+  LandmarkController.newLandmark = function() {
+    var landmarkHtml, groupHtml;
+    
+    loading(true);
+    
+    // We need to load two ajax requests, then move forward
+    // when both are done.
+    var requests = 2;
+    
+    $.get('/landmarks/new', function(html) {
+      landmarkHtml = html;
+      
+      ready();
+    });
+    
+    // Strange "get json.html" because of Legacy Group page (for now)
+    $.getJSON('/groups.json', function(json) {
+      groupHtml = json.html;
+      
+      ready();
+    });
+    
+    function ready() {
+      requests -= 1;
+      
+      if (requests > 0) {
+        // Don't move forward until both requests are complete
+        return;
+      }
+      
+      LandmarkPane.close();
+      LandmarkEditPane.initPane(landmarkHtml).open();
+      GroupPane.showGroups(groupHtml).open();
+      Header.edit('New Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      editLandmarkOnMap(null);
+      LandmarkEditPane.location(MapPane.center());
+      
+      loading(false);
     }
     
     return false;
@@ -268,7 +327,32 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     }
   }
   
+  function editLandmarkOnMap(landmark) {
+    MapPane.collection('temp').removeAll();
+    
+    if (landmark) {
+      activePoint = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+        collection: 'temp',
+        reference: landmark
+      });
+    } else {
+      var c = MapPane.center();
+      activePoint = MapPane.addPoint(c.lat, c.lng, {
+        collection: 'temp'
+      });
+    }
+    
+    activePoint.setValue('draggable', true);
+    
+    MapPane.showCollection('temp');
+    MapPane.hideCollection('landmarks');
+  }
+  
   function closeEditPanes() {
+    activePoint = null;
+    MapPane.showCollection('landmarks');
+    MapPane.hideCollection('temp');
+  
     Header.standard('Landmarks');
     GroupPane.close();
     LandmarkEditPane.close();

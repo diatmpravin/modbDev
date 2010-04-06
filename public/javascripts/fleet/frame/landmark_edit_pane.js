@@ -81,5 +81,33 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
     return LandmarkEditPane;
   };
   
+  /**
+   * location()
+   *
+   * Return the current lat & long of the landmark being edited.
+   *
+   * location(lat, lng)
+   * location(LatLng)
+   *
+   * Set the lat/long of the landmark being edited to the given latitude &
+   * longitude or MQA LatLng object.
+   */
+  LandmarkEditPane.location = function(a, b) {
+    if (a) {
+      if (typeof(a) == 'object') {
+        pane.find('form:first .latitude').val(a.lat);
+        pane.find('form:first .longitude').val(a.lng);
+      } else {
+        pane.find('form:first .latitude').val(a);
+        pane.find('form:first .longitude').val(b);
+      }
+    }
+    
+    return {
+      latitude: pane.find('form:first .latitude').val(),
+      longitude: pane.find('form:first .longitude').val()
+    };
+  };
+  
   return LandmarkEditPane;
 }(Fleet.Frame.LandmarkEditPane || {}, Fleet, jQuery));
