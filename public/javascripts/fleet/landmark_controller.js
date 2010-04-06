@@ -51,6 +51,36 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   };
   
   /**
+   * focus(landmark)
+   *
+   * Pan the map to the given landmark.
+   *
+   * focus()
+   *
+   * Pan the map to the clicked landmark. Called as an event handler.
+   */
+  LandmarkController.focus = function(o) {
+    var id;
+    
+    if (!o || (o && o.originalEvent)) {
+      // If no arg, or arg is a jQuery event object, find the landmark
+      // associated with the clicked dom element.
+      
+      id = $(this).attr('id');
+      id = id.substring(id.lastIndexOf('_') + 1);
+      
+      o = lookup[id];
+    }
+    
+    if (o) {
+      showLandmarkOnMap(o);
+      MapPane.pan(o.poi);
+    }
+    
+    return false;
+  };
+  
+  /**
    * edit()
    *
    * Transition from index into editing a landmark.
@@ -58,12 +88,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   LandmarkController.edit = function() {
     var id, landmark, landmarkHtml, groupHtml;
 
-    id = $(this).attr('id');
+    id = $(this).closest('li').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
     
     if (landmark = lookup[id]) {
-      showLandmarkOnMap(lookup[id]);
-      MapPane.pan(lookup[id].poi);
+      LandmarkController.focus(landmark);
     }
     
     Frame.loading(true); Header.loading(true);

@@ -32,8 +32,14 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     // Our list of landmarks
     list = pane.children('ol');
     
-    // User can click to edit
-    $('#landmark_pane li').live('click', Fleet.LandmarkController.edit);
+    // User can click to pan
+    $('#landmark_pane li').live('click', Fleet.LandmarkController.focus);
+    
+    // User can edit a landmark
+    $('#landmark_pane a.edit').live('click', Fleet.LandmarkController.edit);
+    
+    // User can remove a landmark
+    //$('#landmark_pane a.delete').live('click', Fleet.LandmarkController.);
     
     init = true;
     return LandmarkPane;
@@ -49,7 +55,10 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     var idx, num, html;
     
     for(idx = 0, num = landmarks.length, html = ''; idx < num; idx++) {
-      html += '<li id="landmark_' + landmarks[idx].id + '">' + landmarks[idx].name + '</li>';
+      html += '<li id="landmark_' + landmarks[idx].id + '">' +
+        '<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
+        '<a href="#edit" class="edit hover-only" title="Edit Landmark">Edit</a>' +
+        landmarks[idx].name + '</li>';
     }
     
     list.html(html);
