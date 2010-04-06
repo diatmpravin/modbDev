@@ -177,6 +177,7 @@
   background-color:red;
   border:solid 1px #999;
   display:none;
+  overflow:hidden;
   position:relative;
   
   ol {
@@ -349,7 +350,7 @@
   }
   
   li {
-    background-color:#f0f0f0;
+    background-color:#f8f8f8;
     border-top:solid 1px #c0c0c0;
     cursor:default;
     height:25px;
@@ -359,7 +360,17 @@
 }
 
 #landmark_edit_pane {
+  background:#f8f8f8;
+  height:260px;
+  position:absolute;
+  right:16px;
+  top:16px;
+  width:292px;
+  z-index:7;
   
+  .content {
+    padding:16px;
+  }
 }
 
 #geofence_pane {
@@ -404,3 +415,92 @@
 }
   
  
+
+/**
+ * This is the NEW frame header - the old #report_card_header will
+ * be removed in the near future.
+ */
+#frame_header {
+  background-color:#e0e0e0;
+  border:solid 1px #999;
+  border-bottom:none;
+  height:40px;
+  line-height:40px;
+  position:relative;
+  
+  span.title {
+    font-weight:bold;
+    padding-left:8px;
+  }
+  
+  span.buttons {
+    float:right;
+    padding-right:8px;
+    
+    button {
+      margin-left:8px;
+    }
+  }
+  
+  .loader {
+    background-color:#333;
+    height:100%;
+    left:0;
+    opacity:0.3;
+    position:absolute;
+    top:0;
+    width:100%;
+    z-index:31;
+    
+    .loading {
+      background:transparent url(/images/spinner_reverse.gif) no-repeat left center;
+      float:right;
+      display:block;
+      height:40px;
+      padding-right:8px;
+    }
+  }
+}
+
+#group_pane {
+  background:#303030 url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:280px;
+  z-index:7;
+  
+  > ol {
+    margin-top:-1px;
+  }
+  
+  div.group {
+    background-color:#f8f8f8;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    line-height:25px;
+    padding-left:8px;
+  
+    span {
+      display:block;
+      float:left;
+      height:25px;
+      line-height:25px;
+    }
+  }
+}
+
+#frame_loader {
+  background-color:#333;
+  height:100%;
+  left:0;
+  opacity:0.3;
+  position:absolute;
+  top:0;
+  width:100%;
+  z-index:31;
+}

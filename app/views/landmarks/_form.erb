@@ -1,7 +1,3 @@
-<% content_for :javascript do -%>
-  <%= javascript_include_tag "landmarks/form" %>
-<% end -%>
-
 <% form_for landmark, :html => {:autocomplete => 'off'} do |f| -%>
   <div class="field">
     <%= f.label :name %>
@@ -29,7 +25,7 @@
     <%= f.check_box :alert_on_exit %>
     <%= f.label :alert_on_exit, 'Send alert on exit?' %>
   </div>
-
+<!--
   <h3>Vehicle Groups</h3>
   <fieldset>
     <div class="groupSelect">
@@ -43,10 +39,5 @@
       <% end -%>
     </div>
   </fieldset>
-
-  <div class="clear spacer"></div>
-  <div class="buttons">
-    <%= submit_tag "Save" %>
-    <%= link_to 'Cancel', landmarks_path %>
-  </div>
+-->
 <% end -%>

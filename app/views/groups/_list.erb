@@ -1,0 +1,7 @@
+<% group_tree(current_user.device_group_or_root, :include_parent => true, :root_ol => false) do |group, level| -%>
+  <div class="group" id="<%= dom_id(group) %>">
+    <span class="checkbox"></span>
+    <span class="collapsible"></span>
+    <span class="name"><%= group.name %></span>
+  </div>
+<% end -%>

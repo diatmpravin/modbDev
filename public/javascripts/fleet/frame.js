@@ -6,8 +6,9 @@
  */
 var Fleet = Fleet || {};
 Fleet.Frame = (function(Frame, $) {
-  var resizeHandlers,
-      frame;
+  var resizeHandlers = [],
+      frame,
+      loader;
   
   /**
    * init()
@@ -15,14 +16,16 @@ Fleet.Frame = (function(Frame, $) {
    * Initialize the frame object and set up needed event handlers.
    */
   Frame.init = function() {
-    // Initialize private members
-    frame = $('#frame');
-    resizeHandlers = [];
-  
     // Our frame requires zero bottom padding, so make this change now
     $('#content').css('padding-bottom', 0)
                  .children('.content')
                  .css('padding-bottom', 0);
+  
+    // A reference to the resizable frame
+    frame = $('#frame');
+    
+    // The frame loader
+    loader = $('<div id="frame_loader" style="display:none"></div>').appendTo(frame);
   
     // Handle browser resize events
     $(window).resize(Frame.resize).resize();
@@ -97,6 +100,23 @@ Fleet.Frame = (function(Frame, $) {
    */
   Frame.open = function() {
     frame.show().resize();
+    
+    return Frame;
+  };
+  
+  /**
+   * loading(boolean)
+   *
+   * Show or hide the loading pane that hovers over ("darkens") the frame
+   * content.
+   */
+  Frame.loading = function(bool) {
+    if (bool) {
+      loader.css('opacity', 0).show()
+            .animate({opacity: 0.3}, {duration: 1500});
+    } else {
+      loader.stop(true, false).hide();
+    }
     
     return Frame;
   };

@@ -4,14 +4,13 @@
  * Landmark Controller!
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, $) {
+Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
   var landmarks = null,
       lookup = null;
   
   /**
    * init()
    */
-   
   
   /**
    * index()
@@ -20,8 +19,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
    * actions on the controller (most likely by the Frame).
    */
   LandmarkController.index = function() {
-    LandmarkPane.init().open();
     MapPane.init().open().showCollection('landmarks');
+    LandmarkPane.init().open();
+    LandmarkEditPane.init().close();
+    GroupPane.init().close();
+    Header.init().standard('Landmarks');
     
     LandmarkController.refresh();
   };
@@ -54,7 +56,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
    * Transition from index into editing a landmark.
    */
   LandmarkController.edit = function() {
-    var id, landmark;
+    var id, landmark, landmarkHtml, groupHtml;
 
     id = $(this).attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
@@ -64,8 +66,62 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
       MapPane.pan(lookup[id].poi);
     }
     
-    MapPane.slide(0, function() {
+    Frame.loading(true); Header.loading(true);
+    
+    // We need to load two ajax requests, then move forward
+    // when both are done.
+    var requests = 2;
+    
+    $.get('/landmarks/' + id + '/edit', function(html) {
+      landmarkHtml = html;
+      
+      ready();
+    });
+    
+    // Strange "get json.html" because of Legacy Group page (for now)
+    $.getJSON('/groups.json', function(json) {
+      groupHtml = json.html;
+      
+      ready();
+    });
+    
+    function ready() {
+      requests -= 1;
+      
+      if (requests > 0) {
+        // Don't move forward until both requests are complete
+        return;
+      }
+      
       LandmarkPane.close();
+      LandmarkEditPane.initPane(landmarkHtml).open();
+      GroupPane.showGroups(groupHtml).open();
+      Header.edit('Edit Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      Frame.loading(false); Header.loading(false);
+    }
+    
+    return false;
+  };
+  
+  /**
+   * save()
+   *
+   * Save the landmark currently being edited.
+   */
+  LandmarkController.save = function() {
+    LandmarkEditPane.submit({
+      dataType: 'json',
+      success: function(json) {
+        if (json.status == 'success') {
+          closeEditPanes();
+        } else {
+          LandmarkEditPane.open(json.html);
+        }
+      }
     });
     
     return false;
@@ -74,12 +130,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
   /**
    * cancel()
    *
-   * Transition back to the list view.
+   * Cancel an in-progress Edit Landmark or Create Landmark state by going
+   * back to the list view.
    */
   LandmarkController.cancel = function() {
-    LandmarkPane.open(function() {
-      MapPane.slide(LandmarkPane.width());
-    });
+    closeEditPanes();
     
     return false;
   };
@@ -98,7 +153,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
         });
       }
     }
-  };
+  }
   
   function showLandmarkOnMap(landmark) {
     if (!landmark.poi) {
@@ -107,7 +162,23 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, MapPane, 
         reference: landmark
       });
     }
-  };
+  }
+  
+  function closeEditPanes() {
+    Header.standard('Landmarks');
+    GroupPane.close();
+    LandmarkEditPane.close();
+    LandmarkPane.open(function() {
+      MapPane.slide(LandmarkPane.width());
+    });
+  }
   
   return LandmarkController;
-}(Fleet.LandmarkController || {}, Fleet.Frame.LandmarkPane, Fleet.Frame.MapPane, jQuery));
+}(Fleet.LandmarkController || {},
+  Fleet.Frame.LandmarkPane,
+  Fleet.Frame.LandmarkEditPane,
+  Fleet.Frame.MapPane,
+  Fleet.Frame.GroupPane,
+  Fleet.Frame.Header,
+  Fleet.Frame,
+  jQuery));

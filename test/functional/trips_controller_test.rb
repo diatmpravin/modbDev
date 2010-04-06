@@ -32,13 +32,13 @@ describe "Trips Controller", ActionController::TestCase do
       template.should.equal 'index'
     end
     
-    specify "errors if device is not owned by account" do
+    specify "errors if device is not owned by account (json)" do
       get :index, {
-        :device_id => devices(:aaron_device).id,
-        :format => 'json'
+        :format => 'json',
+        :device_id => devices(:aaron_device).id
       }
 
-      should.redirect_to :action => "index"
+      json['status'].should.equal 'failure'
     end
   end
   
@@ -79,11 +79,11 @@ describe "Trips Controller", ActionController::TestCase do
     
     specify "errors if trip is invalid" do
       get :show, {
-        :id => trips(:aaron_trip),
-        :format => 'json'
+        :format => 'json',
+        :id => trips(:aaron_trip)
       }
 
-      should.redirect_to :action => "index"
+      json['status'].should.equal 'failure'
     end
   end
   
