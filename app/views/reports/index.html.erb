@@ -1,0 +1,20 @@
+<% content_for :javascript do -%>
+  
+  <%= javascript_include_tag 'fleet/frame' %>
+  <%= javascript_include_tag 'fleet/frame/vehicle_pane' %>
+  <%= javascript_include_tag 'fleet/frame/report_pane' %>
+  <%= javascript_include_tag 'fleet/report_controller' %>
+  <!-- <%= javascript_include_tag 'reports/form' %> -->
+  
+  <script type="text/javascript">
+    jQuery(function() {
+      Fleet.Frame.init();
+      Fleet.ReportController.index();
+      Fleet.Frame.open().resize();
+      Fleet.loading(false);
+    });
+  </script>
+<% end -%>
+
+<div id="fleet_loading">Please wait...</div>
+<div id="frame"></div>

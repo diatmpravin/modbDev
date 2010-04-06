@@ -1,6 +1,29 @@
 class ReportsController < ApplicationController
   layout except_ajax('reports')
   
+  def index
+    respond_to do |format|
+      format.html
+      
+      format.json {
+      
+        # TODO: Put this somewhere more global
+        ActiveRecord::Base.include_root_in_json = false
+        
+
+       render :json => {
+         :status => 'success',
+         :html => render_to_string(:partial => 'reports/form', :locals => {:report => Report.new(current_user)}),
+       }
+        #all available reports
+        #@reports = 
+           
+        #render :json => @reports.to_json(index_json_options)
+      }
+    end
+
+  end
+
   def create
     params[:report] ||= {}
     
@@ -63,5 +86,5 @@ class ReportsController < ApplicationController
       }
     end
   end
-  
+
 end
