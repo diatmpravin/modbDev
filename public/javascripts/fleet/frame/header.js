@@ -165,12 +165,12 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    */
   Header.loading = function(bool) {
     if (bool) {
+      header.find('button').hide();
       headers.loader.css('opacity', 0).show()
                     .animate({opacity: 0.3}, {duration: 1500});
-      current.find('button').hide();
     } else {
-      headers.loader.stop(true, false).hide();
-      current.find('button').show();
+      header.find('button').show();
+      headers.loader.stop(true).hide();
     }
     
     return Header;

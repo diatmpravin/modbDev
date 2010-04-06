@@ -53,7 +53,7 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
    * Open the landmark edit pane.
    */
   LandmarkEditPane.open = function() {
-    pane.animate({opacity: 1, right: 16}, {duration: 400});
+    pane.animate({opacity: 0.9, right: 8}, {duration: 400});
     
     return LandmarkEditPane;
   };
@@ -64,7 +64,7 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
    * Close the landmark edit pane.
    */
   LandmarkEditPane.close = function() {
-    pane.animate({opacity: 0, right: 0 - (width + 16)}, {duration: 400});
+    pane.animate({opacity: 0, right: 0 - (width + 8)}, {duration: 400});
     
     return LandmarkEditPane;
   };
