@@ -65,7 +65,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     });
 
     // Prevent normal submit of report form
-    $('#' + container[0].id + ' input[type=submit]').live('click', ReportPane.createReport);
+    $('#' + container[0].id + ' input[type=submit]').live('click', Fleet.ReportController.createReport);
 
     return $('#report_pane .report_selection');
   };
@@ -106,6 +106,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
    * Create a report via ajax, displaying it in a new window if successful.
    */
   ReportPane.createReport = function() {
+    alert('blargh local');
   //  var _form = $(this).closest('form');
   //  var _report = _form.data('report_form');
   //  

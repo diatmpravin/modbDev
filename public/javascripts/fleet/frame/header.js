@@ -28,6 +28,13 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     headers.standard = 
       $('<div class="standard" style="display:none"><span class="title"></span></div>').appendTo(header);
     
+    // Report header with a run button
+    headers.report =
+      $('<div class="report" style="display:none"><span class="title"></span><span class="buttons">' +
+        '<button type="button" class="run">Run</button>' +
+        '</span></div>').appendTo(header);
+    headers.report.find('button').button();
+
     // A header with Save & Cancel buttons
     headers.edit =
       $('<div class="edit" style="display:none"><span class="title"></span><span class="buttons">' +
@@ -57,6 +64,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *  title:  a string to display in the header
    *  save:   a callback function for the Save button
    *  cancel: a callback function for the Cancel button
+   *  run:    a callback function for the Run button
    */
   Header.switch = function(type, options) {
     var newHeader = headers[type];
@@ -81,6 +89,13 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
         newHeader.find('button.cancel')
                  .unbind('.frame_header')
                  .bind('click.frame_header', options.cancel);
+      }
+
+      // Configure new run callback, if provided
+      if (options && $.isFunction(options.run)) {
+        newHeader.find('button.run')
+                 .unbind('.frame_header')
+                 .bind('click.frame_header', options.run);
       }
       
       if (current) {
@@ -126,7 +141,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
       cancel: cancel
     });
   };
-  
+    
   /**
    * custom(html, options)
    *

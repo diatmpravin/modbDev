@@ -9,7 +9,7 @@ Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
   var width = 280,
       pane,
-      vehicles = null,
+      list,
       init = false;
   
   /**
@@ -23,33 +23,67 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     }
     
     // Create the vehicle pane
-    $('#frame').append('<div id="vehicle_pane"></div>');
+    $('#frame').append('<div id="vehicle_pane"><ol></ol></div>');
     
     // Store a permanent reference to the pane
     pane = $('#vehicle_pane');
     
+    // list of vehicles
+    list = pane.children('ol');
+
     init = true;
     return VehiclePane;
   };
   
   /**
-   * open()
    *
-   * Open the vehicle pane.
+   * showVehicles(html)
+   *
+   * Take the groups & vehicle to populate the list
+   * Clears any existing html
+   *
    */
-  VehiclePane.open = function() {
-    pane.animate({width: width}, {duration: 400});
+  VehiclePane.showVehicles = function(html) {
+    list.html(html);
+    return VehiclePane;
+  };
+
+  /**
+   * open()
+   * open(callback)
+   *
+   * Open the vehicle pane.  If provided, the callback will be called
+   * after the pane is opened.
+   */
+  VehiclePane.open = function(callback) {
+    if ($.isFunction(callback)){
+      pane.animate({width: width}, {
+        duration: 400,
+        complete: callback
+      });
+    } else {
+      pane.animate({width: width}, {duration: 400});
+    }
     
     return VehiclePane;
   };
   
   /**
    * close()
+   * close(callback)
    *
-   * Close the vehicle pane.
+   * Close the vehicle pane. If provided, the callback will be called
+   * after the pane is closed.
    */
   VehiclePane.close = function() {
-    pane.animate({width: 0}, {duration: 400});
+    if ($.isFunction(callback)) {
+      pane.animate({width: 0}, {
+        duration: 400,
+        complete: callback
+      });
+    } else {
+      pane.animate({width: 0}, {duration: 400});
+    }
     
     return VehiclePane;
   };
