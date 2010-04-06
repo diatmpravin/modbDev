@@ -256,8 +256,8 @@
       padding:0 0 0 280px;
     }
   }
-  
-  #tab {
+
+ #tab {
     width:23px;
     height:27px;
     background-color:red;
@@ -384,6 +384,37 @@
   width:300px;
   z-index:7;
 }
+
+#vehicle_pane {
+  background:red url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:280px;
+  z-index:7;
+}
+
+#report_pane {
+    background-color:green;
+    display:none;
+    height:100%;
+    left:0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position:absolute;
+    top:0px;
+    width:100%;
+    z-index:3; 
+
+    div.report_selection {
+      padding:32px 32px 32px 312px;
+    }
+}
+  
+ 
 
 /**
  * This is the NEW frame header - the old #report_card_header will
