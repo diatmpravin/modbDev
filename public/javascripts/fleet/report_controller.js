@@ -46,8 +46,8 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
     
     _form.ajaxSubmit({
       dataType: 'json',
-      //TODO: show loading - beforeSubmit: function() { _form.find('.loading').show(); },
-      //TOTO: end loading - complete: function() { _form.find('.loading').hide(); },
+      beforeSubmit: function() { Header.loading(true); },
+      complete: function() { Header.loading(false); },
       success: function(json) {
         if (json.status == 'success') {
           window.open('/reports/' + json.report_id + '.html');
