@@ -9,6 +9,7 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
   var width = 280,
       pane,
       list,
+      confirmRemoveDialog,
       landmarks = null,
       lookup = null,
       init = false;
@@ -39,7 +40,7 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     $('#landmark_pane a.edit').live('click', Fleet.LandmarkController.edit);
     
     // User can remove a landmark
-    //$('#landmark_pane a.delete').live('click', Fleet.LandmarkController.);
+    $('#landmark_pane a.delete').live('click', Fleet.LandmarkController.remove);
     
     init = true;
     return LandmarkPane;

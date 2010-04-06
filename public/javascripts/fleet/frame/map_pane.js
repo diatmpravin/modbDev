@@ -254,6 +254,23 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   };
   
   /**
+   * removePoint(point)
+   * removePoint(point, collection)
+   *
+   * Remove a point object from the given collection. If the collection is not
+   * provided, will attempt to remove the point from the default collection.
+   */
+  MapPane.removePoint = function(point, collection) {
+    collection = MapPane.collection(collection);
+  
+    if (collection.contains(point)) {
+      collection.removeItem(point);
+    }
+    
+    return point;
+  };
+  
+  /**
    * pan(poi)
    *
    * Pan the map to the location of the given MapQuest point object.

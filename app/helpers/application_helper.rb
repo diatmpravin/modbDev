@@ -20,13 +20,6 @@ module ApplicationHelper
     params[:controller].parameterize
   end
 
-  # Courtesy of http://brandonaaron.net/blog/2009/02/24/jquery-rails-and-ajax
-  def jquery_authenticity_token
-    if protect_against_forgery?
-      javascript_tag("Rails = {authenticity_token:'#{form_authenticity_token}'};") + javascript_include_tag('jquery/jquery.authenticity_token')
-    end
-  end
-
   # Shortcut for showing any flash errors, warnings, and notices
   def messages
     render :partial => 'common/messages'

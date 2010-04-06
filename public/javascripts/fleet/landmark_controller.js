@@ -5,12 +5,35 @@
  */
 var Fleet = Fleet || {};
 Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
-  var landmarks = null,
-      lookup = null;
+  var confirmRemoveDialog,
+      landmarks = null,
+      lookup = null,
+      init = false;
   
   /**
    * init()
    */
+  LandmarkController.init = function() {
+    if (init) {
+      return LandmarkController;
+    }
+    
+    // Our confirm remove dialog box
+    confirmRemoveDialog = $('<div class="dialog" title="Remove Landmark?">Are you sure you want to remove this landmark?</div>').appendTo('body');
+    confirmRemoveDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Remove': LandmarkController.confirmedRemove,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+  
+    init = true;
+    return LandmarkController;
+  };
   
   /**
    * index()
@@ -95,7 +118,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       LandmarkController.focus(landmark);
     }
     
-    Frame.loading(true); Header.loading(true);
+    loading(true);
     
     // We need to load two ajax requests, then move forward
     // when both are done.
@@ -130,7 +153,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         LandmarkController.cancel
       );
       
-      Frame.loading(false); Header.loading(false);
+      loading(false);
     }
     
     return false;
@@ -168,6 +191,58 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     return false;
   };
   
+  /**
+   * remove()
+   *
+   * Display a confirmation dialog, asking if the user wants to remove the
+   * clicked landmark.
+   */
+  LandmarkController.remove = function() {
+    var id = $(this).closest('li').attr('id');
+    id = id.substring(id.lastIndexOf('_') + 1);
+  
+    confirmRemoveDialog.data('id', id).errors().dialog('open');
+    
+    return false;
+  };
+   
+  /**
+   * confirmedRemove()
+   *
+   * Called after the user confirms the removal of a landmark.
+   */
+  LandmarkController.confirmedRemove = function() {
+    var id = confirmRemoveDialog.data('id');
+    
+    confirmRemoveDialog.dialog('close');
+    loading(true);
+    
+    $.ajax({
+      url: '/landmarks/' + id,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function(json) {
+        loading(false);
+        if (json.status == 'success') {
+          // Remove landmark from list
+          $('#landmark_' + id).hide('fast', function() {
+            $(this).remove();
+          });
+          
+          // Remove landmark from map
+          if (lookup[id].poi) {
+            MapPane.removePoint(lookup[id].poi);
+            lookup[id].poi = null;
+          }
+        } else {
+          confirmRemoveDialog.errors(json.error).dialog('open');
+        }
+      }
+    });
+  
+    return false;
+  };
+  
   /* Private Functions */
   
   function showLandmarksOnMap(landmarks) {
@@ -200,6 +275,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkPane.open(function() {
       MapPane.slide(LandmarkPane.width());
     });
+  }
+  
+  function loading(bool) {
+    Frame.loading(bool);
+    Header.loading(bool);
   }
   
   return LandmarkController;
