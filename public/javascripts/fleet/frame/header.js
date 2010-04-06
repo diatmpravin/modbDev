@@ -28,6 +28,13 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     headers.standard = 
       $('<div class="standard" style="display:none"><span class="title"></span></div>').appendTo(header);
     
+    // Report header with a run button
+    headers.report =
+      $('<div class="report" style="display:none"><span class="title"></span><span class="buttons">' +
+        '<button type="button" class="run">Run</button>' +
+        '</span></div>').appendTo(header);
+    headers.report.find('button').button();
+
     // A header with Save & Cancel buttons
     headers.edit =
       $('<div class="edit" style="display:none"><span class="title"></span><span class="buttons">' +
@@ -36,7 +43,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
         '</span></div>').appendTo(header);
     headers.edit.find('button').button();
     
-    // The special "loader" header, actually an overlay used by all header types
+    // The special "loader" header, which is actually an overlay used by all header types
     headers.loader =
       $('<div class="loader" style="display:none"><div class="loading"></div></div>').appendTo(header);
     
@@ -86,6 +93,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *  title:  a string to display in the header
    *  save:   a callback function for the Save button
    *  cancel: a callback function for the Cancel button
+   *  run:    a callback function for the Run button
    *  *:      specify custom callbacks for each button class in your header
    */
   Header.switch = function(type, options) {
@@ -101,7 +109,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
             
             newHeader.find('span.title').text(options.title);
           } else if ($.isFunction(options[opt])) {
-            // If provided, set callbacks for the given button class
+            // If provided, set callbacks for each given button class
             
             button = newHeader.find('button.' + opt);
             
@@ -156,7 +164,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
       cancel: cancel
     });
   };
-  
+    
   /**
    * loading(boolean)
    *
@@ -165,12 +173,12 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    */
   Header.loading = function(bool) {
     if (bool) {
-      header.find('button').hide();
       headers.loader.css('opacity', 0).show()
                     .animate({opacity: 0.3}, {duration: 1500});
+      header.find('button').hide();
     } else {
-      header.find('button').show();
       headers.loader.stop(true).hide();
+      header.find('button').show();
     }
     
     return Header;
