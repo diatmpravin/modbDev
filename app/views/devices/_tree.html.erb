@@ -1,0 +1,22 @@
+<% new_tree(node, :root_ol => false) do |node, level| -%>
+  <% if node.is_a?(Device) -%>
+    <div class="row device clear" id="<%= dom_id(node) %>">
+      <div class="listing">
+        <span class="tab"></span>
+        <span class="indent"></span>
+        <span class="name"><%= node.name %></span>
+        <span class="checkbox"></span>
+      </div>
+    </div>
+  <% else -%>
+    <div class="row group clear" id="<%= dom_id(node) %>">
+      <div class="listing">
+        <span class="tab"></span>
+        <span class="indent"></span>
+        <span class="collapsible open"></span>
+        <span class="name"><%= node.name %></span>
+        <span class="checkbox"></span>
+      </div>
+    </div>
+  <% end -%>
+<% end -%>
