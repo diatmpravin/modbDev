@@ -53,7 +53,7 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
    * Open the landmark edit pane.
    */
   LandmarkEditPane.open = function() {
-    pane.animate({opacity: 1, right: 16}, {duration: 400});
+    pane.animate({opacity: 0.9, right: 8}, {duration: 400});
     
     return LandmarkEditPane;
   };
@@ -64,7 +64,7 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
    * Close the landmark edit pane.
    */
   LandmarkEditPane.close = function() {
-    pane.animate({opacity: 0, right: 0 - (width + 16)}, {duration: 400});
+    pane.animate({opacity: 0, right: 0 - (width + 8)}, {duration: 400});
     
     return LandmarkEditPane;
   };
@@ -79,6 +79,34 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
     pane.find('form:first').ajaxSubmit(options);
     
     return LandmarkEditPane;
+  };
+  
+  /**
+   * location()
+   *
+   * Return the current lat & long of the landmark being edited.
+   *
+   * location(lat, lng)
+   * location(LatLng)
+   *
+   * Set the lat/long of the landmark being edited to the given latitude &
+   * longitude or MQA LatLng object.
+   */
+  LandmarkEditPane.location = function(a, b) {
+    if (a) {
+      if (typeof(a) == 'object') {
+        pane.find('form:first .latitude').val(a.lat);
+        pane.find('form:first .longitude').val(a.lng);
+      } else {
+        pane.find('form:first .latitude').val(a);
+        pane.find('form:first .longitude').val(b);
+      }
+    }
+    
+    return {
+      latitude: pane.find('form:first .latitude').val(),
+      longitude: pane.find('form:first .longitude').val()
+    };
   };
   
   return LandmarkEditPane;

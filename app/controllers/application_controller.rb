@@ -18,7 +18,10 @@ class ApplicationController < ActionController::Base
   # Multi-purpose record-not-found rescue logic
   rescue_from(ActiveRecord::RecordNotFound) do |error|
     if request.format == Mime::JSON
-      render :json => {:status => 'failure'}
+      render :json => {
+        :status => 'failure',
+        :error => 'Unable to perform the requested action.'
+      }
     else
       redirect_to :action => 'index'
     end

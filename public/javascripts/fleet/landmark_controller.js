@@ -5,12 +5,40 @@
  */
 var Fleet = Fleet || {};
 Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
-  var landmarks = null,
-      lookup = null;
+  var confirmRemoveDialog,
+      landmarks = null,
+      lookup = null,
+      activePoint = null,
+      init = false;
   
   /**
    * init()
    */
+  LandmarkController.init = function() {
+    if (init) {
+      return LandmarkController;
+    }
+    
+    // Our confirm remove dialog box
+    confirmRemoveDialog = $('<div class="dialog" title="Remove Landmark?">Are you sure you want to remove this landmark?</div>').appendTo('body');
+    confirmRemoveDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Remove': LandmarkController.confirmedRemove,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+    
+    Header.init().define('landmarks',
+      '<span class="title">Landmarks</span><span class="buttons"><button type="button" class="newLandmark">Add New</button></span></div>'
+    );
+    
+    init = true;
+    return LandmarkController;
+  };
   
   /**
    * index()
@@ -23,7 +51,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkPane.init().open();
     LandmarkEditPane.init().close();
     GroupPane.init().close();
-    Header.init().standard('Landmarks');
+    Header.init().switch('landmarks', {
+      newLandmark: LandmarkController.newLandmark
+    });
     
     LandmarkController.refresh();
   };
@@ -81,6 +111,58 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   };
   
   /**
+   * newLandmark()
+   *
+   * Transition from index into creating a landmark.
+   */
+  LandmarkController.newLandmark = function() {
+    var landmarkHtml, groupHtml;
+    
+    loading(true);
+    
+    // We need to load two ajax requests, then move forward
+    // when both are done.
+    var requests = 2;
+    
+    $.get('/landmarks/new', function(html) {
+      landmarkHtml = html;
+      
+      ready();
+    });
+    
+    // Strange "get json.html" because of Legacy Group page (for now)
+    $.getJSON('/groups.json', function(json) {
+      groupHtml = json.html;
+      
+      ready();
+    });
+    
+    function ready() {
+      requests -= 1;
+      
+      if (requests > 0) {
+        // Don't move forward until both requests are complete
+        return;
+      }
+      
+      LandmarkPane.close();
+      LandmarkEditPane.initPane(landmarkHtml).open();
+      GroupPane.showGroups(groupHtml).open();
+      Header.edit('New Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      editLandmarkOnMap(null);
+      LandmarkEditPane.location(MapPane.center());
+      
+      loading(false);
+    }
+    
+    return false;
+  };
+  
+  /**
    * edit()
    *
    * Transition from index into editing a landmark.
@@ -95,7 +177,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       LandmarkController.focus(landmark);
     }
     
-    Frame.loading(true); Header.loading(true);
+    loading(true);
     
     // We need to load two ajax requests, then move forward
     // when both are done.
@@ -130,7 +212,13 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         LandmarkController.cancel
       );
       
-      Frame.loading(false); Header.loading(false);
+      // Make sure our landmark object is up to date, then show it on map
+      var l = LandmarkEditPane.location();
+      landmark.latitude = l.latitude;
+      landmark.longitude = l.longitude;
+      editLandmarkOnMap(landmark);
+      
+      loading(false);
     }
     
     return false;
@@ -139,13 +227,32 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   /**
    * save()
    *
-   * Save the landmark currently being edited.
+   * Save the landmark currently being edited. This handler is used by both New
+   * and Edit Landmark.
    */
   LandmarkController.save = function() {
+    var l;
+    
+    loading(true);
+    
     LandmarkEditPane.submit({
       dataType: 'json',
       success: function(json) {
         if (json.status == 'success') {
+          loading(false);
+          
+          // Handle both the "new" and "updated" cases
+          if (l = lookup[json.landmark.id]) {
+            if (l.poi) {
+              MapPane.removePoint(l.poi, 'landmarks');
+            }
+            l.poi = null;
+          }
+          
+          lookup[json.landmark.id] = json.landmark;
+          showLandmarkOnMap(json.landmark);
+          LandmarkPane.showLandmark(json.landmark);
+          
           closeEditPanes();
         } else {
           LandmarkEditPane.open(json.html);
@@ -164,6 +271,72 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    */
   LandmarkController.cancel = function() {
     closeEditPanes();
+    
+    return false;
+  };
+  
+  /**
+   * remove()
+   *
+   * Display a confirmation dialog, asking if the user wants to remove the
+   * clicked landmark.
+   */
+  LandmarkController.remove = function() {
+    var id = $(this).closest('li').attr('id');
+    id = id.substring(id.lastIndexOf('_') + 1);
+  
+    confirmRemoveDialog.data('id', id).errors().dialog('open');
+    
+    return false;
+  };
+   
+  /**
+   * confirmedRemove()
+   *
+   * Called after the user confirms the removal of a landmark.
+   */
+  LandmarkController.confirmedRemove = function() {
+    var id = confirmRemoveDialog.data('id');
+    
+    confirmRemoveDialog.dialog('close');
+    loading(true);
+    
+    $.ajax({
+      url: '/landmarks/' + id,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function(json) {
+        loading(false);
+        if (json.status == 'success') {
+          // Remove landmark from list
+          $('#landmark_' + id).slideUp(400, function() {
+            $(this).remove();
+          });
+          
+          // Remove landmark from map
+          if (lookup[id].poi) {
+            MapPane.removePoint(lookup[id].poi, 'landmarks');
+            lookup[id].poi = null;
+          }
+        } else {
+          confirmRemoveDialog.errors(json.error).dialog('open');
+        }
+      }
+    });
+  
+    return false;
+  };
+  
+  /**
+   * dragPoint(mqEvent)
+   *
+   * Called from MapQuest's Event Manager whenever a user drags a point on the
+   * map. We will update the edit form with the new lat/long.
+   */
+  LandmarkController.dragPoint = function(mqEvent) {
+    if (activePoint) {
+      LandmarkEditPane.location(activePoint.latLng);
+    }
     
     return false;
   };
@@ -193,13 +366,45 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     }
   }
   
+  function editLandmarkOnMap(landmark) {
+    MapPane.collection('temp').removeAll();
+    
+    if (landmark) {
+      activePoint = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+        collection: 'temp',
+        reference: landmark
+      });
+    } else {
+      var c = MapPane.center();
+      activePoint = MapPane.addPoint(c.lat, c.lng, {
+        collection: 'temp'
+      });
+    }
+    
+    MQA.EventManager.addListener(activePoint, 'mouseup', LandmarkController.dragPoint);
+    activePoint.setValue('draggable', true);
+    
+    MapPane.showCollection('temp');
+    MapPane.hideCollection('landmarks');
+  }
+  
   function closeEditPanes() {
-    Header.standard('Landmarks');
+    MapPane.showCollection('landmarks');
+    MapPane.hideCollection('temp');
+    MapPane.collection('temp').removeAll();
+    activePoint = null;
+    
+    Header.switch('landmarks');
     GroupPane.close();
     LandmarkEditPane.close();
     LandmarkPane.open(function() {
       MapPane.slide(LandmarkPane.width());
     });
+  }
+  
+  function loading(bool) {
+    Frame.loading(bool);
+    Header.loading(bool);
   }
   
   return LandmarkController;

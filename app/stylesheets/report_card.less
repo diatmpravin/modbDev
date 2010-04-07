@@ -241,7 +241,7 @@
    * Map Pane
    */
   #map_pane {
-    background-color:green;
+    background:#ccc url(/images/map_loading.png) repeat 0 0;
     display:none;
     height:100%;
     left:0px;
@@ -379,15 +379,16 @@
 
 #landmark_edit_pane {
   background:#f8f8f8;
-  height:260px;
+  border:solid 1px #999;
+  height:200px;
   position:absolute;
-  right:16px;
-  top:16px;
-  width:292px;
+  right:8px;
+  top:8px;
+  width:270px;
   z-index:7;
   
   .content {
-    padding:16px;
+    padding:8px;
   }
 }
 
@@ -572,6 +573,24 @@
       height:25px;
       line-height:25px;
     }
+    
+    span.checkbox {
+      background:transparent url(/images/unchecked.png) no-repeat center center;
+      float:right;
+      width:23px;
+    }
+  }
+  
+  div.active {
+    background-color:#e7f5e3;
+    
+    span.checkbox {
+      background-image:url(/images/checked.png);
+    }
+  }
+  
+  div.group:hover {
+    background-color:#e3ecf5;
   }
 }
 

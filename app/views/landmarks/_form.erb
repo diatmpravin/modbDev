@@ -7,13 +7,13 @@
   
   <div class="field">
     <%= f.label :latitude %>
-    <%= f.text_field :latitude, :size => 11, :maxlength => 11 %>
+    <%= f.text_field :latitude, :size => 11, :maxlength => 11, :class => 'latitude' %>
     <%= error_message_on landmark, :latitude, :prepend_text => '* Latitude ' %>
   </div>
   
   <div class="field">
     <%= f.label :longitude %>
-    <%= f.text_field :longitude, :size => 11, :maxlength => 11 %>
+    <%= f.text_field :longitude, :size => 11, :maxlength => 11, :class => 'longitude' %>
     <%= error_message_on landmark, :longitude, :prepend_text => '* Longitude ' %>
   </div>
   

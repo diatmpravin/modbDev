@@ -30,6 +30,11 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
     // Our list of landmarks
     list = pane.children('ol');
     
+    // Toggle groups on and off when clicked
+    $('#group_pane div.group').live('click', function() {
+      $(this).toggleClass('active');
+    });
+    
     init = true;
     return GroupPane;
   };

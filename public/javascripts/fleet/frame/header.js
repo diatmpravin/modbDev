@@ -43,7 +43,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
         '</span></div>').appendTo(header);
     headers.edit.find('button').button();
     
-    // The special "loader" header, actually an overlay used by all header types
+    // The special "loader" header, which is actually an overlay used by all header types
     headers.loader =
       $('<div class="loader" style="display:none"><div class="loading"></div></div>').appendTo(header);
     
@@ -51,6 +51,35 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     Header.switch('standard');
     
     init = true;
+    return Header;
+  };
+  
+  /**
+   * define(name, html)
+   *
+   * Allows controllers to define their own header styles by passing in a
+   * name and a block of HTML. If the given name is already taken, it will be
+   * overwritten with the new definition.
+   *
+   * Note that the given html should contain only the "inside" of the header,
+   * and not the outer <div>. Usually, this will include a "title" span and
+   * then whatever custom elements you require.
+   */
+  Header.define = function(name, html) {
+    var old = headers[name];
+    
+    if (old) {
+      headers[name] = null;
+      old.remove();
+    }
+    
+    headers[name] = $('<div class="' + name + '" style="display:none">' + html + '</div>').appendTo(header);
+    headers[name].find('button').button();
+    
+    if (current && current == old) {
+      Header.switch(name);
+    }
+    
     return Header;
   };
   
@@ -65,37 +94,31 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *  save:   a callback function for the Save button
    *  cancel: a callback function for the Cancel button
    *  run:    a callback function for the Run button
+   *  *:      specify custom callbacks for each button class in your header
    */
   Header.switch = function(type, options) {
-    var newHeader = headers[type];
+    var newHeader = headers[type],
+        opt,
+        button;
     
     if (newHeader) {
-      // Configure new title, if provided
-      if (options && options.title) {
-        newHeader.find('span.title').text(options.title);
-      } else {
-        newHeader.find('span.title').text('');
-      }
-      
-      // Configure new save callback, if provided
-      if (options && $.isFunction(options.save)) {
-        newHeader.find('button.save')
-                 .unbind('.frame_header')
-                 .bind('click.frame_header', options.save);
-      }
-      
-      // Configure new cancel callback, if provided
-      if (options && $.isFunction(options.cancel)) {
-        newHeader.find('button.cancel')
-                 .unbind('.frame_header')
-                 .bind('click.frame_header', options.cancel);
-      }
-
-      // Configure new run callback, if provided
-      if (options && $.isFunction(options.run)) {
-        newHeader.find('button.run')
-                 .unbind('.frame_header')
-                 .bind('click.frame_header', options.run);
+      if (options) {
+        for(opt in options) {
+          if (opt == 'title') {
+            // If provided, configure the new title
+            
+            newHeader.find('span.title').text(options.title);
+          } else if ($.isFunction(options[opt])) {
+            // If provided, set callbacks for each given button class
+            
+            button = newHeader.find('button.' + opt);
+            
+            if (button.length > 0) {
+              button.unbind('.frame_header')
+                    .bind('click.frame_header', options[opt]);
+            }
+          }
+        }
       }
       
       if (current) {
@@ -143,17 +166,6 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
   };
     
   /**
-   * custom(html, options)
-   *
-   * Take a block of HTML and a set of options, and create a custom header.
-   * This function should probably override the same "custom" div each time,
-   * taking care to remove old event handlers?
-   */
-  Header.custom = function(html, options) {
-    // To be implemented as the need arises.
-  };
-  
-  /**
    * loading(boolean)
    *
    * Show or hide the loading pane that covers ("darkens") the header, along
@@ -163,10 +175,10 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     if (bool) {
       headers.loader.css('opacity', 0).show()
                     .animate({opacity: 0.3}, {duration: 1500});
-      current.find('button').hide();
+      header.find('button').hide();
     } else {
-      headers.loader.stop(true, false).hide();
-      current.find('button').show();
+      headers.loader.stop(true).hide();
+      header.find('button').show();
     }
     
     return Header;

@@ -158,10 +158,10 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     } else {
       o = o || 'default';
       
-      c = collections[name];
+      c = collections[o];
       if (!c) {
-        c = collections[name] = new MQA.ShapeCollection();
-        c.setName(name);
+        c = collections[o] = new MQA.ShapeCollection();
+        c.setName(o);
       }
     
       return c;
@@ -254,6 +254,23 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   };
   
   /**
+   * removePoint(point)
+   * removePoint(point, collection)
+   *
+   * Remove a point object from the given collection. If the collection is not
+   * provided, will attempt to remove the point from the default collection.
+   */
+  MapPane.removePoint = function(point, collection) {
+    collection = MapPane.collection(collection);
+  
+    if (collection.contains(point)) {
+      collection.removeItem(point);
+    }
+    
+    return point;
+  };
+  
+  /**
    * pan(poi)
    *
    * Pan the map to the location of the given MapQuest point object.
@@ -270,6 +287,15 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     }
     
     return MapPane;
+  };
+  
+  /**
+   * center()
+   *
+   * Return the center of the currently displayed map in lat & long.
+   */
+  MapPane.center = function() {
+    return map.moshiMap().map.getCenter();
   };
   
   /**
