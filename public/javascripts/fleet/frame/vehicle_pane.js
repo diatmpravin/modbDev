@@ -116,6 +116,29 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
   VehiclePane.width = function() {
     return pane.width();
   };
+
+  /**
+   * getSelectionsByClass()
+   *
+   * Return all the selected/active objects of given class
+   *
+   * classType: name of css class attached to row
+   *
+   */
+  VehiclePane.getSelectionsByClass = function(classType) {
+    var selections = [];
+
+    //if a div is a row and passed in classType
+    //and active, then it is selected.
+    list.find('div.row.active.' + classType).each (function () {
+      id = $(this).attr('id');
+      id = id.substring(id.lastIndexOf('_') + 1);
+      selections.push(id);
+    });
+
+    //return selections.join(',')
+    return selections;
+  }
   
   return VehiclePane;
 }(Fleet.Frame.VehiclePane || {}, Fleet, jQuery));
