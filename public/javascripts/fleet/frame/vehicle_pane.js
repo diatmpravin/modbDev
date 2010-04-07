@@ -31,6 +31,16 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     // list of vehicles
     list = pane.children('ol');
 
+    // Allow user to toggle collapsible groups open and closed
+    $('div.listing').live('click', function() {
+      var self = $(this);
+      if (self.closest('li').children('ol').toggle().css('display') == 'none') {
+        self.find('span.collapsible').addClass('closed');
+      } else {
+        self.find('span.collapsible').removeClass('closed');
+      }
+    });
+  
     init = true;
     return VehiclePane;
   };
@@ -45,6 +55,10 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    */
   VehiclePane.showVehicles = function(html) {
     list.html(html);
+
+    // Hide collapsible arrows for empty groups
+    list.find('li:not(:has(li)) span.collapsible').hide();
+
     return VehiclePane;
   };
 

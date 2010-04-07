@@ -31,6 +31,10 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
       ReportPane.initPane(json.html);
     });
 
+    $.get('/devices', function(html) {
+      VehiclePane.showVehicles(html);
+    });
+
     //ReportController.refresh();
   };
   
