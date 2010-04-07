@@ -1,7 +1,7 @@
-<div class="frame corners">
+<div class="frame">
   <%= messages %>
   <div class="content">
-    <h2>Smart Fleet Solutions</h2>
+    <h2>Sign In</h2>
     <% form_tag login_path do -%>
       <div class="field">
         <label for="account_number">Account ID</label>
@@ -17,7 +17,7 @@
       </div>
       <div class="field">
         <label></label>
-        <%= submit_tag 'Login' %>
+        <%= submit_tag 'Sign in' %>
       </div>
       <%= link_to 'Forgot My Password', forgot_password_path %>
     <% end -%>
