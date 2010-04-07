@@ -6,11 +6,6 @@ class ReportsController < ApplicationController
       format.html
       
       format.json {
-      
-        # TODO: Put this somewhere more global
-        ActiveRecord::Base.include_root_in_json = false
-        
-
        render :json => {
          :status => 'success',
          :html => render_to_string(:partial => 'reports/form', :locals => {:report => Report.new(current_user)}),

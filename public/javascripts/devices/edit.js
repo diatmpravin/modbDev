@@ -44,13 +44,13 @@ Devices.Edit = {
         // This is more verbose than I want it to be, but I need to avoid
         // screwing up Rails' "checkbox+hidden-field" method of creating
         // checkboxes.
-        for(var f in json.device_profile) {
+        for(var f in json) {
           var field = q('.profileSettings input[type=checkbox][name$=\[' + f + '\]]');
           if (field.length > 0) {
             field.attr('checked', json.device_profile[f]);
           } else {
             field = q('.profileSettings input[name$=\[' + f + '\]],.profileSettings select[name$=\[' + f + '\]]');
-            field.val(json.device_profile[f]);
+            field.val(json[f]);
           }
         }
         

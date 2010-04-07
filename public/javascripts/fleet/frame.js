@@ -81,8 +81,8 @@ Fleet.Frame = (function(Frame, $) {
     var width = q(window).width();
     var height = q(window).height() - frame.offset().top - 1;
     
-    // Hardcoded 32 pixel bottom padding and 2 pixel border
-    height -= (32 + 2);
+    // Hardcoded 16 pixel bottom padding and 2 pixel border
+    height -= (16 + 2);
     
     frame.height(height);
     

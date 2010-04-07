@@ -59,7 +59,7 @@ describe "Device Profiles Controller", ActionController::TestCase do
         :format => 'json'
       }
       
-      json['device_profile']['name'].should.equal 'Quentin Default'
+      json['name'].should.equal 'Quentin Default'
     end
   end
   

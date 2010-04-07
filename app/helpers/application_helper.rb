@@ -74,4 +74,11 @@ module ApplicationHelper
 </script>
     END
   end
+  
+  # What tab should be active on this page?
+  def active?(controller_name)
+    if params[:controller] == controller_name
+      ' class="active" '
+    end
+  end
 end

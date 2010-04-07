@@ -268,113 +268,68 @@ a.close {
 #content .content {
   /* Gradient background temporarily removed */
   /*background:white url(/images/content_bg.png) repeat-x 0 0;*/
-  padding:32px;
+  padding:16px;
 }
 
 /* Header */
 
 #header {
-  background:black url(/images/header_bg.png) repeat-x top left;
-  color:white;
-  height:60px;
+  background:white;
+  color:#333;
+  height:50px;
   line-height:23px;
-  padding:0 32px;
+  padding:0 16px;
 
   #logo {
     float:left;
-    height:60px;
-    width:195px;
+    height:50px;
+    width:275px;
   }
 
   ul {
+    cursor:default;
     float:right;
     margin:0;
-    padding:20px 0 0 0;
-    
-    ul {
-      margin:0;
-      padding:0;
-    }
-  }
-  
-  li {
-    float:left;
-    height:23px;
-    line-height:23px;
-    list-style:none;
-    padding:0 1em 0 1em;
-    margin-left:6px;
-    
-    :hover {
-      background-color:#15191a;
-    }
+    padding:15px 0 0 0;
     
     li {
-      float:none;
-      margin-left:0;
+      float:left;
+      height:25px;
+      line-height:25px;
+      list-style:none;
+      padding:0 0 0 16px;
       
       a {
-        font-weight:normal;
+        color:#333;
+    
+        :hover {
+          color:#444;
+          text-decoration:none;
+        }
+      }
+    }
+    
+    li.signout {
+      border-left:solid 1px #999;
+      margin-left:16px;
+      padding-right:0;
+    
+      a {
+        color:#0380b0;
         
         :hover {
-          color:#7cdefe;
+          color:#0593c9;
         }
       }
     }
   }
   
-  a {
-    color:#ffffff;
-    
-    :hover {
-      text-decoration:none;
-    }
-  }
-  
-  li.logout {
-    border-left:solid 1px #d0d0d0;
-    margin-left:1.5em;
-    padding-left:2em;
-    padding-right:0;
-    
-    a {
-      color:#7cdefe;
-    }
-  }
-  
   span.info {
+    cursor:default;
     float:right;
-    margin-top:20px;
-    padding-right:1em;
-    border-right:solid 1px #d0d0d0;
-  }
-
-  /* Subscription Status Text */
-  a.active { color:#7cdefe; }
-  a.failed, #header a.failed_again { color: #ffff00; }
-  a.cancelled { color: red; }
-  
-  /* Drop-down menu styles */
-  li.sfHover,
-  li.sfHover ul {
-    background-color:#15191a;
-  }
-
-  a.sf-with-ul {
-    padding-right:2em;
-    min-width:1px;
-  }
-
-  .sf-sub-indicator {
-    position:absolute;
-    display:block;
-    right:.25em;
-    top:.75em;
-    width:7px;
-    height:7px;
-    text-indent:-999em;
-    overflow:hidden;
-    background: url(/images/topnav_arrow.png) no-repeat left top;
+    margin-top:15px;
+    padding-right:16px;
+    border-right:solid 1px #999;
   }
 }
 
@@ -400,12 +355,9 @@ a.close {
 }
 
 /*** LOGIN / SIGNUP / EXTERNAL ***/
-body#sessions {
-  background-color:#0c1317;
-}
 #container {
   width:400px;
-  margin:0 auto 0 auto;
+  margin:50px auto 0 auto;
   padding:16px;
 }
 .frame {

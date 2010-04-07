@@ -1,14 +1,28 @@
 <% inside_layout 'global' do -%>
   <%= render :partial => 'common/header' %>
   
-  <%= tabnav :header %>
-  
-  <%= yield :navbar %>
-  
-  <%= tabnav :vehicles %>
-  <%= tabnav :map_features %>
-  <%= tabnav :users %>
-  <%= tabnav :reseller %>
+  <div id="navbar">
+    <ul class="clearfix">
+      <li <%= active?('report_card') %>>
+        <%= link_to 'Dashboard', report_card_path, :class => 'dashboard' %>
+      </li>
+      <li>
+        <%= link_to 'Map View', '#', :class => 'mapview' %>
+      </li>
+      <li <%= active?('reports') %>>
+        <%= link_to 'Reports', reports_path, :class => 'reports' %>
+      </li>
+      <li <%= active?('landmarks') %>>
+        <%= link_to 'Landmarks', landmarks_path, :class => 'landmarks' %>
+      </li>
+      <li>
+        <%= link_to 'Geofences', geofences_path, :class => 'geofences' %>
+      </li>
+      <li>
+        <%= link_to 'Users', users_path, :class => 'users' %>
+      </li>
+    </ul>
+  </div>
   
   <div id="content">
     <div class="content">

@@ -4,20 +4,11 @@
   <div id="logo">
     <%= link_to image_tag("logo.png"), root_path -%>
   </div>
-
-  <ul class="sf-menu">
-    <li>
-      <%= link_to 'Profile', profile_path %>
-    </li>
-    <li>
-      <%= link_to 'Help', '#' %>
-      <ul>
-        <li><%= link_to 'Contact Us', contact_path %></li>
-      </ul>
-    </li>
-    <li class="logout">
-      <%= link_to 'Logout', logout_path %>
-    </li>
+  
+  <ul>
+    <li><%= link_to 'Profile', profile_path %></li>
+    <li><%= link_to 'Help', contact_path %></li>
+    <li class="signout"><%= link_to 'Sign Out', logout_path %></li>
   </ul>
   
   <span class="info"><strong><%= h(current_account.name) %></strong> &middot; <%= h(current_user.name) %></span>
