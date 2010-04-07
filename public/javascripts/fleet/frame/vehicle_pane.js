@@ -32,13 +32,19 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     list = pane.children('ol');
 
     // Allow user to toggle collapsible groups open and closed
-    $('div.listing').live('click', function() {
+    $('span.indent, span.collapsible').live('click', function() {
       var self = $(this);
-      if (self.closest('li').children('ol').toggle().css('display') == 'none') {
-        self.find('span.collapsible').addClass('closed');
+      var _li = self.closest('li')
+      if (_li.children('ol').toggle().css('display') == 'none') {
+        _li.find('span.collapsible').addClass('closed');
       } else {
-        self.find('span.collapsible').removeClass('closed');
+        _li.find('span.collapsible').removeClass('closed');
       }
+    });
+    
+    // Toggle groups and vehicles on and off when clicked
+    $('span.checkbox,span.name').live('click', function() {
+      $(this).closest('div.row').toggleClass('active');
     });
   
     init = true;

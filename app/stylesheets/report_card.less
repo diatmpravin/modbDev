@@ -415,6 +415,9 @@
   width:280px;
   z-index:7;
 
+  > ol {
+    margin-top:-1px;
+  }
 
   div.row {
     background:#f5ecec none repeat-y 11px top;
@@ -464,17 +467,21 @@
         padding-left:4px;
       }
       
-      a.checkbox {
+      span.checkbox {
+        background:transparent url(/images/unchecked.png) no-repeat center center;
         float:right;
-        height:25px;
-        width:22px;
+        width:23px;
       }
-      
-      a.hover-only {
-        display:none;
-      } 
+    }
+  }
 
-      
+  div.active {
+    background-color:#e7f5e3;
+
+    div.listing {
+      span.checkbox {
+        background-image:url(/images/checked.png);
+      }
     }
   }
 }
