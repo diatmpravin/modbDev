@@ -74,7 +74,7 @@ describe "Trips Controller", ActionController::TestCase do
         :format => 'json'
       }
       
-      json['trip']['id'].should.equal trips(:quentin_trip).id
+      json['id'].should.equal trips(:quentin_trip).id
     end
     
     specify "errors if trip is invalid" do

@@ -9,8 +9,6 @@ class DevicesController < ApplicationController
   layout except_ajax('devices')
 
   def index
-    ActiveRecord::Base.include_root_in_json = true
-    
     respond_to do |format|
       format.html {
         @device = Device.new

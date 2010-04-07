@@ -44,9 +44,9 @@ describe "Devices Controller", ActionController::TestCase do
       }
       
       json.length.should.be 1
-      json[0]['device']['id'].should.equal devices(:quentin_device).id
-      json[0]['device']['position'].should.not.be.nil    # included method
-      json[0]['device']['color'].should.not.be.nil       # included method
+      json[0]['id'].should.equal devices(:quentin_device).id
+      json[0]['position'].should.not.be.nil    # included method
+      json[0]['color'].should.not.be.nil       # included method
     end
 
     specify "Takes into account Device filter parameters" do
@@ -100,7 +100,7 @@ describe "Devices Controller", ActionController::TestCase do
       }
       
       json.length.should.be 1
-      json[0]['device']['id'].should.equal @device.id
+      json[0]['id'].should.equal @device.id
     end
   end
   
@@ -295,8 +295,8 @@ describe "Devices Controller", ActionController::TestCase do
       }
       
       position = ActiveSupport::JSON.decode(body)
-      position['point']['device_id'].should.equal @device.id
-      position['point']['speed'].should.equal @point.speed
+      position['device_id'].should.equal @device.id
+      position['speed'].should.equal @point.speed
     end
   end
 
@@ -466,7 +466,7 @@ describe "Devices Controller", ActionController::TestCase do
         :format => 'json'
 
       json.length.should.equal 3
-      json[0]['device']['id'].should.equal @d1.id
+      json[0]['id'].should.equal @d1.id
     end
 
     specify "return to list of no devices selected to view" do
