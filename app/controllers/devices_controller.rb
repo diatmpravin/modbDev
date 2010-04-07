@@ -13,8 +13,13 @@ class DevicesController < ApplicationController
       format.html {
         @device = Device.new
 
-        if request.xhr? && params[:page]
-          render :partial => "list", :locals => {:devices => @devices}
+        # both old index page and new 'tree' are temporarily side by side here
+        if request.xhr?
+          if (params[:page])
+            render :partial => "list", :locals => {:devices => @devices}
+          else
+            render :partial => "tree", :locals => {:node => current_user.device_group_or_root}
+          end
         end
       }
       format.json {

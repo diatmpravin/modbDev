@@ -384,7 +384,7 @@
 }
 
 #vehicle_pane {
-  background:red url(/images/frame_bg.png) repeat 0 0;
+  background:#303030 url(/images/frame_bg.png) repeat 0 0;
   height:100%;
   left:0;
   overflow-x:hidden;
@@ -393,6 +393,76 @@
   top:0;
   width:280px;
   z-index:7;
+
+  > ol {
+    margin-top:-1px;
+  }
+
+  div.row {
+    background:#f5ecec none repeat-y 11px top;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    
+    :hover {
+      background-color:#e3ecf5;
+    }
+    
+    span {
+      display:block;
+      float:left;
+      height:25px;
+      line-height:25px;
+    }    
+
+    div.listing {
+      
+      span.tab {
+        background:white;
+        display:none;
+        height:27px;
+        margin:-1px 0;
+        width:23px;
+      }
+      
+      span.indent {
+        margin:0;
+        padding:0;
+      }
+      
+      span.collapsible {
+        background:transparent url(/images/report_card_open.png) no-repeat center center;
+        cursor:pointer;
+        width:15px;
+      }
+      
+      span.closed {
+        background:transparent url(/images/report_card_closed.png) no-repeat right center;
+        width:15px;
+      }
+      
+      span.name {
+        float:left;
+        padding-left:4px;
+      }
+      
+      span.checkbox {
+        background:transparent url(/images/unchecked.png) no-repeat center center;
+        float:right;
+        width:23px;
+      }
+    }
+  }
+
+  div.active {
+    background-color:#e7f5e3;
+
+    div.listing {
+      span.checkbox {
+        background-image:url(/images/checked.png);
+      }
+    }
+  }
 }
 
 #report_pane {

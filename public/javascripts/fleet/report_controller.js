@@ -31,6 +31,10 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
       ReportPane.initPane(json.html);
     });
 
+    $.get('/devices', function(html) {
+      VehiclePane.showVehicles(html);
+    });
+
     //ReportController.refresh();
   };
   
@@ -65,7 +69,8 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
    */
   ReportController.getSelection = function() {
     //TODO: get the values from the VehiclesPane
-    return [12,22,40]; 
+    //return [12,22,40]; 
+    return VehiclePane.getSelectionsByClass('device');
   };
  
   return ReportController;

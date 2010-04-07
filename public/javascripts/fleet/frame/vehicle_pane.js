@@ -31,6 +31,22 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     // list of vehicles
     list = pane.children('ol');
 
+    // Allow user to toggle collapsible groups open and closed
+    $('span.indent, span.collapsible').live('click', function() {
+      var self = $(this);
+      var _li = self.closest('li')
+      if (_li.children('ol').toggle().css('display') == 'none') {
+        _li.find('span.collapsible').addClass('closed');
+      } else {
+        _li.find('span.collapsible').removeClass('closed');
+      }
+    });
+    
+    // Toggle groups and vehicles on and off when clicked
+    $('span.checkbox,span.name').live('click', function() {
+      $(this).closest('div.row').toggleClass('active');
+    });
+  
     init = true;
     return VehiclePane;
   };
@@ -45,6 +61,10 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    */
   VehiclePane.showVehicles = function(html) {
     list.html(html);
+
+    // Hide collapsible arrows for empty groups
+    list.find('li:not(:has(li)) span.collapsible').hide();
+
     return VehiclePane;
   };
 
@@ -96,6 +116,29 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
   VehiclePane.width = function() {
     return pane.width();
   };
+
+  /**
+   * getSelectionsByClass()
+   *
+   * Return all the selected/active objects of given class
+   *
+   * classType: name of css class attached to row
+   *
+   */
+  VehiclePane.getSelectionsByClass = function(classType) {
+    var selections = [];
+
+    //if a div is a row and passed in classType
+    //and active, then it is selected.
+    list.find('div.row.active.' + classType).each (function () {
+      id = $(this).attr('id');
+      id = id.substring(id.lastIndexOf('_') + 1);
+      selections.push(id);
+    });
+
+    //return selections.join(',')
+    return selections;
+  }
   
   return VehiclePane;
 }(Fleet.Frame.VehiclePane || {}, Fleet, jQuery));
