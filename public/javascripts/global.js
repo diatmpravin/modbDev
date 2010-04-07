@@ -9,7 +9,9 @@ Global = {
   init: function() {
     q('a.close').live('click', Global.closeNotice);
     
-    q('#header ul.sf-menu').superfish({delay:500});
+    //q('#header ul.sf-menu').superfish({delay:500});
+    q('#navbar li:first').addClass('first');
+    q('#navbar li:last').addClass('last');
     
     q('a.help').live('click', function() {
       return false;

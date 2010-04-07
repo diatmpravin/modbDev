@@ -1,5 +1,63 @@
 /* Navigation Bars */
 
+#navbar {
+  padding:16px 0 0 16px;
+
+  ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+    
+    li {
+      float:left;
+    }
+  }
+  
+  a {
+    background:transparent url(/images/navbar.png) no-repeat -88px 0;
+    color:white;
+    display:block;
+    font-weight:bold;
+    height:34px;
+    line-height:32px;
+    text-align:center;
+    width:88px;
+      
+    :hover {
+      background-position: -88px -34px;
+      text-decoration:none;
+    }
+  }
+  
+  li.first a {
+    background-position:0 0;
+    
+    :hover {
+      background-position: 0 -34px;
+    }
+  }
+  
+  li.last a {
+    background-position:-176px 0;
+    
+    :hover {
+      background-position:-176px -34px;
+    }
+  }
+  
+  li.active a {
+    background-position:-88px -68px;
+  }
+  
+  li.active.first a {
+    background-position:0 -68px;
+  }
+  
+  li.active.last a {
+    background-position:-176px -68px;
+  }
+}
+
 #header_tabnav {
   background:#d7d3bb url(/images/topnav_bg.png) repeat-x 0 0;
   height:33px;
