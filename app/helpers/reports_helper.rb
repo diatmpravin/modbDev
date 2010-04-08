@@ -12,8 +12,8 @@ module ReportsHelper
     "%.1f" % (mpg || 0).to_f
   end
 
-  def percentage(numerator, denominator) 
-    denominator > 0 ? "%.2f\%" % (numerator.to_f / denominator.to_f) : "-"
+  def percentage_format(pct) 
+    pct ? "%.2f\%" % pct : "-"
   end
 
   def average(report, col, rows)

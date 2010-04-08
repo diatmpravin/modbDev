@@ -33,15 +33,22 @@ class OperatingTimeSummaryReport < Report
     devices.each do |device|
       trips = device.trips.in_range(self.start, self.end, self.user.zone)
 
+      duration = trips.map {|t| t.duration}.sum
+      idle = trips.map {|t| t.idle_time}.sum
       report << {
         :name => device.name,
         :miles => trips.map {|t| t.miles}.sum,
-        :duration => trips.map {|t| t.duration}.sum,
-        :idle_time => trips.map {|t| t.idle_time}.sum
+        :duration => duration,
+        :idle_time => idle,
+        :idle_pct => percentage(idle, duration)
       }
     end
 
     self.data = report
   end
 
+  protected
+  def percentage(numerator, denominator) 
+    denominator > 0 ? (numerator.to_f / denominator.to_f) : nil
+  end
 end
