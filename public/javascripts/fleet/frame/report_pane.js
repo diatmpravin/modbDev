@@ -44,9 +44,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     }
    
     // switch report description when type is switched
-    $('#report_type').live('click', function() {
-      ReportPane.showCurrentDescription();
-    });
+    $('#report_type').live('change', Fleet.ReportController.reportType);
 
     // show and hide custom date entry
     $('#report_range_type').live('click', function() {

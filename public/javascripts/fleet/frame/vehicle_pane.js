@@ -101,7 +101,7 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    * Close the vehicle pane. If provided, the callback will be called
    * after the pane is closed.
    */
-  VehiclePane.close = function() {
+  VehiclePane.close = function(callback) {
     if ($.isFunction(callback)) {
       pane.animate({width: 0}, {
         duration: 400,
