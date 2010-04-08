@@ -1,4 +1,4 @@
-<% new_tree(current_user.device_group_or_root, :include_parent => true, :root_ol => false) do |group, level| -%>
+<% new_tree(current_user.device_group_or_root, :include_parent => true, :root_ol => false, :vehicles => false) do |group, level| -%>
   <div class="group" id="<%= dom_id(group) %>">
     <span class="checkbox"></span>
     <span class="collapsible"></span>

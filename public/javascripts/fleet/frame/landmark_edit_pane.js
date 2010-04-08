@@ -109,5 +109,36 @@ Fleet.Frame.LandmarkEditPane = (function(LandmarkEditPane, Fleet, $) {
     };
   };
   
+  /**
+   * groups()
+   *
+   * Return an array of the currently selected group ids.
+   *
+   * groups(array)
+   *
+   * Select the given array of group ids in the form.
+   */
+  LandmarkEditPane.groups = function(arr) {
+    var idx, num,
+        select = pane.find('select.groups');
+    
+    if (arr) {
+      select.children('option').attr('selected', false);
+      
+      for(idx = 0, num = arr.length; idx < num; idx++) {
+        select.children('option[value=' + arr[idx] + ']').attr('selected', true);
+      }
+    } else {
+      var active = select.children('option[selected=true]');
+      arr = [];
+      
+      for(idx = 0, num = active.length; idx < num; idx++) {
+        arr.push(active[idx].value);
+      }
+    }
+    
+    return arr;
+  };
+  
   return LandmarkEditPane;
 }(Fleet.Frame.LandmarkEditPane || {}, Fleet, jQuery));

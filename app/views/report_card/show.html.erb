@@ -1,3 +1,5 @@
+<% @page_title = 'Dashboard' -%>
+
 <% content_for :javascript do -%>
   <%= javascript_include_tag 'frame', 'data_pane', 'edit_pane', 'map_pane', 'edit_pane/device', 'edit_pane/group' %>
   <%= javascript_include_tag 'groups/edit' %>
@@ -14,22 +16,17 @@
   
 <% end -%>
 
-<% form_tag report_card_path, :method => :get do -%>
-  Viewing Report Card for: 
-  <%= select_tag :range_type, options_for_select(range_options_report_card, :selected => @range_type, :disabled => disabled_range_options) %>
-  <%= submit_tag "Update" -%>
-<% end -%>
+<div style="float:right;margin-top:-44px">
+  <% form_tag report_card_path, :method => :get do -%>
+    Viewing Report Card for: 
+    <%= select_tag :range_type, options_for_select(range_options_report_card, :selected => @range_type, :disabled => disabled_range_options) %>
+    <%= submit_tag "Update" -%>
+  <% end -%>
 
-<%= link_to 'Create Group', new_device_group_path, :class => 'newGroup' %>
-<%= link_to 'Create Vehicle', new_device_path, :class => 'newDevice' %>
-
-
-<div id="frame_tabs" class="clearfix">
-  <ul>
-    <li class="data_pane">Report Card</li>
-    <li class="map_pane">Map</li>
-  </ul>
+  <%= link_to 'Create Group', new_device_group_path, :class => 'newGroup' %>
+  <%= link_to 'Create Vehicle', new_device_path, :class => 'newDevice' %>
 </div>
+
 <div id="report_card_header">
   <div class="row scrollbar-fix">
     <div class="listing">

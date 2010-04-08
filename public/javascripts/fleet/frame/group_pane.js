@@ -27,7 +27,7 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
     // Store a permanent reference to the pane
     pane = $('#group_pane');
     
-    // Our list of landmarks
+    // Our list of groups
     list = pane.children('ol');
     
     // Toggle groups on and off when clicked
@@ -110,6 +110,46 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
   GroupPane.width = function() {
     return pane.width();
   };
+  
+  /**
+   * selected()
+   *
+   * Return an array containing the list of selected group ids.
+   *
+   * selected(array)
+   *
+   * Select the groups with ids specified in the given array.
+   */
+  GroupPane.selected = function(arr) {
+    var idx, num, id,
+        active = list.find('div.active');
+    
+    if (arr) {
+      active.removeClass('active');
+      
+      for(idx = 0, num = arr.length; idx < num; idx++) {
+        $('#device_group_' + arr[idx]).addClass('active');
+      }
+    } else {
+      arr = [];
+      
+      for(idx = 0, num = active.length; idx < num; idx++) {
+        id = active[idx].id;
+        
+        arr.push(id.substring(id.lastIndexOf('_') + 1));
+      }
+    }
+    
+    return arr;
+  };
+  
+  /**
+   * select()
+   * select(array)
+   *
+   * The select() function is an alias for selected().
+   */
+  GroupPane.select = GroupPane.selected;
   
   return GroupPane;
 }(Fleet.Frame.GroupPane || {}, Fleet, jQuery));

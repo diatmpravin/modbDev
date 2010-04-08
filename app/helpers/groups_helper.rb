@@ -14,8 +14,10 @@ module GroupsHelper
   #   :close_level => which "level" to close. 0 is the root node
   #   :stop_level => which "level" to stop traversing at. 0 is the root node
   #   :root_ol => include root ol, default true
+  #   :vehicles => include vehicles, default true
   def new_tree(group, options = {}, &block)
     options[:root_ol] = true if options[:root_ol].nil?
+    options[:vehicles] = true if options[:vehicles].nil?
     options[:close_level] ||= 99
     options[:stop_level] ||= 99
     
@@ -47,14 +49,18 @@ module GroupsHelper
       end
       
       if !node.is_a?(Symbol) && !node.is_a?(Device)
-        children = [:ol, (node.children + node.devices).map {|c| [:li, c, :nli]}, :nol]
+        if options[:vehicles]
+          children = [:ol, (node.children + node.devices).map {|c| [:li, c, :nli]}, :nol]
+        else
+          children = [:ol, node.children.map {|c| [:li, c, :nli]}, :nol]
+        end
+        
         pending.unshift *(children.flatten)
       end
     end
     
     concat(html.to_s)
   end
-  
   
   # Create a group tree by passing a parent group (or nil) and a block defining
   # how each element of the tree will look. The block will be passed a group object

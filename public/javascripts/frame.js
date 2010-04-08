@@ -8,6 +8,28 @@ Frame = {
     // This was added as a "bridge" between OLD and NEW frame implementations.
     q('#frame').show();
     
+    // More bridge code: setup Map View and Dashboard buttons.
+    q('#navbar .dashboard').click(function() {
+      q(this).closest('li').addClass('active')
+             .siblings().removeClass('active');
+      
+      EditPane.title();
+      DataPane.open(function() {
+        MapPane.close();
+      });
+      return false;
+    });
+    
+    q('#navbar .mapview').click(function() {
+      q(this).closest('li').addClass('active')
+             .siblings().removeClass('active');
+             
+      MapPane.open();
+      DataPane.close();
+      EditPane.title('');
+      return false;
+    });
+    
     // When browser window resizes, adjust the size of the report card frame
     q('#frame').fitWindow(Frame.resize);
    
@@ -15,27 +37,6 @@ Frame = {
     var scrollbarSize = q('#data_pane').width() - q('#data_pane > ol').width();
     q('.scrollbar-fix').css('padding-right', function() {
       return parseInt(q(this).css('padding-right')) + scrollbarSize;
-    });
-    
-    // Allow user to switch to the Report Card
-    q('#frame_tabs .data_pane').click(function() {
-      q(this).addClass('active')
-             .siblings().removeClass('active');
-      
-      EditPane.title();
-      DataPane.open(function() {
-        MapPane.close();
-      });
-    });
-    
-    // Allow user to switch to the Map View
-    q('#frame_tabs .map_pane').click(function() {
-      q(this).addClass('active')
-             .siblings().removeClass('active');
-      
-      MapPane.open();
-      DataPane.close();
-      EditPane.title('');
     });
   },
   

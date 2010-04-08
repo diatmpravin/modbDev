@@ -207,6 +207,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       LandmarkPane.close();
       LandmarkEditPane.initPane(landmarkHtml).open();
       GroupPane.showGroups(groupHtml).open();
+      GroupPane.select(LandmarkEditPane.groups());
       Header.edit('Edit Landmark',
         LandmarkController.save,
         LandmarkController.cancel
@@ -235,13 +236,16 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     
     loading(true);
     
+    // Get the selected groups from the group pane into the form
+    LandmarkEditPane.groups(GroupPane.selected());
+    
     LandmarkEditPane.submit({
       dataType: 'json',
       success: function(json) {
         if (json.status == 'success') {
           loading(false);
           
-          // Handle both the "new" and "updated" cases
+          // If it's an update, get rid of the old landmark
           if (l = lookup[json.landmark.id]) {
             if (l.poi) {
               MapPane.removePoint(l.poi, 'landmarks');
@@ -249,6 +253,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
             l.poi = null;
           }
           
+          // Now create a new landmark
           lookup[json.landmark.id] = json.landmark;
           showLandmarkOnMap(json.landmark);
           LandmarkPane.showLandmark(json.landmark);

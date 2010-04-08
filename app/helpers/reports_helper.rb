@@ -13,7 +13,7 @@ module ReportsHelper
   end
 
   def percentage(numerator, denominator) 
-    "%.2f" % (numerator.to_f / denominator.to_f)
+    denominator > 0 ? "%.2f\%" % (numerator.to_f / denominator.to_f) : "-"
   end
 
   def average(report, col, rows)
