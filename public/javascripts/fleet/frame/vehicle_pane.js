@@ -44,7 +44,13 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     
     // Toggle groups and vehicles on and off when clicked
     $('span.checkbox,span.name').live('click', function() {
-      $(this).closest('div.row').toggleClass('active');
+      var row = $(this).closest('div.row');
+
+      // flip the initial row's value
+      row.toggleClass('active');
+
+      // if it is a group, set all children similarly.
+      row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
     });
   
     init = true;
