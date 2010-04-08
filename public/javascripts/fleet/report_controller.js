@@ -24,7 +24,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
   ReportController.index = function() {
     VehiclePane.init().open();
     ReportPane.init().open();
-    Header.init().switch('report', {title: 'Reports', run: ReportController.createReport});
+    Header.init().switch('report', {title: 'Reports', create_report: ReportController.createReport});
   
     report_form = $('#runReportForm')
     $.getJSON('/reports', function(json) {
