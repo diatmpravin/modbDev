@@ -23,7 +23,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     }
     
     // Create the report pane
-    $('#frame').append('<div id="report_pane"><div id="runReportForm" class="report_selection">report pane goes here</div></div>');
+    $('#frame').append('<div id="report_pane"><div id="runReportForm" class="report_selection"></div></div>');
     
     // Store a permanent reference to the pane
     pane = $('#report_pane');
