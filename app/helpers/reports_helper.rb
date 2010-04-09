@@ -35,6 +35,7 @@ module ReportsHelper
       ['Landmark Report', Report::LANDMARK_SUMMARY_REPORT],
       ['Exception Detail Report', Report::EXCEPTION_SUMMARY_REPORT],
       ['Operating Time Summary Report', Report::OPERATING_TIME_SUMMARY_REPORT],
+      ['After Hours Detail Report', Report::AFTER_HOURS_DETAIL_REPORT],
       ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT]
     ].freeze
   end
