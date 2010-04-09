@@ -345,6 +345,17 @@
     a.hover-only {
       display:none;
     }
+    
+    a.hover-none {
+      display:none;
+    }
+
+    span.checkbox {
+      background:transparent url(/images/unchecked.png) no-repeat center center;
+      float:right;
+      height:25px;
+      width:23px;
+    }
   }
   
   li:hover {
@@ -354,6 +365,15 @@
   li:hover a.hover-only {
     display:block;
   }
+
+  li.active {
+    background-color:#e7f5e3;
+
+    span.checkbox {
+      background-image:url(/images/checked.png);
+    }
+  }
+
 }
 
 #landmark_edit_pane {
@@ -466,7 +486,7 @@
 }
 
 #report_pane {
-    background-color:#f0f0f0;
+    background-color:white;
     display:none;
     height:100%;
     left:0px;
@@ -512,6 +532,7 @@
   cursor:default;
   height:38px;
   line-height:34px;
+  overflow:hidden;
   position:relative;
   
   span.title {
