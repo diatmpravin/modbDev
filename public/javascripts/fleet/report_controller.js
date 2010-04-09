@@ -8,6 +8,9 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
   var vehicles = null,
       report_form;
   
+  /* Report Tab */
+  ReportController.tab = 'reports';
+  
   /**
    * init()
    */
@@ -16,17 +19,17 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
    
   
   /**
-   * index()
-   *
-   * Prepare the vehicle list. This should always be called before any other
-   * actions on the controller (most likely by the Frame).
+   * setup()
+   * 
+   * Prepare all of our panes and setup the report view.
    */
-  ReportController.index = function() {
+  ReportController.setup = function() {
     VehiclePane.init().open();
     ReportPane.init().open();
     Header.init().switch('report', {title: 'Reports', run: ReportController.createReport});
   
-    report_form = $('#runReportForm')
+    report_form = $('#runReportForm');
+    
     $.getJSON('/reports', function(json) {
       ReportPane.initPane(json.html);
     });
@@ -34,8 +37,17 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, He
     $.get('/devices', function(html) {
       VehiclePane.showVehicles(html);
     });
-
-    //ReportController.refresh();
+  };
+  
+  /**
+   * teardown()
+   *
+   * Hide all of our panes and throw away any unnecessary resources.
+   */
+  ReportController.teardown = function() {
+    VehiclePane.close();
+    ReportPane.close();
+    Header.standard('');
   };
   
   /**

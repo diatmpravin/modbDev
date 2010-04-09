@@ -7,20 +7,22 @@
         <%= link_to 'Dashboard', report_card_path, :class => 'dashboard' %>
       </li>
       <li>
-        <%= link_to 'Map View', '#', :class => 'mapview' %>
+        <%= link_to 'Map View', '#mapview', :class => 'mapview' %>
       </li>
-      <li <%= active?('reports') %>>
-        <%= link_to 'Reports', reports_path, :class => 'reports' %>
+      <li>
+        <%= link_to 'Reports', '#reports', :class => 'reports' %>
       </li>
-      <li <%= active?('landmarks') %>>
-        <%= link_to 'Landmarks', landmarks_path, :class => 'landmarks' %>
+      <li>
+        <%= link_to 'Landmarks', '#landmarks', :class => 'landmarks' %>
       </li>
-      <!--<li>
+      <!--
+      <li>
         <%= link_to 'Geofences', geofences_path, :class => 'geofences' %>
       </li>
       <li>
         <%= link_to 'Users', users_path, :class => 'users' %>
-      </li>-->
+      </li>
+      -->
     </ul>
   </div>
   
