@@ -20,13 +20,13 @@
   <script type="text/javascript">
     jQuery(function() {
       Fleet.Frame.init();
-      Fleet.LandmarkController.init().index();
       Fleet.Frame.open().resize();
-      Fleet.loading(false);
+      Fleet.controller(Fleet.LandmarkController);
     });
   </script>
 <% end -%>
 
 <div id="fleet_loading">Please wait...</div>
+<div id="frame_header_top"><div class="left"></div><div class="right"></div></div>
 <div id="frame_header"></div>
 <div id="frame"></div>

@@ -41,12 +41,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   };
   
   /**
-   * index()
+   * setup()
    *
-   * Prepare the landmark list. This should always be called before any other
-   * actions on the controller (most likely by the Frame).
+   * Prepare all of our panes and setup the landmark list view.
    */
-  LandmarkController.index = function() {
+  LandmarkController.setup = function() {
     MapPane.init().open().showCollection('landmarks');
     LandmarkPane.init().open();
     LandmarkEditPane.init().close();
@@ -56,6 +55,23 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     });
     
     LandmarkController.refresh();
+  };
+  
+  /**
+   * teardown()
+   *
+   * Hide all of our panes and throw away any unnecessary resources.
+   */
+  LandmarkController.teardown = function() {
+    MapPane.close();
+    LandmarkPane.close();
+    GroupPane.close();
+    Header.standard('');
+    
+    landmarks = null;
+    lookup = null;
+    activePoint = null;
+    MapPane.collection('landmarks').removeAll();
   };
   
   /**

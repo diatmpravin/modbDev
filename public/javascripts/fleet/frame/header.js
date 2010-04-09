@@ -28,10 +28,10 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     headers.standard = 
       $('<div class="standard" style="display:none"><span class="title"></span></div>').appendTo(header);
     
-    // Report header with a run button
+    // Report header with a create report button
     headers.report =
       $('<div class="report" style="display:none"><span class="title"></span><span class="buttons">' +
-        '<button type="button" class="run">Run</button>' +
+        '<button type="button" class="create_report">Create Report</button>' +
         '</span></div>').appendTo(header);
     headers.report.find('button').button();
 
@@ -90,10 +90,10 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    * Switch the frame header to the specified type. If provided, the options
    * hash can contain additional options (some are applicable to only certain
    * headers):
-   *  title:  a string to display in the header
-   *  save:   a callback function for the Save button
-   *  cancel: a callback function for the Cancel button
-   *  run:    a callback function for the Run button
+   *  title:            a string to display in the header
+   *  save:             a callback function for the Save button
+   *  cancel:           a callback function for the Cancel button
+   *  create_report:    a callback function for the Create Report button
    *  *:      specify custom callbacks for each button class in your header
    */
   Header.switch = function(type, options) {
