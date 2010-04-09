@@ -1,0 +1,20 @@
+<% content_for :javascript do -%>
+  <%= mapquest_include_tags %>
+  <%= javascript_include_tag 'mapquest/moshi.viewcontrol', 'mapquest/moshi.zoomcontrol', 'moshimap' %>
+  <%= javascript_include_tag 'fleet/frame' %>
+  <%= javascript_include_tag 'fleet/frame/header' %>
+  <%= javascript_include_tag 'fleet/frame/map_pane' %>
+  <%= javascript_include_tag 'fleet/frame/landmark_pane' %>
+  <%= javascript_include_tag 'fleet/frame/landmark_edit_pane' %>
+  <%= javascript_include_tag 'fleet/frame/group_pane' %>
+  <%= javascript_include_tag 'fleet/landmark_controller' %>
+  
+  <script type="text/javascript">
+    jQuery(Fleet.init);
+  </script>
+<% end -%>
+
+<div id="fleet_loading">Please wait...</div>
+<div id="frame_header_top"><div class="left"></div><div class="right"></div></div>
+<div id="frame_header"></div>
+<div id="frame"></div>

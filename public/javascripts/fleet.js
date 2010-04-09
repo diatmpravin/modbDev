@@ -22,7 +22,88 @@
  *                                '<@@>' 
  */
 var Fleet = (function(Fleet, $) {
+  /**
+   * Controller is a reference to the currently active controller.
+   */
   Fleet.Controller = null;
+  
+  /**
+   * init()
+   *
+   * This function initializes the Fleet framework and starts up the first
+   * controller. If provided, the location anchor will determine the controller
+   * that starts first (default is Dashboard).
+   */
+  Fleet.init = function() {
+    var c, hash;
+    
+    // Create and init our frame
+    Fleet.Frame.init();
+    
+    // Open the frame and fit to the size of the browser window
+    Fleet.Frame.open().resize();
+    
+    // Start up an initial controller
+    hash = location.href.split('#')[1] || '';
+    
+    if (hash == Fleet.LandmarkController.tab) {
+      c = Fleet.LandmarkController;
+    } else if (hash == 'reports') {
+      c = Fleet.ReportController;
+    } else {
+      c = Fleet.DashboardController;
+    }
+    
+    //$('#navbar a.dashboard').click(function() { Fleet.controller(DashboardController); return true; });
+    //$('#navbar a.mapview').click(function()   { Fleet.controller(MapController);       return true; });
+    $('#navbar a.reports').click(function()   { Fleet.controller(ReportController);    return true; });
+    $('#navbar a.landmarks').click(function() { Fleet.controller(LandmarkController);  return true; });
+    
+    Fleet.controller(c);
+    
+    return Fleet;
+  };
+  
+  /**
+   * controller()
+   *
+   * Return the currently active controller.
+   *
+   * controller(newController)
+   *
+   * Switch from the current controller to a new controller. The argument
+   * should be an actual controller (such as Fleet.LandmarkController).
+   */
+  Fleet.controller = function(o) {
+    if (o) {
+      Fleet.loading(true);
+      
+      // Tear down old controller, if necessary
+      if (Fleet.Controller && Fleet.Controller.teardown) {
+        Fleet.Controller.teardown();
+      }
+      
+      Fleet.Controller = o;
+      
+      // Setup new controller
+      if (Fleet.Controller && Fleet.Controller.setup) {
+        Fleet.Controller.init();
+        Fleet.Controller.setup();
+        
+        // Handle the navigation bar
+        if (Fleet.Controller.tab) {
+          $('#navbar a.' + Fleet.Controller.tab).closest('li').addClass('active')
+                                                .siblings().removeClass('active');
+        } else {
+          $('#navbar li').removeClass('active');
+        }
+      }
+      
+      Fleet.loading(false);
+    }
+    
+    return Fleet.Controller;
+  };
   
   /**
    * loading(boolean)
@@ -44,37 +125,6 @@ var Fleet = (function(Fleet, $) {
     loadingView.height($(window).height() - loadingView.offset().top - 1);
     
     return Fleet;
-  };
-  
-  /**
-   * controller()
-   *
-   * Return the currently active controller.
-   *
-   * controller(newController)
-   *
-   * Switch from the current controller to a new controller. The argument
-   * should be an actual controller (such as Fleet.LandmarkController).
-   */
-  Fleet.controller = function(o) {
-    if (o) {
-      Fleet.loading(true);
-      
-      if (Fleet.Controller && Fleet.Controller.teardown) {
-        Fleet.Controller.teardown();
-      }
-      
-      Fleet.Controller = o;
-      
-      if (Fleet.Controller && Fleet.Controller.setup) {
-        Fleet.Controller.init();
-        Fleet.Controller.setup();
-      }
-      
-      Fleet.loading(false);
-    }
-    
-    return Fleet.Controller;
   };
   
   return Fleet;

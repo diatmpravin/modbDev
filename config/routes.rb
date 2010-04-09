@@ -91,8 +91,11 @@ ActionController::Routing::Routes.draw do |map|
     import.resources :vehicles
   end
 
+  # Dashboard
+  map.resource :dashboard, :controller => 'dashboard'
+  
   # Report Card
-  map.resource :report_card, :controller => "report_card"
+  map.resource :report_card, :controller => 'report_card'
 
   # Billing Tester
   map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'

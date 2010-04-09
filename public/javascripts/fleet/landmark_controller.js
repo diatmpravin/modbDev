@@ -11,6 +11,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       activePoint = null,
       init = false;
   
+  /* Landmark Tab */
+  LandmarkController.tab = 'landmarks';
+  
   /**
    * init()
    */
