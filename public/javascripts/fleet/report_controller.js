@@ -132,13 +132,11 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
   ReportController.landmarks = function(callback) {
     if($.isFunction(callback)) {
       LandmarkPane.showLandmarks(landmarkJson).open(function() {
-        $('#landmark_pane a.hover-only').addClass('hover-none').removeClass('hover-only');
         VehiclePane.close();
         callback();
       });
     } else {
       LandmarkPane.showLandmarks(landmarkJson).open(function() {
-        $('#landmark_pane a.hover-only').addClass('hover-none').removeClass('hover-only');
         VehiclePane.close();
       });
     }

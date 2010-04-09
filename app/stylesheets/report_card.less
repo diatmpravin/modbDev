@@ -345,10 +345,6 @@
     a.hover-only {
       display:none;
     }
-    
-    a.hover-none {
-      display:none;
-    }
 
     span.checkbox {
       background:transparent url(/images/unchecked.png) no-repeat center center;
@@ -361,10 +357,6 @@
   li:hover {
     background-color:#e3ecf5;
   }
-  
-  li:hover a.hover-only {
-    display:block;
-  }
 
   li.active {
     background-color:#e7f5e3;
@@ -373,7 +365,16 @@
       background-image:url(/images/checked.png);
     }
   }
+}
 
+#landmark_pane.edit-enabled {
+  span.checkbox {
+    display:none;
+  }
+  
+  li:hover a.hover-only {
+    display:block;
+  }
 }
 
 #landmark_edit_pane {

@@ -50,7 +50,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    */
   LandmarkController.setup = function() {
     MapPane.init().open().showCollection('landmarks');
-    LandmarkPane.init().open();
+    LandmarkPane.init().open().editEnabled(true);
     LandmarkEditPane.init().close();
     GroupPane.init().close();
     Header.init().switch('landmarks', {
@@ -67,7 +67,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    */
   LandmarkController.teardown = function() {
     MapPane.close();
-    LandmarkPane.close();
+    LandmarkPane.close().editEnabled(false);
     GroupPane.close();
     Header.standard('');
     

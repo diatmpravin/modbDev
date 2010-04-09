@@ -148,5 +148,20 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     return pane.width();
   };
   
+  /**
+   * editEnabled(bool)
+   *
+   * Set edit-enabled to true or false (false by default). 
+   */
+  LandmarkPane.editEnabled = function(bool) {
+    if (bool) {
+      pane.addClass('edit-enabled');
+    } else {
+      pane.removeClass('edit-enabled');
+    }
+  
+    return LandmarkPane;
+  };
+  
   return LandmarkPane;
 }(Fleet.Frame.LandmarkPane || {}, Fleet, jQuery));
