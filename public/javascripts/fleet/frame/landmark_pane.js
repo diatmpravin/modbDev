@@ -34,13 +34,13 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     list = pane.children('ol');
     
     // User can click to pan
-    $('#landmark_pane li').live('click', Fleet.LandmarkController.focus);
+    $('#landmark_pane li').live('click', Fleet.Controller.focus);
     
     // User can edit a landmark
-    $('#landmark_pane a.edit').live('click', Fleet.LandmarkController.edit);
+    $('#landmark_pane a.edit').live('click', Fleet.Controller.edit);
     
     // User can remove a landmark
-    $('#landmark_pane a.delete').live('click', Fleet.LandmarkController.remove);
+    $('#landmark_pane a.delete').live('click', Fleet.Controller.remove);
     
     init = true;
     return LandmarkPane;

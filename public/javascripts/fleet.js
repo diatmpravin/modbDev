@@ -22,6 +22,8 @@
  *                                '<@@>' 
  */
 var Fleet = (function(Fleet, $) {
+  Fleet.Controller = null;
+  
   /**
    * loading(boolean)
    *
@@ -40,6 +42,39 @@ var Fleet = (function(Fleet, $) {
     
     loadingView.toggle(bool);
     loadingView.height($(window).height() - loadingView.offset().top - 1);
+    
+    return Fleet;
+  };
+  
+  /**
+   * controller()
+   *
+   * Return the currently active controller.
+   *
+   * controller(newController)
+   *
+   * Switch from the current controller to a new controller. The argument
+   * should be an actual controller (such as Fleet.LandmarkController).
+   */
+  Fleet.controller = function(o) {
+    if (o) {
+      Fleet.loading(true);
+      
+      if (Fleet.Controller && Fleet.Controller.teardown) {
+        Fleet.Controller.teardown();
+      }
+      
+      Fleet.Controller = o;
+      
+      if (Fleet.Controller && Fleet.Controller.setup) {
+        Fleet.Controller.init();
+        Fleet.Controller.setup();
+      }
+      
+      Fleet.loading(false);
+    }
+    
+    return Fleet.Controller;
   };
   
   return Fleet;
