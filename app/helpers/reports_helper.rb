@@ -12,8 +12,8 @@ module ReportsHelper
     "%.1f" % (mpg || 0).to_f
   end
 
-  def percentage(numerator, denominator) 
-    denominator > 0 ? "%.2f\%" % (numerator.to_f / denominator.to_f) : "-"
+  def percentage_format(pct) 
+    pct ? "%.2f\%" % pct : "-"
   end
 
   def average(report, col, rows)
@@ -33,7 +33,7 @@ module ReportsHelper
       ['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
       ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
       ['Landmark Report', Report::LANDMARK_SUMMARY_REPORT],
-      ['Exception Summary Report', Report::EXCEPTION_SUMMARY_REPORT],
+      ['Exception Detail Report', Report::EXCEPTION_SUMMARY_REPORT],
       ['Operating Time Summary Report', Report::OPERATING_TIME_SUMMARY_REPORT],
       ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT],
       ['Landmark Summary Report', Report::LANDMARK_BY_LANDMARK_SUMMARY_REPORT],

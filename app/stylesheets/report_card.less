@@ -154,7 +154,7 @@
  */
 #frame {
   background-color:red;
-  border:solid 1px #999;
+  border:solid 1px #333;
   display:none;
   overflow:hidden;
   position:relative;
@@ -508,12 +508,29 @@
  * This is the NEW frame header - the old #report_card_header will
  * be removed in the near future.
  */
+#frame_header_top {
+  div.left {
+    background:transparent url(/images/frame_header.png) no-repeat 0 0;
+    height:5px;
+    margin-right:6px;
+  }
+  
+  div.right {
+    background:transparent url(/images/frame_header.png) no-repeat -1914px 0;
+    float:right;
+    height:5px;
+    margin-top:-5px;
+    width:6px;
+  }
+}
+
 #frame_header {
   background-color:#e0e0e0;
-  border:solid 1px #999;
+  border:solid 1px #333;
   border-bottom:none;
-  height:40px;
-  line-height:40px;
+  border-top:none;
+  height:38px;
+  line-height:36px;
   position:relative;
   
   span.title {
@@ -544,7 +561,7 @@
       background:transparent url(/images/spinner_reverse.gif) no-repeat left center;
       float:right;
       display:block;
-      height:40px;
+      height:36px;
       padding-right:8px;
     }
   }

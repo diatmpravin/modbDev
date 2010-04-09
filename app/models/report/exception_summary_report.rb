@@ -7,7 +7,7 @@ class ExceptionSummaryReport < Report
   end
 
   def title
-    "Exception Summary Report - #{self.start} through #{self.end}"
+    "Exception Detail Report - #{self.start} through #{self.end}"
   end
 
   def to_csv
