@@ -48,7 +48,7 @@ VehiclesView = {
    */
   buildVehicles: function() {
     for(var i = 0; i < VehiclesView.vehicles.length; i++) {
-      var vehicle = VehiclesView.vehicles[i].device;
+      var vehicle = VehiclesView.vehicles[i];
       
       if (vehicle.position != null) {
         var point = new MQA.Poi(new MQA.LatLng(vehicle.position.latitude, vehicle.position.longitude));
