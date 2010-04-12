@@ -150,7 +150,17 @@ class Device < ActiveRecord::Base
                                      AVG(after_hours_events) as after_hours_events_avg,
                                      AVG(mpg) as mpg_avg,
                                      AVG(first_start) as first_start_avg,
-                                     AVG(last_stop) as last_stop_avg",
+                                     AVG(last_stop) as last_stop_avg,
+                                     SUM(duration) as duration_sum,
+                                     SUM(miles) as miles_sum,
+                                     SUM(speed_events) as speed_events_sum,
+                                     SUM(geofence_events) as geofence_events_sum,
+                                     SUM(idle_events) as idle_events_sum,
+                                     SUM(aggressive_events) as aggressive_events_sum,
+                                     SUM(after_hours_events) as after_hours_events_sum,
+                                     SUM(mpg) as mpg_sum,
+                                     SUM(first_start) as first_start_sum,
+                                     SUM(last_stop) as last_stop_sum",
                          #:conditions => { :device_id => self.id})
                          :conditions => {:date => from..to, :device_id => self.id})
   end
