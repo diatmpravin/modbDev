@@ -25,30 +25,30 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     headers = {};
     
     // The plain old header
-    headers.standard = 
-      $('<div class="standard" style="display:none"><span class="title"></span></div>').appendTo(header);
+    Header.define('standard', '<span class="title"></span>');
     
     // Report header with a create report button
-    headers.report =
-      $('<div class="report" style="display:none"><span class="title"></span><span class="buttons">' +
-        '<button type="button" class="create_report">Create Report</button>' +
-        '</span></div>').appendTo(header);
-    headers.report.find('button').button();
+    Header.define('report', '<span class="title"></span><span class="buttons">' +
+      '<button type="button" class="create_report">Create Report</button></span></div>');
 
     // A header with Save & Cancel buttons
-    headers.edit =
-      $('<div class="edit" style="display:none"><span class="title"></span><span class="buttons">' +
-        '<button type="button" class="cancel">Cancel</button>' +
-        '<button type="button" class="save">Save</button>' +
-        '</span></div>').appendTo(header);
-    headers.edit.find('button').button();
+    Header.define('edit', '<span class="title"></span><span class="buttons">' +
+      '<button type="button" class="cancel">Cancel</button>' +
+      '<button type="button" calss="save">Save</button></span></div>');
     
     // The special "loader" header, which is actually an overlay used by all header types
-    headers.loader =
-      $('<div class="loader" style="display:none"><div class="loading"></div></div>').appendTo(header);
+    Header.define('loader', '<div class="loading"></div>');
     
-    // Start out with a standard, no-title header
-    Header.switch('standard');
+    // If the page STARTS with a header, that is the "page" header, and will be the default
+    if (header.find('span').length > 0) {
+      header.children().wrapAll('<div class="page"></div>');
+      headers.page = header.children('.page');
+      headers.page.find('button').button();
+      
+      Header.switch('page');
+    } else {
+      Header.switch('standard');
+    }
     
     init = true;
     return Header;

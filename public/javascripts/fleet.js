@@ -29,19 +29,26 @@ var Fleet = (function(Fleet, $) {
   
   /**
    * init()
+   * init(frameOnly)
    *
    * This function initializes the Fleet framework and starts up the first
    * controller. If provided, the location anchor will determine the controller
    * that starts first (default is Dashboard).
+   *
+   * If the optional frameOnly argument is true, no controller will be started
+   * up and the tabnav links will be left as-is.
    */
-  Fleet.init = function() {
+  Fleet.init = function(frameOnly) {
     var c, hash;
     
     // Create and init our frame
-    Fleet.Frame.init();
+    if (Fleet.Frame.init()) {
+      Fleet.Frame.open().resize();
+    }
     
-    // Open the frame and fit to the size of the browser window
-    Fleet.Frame.open().resize();
+    if (frameOnly) {
+      return Fleet;
+    }
     
     // Start up an initial controller
     hash = location.href.split('#')[1] || '';

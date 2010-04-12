@@ -8,7 +8,8 @@ var Fleet = Fleet || {};
 Fleet.Frame = (function(Frame, $) {
   var resizeHandlers = [],
       frame,
-      loader;
+      loader,
+      init = false;
   
   /**
    * init()
@@ -16,6 +17,15 @@ Fleet.Frame = (function(Frame, $) {
    * Initialize the frame object and set up needed event handlers.
    */
   Frame.init = function() {
+    if (init) {
+      return Frame;
+    }
+    
+    // If this page does NOT contain a frame, abort init.
+    if ($('#frame').length == 0) {
+      return false;
+    }
+    
     // Our frame requires zero bottom padding, so make this change now
     $('#content').css('padding-bottom', 0)
                  .children('.content')
@@ -57,6 +67,7 @@ Fleet.Frame = (function(Frame, $) {
       EditPane.title('');
     });*/
     
+    init = true;
     return Frame;
   };
 

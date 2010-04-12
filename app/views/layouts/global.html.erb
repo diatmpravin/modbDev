@@ -12,12 +12,6 @@
       <%= stylesheet_link_tag 'ie7.css', :media => 'screen, project' %>
     <![endif]-->
     <%= yield :stylesheet %>
-    <!-- Head Scripts -->
-    <%= jquery_include_tag %>
-    <%= javascript_include_tag 'jquery/jquery.noconflict' %>
-    <%= remote_forgery_protection %>
-    <%= javascript_include_tag 'fleet' %>
-    <!-- End Head Scripts -->
   </head>
   <% content_tag :body, :id => body_id do %>   
     <div id="layout">
@@ -25,6 +19,9 @@
     </div>
     
     <!-- Tail Scripts -->
+    <%= jquery_include_tag %>
+    <%= javascript_include_tag 'jquery/jquery.noconflict' %>
+    <%= remote_forgery_protection %>
     <%= javascript_include_tag 'jquery/jquery-ui-1.8.custom.min' %>
     <%= javascript_include_tag 'jquery/jquery.form' %>
     <%= javascript_include_tag 'jquery/jquery.corners.min' %>
@@ -38,6 +35,9 @@
     <%= javascript_include_tag 'jquery/ui.timepickr' %>
     <%= javascript_include_tag 'global' %>
     <%= javascript_include_tag 'moshitime' %>
+    <%= javascript_include_tag 'fleet' %>
+    <%= javascript_include_tag 'fleet/frame' %>
+    <%= javascript_include_tag 'fleet/frame/header' %>
     <%= yield :javascript %>
     <!-- End Tail Scripts -->
   <% end -%>
