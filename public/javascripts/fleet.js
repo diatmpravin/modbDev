@@ -47,6 +47,8 @@ var Fleet = (function(Fleet, $) {
     }
     
     if (frameOnly) {
+      Fleet.loading(false);
+      
       return Fleet;
     }
     
@@ -69,6 +71,7 @@ var Fleet = (function(Fleet, $) {
     $('#navbar a.landmarks').click(function() { Fleet.controller(Fleet.LandmarkController);  return true; });
     
     Fleet.controller(c);
+    Fleet.loading(false);
     
     return Fleet;
   };
