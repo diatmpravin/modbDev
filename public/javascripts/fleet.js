@@ -50,12 +50,14 @@ var Fleet = (function(Fleet, $) {
       c = Fleet.LandmarkController;
     } else if (hash == Fleet.ReportController.tab) {
       c = Fleet.ReportController;
+    } else if (hash == Fleet.MapController.tab) {
+      c = Fleet.MapController;
     } else {
       c = Fleet.DashboardController;
     }
     
     //$('#navbar a.dashboard').click(function() { Fleet.controller(Fleet.DashboardController); return true; });
-    //$('#navbar a.mapview').click(function()   { Fleet.controller(Fleet.MapController);       return true; });
+    $('#navbar a.mapview').click(function()   { Fleet.controller(Fleet.MapController);       return true; });
     $('#navbar a.reports').click(function()   { Fleet.controller(Fleet.ReportController);    return true; });
     $('#navbar a.landmarks').click(function() { Fleet.controller(Fleet.LandmarkController);  return true; });
     
