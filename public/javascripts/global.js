@@ -154,6 +154,31 @@ jQuery.fn.errors = function(o) {
 };
 
 /**
+ * .messageboxErrors(list)
+ *
+ * Call .messageboxErrors() on a container element that you would like to flash
+ * errors in. Given either a string or
+ * an array of strings, .messageboxErrors() will add one div
+ * with id 'error' to the top of the container specified.
+ *
+ * Calling messageboxErrors() with no parameters will clear errors from the container.
+ */
+jQuery.fn.messageboxErrors = function(o) {
+  this.find('#error').remove();
+  if (jQuery.isArray(o)) {
+    var h = '<div id="error" class="messageBox"><a class="close" title="Hide message" alt="Hide message" href="#">X</a>';
+    for(var i = 0; i < o.length; i++) {
+      h +=  o[i];
+    }
+    h += '<div class="clear"></div></div>';
+    this.prepend(h);
+  } else if (typeof o != 'undefined') {
+    this.prepend('<div id="error" class="messagebox">' + o + '</div>');
+  }
+  return this;
+};
+
+/**
  * .clearRailsForm()
  *
  * Need a better name for this. This is an attempt to encapsulate "clearing"
