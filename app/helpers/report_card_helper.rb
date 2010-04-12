@@ -74,6 +74,7 @@ module ReportCardHelper
     
     disabled << Report::DateRange::THIS_WEEK if Date.today.wday == 1
     disabled << Report::DateRange::THIS_MONTH if Date.today.day == 1 
+    disabled
   end
 
 end
