@@ -17,7 +17,7 @@ class ProfileController < ApplicationController
 
       redirect_to profile_path
     else
-      flash[:error] = "Unable to update Profile. Please fix errors below."
+      flash.now[:error] = "Unable to update Profile. Please fix errors below."
 
       render :action => "show"
     end
