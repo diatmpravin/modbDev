@@ -17,3 +17,8 @@
 #report_card #frame li {
   display:inline;
 }
+
+/* IE7 Opacity Filter Bold Text Aliasing Fix */
+#frame_header span.title {
+  background-color:#e0e0e0;
+}

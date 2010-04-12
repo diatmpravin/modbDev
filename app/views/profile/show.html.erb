@@ -80,7 +80,7 @@
   <script type="text/javascript">
     jQuery(function() {
       Fleet.init(true);
-      Fleet.Frame.Header.init().switch('page', {
+      Fleet.Frame.Header.init().open('page', {
         save: function() {
           Fleet.Frame.Header.loading(true);
           jQuery('form:first').submit();
