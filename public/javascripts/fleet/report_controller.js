@@ -33,9 +33,9 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
     
     // store the report form location
     report_form = $('#runReportForm');
-
+    
     // load up the report form content
-    $.getJSON('/reports', function(json) {
+    $.getJSON('/reports.json', function(json) {
       ReportPane.initPane(json.html);
     });
 
