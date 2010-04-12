@@ -37,6 +37,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     Header.init().switch('map');
     
     MapController.refresh();
+    MapController.refreshVehicleList();
   };
   
   /**
@@ -57,23 +58,42 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   /**
    * refresh()
    *
-   * Load all vehicles from the server and populate them.
+   * Load all vehicles from the server and populate them. This call loads actual
+   * vehicle data (as opposed to a "hierarchy" html view).
    */
   MapController.refresh = function() {
     vehicles = lookup = null;
     
-    /*$.getJSON('/landmarks.json', function(json) {
+    loading(true);
+    
+    $.getJSON('/devices.json', function(json) {
       var idx, num, html;
       
-      landmarks = json;
+      vehicles = json;
       
-      for(idx = 0, num = landmarks.length, lookup = {}; idx < num; idx++) {
-        lookup[landmarks[idx].id] = landmarks[idx];
+      for(idx = 0, num = vehicles.length, lookup = {}; idx < num; idx++) {
+        lookup[vehicles[idx].id] = vehicles[idx];
       }
       
-      LandmarkPane.showLandmarks(landmarks);
-      showLandmarksOnMap(landmarks);
-    });*/
+      showVehiclesOnMap(vehicles);
+      
+      loading(false);
+    });
+  };
+  
+  /**
+   * refreshVehicleList()
+   *
+   * Load the hierarchy HTML from the server and display it in the vehicles pane.
+   */
+  MapController.refreshVehicleList = function() {
+    loading(true);
+    
+    $.get('/devices', function(html) {
+      VehiclePane.showVehicles(html);
+      
+      loading(false);
+    });
   };
   
   /**
