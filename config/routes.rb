@@ -11,9 +11,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/login', :controller => 'sessions', :action => 'create', :conditions => {:method => :post}
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
-  # Maps
-  map.resources :maps, :collection => {:status => :get}, :member => {:status => :get}
-  
   # Users
   map.resources :users, :collection => {
     :resend_activation => :get,
@@ -97,6 +94,9 @@ ActionController::Routing::Routes.draw do |map|
   # Report Card
   map.resource :report_card, :controller => 'report_card'
 
+  # Map
+  map.resource :map, :controller => 'map'
+  
   # Billing Tester
   map.billing_tester '/billing_tester/:action', :controller => 'billing_tester'
 
