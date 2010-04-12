@@ -12,7 +12,9 @@
   <%= javascript_include_tag 'fleet/map_controller' %>
   
   <script type="text/javascript">
-    jQuery(Fleet.init);
+    jQuery(function() {
+      Fleet.init();
+    });
   </script>
 <% end -%>
 
