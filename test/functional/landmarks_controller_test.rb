@@ -11,11 +11,10 @@ describe "Landmarks Controller", ActionController::TestCase do
   end
   
   context "Listing landmarks" do
-    specify "works in html" do
+    specify "redirects to dashboard" do
       get :index
       
-      template.should.equal 'index'
-      assigns(:landmarks).should.include landmarks(:quentin)
+      should.redirect_to dashboard_path(:anchor => 'landmarks')
     end
   end
   

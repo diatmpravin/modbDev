@@ -21,14 +21,14 @@ class RoutesTest < ActionController::IntegrationTest
     assert_equal "/logout", logout_path
   end
 
-  test "maps resources" do
-    assert_equal "/maps", maps_path
-    assert_equal "/maps/1", map_path(1)
-
-    assert_equal "/maps/status", status_maps_path
-    assert_equal "/maps/1/status", status_map_path(1)
+  test "map resource" do
+    assert_equal "/map", map_path
   end
 
+  test "dashboard resource" do
+    assert_equal "/dashboard", dashboard_path
+  end
+  
   test "users resources" do
     assert_equal "/users", users_path
     assert_equal "/users/1", user_path(1)
