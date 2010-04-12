@@ -42,13 +42,15 @@
   <div class="alertInfo">
     <h3>Vehicle Settings</h3>
     
+    <!--
     <div class="field">
       <div class="loading" style="float:right"></div>
       <%= f.label :device_profile_id, 'Profile' %>
       <%= f.select :device_profile_id, current_account.device_profiles.map {|p| [p.name, p.id]},
         {:include_blank => 'None'}, {:class => 'profile'} %>
     </div>
-    
+    -->
+ 
     <div class="<%= device.device_profile ? 'profileSettings profileLocked' : 'profileSettings' %>">
       <div class="field note">
         These settings are controlled by your profile. Select "None" to change these settings.
