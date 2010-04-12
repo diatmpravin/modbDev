@@ -45,9 +45,9 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
       headers.page = header.children('.page');
       headers.page.find('button').button();
       
-      Header.switch('page');
+      Header.open('page');
     } else {
-      Header.switch('standard');
+      Header.open('standard');
     }
     
     init = true;
@@ -77,17 +77,17 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     headers[name].find('button').button();
     
     if (current && current == old) {
-      Header.switch(name);
+      Header.open(name);
     }
     
     return Header;
   };
   
   /**
-   * switch(type)
-   * switch(type, options)
+   * open(type)
+   * open(type, options)
    *
-   * Switch the frame header to the specified type. If provided, the options
+   * Open the frame header to the specified type. If provided, the options
    * hash can contain additional options (some are applicable to only certain
    * headers):
    *  title:            a string to display in the header
@@ -96,7 +96,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *  create_report:    a callback function for the Create Report button
    *  *:      specify custom callbacks for each button class in your header
    */
-  Header.switch = function(type, options) {
+  Header.open = function(type, options) {
     var newHeader = headers[type],
         opt,
         button;
@@ -136,14 +136,14 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *
    * A simple shortcut for standard headers. Instead of the normal call:
    *
-   *   Header.switch('standard', {title: 'My Page'});
+   *   Header.open('standard', {title: 'My Page'});
    * 
    * A controller can use the following (shortened) function call:
    *
    *   Header.standard('My Page');
    */
   Header.standard = function(title) {
-    return Header.switch('standard', {title: title});
+    return Header.open('standard', {title: title});
   };
   
   /**
@@ -151,14 +151,14 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
    *
    * A simple shortcut for edit headers. Instead of the normal call:
    *
-   *  Header.switch('edit', {title: 'Edit', save: func1, cancel: func2});
+   *  Header.open('edit', {title: 'Edit', save: func1, cancel: func2});
    *
    * A controller can use the following (shortened) function call:
    *
    *  Header.edit('Edit', func1, func2);
    */
   Header.edit = function(title, save, cancel) {
-    return Header.switch('edit', {
+    return Header.open('edit', {
       title: title,
       save: save,
       cancel: cancel

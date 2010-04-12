@@ -25,7 +25,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    */
   ReportController.setup = function() {
     // set the header title and buttons
-    Header.init().switch('report', {title: 'Reports', create_report: ReportController.createReport});
+    Header.init().open('report', {title: 'Reports', create_report: ReportController.createReport});
 
     VehiclePane.init().open();
     ReportPane.init().open();

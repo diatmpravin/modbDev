@@ -34,7 +34,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     MapPane.init().open().showCollection('vehicles');
     VehiclePane.init().open();
     
-    Header.init().switch('map');
+    Header.init().open('map');
     
     MapController.refresh();
     MapController.refreshVehicleList();

@@ -53,7 +53,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkPane.init().open().editEnabled(true);
     LandmarkEditPane.init().close();
     GroupPane.init().close();
-    Header.init().switch('landmarks', {
+    Header.init().open('landmarks', {
       newLandmark: LandmarkController.newLandmark
     });
     
@@ -418,7 +418,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     MapPane.collection('temp').removeAll();
     activePoint = null;
     
-    Header.switch('landmarks');
+    Header.open('landmarks');
     GroupPane.close();
     LandmarkEditPane.close();
     LandmarkPane.open(function() {
