@@ -65,7 +65,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
     
     // Copy the device selection list into the form
     _form.find('input[name=device_ids]').val(ReportController.getSelection());
-    report_form.errors();
+    report_form.messageboxErrors();
     
     _form.ajaxSubmit({
       dataType: 'json',
@@ -75,7 +75,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
         if (json.status == 'success') {
           window.open('/reports/' + json.report_id + '.html');
         } else {
-          report_form.errors(json.errors);
+          report_form.messageboxErrors(json.errors);
         }
       }
     });
