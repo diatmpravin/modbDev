@@ -8,7 +8,9 @@ class LandmarksController < ApplicationController
     @landmarks = current_account.landmarks
     
     respond_to do |format|
-      format.html
+      format.html {
+        redirect_to dashboard_path(:anchor => 'landmarks')
+      }
       
       format.json {
         render :json => @landmarks.to_json(index_json_options)

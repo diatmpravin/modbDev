@@ -65,10 +65,15 @@ var Fleet = (function(Fleet, $) {
       c = Fleet.DashboardController;
     }
     
-    //$('#navbar a.dashboard').click(function() { Fleet.controller(Fleet.DashboardController); return true; });
-    $('#navbar a.mapview').click(function()   { Fleet.controller(Fleet.MapController);       return true; });
-    $('#navbar a.reports').click(function()   { Fleet.controller(Fleet.ReportController);    return true; });
-    $('#navbar a.landmarks').click(function() { Fleet.controller(Fleet.LandmarkController);  return true; });
+    // We are on a dashboard page, so rewire the tabnav links
+    /*$('#navbar a.dashboard').attr('href', '#' + Fleet.DashboardController.tab)
+                            .click(function() { Fleet.controller(Fleet.DashboardController); return true; });
+    $('#navbar a.mapview').attr('href', '#' + Fleet.MapController.tab)
+                          .click(function() { Fleet.controller(Fleet.MapController); return true; });*/
+    $('#navbar a.reports').attr('href', '#' + Fleet.ReportController.tab)
+                          .click(function() { Fleet.controller(Fleet.ReportController); return true; });
+    $('#navbar a.landmarks').attr('href', '#' + Fleet.LandmarkController.tab)
+                            .click(function() { Fleet.controller(Fleet.LandmarkController); return true; });
     
     Fleet.controller(c);
     Fleet.loading(false);

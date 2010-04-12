@@ -3,7 +3,9 @@ class ReportsController < ApplicationController
   
   def index
     respond_to do |format|
-      format.html
+      format.html {
+        redirect_to dashboard_path(:anchor => 'reports')
+      }
       
       format.json {
        render :json => {

@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  layout except_ajax('dashboard')
+  layout except_ajax('internal')
 
   def show
   end
