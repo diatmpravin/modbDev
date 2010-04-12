@@ -186,7 +186,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    *
    * Transition from index into editing a landmark.
    */
-  LandmarkController.edit = function() {
+  LandmarkController.edit = function(e) {
     var id, landmark, landmarkHtml, groupHtml;
 
     id = $(this).closest('li').attr('id');
@@ -241,6 +241,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       loading(false);
     }
     
+    e.stopImmediatePropagation();
     return false;
   };
   

@@ -24,6 +24,15 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     header = $('#frame_header');
     headers = {};
     
+    // If the page STARTS with a header, that is the "page" header, and will be the default
+    if (header.find('span').length > 0) {
+      header.children().wrapAll('<div class="page"></div>');
+      headers.page = header.children('.page');
+      headers.page.find('button').button();
+      
+      Header.open('page');
+    }
+    
     // The plain old header
     Header.define('standard', '<span class="title"></span>');
     
@@ -39,14 +48,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     // The special "loader" header, which is actually an overlay used by all header types
     Header.define('loader', '<div class="loading"></div>');
     
-    // If the page STARTS with a header, that is the "page" header, and will be the default
-    if (header.find('span').length > 0) {
-      header.children().wrapAll('<div class="page"></div>');
-      headers.page = header.children('.page');
-      headers.page.find('button').button();
-      
-      Header.open('page');
-    } else {
+    if (!current) {
       Header.open('standard');
     }
     
