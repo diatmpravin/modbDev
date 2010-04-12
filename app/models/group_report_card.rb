@@ -30,6 +30,13 @@ class GroupReportCard < Report
       :idle_events => [],
       :aggressive_events => [],
       :after_hours_events => [],
+      :duration_sum => [],
+      :miles_sum => [],
+      :speed_events_sum => [],
+      :geofence_events_sum => [],
+      :idle_events_sum => [],
+      :aggressive_events_sum => [],
+      :after_hours_events_sum => []
     }
 
     report_card = {
@@ -60,6 +67,13 @@ class GroupReportCard < Report
         aggregate[:idle_events] << data.idle_events_avg.to_f
         aggregate[:aggressive_events] << data.aggressive_events_avg.to_f
         aggregate[:after_hours_events] << data.after_hours_events_avg.to_f
+        aggregate[:duration_sum] << data.duration_sum.to_f
+        aggregate[:miles_sum] << data.miles_sum.to_f
+        aggregate[:speed_events_sum] << data.speed_events_sum.to_f
+        aggregate[:geofence_events_sum] << data.geofence_events_sum.to_f
+        aggregate[:idle_events_sum] << data.idle_events_sum.to_f
+        aggregate[:aggressive_events_sum] << data.aggressive_events_sum.to_f
+        aggregate[:after_hours_events_sum] << data.after_hours_events_sum.to_f
 
         # Report card grading
         report_card[:count] += 1
@@ -78,13 +92,13 @@ class GroupReportCard < Report
       end
     end
 
-    aggregate[:duration] = aggregate[:duration].sum.to_i
-    aggregate[:miles] = aggregate[:miles].sum.to_f
-    aggregate[:speed_events] = aggregate[:speed_events].sum.to_i
-    aggregate[:geofence_events] = aggregate[:geofence_events].sum.to_i
-    aggregate[:idle_events] = aggregate[:idle_events].sum.to_i
-    aggregate[:aggressive_events] = aggregate[:aggressive_events].sum.to_i
-    aggregate[:after_hours_events] = aggregate[:after_hours_events].sum.to_i
+    aggregate[:duration] = aggregate[:duration_sum].sum.to_i
+    aggregate[:miles] = aggregate[:miles_sum].sum.to_f
+    aggregate[:speed_events] = aggregate[:speed_events_sum].sum.to_i
+    aggregate[:geofence_events] = aggregate[:geofence_events_sum].sum.to_i
+    aggregate[:idle_events] = aggregate[:idle_events_sum].sum.to_i
+    aggregate[:aggressive_events] = aggregate[:aggressive_events_sum].sum.to_i
+    aggregate[:after_hours_events] = aggregate[:after_hours_events_sum].sum.to_i
 
     if report_card[:count] > 0
       aggregate[:mpg] = 
