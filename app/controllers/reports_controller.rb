@@ -29,11 +29,15 @@ class ReportsController < ApplicationController
       params[:report][:devices] = current_account.devices.find(
         params[:device_ids].split(',')
       )
-    elsif params[:group_ids]
+    end
+
+    if params[:group_ids]
       params[:report][:devices] = current_account.devices.all(
         :conditions => {:group_id => params[:group_ids].split(',')}
       )
-    elsif params[:landmark_ids]
+    end
+
+    if params[:landmark_ids]
       params[:report][:landmarks] = current_account.landmarks.find(
         params[:landmark_ids].split(',')
       )

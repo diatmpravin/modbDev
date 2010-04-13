@@ -63,8 +63,10 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
   ReportController.createReport = function() {
     var _form = report_form.find('form');
     
-    // Copy the device selection list into the form
-    _form.find('input[name=device_ids]').val(ReportController.getSelection());
+    // Copy the selection list into the form
+    _form.find('input[name=device_ids]').val(VehiclePane.getSelections());
+    _form.find('input[name=landmark_ids]').val(LandmarkPane.getSelections());
+
     report_form.messageboxErrors();
     
     _form.ajaxSubmit({
