@@ -1,13 +1,45 @@
-<%= messages %>
+<div id="frame_header_top"><div class="left"></div><div class="right"></div></div>
+<div id="frame_header">
+  <span class="title">Contact Us</span>
+  <span class="buttons">
+    <button type="button" class="save">Send</button>
+  </span>
+</div>
 
-<% form_for :contacts do |_| %>
-  <%= label_tag(:subject, 'Subject') %>
-  <%= text_field_tag(:subject, @subject, :id => 'contacts_subject') %>
+<div id="frame">
+  <div id="generic_pane">
+    <div class="content">
+      <%= messages %>
 
-  <%= label_tag(:body, 'Body') %>
-  <%= text_area_tag(:body, @body, :id => 'contacts_body', :rows => 12)%>
+      <% form_for :contacts do |_| %>
+        <div class="field">
+          <%= label_tag(:subject, 'Subject') %>
+          <%= text_field_tag(:subject, @subject, :id => 'contacts_subject') %>
+        </div>
 
-  <div class="buttons">
-    <button>Send</button>
+        <div class="field">      
+          <%= label_tag(:body, 'Body') %>
+          <%= text_area_tag(:body, @body, :id => 'contacts_body', :cols => 65, :rows => 12)%>
+        </div>
+
+      <% end -%>
+
+    </div>
   </div>
+</div>
+
+
+<% content_for(:javascript) do -%>
+  <script type="text/javascript">
+    jQuery(function() {
+      Fleet.init(true);
+      Fleet.Frame.Header.init().open('page', {
+        save: function() {
+          Fleet.Frame.Header.loading(true);
+          jQuery('form:first').submit();
+          return false;
+        }
+      });
+    });
+  </script>
 <% end -%>

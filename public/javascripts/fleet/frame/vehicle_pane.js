@@ -142,8 +142,17 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
       selections.push(id);
     });
 
-    //return selections.join(',')
     return selections;
+  }
+
+  /**
+   * getSelections()
+   *
+   * Return the selected/active vehicles.
+   *
+   */
+  VehiclePane.getSelections = function() {
+    return VehiclePane.getSelectionsByClass('device');
   }
   
   return VehiclePane;

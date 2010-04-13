@@ -30,14 +30,14 @@ module ReportsHelper
     @@vehicle_report_options ||= [
       ['Vehicle Summary Report', Report::VEHICLE_SUMMARY_REPORT],
       ['Daily Summary Report', Report::DAILY_SUMMARY_REPORT],
-      ['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
+      #['Fuel Economy Report', Report::FUEL_ECONOMY_REPORT],
       ['Trip Detail Report', Report::TRIP_DETAIL_REPORT],
-      ['Landmark Report', Report::LANDMARK_SUMMARY_REPORT],
+      ['Landmark by Vehicle Report', Report::LANDMARK_SUMMARY_REPORT],
       ['Exception Detail Report', Report::EXCEPTION_SUMMARY_REPORT],
       ['Operating Time Summary Report', Report::OPERATING_TIME_SUMMARY_REPORT],
       ['After Hours Detail Report', Report::AFTER_HOURS_DETAIL_REPORT],
-      ['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT],
-      ['Landmark Summary Report', Report::LANDMARK_BY_LANDMARK_SUMMARY_REPORT]
+      #['Fuel Summary Report', Report::FUEL_SUMMARY_REPORT],
+      ['Landmark by Landmark Report', Report::LANDMARK_BY_LANDMARK_SUMMARY_REPORT]
     ].freeze
   end
   

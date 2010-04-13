@@ -163,5 +163,22 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     return LandmarkPane;
   };
   
+  /**
+   * getSelections()
+   *
+   * Return all the selected/active landmarks.
+   */
+  LandmarkPane.getSelections = function() {
+    var selections = [];
+
+    list.find('li.active').each (function () {
+      id = $(this).attr('id');
+      id = id.substring(id.lastIndexOf('_') + 1);
+      selections.push(id);
+    });
+
+    return selections;
+  };
+
   return LandmarkPane;
 }(Fleet.Frame.LandmarkPane || {}, Fleet, jQuery));
