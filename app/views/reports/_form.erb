@@ -1,4 +1,4 @@
-<% form_for :report, report, :url => reports_path, :html => { :class => 'multiSubmit', :method => :post } do |f| -%>
+<% form_for :report, report, :url => reports_path(:format => 'json'), :html => { :class => 'multiSubmit', :method => :post } do |f| -%>
   <div class="col">
     <div class="field">
       <%= f.label :type %>
