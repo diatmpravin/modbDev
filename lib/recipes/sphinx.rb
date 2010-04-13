@@ -42,7 +42,7 @@ namespace :sphinx do
   end
 
   desc "Create the shared folder for the sphinx database"
-  def setup
+  task :setup do
     run "mkdir -p #{shared_path}/db/sphinx/#{fetch(:rails_env, "production")}"
   end
 
