@@ -1,0 +1,3 @@
+<% new_tree(node, :root_ol => false) do |node, level| -%>
+  <%= render :partial => 'dashboard/row', :locals => {:node => node, :level => level} %>
+<% end -%>

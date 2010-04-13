@@ -68,6 +68,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   LandmarkController.teardown = function() {
     MapPane.close();
     LandmarkPane.close().editEnabled(false);
+    LandmarkEditPane.close();
     GroupPane.close();
     Header.standard('');
     
@@ -263,7 +264,8 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       dataType: 'json',
       success: function(json) {
         loading(false);
-        if (json.status == 'success') {          
+        
+        if (json.status == 'success') {
           // If it's an update, get rid of the old landmark
           if (l = lookup[json.landmark.id]) {
             if (l.poi) {
