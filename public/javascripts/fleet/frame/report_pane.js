@@ -31,7 +31,8 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     container = $('#runReportForm')
    
     // switch report description when type is switched
-    $('#report_type').live('change', Fleet.ReportController.reportType);
+    // moved to init pane because jQuery doesn't currently support live change for IE
+    //$('#report_type').live('change', Fleet.ReportController.reportType);
 
     // show and hide custom date entry
     $('#report_range_type').live('click', function() {
@@ -57,6 +58,8 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     if (typeof(html) != 'undefined') {
       $('#report_pane .report_selection').html(html);
     }
+
+    $('#report_type').bind('change', Fleet.ReportController.reportType);
 
     // custom date entry pickers
     $('#report_range_start,#report_range_end').datepicker({

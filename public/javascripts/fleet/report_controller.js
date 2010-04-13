@@ -44,6 +44,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
       vehiclesHtml = html;
       VehiclePane.showVehicles(vehiclesHtml);
     });
+
   };
   
   /**
@@ -162,15 +163,6 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
     }
   };
 
-  /**
-   * Get the selected vehicle ids
-   */
-  ReportController.getSelection = function() {
-    //TODO: get the values from the VehiclesPane
-    //return [12,22,40]; 
-    return VehiclePane.getSelectionsByClass('device');
-  };
- 
   function loading(bool) {
     Fleet.Frame.loading(bool);
     Header.loading(bool);
