@@ -67,6 +67,14 @@ Fleet.Frame = (function(Frame, $) {
       EditPane.title('');
     });*/
     
+    
+    // Adjust the padding of certain elements to reflect the scrollbar size
+    //var scrollbarSize = q('#data_pane').width() - q('#data_pane > ol').width();
+    var scrollbarSize = 16;
+    q('.scrollbar-fix').css('padding-right', function() {
+      return parseInt(q(this).css('padding-right')) + scrollbarSize;
+    });
+    
     init = true;
     return Frame;
   };

@@ -19,7 +19,36 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
     }
     
     Header.init().define('dashboard',
-      '<span class="title">Dashboard</span>');
+      '<span class="title">Dashboard</span>' +
+      '<div class="dashboard_data">' +
+      '<span class="first_start"><span>Start Time</span></span>' +
+      '<span class="last_stop"><span>End Time</span></span>' +
+      '<span class="operating_time"><span>Operating Time</span></span>' + 
+      '<span class="miles_driven"><span>Miles Driven</span></span>' +
+      '<span class="average_mpg"><span>Average MPG</span></span>' +
+      '<span class="speed_events"><span>Speed Events</span></span>' +
+      '<span class="geofence_events"><span>Geofence Events</span></span>' +
+      '<span class="idle_events"><span>Idle Events</span></span>' +
+      '<span class="aggressive_events"><span>Aggressive Events</span></span>' +
+      '<span class="after_hours_events"><span>After Hours Events</span></span>' +
+      '</div>');
+      
+      /*<span class="data">Start</span>
+      <span class="data">End</span>
+      <span class="data">Time</span>
+      <span class="data">Miles</span>
+      <span class="data">MPG</span>
+      <span class="data">Speed</span>
+      <span class="data">Geofence</span>
+      <span class="data">Idle</span>
+      <span class="data">Aggressive</span>
+      <span class="after_hours">After</span>
+    </div>
+    <div class="title">
+      <span></span>
+    </div>
+  </div>
+</div>*/
     
     init = true;
     return DashboardController;
@@ -60,7 +89,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
   DashboardController.refresh = function() {
     loading(true);
     
-    $.getJSON('/dashboard.json', function(json) {
+    $.getJSON('/dashboard.json', {range_type: 5}, function(json) {
       loading(false);
       
       DashboardPane.initPane(json.html, json.id);

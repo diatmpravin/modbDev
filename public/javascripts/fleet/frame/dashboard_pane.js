@@ -23,7 +23,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     }
     
     // Create the dashboard pane
-    $('#frame').append('<div id="dashboard_pane"><ol></ol></div>');
+    $('#frame').append('<div id="dashboard_pane" class="hierarchy"><ol></ol></div>');
     
     // Store a permanent reference to the pane
     pane = $('#dashboard_pane');
