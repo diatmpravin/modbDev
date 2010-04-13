@@ -29,19 +29,6 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     pane = $('#report_pane');
     
     container = $('#runReportForm')
-
-    init = true;
-    return ReportPane;
-  };
-   
-  /**
-   * Prepare anything necessary for the report pane. If
-   * provided, load up the pane first with the given HTML.
-   */
-  ReportPane.initPane = function(html) {
-    if (typeof(html) != 'undefined') {
-      $('#report_pane .report_selection').html(html);
-    }
    
     // switch report description when type is switched
     $('#report_type').live('change', Fleet.ReportController.reportType);
@@ -55,15 +42,28 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
       }
     });
 
+    // Prevent normal submit of report form
+    $('#' + container[0].id + ' input[type=submit]').live('click', Fleet.ReportController.createReport);
+
+    init = true;
+    return ReportPane;
+  };
+   
+  /**
+   * Prepare anything necessary for the report pane. If
+   * provided, load up the pane first with the given HTML.
+   */
+  ReportPane.initPane = function(html) {
+    if (typeof(html) != 'undefined') {
+      $('#report_pane .report_selection').html(html);
+    }
+
     // custom date entry pickers
     $('#report_range_start,#report_range_end').datepicker({
       duration: 'fast',
       maxDate: new Date(MoshiTime.serverTime),
       constrainInput: true
     });
-
-    // Prevent normal submit of report form
-    $('#' + container[0].id + ' input[type=submit]').live('click', Fleet.ReportController.createReport);
 
     return $('#report_pane .report_selection');
   };
@@ -99,34 +99,6 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
       .show()
       .siblings().hide();
   };
-
-  /**
-   * Create a report via ajax, displaying it in a new window if successful.
-   */
-  ReportPane.createReport = function() {
-    alert('blargh local');
-  //  var _form = $(this).closest('form');
-  //  var _report = _form.data('report_form');
-  //  
-  //  // Copy the selection list into the form
-  //  _form.find(_report.deviceField).val(_report.getSelection());
-  //  _report.container.errors();
-  //  
-  //  _form.ajaxSubmit({
-  //    dataType: 'json',
-  //    beforeSubmit: function() { _form.find('.loading').show(); },
-  //    complete: function() { _form.find('.loading').hide(); },
-  //    success: function(json) {
-  //      if (json.status == 'success') {
-  //        window.open('/reports/' + json.report_id + '.html');
-  //      } else {
-  //        _report.container.errors(json.errors);
-  //      }
-  //    }
-  //  });
-  //  
-    return false;
-  }
 
   return ReportPane;
 }(Fleet.Frame.ReportPane || {}, Fleet, jQuery));
