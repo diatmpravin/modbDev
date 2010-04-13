@@ -43,6 +43,9 @@ Global = {
     if (q('#report_card').length == 0) {
       Global.initTabs();
     }
+
+    // handle IE7 no disabled option support
+    Global.disabledIEOptions();
   }
   ,
   closeNotice: function() {
@@ -50,6 +53,15 @@ Global = {
     _div.slideUp('fast', function() {
       _div.remove();
     });
+  }
+  ,
+  disabledIEOptions: function() {
+    if (q.browser.msie && parseFloat(q.browser.version) < 8) {
+      selects = q('select').find(':disabled');
+      if (selects.length > 0) {
+        selects.optionDisable();
+      }
+    }
   }
   ,
   /**
@@ -323,4 +335,25 @@ jQuery.fn.sort = function(sort_fn) {
   this.each(function(index, o) {
     [].sort.apply(jQuery(o).children(), [sort_fn]).appendTo(o);
   });
+};
+
+jQuery.fn.optionDisable = function() {
+  var ths = jQuery(this);
+  if(ths.attr('tagName').toLowerCase() == 'option') {
+    this.before(jQuery('<optgroup>&nbsp;</optgroup>').css({color:'#ccc'}).attr({alt:ths.attr('value'),label:ths.text()}));
+    ths.remove();
+  }
+  return ths; 
+};
+
+jQuery.fn.optionEnable = function() {
+  var ths = jQuery(this);
+  var tag = ths.attr('tagName').toLowerCase();
+  if(tag == 'option') {
+    ths.removeAttr('disabled');
+  }
+  else if(tag == 'optgroup') {
+    ths.before(jQuery('<option/>').attr({value:ths.attr('alt')}).text(ths.attr('label'))).remove();
+  }
+  return ths;
 };
