@@ -262,9 +262,8 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkEditPane.submit({
       dataType: 'json',
       success: function(json) {
-        if (json.status == 'success') {
-          loading(false);
-          
+        loading(false);
+        if (json.status == 'success') {          
           // If it's an update, get rid of the old landmark
           if (l = lookup[json.landmark.id]) {
             if (l.poi) {
@@ -280,7 +279,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
           
           closeEditPanes();
         } else {
-          LandmarkEditPane.open(json.html);
+          LandmarkEditPane.initPane(json.html);
         }
       }
     });
