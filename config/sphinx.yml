@@ -16,6 +16,11 @@ staging:
   listen: 127.0.0.1
   <<: *defaults
 
+demo:
+  port: 3312
+  listen: 127.0.0.1
+  <<: *defaults
+
 production:
   port: 3312
   listen: 127.0.0.1

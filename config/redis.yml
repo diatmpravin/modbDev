@@ -20,6 +20,10 @@ staging:
   host: 127.0.0.1
   <<: *defaults
 
+demo:
+  host: 127.0.0.1
+  <<: *defaults  
+
 production:
   host: 127.0.0.1
   <<: *defaults

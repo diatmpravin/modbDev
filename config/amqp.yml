@@ -16,6 +16,12 @@ staging:
   pass: 'il_i3Yai'
   vhost: '/jasper_gateway'
 
+demo:
+  host: 'smokey.gomoshi.com'
+  user: 'mobd'
+  pass: 'il_i3Yai'
+  vhost: '/jasper_gateway'
+
 production:
   host: 'smokey.gomoshi.com'
   user: 'mobd'
