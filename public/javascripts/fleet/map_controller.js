@@ -139,6 +139,9 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
       
       if (!v.poi && v.position) {
         v.poi = MapPane.addPoint(v.position.latitude, v.position.longitude, {
+          icon: '/images/points/turquoise.png',
+          size: [11, 11],
+          offset: [-6, -6],
           collection: collection,
           reference: v
         });
@@ -149,6 +152,9 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   function showVehicleOnMap(vehicle) {
     if (!vehicle.poi && vehicle.position) {
       vehicle.poi = MapPane.addPoint(vehicle.position.latitude, vehicle.position.longitude, {
+        icon: '/images/points/turquoise.png',
+        size: [11, 11],
+        offset: [-6, -6],
         collection: 'vehicles',
         reference: vehicle
       });

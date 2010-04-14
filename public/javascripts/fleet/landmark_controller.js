@@ -376,6 +376,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     for(idx = 0, num = landmarks.length; idx < num; idx++) {
       if (!landmarks[idx].poi) {
         landmarks[idx].poi = MapPane.addPoint(landmarks[idx].latitude, landmarks[idx].longitude, {
+          icon: '/images/landmark.png',
+          size: [16, 16],
+          offset: [-10, -15],
           collection: collection,
           reference: landmarks[idx]
         });
@@ -386,6 +389,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   function showLandmarkOnMap(landmark) {
     if (!landmark.poi) {
       landmark.poi = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+        icon: '/images/landmark.png',
+        size: [16, 16],
+        offset: [-10, -15],
         collection: 'landmarks',
         reference: landmark
       });
