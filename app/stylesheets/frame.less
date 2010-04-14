@@ -359,38 +359,28 @@ div.dashboard_data {
 /**
  * Dashboard Pane (a .hierarchy view)
  */
-#dashboard_pane li {
-  li {
-    span.name {
-      overflow:hidden;
-      width:170px;
-    }
-    li {
-      span.name {
-        width:156px;
-      }
-      li {
-        span.name {
-          width:142px;
-        }
-        li {
-          span.name {
-            width:128px;
-          }
-          li {
-            span.name {
-              width:114px;
-            }
-            li {
-              span.name {
-                width:100px;
-              }
-            }
-          }
-        }
-      }
-    }
+
+/* This is for making sure vehicle and group names don't overflow into a second row */
+#dashboard_pane {
+  span.name {
+    overflow:hidden;
   }
+
+  li                   div.row span.name { width:240px; }
+  li li                div.row span.name { width:226px; }
+  li li li             div.row span.name { width:212px; }
+  li li li li          div.row span.name { width:198px; }
+  li li li li li       div.row span.name { width:184px; }
+  li li li li li li    div.row span.name { width:170px; }
+  li li li li li li li div.row span.name { width:156px; }
+
+  li                   div.row:hover span.name { width:184px; }
+  li li                div.row:hover span.name { width:170px; }
+  li li li             div.row:hover span.name { width:156px; }
+  li li li li          div.row:hover span.name { width:142px; }
+  li li li li li       div.row:hover span.name { width:128px; }
+  li li li li li li    div.row:hover span.name { width:114px; }
+  li li li li li li li div.row:hover span.name { width:100px; }
 }
 
 #dashboard_pane {
@@ -438,6 +428,21 @@ div.dashboard_data {
   float:right;
   line-height:34px;
   padding:16px 32px 0 0;
+}
+
+/* This is for making sure vehicle and group names don't overflow into a second row */
+#vehicle_pane {
+  span.name {
+    overflow:hidden;
+  }
+
+  li                   div.row span.name { width:210px; }
+  li li                div.row span.name { width:196px; }
+  li li li             div.row span.name { width:182px; }
+  li li li li          div.row span.name { width:168px; }
+  li li li li li       div.row span.name { width:154px; }
+  li li li li li li    div.row span.name { width:140px; }
+  li li li li li li li div.row span.name { width:126px; }
 }
 
 /**
@@ -559,7 +564,7 @@ div.dashboard_data {
   > ol {
     margin-top:-1px;
   }
-  
+
   li {
     background-color:#f8f8f8;
     border-top:solid 1px #c0c0c0;
@@ -579,6 +584,13 @@ div.dashboard_data {
       float:right;
       height:25px;
       width:23px;
+    }
+
+    span.name {
+      float:left;
+      background-color:red;
+      overflow:hidden;
+      width:170px;
     }
   }
   
