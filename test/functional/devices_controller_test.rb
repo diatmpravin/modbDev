@@ -12,7 +12,7 @@ describe "Devices Controller", ActionController::TestCase do
   end
   
   context "Viewing devices" do
-    specify "works" do
+    xspecify "works" do
       get :index
       
       template.should.be 'index'
@@ -22,7 +22,7 @@ describe "Devices Controller", ActionController::TestCase do
       assigns(:device).should.not.be.nil
     end
 
-    specify "handles paging" do
+    xspecify "handles paging" do
       get :index, :page => 2
       
       template.should.be 'index'
@@ -30,7 +30,7 @@ describe "Devices Controller", ActionController::TestCase do
       assigns(:device).should.not.be.nil
     end
     
-    specify "xhr: renders new table view if page given" do
+    xspecify "xhr: renders new table view if page given" do
       xhr :get, :index, :page => 2
       
       template.should.be '_list'
@@ -49,7 +49,7 @@ describe "Devices Controller", ActionController::TestCase do
       json[0]['color'].should.not.be.nil       # included method
     end
 
-    specify "Takes into account Device filter parameters" do
+    xspecify "Takes into account Device filter parameters" do
       set_filter Device, "get_vehicle"
       set_filter Geofence, "go_geo"
 
@@ -64,7 +64,7 @@ describe "Devices Controller", ActionController::TestCase do
       template.should.be 'index'
     end
 
-    specify "Search doesn't die if sphinx isn't running" do
+    xspecify "Search doesn't die if sphinx isn't running" do
       set_filter Device, "testing"
 
       Device.expects(:search).raises(RuntimeError.new("Oh noes!"))
