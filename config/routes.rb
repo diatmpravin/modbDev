@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   # Root
-  map.root :controller => 'report_card', :action => 'show'
+  map.root :controller => 'dashboard', :action => 'show'
   
   # Accounts
   map.resources :accounts
