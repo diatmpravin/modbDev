@@ -120,7 +120,9 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     
     if (o) {
       showVehicleOnMap(o);
-      MapPane.pan(o.poi);
+      if (o.poi) {
+        MapPane.pan(o.poi);
+      }
     }
     
     return false;
