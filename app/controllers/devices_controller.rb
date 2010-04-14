@@ -13,13 +13,10 @@ class DevicesController < ApplicationController
       format.html {
         @device = Device.new
 
-        # both old index page and new 'tree' are temporarily side by side here
         if request.xhr?
-          if (params[:page])
-            render :partial => "list", :locals => {:devices => @devices}
-          else
-            render :partial => "tree", :locals => {:node => current_user.device_group_or_root}
-          end
+          render :partial => "tree", :locals => {:node => current_user.device_group_or_root}
+        else
+          redirect_to dashboard_path
         end
       }
       format.json {
