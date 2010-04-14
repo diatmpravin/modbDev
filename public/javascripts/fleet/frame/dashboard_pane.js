@@ -88,8 +88,6 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       handle: 'div.listing',
       opacity: 0.8,
       distance: 8
-      //start: function() { DataPane.dragging = true; },
-      //stop: function() { DataPane.dragging = false; }
     });
     
     // Allow user to drop groups onto other groups
@@ -97,11 +95,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       hoverClass: 'drop-hover',
       greedy: true,
       drop: function(event, ui) {
-        if (ui.draggable.hasClass('group')) {
-          //EditPane.Group.confirmMove(ui.draggable, q(this));
-        } else {
-          //EditPane.Device.confirmMove(ui.draggable, q(this));
-        }
+        Fleet.DashboardController.move(ui.draggable, $(this));
       }
     });
     

@@ -44,7 +44,22 @@ Fleet.Frame.VehicleEditPane = (function(VehicleEditPane, Fleet, $) {
     if (typeof(html) != 'undefined') {
       container.html(html);
     }
+    
+    // Lock/unlock profile settings
+    container.find('select.profile').change(setProfile);
+    
+    // Lock/unlock VIN number
+    container.find('input.vinNumber').change(updateVIN).change();
+    
+    // Setup device profile stuff
+    DeviceProfile.Form.initPane(pane);
+    
+    // Alert Recipient
+    AlertRecipients.prepare(pane);
 
+    // Tags
+    Tags.prepare(pane);
+    
     return VehicleEditPane;
   };
   
@@ -82,5 +97,47 @@ Fleet.Frame.VehicleEditPane = (function(VehicleEditPane, Fleet, $) {
     return VehicleEditPane;
   };
 
+  /* Private Functions */
+  
+  function updateVIN() {
+    if($(this).val() == '') {
+      $('.lockVIN').hide().find('input').attr('checked', false);
+    } else {
+      $('.lockVIN').show();
+    }
+  }
+  
+  function setProfile() {
+    var self = $(this);
+    var profile = self.val();
+    
+    if (profile == '') {
+      $('.profileSettings').removeClass('profileLocked')
+        .find('input,select').attr('disabled', false);
+    } else {
+      $('.profileSettings').addClass('profileLocked')
+        .find('input,select').attr('disabled', true);
+        
+      self.siblings('.loading').show();
+      $.getJSON('/device_profiles/' + profile, function(json) {
+        // This is more verbose than I want it to be, but I need to avoid
+        // screwing up Rails' "checkbox+hidden-field" method of creating
+        // checkboxes.
+        for(var f in json) {
+          var field = $('.profileSettings input[type=checkbox][name$=\[' + f + '\]]');
+          if (field.length > 0) {
+            field.attr('checked', json[f]);
+          } else {
+            field = $('.profileSettings input[name$=\[' + f + '\]],.profileSettings select[name$=\[' + f + '\]]');
+            field.val(json[f]);
+          }
+        }
+        
+        $('.profileSettings').find('input[type=checkbox]').click();
+        self.siblings('.loading').hide();
+      });
+    }
+  }
+  
   return VehicleEditPane;
 }(Fleet.Frame.VehicleEditPane || {}, Fleet, jQuery));

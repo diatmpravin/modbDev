@@ -40,6 +40,9 @@ Fleet.Frame = (function(Frame, $) {
     // Handle browser resize events
     $(window).resize(Frame.resize).resize();
     
+    // Do something
+    frame.disableSelection();
+    
     // Adjust the padding of certain elements to reflect the scrollbar size
     /*var scrollbarSize = q('#data_pane').width() - q('#data_pane > ol').width();
     q('.scrollbar-fix').css('padding-right', function() {

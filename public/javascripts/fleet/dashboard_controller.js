@@ -3,8 +3,10 @@
  */
 var Fleet = Fleet || {};
 Fleet.DashboardController = (function(DashboardController, DashboardPane, VehicleEditPane, GroupEditPane, Header, Frame, $) {
-  var vehicles = null,
-      lookup = null,
+  var confirmMoveVehicleDialog,
+      confirmMoveGroupDialog,
+      confirmRemoveVehicleDialog,
+      confirmRemoveGroupDialog,
       init = false;
   
   /* Dashboard Tab */
@@ -17,6 +19,58 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     if (init) {
       return DashboardController;
     }
+    
+    // Our confirm Move Vehicle dialog box
+    confirmMoveVehicleDialog = $('<div class="dialog" title="Move Vehicle?">Are you sure you want to move this vehicle into the <span class="dropGroup"></span> group?</div>').appendTo('body');
+    confirmMoveVehicleDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': DashboardController.confirmedMoveVehicle,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+    
+    // Our confirm Move Group dialog box
+    confirmMoveGroupDialog = $('<div class="dialog" title="Move Group?">Are you sure you want to move this group into the <span class="dropGroup"></span> group?</div>').appendTo('body');
+    confirmMoveGroupDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': DashboardController.confirmedMoveGroup,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+    
+    // Our confirm Remove Vehicle dialog box
+    confirmRemoveVehicleDialog = $('<div class="dialog" title="Remove Vehicle?">Are you sure you want to remove this vehicle?</div>').appendTo('body');
+    confirmRemoveVehicleDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Remove': DashboardController.confirmedRemoveVehicle,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+    
+    // Our confirm Remove Group dialog box
+    confirmRemoveGroupDialog = $('<div class="dialog" title="Remove Group?">Are you sure you want to remove this group?</div>').appendTo('body');
+    confirmRemoveGroupDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Remove': DashboardController.confirmedRemoveGroup,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
     
     // Define the big messy dashboard header
     Header.init().define('dashboard',
@@ -153,17 +207,6 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
   };
   
   /**
-   * remove()
-   *
-   * Remove the selected vehicle or group.
-   */
-  DashboardController.remove = function() {
-    alert(3);
-    
-    return false;
-  };
-  
-  /**
    * cancel()
    *
    * Close the edit form for the current vehicle or group and return to the
@@ -180,6 +223,52 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     
     return false;
   };
+  
+  /**
+   * move(from, to)
+   * 
+   * Show the move confirmation dialog box for the given move. The first argument
+   * can be either a vehicle or group row, and the second argument should be
+   * a group row.
+   */
+  DashboardController.move = function(from, to) {
+    var dragId = from.attr('id'); dragId = dragId.substring(dragId.lastIndexOf('_') + 1);
+    var dropId = to.attr('id'); dropId = dropId.substring(dropId.lastIndexOf('_') + 1);
+    var dialog = from.hasClass('group') ? confirmMoveGroupDialog : confirmMoveVehicleDialog;
+    
+    // Store references to the dragged item and where it is moving
+    dialog.data('from', from)
+          .data('to', to)
+          .find('span.dropGroup').text(to.find('span.name').text());
+    
+    dialog.errors().dialog('open');
+    
+    return false;
+  },
+  
+  DashboardController.confirmedMoveVehicle = function() {
+  };
+  DashboardController.confirmedMoveGroup = function() {
+  };
+  DashboardController.confirmedRemoveVehicle = function() {
+  };
+  DashboardController.confirmedRemoveGroup = function() {
+  };
+  
+  /**
+   * confirmedMoveVehicle
+    */
+  /**
+   * remove()
+   *
+   * Remove the selected vehicle or group.
+   */
+  DashboardController.remove = function() {
+    alert(3);
+    
+    return false;
+  };
+  
   
   /* Private Functions */
   /*
