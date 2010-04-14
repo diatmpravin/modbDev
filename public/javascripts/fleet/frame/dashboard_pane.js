@@ -32,13 +32,13 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     list = pane.children('ol');
 
     // Allow user to toggle collapsible groups open and closed
-    $('#dashboard_pane span.indent, #dashboard span.collapsible').live('click', function() {
-      var self = $(this);
+    $('#dashboard_pane div.group span.indent, #dashboard div.group span.collapsible').live('click', function() {
+      var self = $(this).parent().children('span.collapsible');
       var _li = self.closest('li')
       if (_li.children('ol').toggle().css('display') == 'none') {
-        _li.find('span.collapsible').addClass('closed');
+        self.addClass('closed');
       } else {
-        _li.find('span.collapsible').removeClass('closed');
+        self.removeClass('closed');
       }
       
       return false;
@@ -84,7 +84,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     }
     
     // Hide collapsible arrows for empty groups
-    root.find('li:not(:has(li)) span.collapsible').hide();
+    root.find('li:not(:has(li)) span.collapsible').removeClass('collapsible').addClass('empty');
 
     // Allow user to drag groups and vehicles around
     root.find('div.row').draggable({

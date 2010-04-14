@@ -32,13 +32,13 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     list = pane.children('ol');
 
     // Allow user to toggle collapsible groups open and closed
-    $('#vehicle_pane span.indent, #vehicle_pane span.collapsible').live('click', function() {
-      var self = $(this);
+    $('#vehicle_pane div.group span.indent, #vehicle_pane div.group span.collapsible').live('click', function() {
+      var self = $(this).parent().children('span.collapsible');
       var _li = self.closest('li')
       if (_li.children('ol').toggle().css('display') == 'none') {
-        _li.find('span.collapsible').addClass('closed');
+        self.addClass('closed');
       } else {
-        _li.find('span.collapsible').removeClass('closed');
+        self.removeClass('closed');
       }
       
       return false;
@@ -69,10 +69,10 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    */
   VehiclePane.showVehicles = function(html) {
     list.html(html);
-
+    
     // Hide collapsible arrows for empty groups
-    list.find('li:not(:has(li)) span.collapsible').hide();
-
+    list.find('li:not(:has(li)) span.collapsible').removeClass('collapsible').addClass('empty');
+    
     return VehiclePane;
   };
 

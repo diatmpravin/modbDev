@@ -96,14 +96,24 @@ div.hierarchy {
       }
       
       span.collapsible {
-        background:transparent url(/images/report_card_open.png) no-repeat center center;
+        background:transparent url(/images/group_open.png) no-repeat center center;
         cursor:pointer;
-        width:15px;
+        width:18px;
       }
       
       span.closed {
-        background:transparent url(/images/report_card_closed.png) no-repeat right center;
-        width:15px;
+        background:transparent url(/images/group_closed.png) no-repeat center center;
+        width:18px;
+      }
+      
+      span.empty {
+        background:transparent url(/images/group_empty.png) no-repeat center center;
+        width:18px;
+      }
+      
+      span.vehicle {
+        background:transparent url(/images/vehicle.png) no-repeat center center;
+        width:18px;
       }
       
       span.name {
@@ -153,12 +163,12 @@ div.hierarchy {
   li li li li li li li span.indent { width:4px + 14px * 6; }
   
   /* Nested Indent Lines */
-  li li                div.row { background-image:url(/images/report_card_tree_1.png); }
+  /*li li                div.row { background-image:url(/images/report_card_tree_1.png); }
   li li li             div.row { background-image:url(/images/report_card_tree_2.png); }
   li li li li          div.row { background-image:url(/images/report_card_tree_3.png); }
   li li li li li       div.row { background-image:url(/images/report_card_tree_4.png); }
   li li li li li li    div.row { background-image:url(/images/report_card_tree_5.png); }
-  li li li li li li li div.row { background-image:url(/images/report_card_tree_6.png); }
+  li li li li li li li div.row { background-image:url(/images/report_card_tree_6.png); }*/
 }
 
 /**
@@ -252,7 +262,7 @@ div.dashboard_data {
   border-top:none;
   cursor:default;
   height:38px;
-  line-height:34px;
+  line-height:36px;
   overflow:hidden;
   position:relative;
   

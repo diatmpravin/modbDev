@@ -242,7 +242,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       loading(false);
     }
     
-    e.stopImmediatePropagation();
+    //e.stopImmediatePropagation();
     return false;
   };
   
