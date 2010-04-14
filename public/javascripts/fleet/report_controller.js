@@ -54,6 +54,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    */
   ReportController.teardown = function() {
     VehiclePane.close().showVehicles('');
+    LandmarkPane.close();
     ReportPane.close();
     Header.standard('');
   };
