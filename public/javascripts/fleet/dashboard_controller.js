@@ -2,7 +2,7 @@
  * Fleet.DashboardController
  */
 var Fleet = Fleet || {};
-Fleet.DashboardController = (function(DashboardController, DashboardPane, Header, Frame, $) {
+Fleet.DashboardController = (function(DashboardController, DashboardPane, VehicleEditPane, GroupEditPane, Header, Frame, $) {
   var vehicles = null,
       lookup = null,
       init = false;
@@ -18,6 +18,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
       return DashboardController;
     }
     
+    // Define the big messy dashboard header
     Header.init().define('dashboard',
       '<span class="title">Dashboard</span>' +
       '<div class="dashboard_data">' +
@@ -32,23 +33,6 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
       '<span class="aggressive_events"><span>Aggressive Events</span></span>' +
       '<span class="after_hours_events"><span>After Hours Events</span></span>' +
       '</div>');
-      
-      /*<span class="data">Start</span>
-      <span class="data">End</span>
-      <span class="data">Time</span>
-      <span class="data">Miles</span>
-      <span class="data">MPG</span>
-      <span class="data">Speed</span>
-      <span class="data">Geofence</span>
-      <span class="data">Idle</span>
-      <span class="data">Aggressive</span>
-      <span class="after_hours">After</span>
-    </div>
-    <div class="title">
-      <span></span>
-    </div>
-  </div>
-</div>*/
     
     init = true;
     return DashboardController;
@@ -61,6 +45,8 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
    */
   DashboardController.setup = function() {
     DashboardPane.init().open();
+    VehicleEditPane.init().close();
+    GroupEditPane.init().close();
     
     Header.init().open('dashboard');
     
@@ -103,6 +89,91 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
   // get json for the report card tree
   q.getJSON('/report_card', { range_type: rt }, function(json) {
   */
+    return DashboardController;
+  };
+  
+  /**
+   * edit()
+   *
+   * Show the edit form for the selected vehicle or group.
+   */
+  DashboardController.edit = function() {
+    var row = $(this).closest('div.row');
+    
+    if (row.hasClass('group')) {
+      loading(true);
+      
+      $.get($(this).attr('href'), function(html) {
+        loading(false);
+        
+        GroupEditPane.initPane(html).open();
+        DashboardPane.close();
+        Header.edit('Edit Group', DashboardController.saveGroup, DashboardController.cancel);
+      });
+    } else {
+      loading(true);
+      
+      $.get($(this).attr('href'), function(html) {
+        loading(false);
+        
+        VehicleEditPane.initPane(html).open();
+        DashboardPane.close();
+        Header.edit('Edit Vehicle', DashboardController.saveVehicle, DashboardController.cancel);
+      });
+    }
+    
+    return false;
+  };
+  
+  /**
+   * saveGroup()
+   *
+   * Save the group currently being edited, closing the edit form and
+   * returning to the dashboard if successful.
+   */
+  DashboardController.saveGroup = function() {
+  
+    return false;
+  };
+  
+  /**
+   * saveVehicle()
+   *
+   * Save the vehicle currently being edited, closing the edit form and
+   * returning to the dashboard if successful.
+   */
+  DashboardController.saveVehicle = function() {
+  
+    return false;
+  };
+  
+  /**
+   * remove()
+   *
+   * Remove the selected vehicle or group.
+   */
+  DashboardController.remove = function() {
+    alert(3);
+    
+    return false;
+  };
+  
+  /**
+   * cancel()
+   *
+   * Close the edit form for the current vehicle or group and return to the
+   * dashboard view. Doesn't really matter which one the user is editing,
+   * we'll close both forms just to be safe.
+   */
+  DashboardController.cancel = function() {
+    DashboardPane.open(function() {
+      GroupEditPane.close();
+      VehicleEditPane.close();
+    });
+    
+    Header.open('dashboard');
+    
+    return false;
   };
   
   /* Private Functions */
@@ -140,6 +211,8 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Header
   return DashboardController;
 }(Fleet.DashboardController || {},
   Fleet.Frame.DashboardPane,
+  Fleet.Frame.VehicleEditPane,
+  Fleet.Frame.GroupEditPane,
   Fleet.Frame.Header,
   Fleet.Frame,
   jQuery));

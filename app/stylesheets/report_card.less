@@ -156,19 +156,13 @@
     z-index:7;
   }
   
-  /**
-   * Support for hover elements
-   */
-  div.row .hover-only {
+  /* Support for hover elements */
+  .hover-only {
     display:none;
   }
   
-  .edit-mode div.row:hover {
-    background-color:#eddede;
-    
-    .hover-only {
-      display:block;
-    }
+  .edit-enabled div.row:hover .hover-only {
+    display:block;
   }
   
   .edit-mode div.drop-hover {
@@ -249,10 +243,6 @@
       float:right;
       height:25px;
       width:22px;
-    }
-    
-    a.hover-only {
-      display:none;
     }
 
     span.checkbox {
@@ -416,8 +406,6 @@
       padding:32px 32px 32px 312px;
     }
 }
-  
- 
 
 /**
  * This is the NEW frame header - the old #report_card_header will
@@ -646,6 +634,12 @@ div.hierarchy {
         float:right;
         width:23px;
       }
+      
+      a {
+        float:right;
+        height:25px;
+        width:22px;
+      }
     }
   }
   
@@ -752,5 +746,37 @@ div.dashboard_data {
   div.listing {
     float:left;
     width:@listing_width;
+  }
+}
+
+#vehicle_edit_pane {
+  background-color:white;
+  height:100%;
+  left:0px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  position:absolute;
+  top:0px;
+  width:100%;
+  z-index:3;
+  
+  div.content {
+    padding:16px;
+  }
+}
+
+#group_edit_pane {
+  background-color:white;
+  height:100%;
+  left:0px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  position:absolute;
+  top:0px;
+  width:100%;
+  z-index:3;
+  
+  div.content {
+    padding:16px;
   }
 }

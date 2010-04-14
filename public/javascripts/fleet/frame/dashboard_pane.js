@@ -23,16 +23,16 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     }
     
     // Create the dashboard pane
-    $('#frame').append('<div id="dashboard_pane" class="hierarchy"><ol></ol></div>');
+    $('#frame').append('<div id="dashboard_pane" class="hierarchy edit-enabled"><ol></ol></div>');
     
     // Store a permanent reference to the pane
     pane = $('#dashboard_pane');
     
     // list of vehicles and groups
     list = pane.children('ol');
-/*
+
     // Allow user to toggle collapsible groups open and closed
-    $('span.indent, span.collapsible').live('click', function() {
+    $('#dashboard_pane span.indent, #dashboard span.collapsible').live('click', function() {
       var self = $(this);
       var _li = self.closest('li')
       if (_li.children('ol').toggle().css('display') == 'none') {
@@ -42,6 +42,10 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       }
     });
     
+    $('#dashboard_pane a.edit').live('click', Fleet.DashboardController.edit);
+    $('#dashboard_pane a.delete').live('click', Fleet.DashboardController.remove);
+    
+    /* Commented out for now -- don't need checkboxes?
     // Toggle groups and vehicles on and off when clicked
     $('span.checkbox,span.name').live('click', function() {
       var row = $(this).closest('div.row');
@@ -51,8 +55,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
 
       // if it is a group, set all children similarly.
       row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
-    });
-  */
+    });*/
   
     init = true;
     return DashboardPane;
@@ -148,7 +151,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   /**
    * width()
    *
-   * Return the current width of the vehicle pane.
+   * Return the current width of the dashboard pane.
    */
   DashboardPane.width = function() {
     return pane.width();
