@@ -39,6 +39,8 @@
     <%= render :partial => 'tags/list', :locals => {:object => device, :field_prefix => "device"} %>
   </div>
   
+  <%= f.hidden_field :group_id %>
+  
   <div class="alertInfo">
     <h3>Vehicle Settings</h3>
     

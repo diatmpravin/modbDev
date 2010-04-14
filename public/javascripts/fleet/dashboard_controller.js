@@ -151,6 +151,45 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
   };
   
   /**
+   * newSomething()
+   *
+   * This absolutely hilarious function shows the "create new" form for
+   * a vehicle or group. It all depends which one the user clicked on.
+   */
+  DashboardController.newSomething = function() {
+    var title, url,
+        self = $(this),
+        row = self.closest('div.row'),
+        id = row.attr('id');
+    
+    id = id.substring(id.lastIndexOf('_') + 1);
+    
+    if (self.hasClass('group')) {
+      activePane = GroupEditPane;
+      url = '/groups/new';
+      title = 'New Group';
+    } else {
+      activePane = VehicleEditPane;
+      url = '/devices/new';
+      title = 'New Vehicle';
+    }
+    
+    loading(true);
+    
+    $.get(url, function(html) {
+      loading(false);
+      
+      activePane.initPane(html).parentGroup(id).open();
+      DashboardPane.close();
+      Header.edit(title, function() {
+        DashboardController.save(activePane);
+      }, DashboardController.cancel);
+    });
+    
+    return false;
+  };
+  
+  /**
    * edit()
    *
    * Show the edit form for the selected vehicle or group.

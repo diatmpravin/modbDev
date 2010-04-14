@@ -76,6 +76,23 @@ Fleet.Frame.VehicleEditPane = (function(VehicleEditPane, Fleet, $) {
   };
   
   /**
+   * parentGroup(id)
+   *
+   * Set the parent group id in the group form. If the id is 0, we were called
+   * from root, so blank out the value instead.
+   */
+  VehicleEditPane.parentGroup = function(id) {
+    if (id == '0') {
+      pane.find('input[name=device[group_id]]').val('');
+    } else {
+      pane.find('input[name=device[group_id]]').val(id);
+      
+    }
+    
+    return VehicleEditPane;
+  };
+  
+  /**
    * open()
    *
    * Open the vehicle edit pane.

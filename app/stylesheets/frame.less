@@ -47,6 +47,7 @@
   
   .edit-enabled div.ui-draggable-dragging, .edit-enabled div.ui-draggable-dragging:hover {
     background-image:none;
+    border:solid 1px #c0c0c0;
     cursor:move;
     width:300px;
     
@@ -161,14 +162,6 @@ div.hierarchy {
   li li li li li       span.indent { width:4px + 14px * 4; }
   li li li li li li    span.indent { width:4px + 14px * 5; }
   li li li li li li li span.indent { width:4px + 14px * 6; }
-  
-  /* Nested Indent Lines */
-  /*li li                div.row { background-image:url(/images/report_card_tree_1.png); }
-  li li li             div.row { background-image:url(/images/report_card_tree_2.png); }
-  li li li li          div.row { background-image:url(/images/report_card_tree_3.png); }
-  li li li li li       div.row { background-image:url(/images/report_card_tree_4.png); }
-  li li li li li li    div.row { background-image:url(/images/report_card_tree_5.png); }
-  li li li li li li li div.row { background-image:url(/images/report_card_tree_6.png); }*/
 }
 
 /**
@@ -385,6 +378,11 @@ div.dashboard_data {
     padding-right:280px;
   }
   
+  /* Don't want all that extra padding when dragging things around */
+  div.ui-draggable-dragging {
+    padding-right:0px;
+  }
+  
   div.listing {
     float:left;
     width:@listing_width;
@@ -392,6 +390,7 @@ div.dashboard_data {
   
   span.new {
     background:transparent url(/images/new.png) no-repeat center center;
+    cursor:pointer;
     float:right;
     height:25px;
     position:relative;
@@ -416,11 +415,6 @@ div.dashboard_data {
   > ol {
     margin-top:-1px;
   }
-
-/*  li {
-    margin:0;
-    padding:0;
-  }*/
   
   div.listing {
     span.checkbox {

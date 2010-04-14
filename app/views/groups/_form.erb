@@ -7,9 +7,10 @@
       <%= f.text_field :name %>
       <%= error_message_on group, :name, :prepend_text => '* Name ' %>
     </div>
-    
   </div>
 
+  <%= f.hidden_field :parent_id %>
+  
   <% proxy = group.grade_proxy -%>
   <h3>Group Parameters</h3>
   <p>Values shown here are [key] [pass] - [fail]</p>

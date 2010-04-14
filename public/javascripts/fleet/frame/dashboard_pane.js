@@ -11,6 +11,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       pane,
       list,
       new_chooser,
+      new_chooser_timer,
       init = false;
   
   /**
@@ -32,9 +33,6 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     // Our list of vehicles and groups
     list = pane.children('ol');
     
-    // Create our new chooser widget
-    new_chooser = $('<div id="new_chooser"><ul><li>New Vehicle</li><li>New Group</li></ul></div>').appendTo('body');
-    
     // Allow user to toggle collapsible groups open and closed
     $('#dashboard_pane div.group span.indent, #dashboard div.group span.collapsible').live('click', function() {
       var self = $(this).parent().children('span.collapsible');
@@ -48,14 +46,24 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       return false;
     });
     
-    $('#dashboard_pane a.edit').live('click', Fleet.DashboardController.edit);
-    $('#dashboard_pane a.delete').live('click', Fleet.DashboardController.remove);
+    // Create our new chooser widget
+    new_chooser = $('<div id="new_chooser"><ul><li class="vehicle">New Vehicle</li><li class="group">New Group</li></ul></div>').appendTo('body');
     
+    // Hovering over the New icon makes the widget pop up after a brief delay
     $('#dashboard_pane span.new').live('mouseenter', function() {
-      new_chooser.appendTo(this).show();
+      new_chooser.appendTo(this);
+      showNewChooser(250);
     }).live('mouseleave', function() {
+      if (new_chooser_timer) {
+        clearTimeout(new_chooser_timer);
+      }
+      
       new_chooser.hide();
     });
+    
+    $('#new_chooser li').live('click', Fleet.DashboardController.newSomething);
+    $('#dashboard_pane a.edit').live('click', Fleet.DashboardController.edit);
+    $('#dashboard_pane a.delete').live('click', Fleet.DashboardController.remove);
     
     /* Commented out for now -- don't need checkboxes?
     // Toggle groups and vehicles on and off when clicked
@@ -170,6 +178,22 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   DashboardPane.width = function() {
     return pane.width();
   };
+  
+  /* Private Functions */
+  
+  function showNewChooser(arg) {
+    if (arg) {
+      if (new_chooser_timer) {
+        clearTimeout(new_chooser_timer);
+      }
+      
+      new_chooser_timer = setTimeout(showNewChooser, arg);
+    } else {
+      new_chooser.show();
+    }
+    
+    return true;
+  }
   
   return DashboardPane;
 }(Fleet.Frame.DashboardPane || {}, Fleet, jQuery));
