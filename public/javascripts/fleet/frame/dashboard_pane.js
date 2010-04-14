@@ -71,9 +71,11 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   DashboardPane.initPane = function(html, id) {
     var root = $('#' + id);
     
+    // Needs some work. Basically, we're trying to replace only the portion of
+    // the tree that was sent us, or the entire tree if it's the first time.
     if (root.length > 0) {
       root.closest('li').replaceWith(html);
-      root = $('#' + id);
+      root = $('#' + id).closest('li');
     } else {
       list.html(html);
       root = list;
@@ -110,14 +112,17 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
    * after the pane is opened.
    */
   DashboardPane.open = function(callback) {
-    if ($.isFunction(callback)){
-      pane.animate({width: '100%'}, {
-        duration: 400,
-        complete: callback
-      });
-    } else {
-      pane.animate({width: '100%'}, {duration: 400});
-    }
+    pane.animate({width: '100%'}, {
+      duration: 400,
+      complete: function() {
+        // Free the report card width so it resizes naturally
+        list.css('width', 'auto');
+        
+        if ($.isFunction(callback)) {
+          callback();
+        }
+      }
+    });
     
     return DashboardPane;
   };
@@ -130,6 +135,9 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
    * after the pane is closed.
    */
   DashboardPane.close = function(callback) {
+    // Fix the report card width so it doesn't break while sliding
+    list.css('width', function() { return $(this).width() + 'px'; });
+    
     if ($.isFunction(callback)) {
       pane.animate({width: 0}, {
         duration: 400,

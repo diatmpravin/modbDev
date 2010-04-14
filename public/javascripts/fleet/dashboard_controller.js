@@ -20,6 +20,10 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       return DashboardController;
     }
     
+    // Side note: both "Move" dialogs and both "Remove" dialogs could be merged into one dialog box
+    // each, with the title and text changed depending on whether the user clicks vehicle or group.
+    // Someone should either do that, or remove this comment.
+    
     // Our confirm Move Vehicle dialog box
     confirmMoveVehicleDialog = $('<div class="dialog" title="Move Vehicle?">Are you sure you want to move this vehicle into the <span class="dropGroup"></span> group?</div>').appendTo('body');
     confirmMoveVehicleDialog.dialog({
@@ -28,7 +32,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       resizable: false,
       width: 300,
       buttons: {
-        'Move': DashboardController.confirmedMoveVehicle,
+        'Move': DashboardController.confirmedMove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
@@ -41,7 +45,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       resizable: false,
       width: 300,
       buttons: {
-        'Move': DashboardController.confirmedMoveGroup,
+        'Move': DashboardController.confirmedMove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
@@ -54,7 +58,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       resizable: false,
       width: 300,
       buttons: {
-        'Remove': DashboardController.confirmedRemoveVehicle,
+        'Remove': DashboardController.confirmedRemove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
@@ -67,7 +71,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       resizable: false,
       width: 300,
       buttons: {
-        'Remove': DashboardController.confirmedRemoveGroup,
+        'Remove': DashboardController.confirmedRemove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
@@ -244,58 +248,133 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     dialog.errors().dialog('open');
     
     return false;
-  },
-  
-  DashboardController.confirmedMoveVehicle = function() {
-  };
-  DashboardController.confirmedMoveGroup = function() {
-  };
-  DashboardController.confirmedRemoveVehicle = function() {
-  };
-  DashboardController.confirmedRemoveGroup = function() {
   };
   
   /**
-   * confirmedMoveVehicle
-    */
+   * confirmedMove()
+   *
+   * Called after the user confirms the movement of a group or vehicle.
+   */
+  DashboardController.confirmedMove = function() {
+    var self = $(this),
+        from = self.data('from'),
+        fromId = from.attr('id'),
+        to = self.data('to'),
+        toId = to.attr('id'),
+        controller = from.hasClass('group') ? '/groups/' : '/devices/';
+    
+    fromId = fromId.substring(fromId.lastIndexOf('_') + 1);
+    toId = toId.substring(toId.lastIndexOf('_') + 1);
+    
+    self.dialog('close');
+    loading(true);
+    
+    if (from.hasClass('group')) {
+      // Move a group into another group
+      $.ajax({
+        url: '/groups/' + fromId,
+        data: {'device_group[parent_id]': toId},
+        type: 'PUT',
+        dataType: 'json',
+        success: function(json) {
+          loading(false);
+          
+          if (json.status == 'success') {
+            DashboardController.refresh();
+          } else {
+            self.errors(json.error).dialog('open');
+          }
+        }
+      });
+    } else {
+      // Move a vehicle into a group
+      $.ajax({
+        url: '/devices/' + fromId,
+        data: {'device[group_id]': toId},
+        type: 'PUT',
+        dataType: 'json',
+        success: function(json) {
+          loading(false);
+          
+          if (json.status == 'success') {
+            DashboardController.refresh();
+          } else {
+            self.errors(json.error).dialog('open');
+          }
+        }
+      });
+    }
+    
+    return false;
+  };  
+  
   /**
    * remove()
    *
-   * Remove the selected vehicle or group.
+   * Show the remove confirmation dialog box for the given group or vehicle.
    */
   DashboardController.remove = function() {
-    alert(3);
+    var row = $(this).closest('div.row'),
+        dialog = row.hasClass('group') ? confirmRemoveGroupDialog : confirmRemoveVehicleDialog;
+    
+    dialog.data('row', row).errors().dialog('open');
     
     return false;
   };
   
-  
-  /* Private Functions */
-  /*
-  function showVehiclesOnMap(vehicles) {
-    var idx, num, v,
-        collection = MapPane.collection('vehicles');
+  /**
+   * confirmedRemove()
+   *
+   * Called after the user confirms the removal of a group or vehicle.
+   */
+  DashboardController.confirmedRemove = function() {
+    var self = $(this),
+        row = self.data('row'),
+        id = row.attr('id');
     
-    for(idx = 0, num = vehicles.length; idx < num; idx++) {
-      v = vehicles[idx];
-      
-      if (!v.poi) {
-        v.poi = MapPane.addPoint(v.position.latitude, v.position.longitude, {
-          collection: collection,
-          reference: v
-        });
-      }
-    }
-  }
-  
-  function showVehicleOnMap(vehicle) {
-    if (!vehicle.poi) {
-      vehicle.poi = MapPane.addPoint(vehicle.position.latitude, vehicle.position.longitude, {
-        collection: 'vehicles',
-        reference: vehicle
+    id = id.substring(id.lastIndexOf('_') + 1);
+    
+    self.dialog('close');
+    loading(true);
+    
+    if (row.hasClass('group')) {
+      // Remove a group
+      $.ajax({
+        url: '/groups/' + id,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function(json) {
+          loading(false);
+          
+          if (json.status == 'success') {
+            DashboardController.refresh();
+          } else {
+            self.errors(json.error).dialog('open');
+          }
+        }
+      });
+    } else {
+      // Remove a vehicle
+      $.ajax({
+        url: '/devices/' + id,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function(json) {
+          loading(false);
+          
+          if (json.status == 'success') {
+            DashboardController.refresh();
+          } else {
+            self.errors(json.error).dialog('open');
+          }
+        }
       });
     }
-  }*/
+    
+    return false;
+  };
+  
+  /* Private Functions */
   
   function loading(bool) {
     Frame.loading(bool);
