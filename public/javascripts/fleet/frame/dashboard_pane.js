@@ -40,6 +40,8 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       } else {
         _li.find('span.collapsible').removeClass('closed');
       }
+      
+      return false;
     });
     
     $('#dashboard_pane a.edit').live('click', Fleet.DashboardController.edit);

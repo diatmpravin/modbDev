@@ -23,7 +23,7 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     }
     
     // Create the vehicle pane
-    $('#frame').append('<div id="vehicle_pane"><ol></ol></div>');
+    $('#frame').append('<div id="vehicle_pane" class="hierarchy"><ol></ol></div>');
     
     // Store a permanent reference to the pane
     pane = $('#vehicle_pane');
@@ -32,7 +32,7 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     list = pane.children('ol');
 
     // Allow user to toggle collapsible groups open and closed
-    $('span.indent, span.collapsible').live('click', function() {
+    $('#vehicle_pane span.indent, #vehicle_pane span.collapsible').live('click', function() {
       var self = $(this);
       var _li = self.closest('li')
       if (_li.children('ol').toggle().css('display') == 'none') {
@@ -40,6 +40,8 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
       } else {
         _li.find('span.collapsible').removeClass('closed');
       }
+      
+      return false;
     });
     
     // Toggle groups and vehicles on and off when clicked
