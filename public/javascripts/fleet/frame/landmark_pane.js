@@ -139,6 +139,10 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     return LandmarkPane;
   };
   
+  LandmarkPane.toggleActive = function() {
+    $(this).toggleClass('active');
+  };
+
   /**
    * width()
    *
