@@ -60,7 +60,8 @@ module ReportCardHelper
     return 'err' unless data[name] != nil
 
     case name
-    when :miles then "%.1f" % data[name]
+#    when :miles then "%.1f" % data[name]
+    when :miles then number_with_delimiter(data[name])
     when :mpg then "%.1f" % data[name]
     when :first_start then operating_time(data[name].to_i)
     when :last_stop then operating_time(data[name].to_i)
