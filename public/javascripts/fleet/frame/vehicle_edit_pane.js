@@ -49,6 +49,18 @@ Fleet.Frame.VehicleEditPane = (function(VehicleEditPane, Fleet, $) {
   };
   
   /**
+   * submit(options)
+   *
+   * Used by the controller to submit the edit pane form. The options
+   * passed in will be forwarded to the ajaxSubmit method.
+   */
+  VehicleEditPane.submit = function(options) {
+    pane.find('form:first').ajaxSubmit(options);
+    
+    return VehicleEditPane;
+  };
+  
+  /**
    * open()
    *
    * Open the vehicle edit pane.

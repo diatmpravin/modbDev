@@ -98,52 +98,57 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
    * Show the edit form for the selected vehicle or group.
    */
   DashboardController.edit = function() {
-    var row = $(this).closest('div.row');
+    var activePane, title, row = $(this).closest('div.row');
     
     if (row.hasClass('group')) {
-      loading(true);
-      
-      $.get($(this).attr('href'), function(html) {
-        loading(false);
-        
-        GroupEditPane.initPane(html).open();
-        DashboardPane.close();
-        Header.edit('Edit Group', DashboardController.saveGroup, DashboardController.cancel);
-      });
+      activePane = GroupEditPane;
+      title = 'Edit Group';
     } else {
-      loading(true);
-      
-      $.get($(this).attr('href'), function(html) {
-        loading(false);
-        
-        VehicleEditPane.initPane(html).open();
-        DashboardPane.close();
-        Header.edit('Edit Vehicle', DashboardController.saveVehicle, DashboardController.cancel);
-      });
+      activePane = VehicleEditPane;
+      title = 'Edit Vehicle';
     }
+    
+    loading(true);
+  
+    $.get($(this).attr('href'), function(html) {
+      loading(false);
+      
+      activePane.initPane(html).open();
+      DashboardPane.close();
+      Header.edit(title, function() {
+        DashboardController.save(activePane);
+      }, DashboardController.cancel);
+    });
     
     return false;
   };
   
   /**
-   * saveGroup()
+   * save(activePane)
    *
-   * Save the group currently being edited, closing the edit form and
-   * returning to the dashboard if successful.
+   * Save the group or vehicle currently being edited. The logic is identical
+   * in either case, just pass in the active pane (either VehicleEditPane or
+   * GroupEditPane).
    */
-  DashboardController.saveGroup = function() {
-  
-    return false;
-  };
-  
-  /**
-   * saveVehicle()
-   *
-   * Save the vehicle currently being edited, closing the edit form and
-   * returning to the dashboard if successful.
-   */
-  DashboardController.saveVehicle = function() {
-  
+  DashboardController.save = function(activePane) {
+    activePane.submit({
+      dataType: 'json',
+      beforeSubmit: function() { loading(true); },
+      success: function(json) {
+        loading(false);
+      
+        if (json.status == 'success') {
+          Header.open('dashboard');
+          DashboardPane.open(function() {
+            activePane.close();
+            DashboardController.refresh();
+          });
+        } else {
+          activePane.initPane(json.html);
+        }
+      }
+    });
+    
     return false;
   };
   
