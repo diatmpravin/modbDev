@@ -172,7 +172,12 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    * focus()
    */
   ReportController.focus = function() {
-    $(this).toggleClass('active');
+    // temporary hack - don't want it to call both
+    if (VehiclePane.width() > 0) {
+      VehiclePane.toggleActive.call(this);
+    } else {
+      LandmarkPane.toggleActive.call(this);
+    }
   };
   
   return ReportController;
