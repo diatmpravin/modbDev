@@ -117,7 +117,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
    * Hide all of our panes and throw away any unnecessary resources.
    */
   DashboardController.teardown = function() {
-    DashboardPane.close();
+    DashboardPane.close().initPane('');
     Header.standard('');
     
     vehicles = null;
