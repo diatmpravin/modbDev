@@ -7,8 +7,8 @@ class RoutesTest < ActionController::IntegrationTest
     url_for(options.merge(:only_path => true))
   end
 
-  test "report card is root" do
-    assert_equal "/", path_for(:controller => "report_card", :action => "show")
+  test "dashboard is root" do
+    assert_equal "/", path_for(:controller => "dashboard", :action => "show")
   end
   
   test "accounts resources" do
