@@ -7,6 +7,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       confirmMoveGroupDialog,
       confirmRemoveVehicleDialog,
       confirmRemoveGroupDialog,
+      range_type_container,
       init = false;
   
   /* Dashboard Tab */
@@ -76,6 +77,13 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
       }
     });
     
+    // Move the dashboard range type thing, which is always on the page, to the appropriate spot
+    range_type_container = $('#dashboard_range_type');
+    $('#navbar').before(range_type_container);
+    
+    // Hook up the event handler for range type
+    $('#range_type').change(DashboardController.refresh);
+    
     // Define the big messy dashboard header
     Header.init().define('dashboard',
       '<span class="title">Dashboard</span>' +
@@ -107,6 +115,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     GroupEditPane.init().close();
     
     Header.init().open('dashboard');
+    range_type_container.show(400);
     
     DashboardController.refresh();
   };
@@ -119,6 +128,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
   DashboardController.teardown = function() {
     DashboardPane.close().initPane('');
     Header.standard('');
+    range_type_container.hide(400);
     
     vehicles = null;
     lookup = null;
@@ -133,20 +143,12 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
   DashboardController.refresh = function() {
     loading(true);
     
-    $.getJSON('/dashboard.json', {range_type: 5}, function(json) {
+    $.getJSON('/dashboard.json', {range_type: $('#range_type').val()}, function(json) {
       loading(false);
       
       DashboardPane.initPane(json.html, json.id);
     });
     
-    /*
-    
-  // what range type?
-  rt = q('#range_type').val();
-
-  // get json for the report card tree
-  q.getJSON('/report_card', { range_type: rt }, function(json) {
-  */
     return DashboardController;
   };
   

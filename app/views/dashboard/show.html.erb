@@ -26,6 +26,10 @@
   </script>
 <% end -%>
 
+<div id="dashboard_range_type">
+  Time Period &nbsp; &nbsp; <%= select_tag :range_type, options_for_select(range_options_report_card, :selected => @range_type, :disabled => disabled_range_options) %>
+</div>
+
 <div id="fleet_loading">Please wait...</div>
 <div id="frame_header_top"><div class="left"></div><div class="right"></div></div>
 <div id="frame_header" class="scrollbar-fix"></div>
