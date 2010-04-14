@@ -37,13 +37,13 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
     Header.define('standard', '<span class="title"></span>');
     
     // Report header with a create report button
-    Header.define('report', '<span class="title"></span><span class="buttons">' +
-      '<button type="button" class="create_report">Create Report</button></span>');
+    Header.define('report', '<span class="buttons">' +
+      '<button type="button" class="create_report">Create Report</button></span>' + '<span class="title"></span>');
 
     // A header with Save & Cancel buttons
-    Header.define('edit', '<span class="title"></span><span class="buttons">' +
+    Header.define('edit', '<span class="buttons">' +
       '<button type="button" class="cancel">Cancel</button>' +
-      '<button type="button" class="save">Save</button></span>');
+      '<button type="button" class="save">Save</button></span><span class="title"></span>');
     
     // The special "loader" header, which is actually an overlay used by all header types
     Header.define('loader', '<div class="loading"></div>');
@@ -126,7 +126,7 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
       if (current) {
         current.hide(400);
       }
-      
+
       current = newHeader.show(400);
     }
     

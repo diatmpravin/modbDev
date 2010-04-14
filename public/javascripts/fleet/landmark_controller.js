@@ -36,7 +36,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     });
     
     Header.init().define('landmarks',
-      '<span class="title">Landmarks</span><span class="buttons"><button type="button" class="newLandmark">Add New</button></span>'
+      '<span class="buttons"><button type="button" class="newLandmark">Add New</button></span><span class="title">Landmarks</span>'
     );
     
     init = true;
