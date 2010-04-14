@@ -284,7 +284,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     // Store references to the dragged item and where it is moving
     dialog.data('from', from)
           .data('to', to)
-          .find('span.dropGroup').text(to.find('span.name').text());
+          .find('span.dropGroup').text(to.find('span.name').text() + ' ');
     
     dialog.errors().dialog('open');
     
