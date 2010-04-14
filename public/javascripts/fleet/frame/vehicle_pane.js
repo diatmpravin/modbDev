@@ -44,8 +44,21 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
       return false;
     });
     
-    // Toggle groups and vehicles on and off when clicked
-    $('#vehicle_pane span.checkbox, #vehicle_pane span.name').live('click', function() {
+    // User can click to pan
+    $('#vehicle_pane li div.row').live('click', function(event) {
+      Fleet.Controller.focus.call(this);
+    });
+
+    init = true;
+    return VehiclePane;
+  };
+  
+  /**
+   * toggleActive
+   *
+   *
+   */
+  VehiclePane.toggleActive = function() {
       var row = $(this).closest('div.row');
 
       // flip the initial row's value
@@ -53,12 +66,8 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
 
       // if it is a group, set all children similarly.
       row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
-    });
-  
-    init = true;
-    return VehiclePane;
   };
-  
+
   /**
    *
    * showVehicles(html)
@@ -76,6 +85,21 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     return VehiclePane;
   };
 
+  /**
+   * selectEnabled(bool)
+   *
+   * Set select-enabled to true or false (false by default). 
+   */
+  VehiclePane.selectEnabled = function(bool) {
+    if (bool) {
+      pane.addClass('select-enabled');
+    } else {
+      pane.removeClass('select-enabled');
+    }
+  
+    return VehiclePane;
+  };
+  
   /**
    * open()
    * open(callback)

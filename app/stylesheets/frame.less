@@ -359,6 +359,40 @@ div.dashboard_data {
 /**
  * Dashboard Pane (a .hierarchy view)
  */
+#dashboard_pane li {
+  li {
+    span.name {
+      overflow:hidden;
+      width:170px;
+    }
+    li {
+      span.name {
+        width:156px;
+      }
+      li {
+        span.name {
+          width:142px;
+        }
+        li {
+          span.name {
+            width:128px;
+          }
+          li {
+            span.name {
+              width:114px;
+            }
+            li {
+              span.name {
+                width:100px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 #dashboard_pane {
   background:#f8f8f8 url(/images/frame_bg.png) repeat 0 0;
   height:100%;
@@ -424,10 +458,14 @@ div.dashboard_data {
     margin-top:-1px;
   }
   
-  div.listing {
-    span.checkbox {
-      display:block;
-    }
+  span.checkbox {
+    display:none;
+  }
+}
+
+#vehicle_pane.select-enabled {
+  span.checkbox {
+    display:block;
   }
 }
 

@@ -88,9 +88,9 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
     Header.init().define('dashboard',
       '<span class="title">Dashboard</span>' +
       '<div class="dashboard_data">' +
-      '<span class="first_start"><span>Start Time</span></span>' +
-      '<span class="last_stop"><span>End Time</span></span>' +
-      '<span class="operating_time"><span>Operating Time</span></span>' + 
+      '<span class="first_start"><span>First Start</span></span>' +
+      '<span class="last_stop"><span>Last Stop</span></span>' +
+      '<span class="operating_time"><span>Operating Time (hh:mm)</span></span>' + 
       '<span class="miles_driven"><span>Miles Driven</span></span>' +
       '<span class="average_mpg"><span>Average MPG</span></span>' +
       '<span class="speed_events"><span>Speed Events</span></span>' +
