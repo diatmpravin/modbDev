@@ -86,6 +86,21 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
   };
 
   /**
+   * selectEnabled(bool)
+   *
+   * Set select-enabled to true or false (false by default). 
+   */
+  VehiclePane.selectEnabled = function(bool) {
+    if (bool) {
+      pane.addClass('select-enabled');
+    } else {
+      pane.removeClass('select-enabled');
+    }
+  
+    return VehiclePane;
+  };
+  
+  /**
    * open()
    * open(callback)
    *
