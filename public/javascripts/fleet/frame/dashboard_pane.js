@@ -10,6 +10,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   var width = 280,
       pane,
       list,
+      new_chooser,
       init = false;
   
   /**
@@ -28,9 +29,12 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     // Store a permanent reference to the pane
     pane = $('#dashboard_pane');
     
-    // list of vehicles and groups
+    // Our list of vehicles and groups
     list = pane.children('ol');
-
+    
+    // Create our new chooser widget
+    new_chooser = $('<div id="new_chooser"><ul><li>New Vehicle</li><li>New Group</li></ul></div>').appendTo('body');
+    
     // Allow user to toggle collapsible groups open and closed
     $('#dashboard_pane div.group span.indent, #dashboard div.group span.collapsible').live('click', function() {
       var self = $(this).parent().children('span.collapsible');
@@ -46,6 +50,12 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     
     $('#dashboard_pane a.edit').live('click', Fleet.DashboardController.edit);
     $('#dashboard_pane a.delete').live('click', Fleet.DashboardController.remove);
+    
+    $('#dashboard_pane span.new').live('mouseenter', function() {
+      new_chooser.appendTo(this).show();
+    }).live('mouseleave', function() {
+      new_chooser.hide();
+    });
     
     /* Commented out for now -- don't need checkboxes?
     // Toggle groups and vehicles on and off when clicked
