@@ -30,9 +30,28 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
     // Our list of groups
     list = pane.children('ol');
     
+    // Allow user to toggle collapsible groups open and closed
+    $('#group_pane div.group span.indent, #group_pane div.group span.collapsible').live('click', function() {
+      var self = $(this).parent().children('span.collapsible');
+      var _li = self.closest('li')
+      if (_li.children('ol').toggle().css('display') == 'none') {
+        self.addClass('closed');
+      } else {
+        self.removeClass('closed');
+      }
+      
+      return false;
+    });
+    
     // Toggle groups on and off when clicked
-    $('#group_pane div.group').live('click', function() {
-      $(this).toggleClass('active');
+    $('#group_pane span.checkbox, #group_pane span.name').live('click', function() {
+      var row = $(this).closest('div.row');
+
+      // flip the initial row's value
+      row.toggleClass('active');
+
+      // if it is a group, set all children similarly.
+      row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
     });
     
     init = true;

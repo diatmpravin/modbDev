@@ -14,11 +14,15 @@
 }
 
 /* IE7 List Element Vertical Whitespace Fix */
-#report_card #frame li {
+#dashboard_pane li {
   display:inline;
 }
 
 #vehicle_pane li {
+  display:inline;
+}
+
+#group_pane li {
   display:inline;
 }
 
