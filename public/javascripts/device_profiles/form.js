@@ -12,7 +12,7 @@ DeviceProfile.Form = {
       q(this).siblings('.extra').toggle(this.checked);
       
       // This "re-init" prevents an alignment bug
-      DeviceProfile.Form.initTimepickr(q(this).parent());
+      //DeviceProfile.Form.initTimepickr(q(this).parent());
     });
   },
   
@@ -20,7 +20,7 @@ DeviceProfile.Form = {
    * Init pane stuff.
    */
   initPane: function(element) {
-    DeviceProfile.Form.initTimepickr(element);
+    //DeviceProfile.Form.initTimepickr(element);
   },
   
   /**
