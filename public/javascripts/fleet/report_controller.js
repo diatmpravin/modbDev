@@ -27,7 +27,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
     // set the header title and buttons
     Header.init().open('report', {title: 'Reports', create_report: ReportController.createReport});
 
-    VehiclePane.init().open();
+    VehiclePane.init().open().selectEnabled(true);
     ReportPane.init().open();
     LandmarkPane.init().close();
     
@@ -54,6 +54,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    */
   ReportController.teardown = function() {
     VehiclePane.close().showVehicles('');
+    LandmarkPane.close();
     ReportPane.close();
     Header.standard('');
   };

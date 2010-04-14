@@ -32,7 +32,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    */
   MapController.setup = function() {
     MapPane.init().open().showCollection('vehicles');
-    VehiclePane.init().open();
+    VehiclePane.init().open().selectEnabled(false);
     
     Header.init().open('map');
     
