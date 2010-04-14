@@ -69,7 +69,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     MapPane.close();
     LandmarkPane.close().editEnabled(false);
     LandmarkEditPane.close();
-    GroupPane.close();
+    GroupPane.close().showGroups('');
     Header.standard('');
     
     landmarks = null;
@@ -242,7 +242,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       loading(false);
     }
     
-    e.stopImmediatePropagation();
+    //e.stopImmediatePropagation();
     return false;
   };
   

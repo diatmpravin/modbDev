@@ -22,7 +22,7 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
     }
     
     // Create the group pane
-    $('#frame').append('<div id="group_pane"><ol></ol></div>');
+    $('#frame').append('<div id="group_pane" class="hierarchy"><ol></ol></div>');
     
     // Store a permanent reference to the pane
     pane = $('#group_pane');

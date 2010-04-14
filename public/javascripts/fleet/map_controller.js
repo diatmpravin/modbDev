@@ -46,8 +46,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    * Hide all of our panes and throw away any unnecessary resources.
    */
   MapController.teardown = function() {
-    MapPane.close();
-    VehiclePane.close();
+    MapPane.close().hideCollection('vehicles');
+    VehiclePane.close().showVehicles('');
     Header.standard('');
     
     vehicles = null;
@@ -135,7 +135,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     for(idx = 0, num = vehicles.length; idx < num; idx++) {
       v = vehicles[idx];
       
-      if (!v.poi) {
+      if (!v.poi && v.position) {
         v.poi = MapPane.addPoint(v.position.latitude, v.position.longitude, {
           collection: collection,
           reference: v
@@ -145,7 +145,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   }
   
   function showVehicleOnMap(vehicle) {
-    if (!vehicle.poi) {
+    if (!vehicle.poi && vehicle.position) {
       vehicle.poi = MapPane.addPoint(vehicle.position.latitude, vehicle.position.longitude, {
         collection: 'vehicles',
         reference: vehicle

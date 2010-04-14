@@ -24,7 +24,7 @@ class DeviceGroup < ActiveRecord::Base
     
     def initialize(options = {})
       self.id = options[:id] || 0
-      self.name = options[:name] || 'Root'
+      self.name = options[:name] || 'All'
       self.children = options[:children] || []
       self.devices = options[:devices] || []
     end
