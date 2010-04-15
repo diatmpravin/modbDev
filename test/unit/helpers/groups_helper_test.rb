@@ -1,16 +1,8 @@
 require 'test_helper'
-require 'action_view/test_case'
 
 describe "Groups Helper", ActionView::TestCase do
 
-  setup do
-    class << self
-      tests GroupsHelper
-      include helper_class
-    end
-
-    setup_with_controller
-  end
+  tests GroupsHelper
 
   context "Groups Helper" do
     specify "true" do
