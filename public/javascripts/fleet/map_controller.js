@@ -128,6 +128,39 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     return false;
   };
   
+  /**
+   * focusPoint()
+   *
+   * Called when a user clicks a point in the map pane. When called, this
+   * function will have the MapQuest POI as its context.
+   */
+  MapController.focusPoint = function() {
+    var v = this.reference;
+    
+    alert('User clicked on vehicle id '+v.id);
+  
+    return false;
+  };
+  
+  /**
+   * hoverPoint(bool)
+   *
+   * Called when a user hovers over or out of a point in the map pane. When
+   * called, this function will have the MapQuest POI as its context. The
+   * bool argument will be true if the mouse is over the point, false otherwise.
+   */
+  MapController.hoverPoint = function(bool) {
+    var v = this.reference;
+    
+    if (bool) {
+      $('#frame_header span.title').text('Hovering over vehicle id '+v.id);
+    } else {
+      $('#frame_header span.title').text('No more hover');
+    }
+    
+    return false;
+  };
+ 
   /* Private Functions */
   
   function showVehiclesOnMap(vehicles) {
