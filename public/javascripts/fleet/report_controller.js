@@ -135,12 +135,12 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    */
   ReportController.landmarks = function(callback) {
     if($.isFunction(callback)) {
-      LandmarkPane.showLandmarks(landmarkJson).open(function() {
+      LandmarkPane.showLandmarks(landmarkJson, true).open(function() {
         VehiclePane.close();
         callback();
       });
     } else {
-      LandmarkPane.showLandmarks(landmarkJson).open(function() {
+      LandmarkPane.showLandmarks(landmarkJson, true).open(function() {
         VehiclePane.close();
       });
     }
