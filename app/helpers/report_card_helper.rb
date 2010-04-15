@@ -50,7 +50,7 @@ module ReportCardHelper
     if (grade_only && !g.nil?) 
       g + "_only"
     else
-      g == "pass" ? "" : g
+      g
     end
   end
 
