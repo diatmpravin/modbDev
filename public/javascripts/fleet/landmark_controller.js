@@ -131,6 +131,31 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   };
   
   /**
+   * focusPoint()
+   *
+   * Called when a user clicks a point in the map pane. When called, this
+   * function will have the MapQuest POI as its context.
+   */
+  LandmarkController.focusPoint = function() {
+    //var v = this.reference;
+  
+    return false;
+  };
+  
+  /**
+   * hoverPoint(bool)
+   *
+   * Called when a user hovers over or out of a point in the map pane. When
+   * called, this function will have the MapQuest POI as its context. The
+   * bool argument will be true if the mouse is over the point, false otherwise.
+   */
+  LandmarkController.hoverPoint = function(bool) {
+    //var v = this.reference;
+    
+    return false;
+  };
+  
+  /**
    * newLandmark()
    *
    * Transition from index into creating a landmark.

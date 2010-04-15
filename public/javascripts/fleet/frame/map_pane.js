@@ -6,11 +6,13 @@
  */
 var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};
-Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
+Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   var pane,
       container,
       map,
+      popup,
       collections,
+      originalEventManagerTrigger,
       init = false;
   
   /**
@@ -41,6 +43,13 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     
     // Create our MoshiMap (initialize MapQuest)
     map.moshiMap().init();
+    
+    // Intercept MapQuest events for our own (nefarious?) purposes
+    originalEventManagerTrigger = MQA.EventManager.trigger;
+    MQA.EventManager.trigger = mapPaneEventManagerTrigger;
+    
+    // Our custom pop-up
+    popup = $('<div id="map_popup"></div>').appendTo($('#mqtiledmap'));
     
     // Whenever the frame is resized, resize our map as well
     Frame.resize(MapPane.resize);
@@ -301,7 +310,7 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
   /**
    * panToDeviceId(id)
    *
-   * Pan the move to the point specified by the given device id.
+   * Pan the map to the point specified by the given device id.
    */
   MapPane.panToDeviceId = function(id) {
     var point = VehiclesView.lookup[parseInt(id)];
@@ -311,5 +320,41 @@ Fleet.Frame.MapPane = (function(MapPane, $, Frame) {
     }
   };
   
+  /**
+   * popup(point)
+   * 
+   *
+  MapPane.popupForDeviceId = function(point) {
+    var 
+  };
+  popup.css('left', q(point.shape).position().left)
+Object
+popup.css('top', q(point.shape).position().top)
+  */
+  
+  /* Private Functions */
+
+  function mapPaneEventManagerTrigger(object, eventType, mqEvent) {
+    // This function deserves special attention, as it intercepts all calls to
+    // the normal MQA.EventManager.trigger function. If these events are
+    // mishandled, it could prevent the user from panning or zooming the map at
+    // all, so be careful not to prevent event bubbling.
+    
+    if (mqEvent.eventName == 'MQA.Poi.mouseOver') {
+      Fleet.Controller.hoverPoint.call(object, true);
+    } else if (mqEvent.eventName == 'MQA.Poi.mouseOut') {
+      Fleet.Controller.hoverPoint.call(object, false);
+    } else if (mqEvent.eventName == 'MQA.Poi.click') {
+      Fleet.Controller.focusPoint.call(object);
+    }
+    
+    // Call the normal Event Manager trigger, passing in the original
+    // context and parameters.
+    return originalEventManagerTrigger.call(this, object, eventType, mqEvent);
+  }
+  
   return MapPane;  
-}(Fleet.Frame.MapPane || {}, jQuery, Fleet.Frame));
+}(Fleet.Frame.MapPane || {},
+  Fleet.Frame,
+  Fleet,
+  jQuery));
