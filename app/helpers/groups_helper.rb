@@ -9,15 +9,18 @@ module GroupsHelper
   # will be called with groups and vehicles as the list is created.
   #
   # The group given should be a DeviceGroup or DeviceGroup::Root object.
+  # users and vehicles are mutually exclusive.
   #
   # Options:
   #   :close_level => which "level" to close. 0 is the root node
   #   :stop_level => which "level" to stop traversing at. 0 is the root node
   #   :root_ol => include root ol, default true
   #   :vehicles => include vehicles, default true
+  #   :users => include users, default false
   def new_tree(group, options = {}, &block)
     options[:root_ol] = true if options[:root_ol].nil?
     options[:vehicles] = true if options[:vehicles].nil?
+    options[:users] = false if options[:users].nil?
     options[:close_level] ||= 99
     options[:stop_level] ||= 99
     
@@ -48,9 +51,11 @@ module GroupsHelper
         html.last << capture(node, level, &block)
       end
       
-      if !node.is_a?(Symbol) && !node.is_a?(Device)
+      if !node.is_a?(Symbol) && !(node.is_a?(Device) || node.is_a?(User))
         if options[:vehicles]
           children = [:ol, (node.children + node.devices).map {|c| [:li, c, :nli]}, :nol]
+        elsif options[:users]
+          children = [:ol, (node.children + node.users).map {|c| [:li, c, :nli]}, :nol]
         else
           children = [:ol, node.children.map {|c| [:li, c, :nli]}, :nol]
         end
