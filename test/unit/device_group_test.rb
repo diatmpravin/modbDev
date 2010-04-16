@@ -38,6 +38,18 @@ describe "Device Group", ActiveSupport::TestCase do
       @north.landmarks.should.equal [landmarks(:quentin)]
       landmarks(:quentin).device_groups.should.equal [@north]
     end
+
+    specify "has many users" do
+      u = users(:quentin)
+
+      @north.users.should.equal []
+      @north.users << u
+      @north.reload
+      u.reload
+
+      @north.users.should.equal [u]
+      u.device_group.should.equal @north
+    end
   end
   
   context "Validations" do

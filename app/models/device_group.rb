@@ -1,6 +1,7 @@
 class DeviceGroup < ActiveRecord::Base
   belongs_to :account
   has_many :devices, :foreign_key => :group_id, :order => 'name ASC', :dependent => :nullify
+  has_many :users, :foreign_key => :device_group_id, :order => 'name ASC', :dependent => :nullify
   
   attr_accessible :account, :name, :grading, :parent_id
   
@@ -20,13 +21,14 @@ class DeviceGroup < ActiveRecord::Base
   
   # This class represents a "root" group, which isn't actually in the database
   class Root
-    attr_accessor :id, :name, :children, :devices
+    attr_accessor :id, :name, :children, :devices, :users
     
     def initialize(options = {})
       self.id = options[:id] || 0
       self.name = options[:name] || 'All'
       self.children = options[:children] || []
       self.devices = options[:devices] || []
+      self.users = options[:users] || []
     end
   end
   
@@ -55,6 +57,7 @@ class DeviceGroup < ActiveRecord::Base
       self.parent.devices   += self.devices
       self.parent.geofences += self.geofences
       self.parent.landmarks += self.landmarks
+      self.parent.users += self.users
       self.parent.save
     else
       self.children.each do |c|
