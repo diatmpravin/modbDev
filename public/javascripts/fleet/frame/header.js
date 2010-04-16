@@ -46,7 +46,10 @@ Fleet.Frame.Header = (function(Header, Fleet, $) {
       '<button type="button" class="save">Save</button></span><span class="title"></span>');
     
     // The special "loader" header, which is actually an overlay used by all header types
-    Header.define('loader', '<div class="loading"></div>');
+    Header.define('loader', '<div class="left"></div><div class="right"></div><div class="loading"></div>');    
+    
+    // The loader lives in #frame_header_top, away from all the other headers
+    headers.loader.appendTo($('#frame_header_top'));
     
     if (!current) {
       Header.open('standard');
