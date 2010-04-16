@@ -93,3 +93,17 @@ module MapQuest
     FORMAT = MapQuest::ContentType::GIF
   end
 end
+
+# A little extra juice for helper tests using TestSpec
+require 'action_view/test_case'
+module ActionView
+  class TestCase < ActiveSupport::TestCase
+    class << self
+      alias tests_without_test_spec tests
+      def tests(helper_class)
+        tests_without_test_spec(helper_class)
+        setups << lambda { setup_with_controller; class_eval { include helper_class } }
+      end
+    end
+  end
+end
