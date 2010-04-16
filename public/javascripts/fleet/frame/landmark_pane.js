@@ -32,12 +32,12 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     
     // Our list of landmarks
     list = pane.children('ol');
-  
+
     // User can click to pan
     $('#landmark_pane li').live('click', function() {
       Fleet.Controller.focus.call(this);
     });
-    
+  
     // User can edit a landmark
     $('#landmark_pane a.edit').live('click', function() {
       Fleet.Controller.edit.call(this);
@@ -58,10 +58,15 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
    * Take the given list of landmarks and populate the landmark list. Clears
    * any existing landmark HTML.
    */
-  LandmarkPane.showLandmarks = function(landmarks) {
+  LandmarkPane.showLandmarks = function(landmarks, showSelectAll) {
     var idx, num, html;
-    
-    for(idx = 0, num = landmarks.length, html = ''; idx < num; idx++) {
+ 
+    html = '';
+    if (showSelectAll) {
+      html += '<li id="all"><span class="checkbox"></span><b>All</b></li>';
+    }
+
+    for(idx = 0, num = landmarks.length; idx < num; idx++) {
       html += '<li id="landmark_' + landmarks[idx].id + '">' +
         '<span class="checkbox"></span>' +
         '<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
@@ -118,7 +123,7 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     
     return LandmarkPane;
   };
-  
+
   /**
    * close()
    * close(callback)
@@ -140,7 +145,11 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
   };
   
   LandmarkPane.toggleActive = function() {
-    $(this).toggleClass('active');
+    var active = $(this).toggleClass('active').hasClass('active');
+    /* If this item is the "All" item, then make all selections in the list same as this */
+    if (this.id == "all") {
+      list.find('li').toggleClass('active', active);
+    }
   };
 
   /**
@@ -175,7 +184,7 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
   LandmarkPane.getSelections = function() {
     var selections = [];
 
-    list.find('li.active').each (function () {
+    list.find('li.active').not('#all').each (function () {
       id = $(this).attr('id');
       id = id.substring(id.lastIndexOf('_') + 1);
       selections.push(id);
