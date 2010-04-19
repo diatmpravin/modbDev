@@ -548,12 +548,39 @@ div.dashboard_data {
  * Map Pane Custom Popup
  */
 #map_popup {
-  background:#ccc;
   display:none;
   height:60px;
+  left:-20px;
+  overflow:visible;
   position:absolute;
-  width:120px;
+  width:200px;
+  top:5px;
   z-index:91;
+  
+  .top {
+    background:transparent url(/images/popup.png) no-repeat 0 0;
+    height:14px;
+  }
+  
+  .content {
+    background:transparent url(/images/popup.png) no-repeat 0 -14px;
+    padding:2px 8px;
+  }
+  
+  .bottom {
+    background:transparent url(/images/popup.png) no-repeat 0 -295px;
+    height:5px;
+  }
+  
+  h4 {
+    margin:0 0 4px 0;
+    padding:0;
+  }
+  
+  p {
+    margin:0;
+    padding:0;
+  }
 }
 
 /**

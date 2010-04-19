@@ -49,7 +49,7 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     MQA.EventManager.trigger = mapPaneEventManagerTrigger;
     
     // Our custom pop-up
-    popup = $('<div id="map_popup"></div>').appendTo($('#mqtiledmap'));
+    popup = $('<div id="map_popup"><div class="top"></div><div class="content"></div><div class="bottom"></div></div>').appendTo($('#mqtiledmap'));
     
     // Whenever the frame is resized, resize our map as well
     Frame.resize(MapPane.resize);
@@ -308,29 +308,30 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   };
   
   /**
-   * panToDeviceId(id)
-   *
-   * Pan the map to the point specified by the given device id.
-   */
-  MapPane.panToDeviceId = function(id) {
-    var point = VehiclesView.lookup[parseInt(id)];
-    
-    if (point) {
-      MoshiMap.moshiMap.map.panToLatLng(point.latLng);
-    }
-  };
-  
-  /**
+   * popup()
    * popup(point)
-   * 
+   * popup(point, html)
    *
-  MapPane.popupForDeviceId = function(point) {
-    var 
+   * Display the popup info window over the given point. If no arguments are
+   * given or the first argument is false, the popup will be hidden. Send
+   * an optional second argument to update the HTML in the popup window.
+   */
+  MapPane.popup = function(point, html) {
+    if (!point) {
+      popup.hide();
+    } else {
+      if (html) {
+        popup.children('.content').html(html);
+      }
+      
+      //popup.css('left', $(point.shape).position().left);
+      //popup.css('top', $(point.shape).position().top);
+      popup.appendTo(point.shape);
+      popup.show();
+    }
+    
+    return point;
   };
-  popup.css('left', q(point.shape).position().left)
-Object
-popup.css('top', q(point.shape).position().top)
-  */
   
   /* Private Functions */
 
