@@ -14,8 +14,13 @@ module LoadTesting
     def clean 
       acc = Account.find_by_name('Load Testing')
       if acc
-        acc.devices.each { | d | d.delete }
-        acc.trackers.each { | t | t.delete }
+        acc.devices.each { | d | 
+          d.trips.delete_all 
+          d.points.delete_all
+          d.delete
+        }
+
+        acc.trackers.delete_all
         acc.delete
 
 #        acc.trackers.each do | t | 
