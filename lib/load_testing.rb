@@ -14,40 +14,68 @@ module LoadTesting
     def clean 
       acc = Account.find_by_name('Load Testing')
       if acc
-        acc.devices.each { | d | 
-          d.trips.delete_all 
-          d.points.delete_all
-          d.delete
-        }
+#        acc.trackers.delete_all
+#
+#        acc.devices.each { | d | 
+#          d.points.delete_all
+#          d.trips.each { | t | 
+#            t.legs.delete_all 
+#            t.delete 
+#          }
+#          d.delete
+#        }
+#        acc.delete
 
-        acc.trackers.delete_all
-        acc.delete
+# TODO change all of the "delete" calls below to "destroy"
 
-#        acc.trackers.each do | t | 
-#          t.destroy
-#        end
-#        acc.destroy
+        # delete the trackers
+        acc.trackers.each { | t | t.destroy }
+
+        # Now delete the points, legs, and trips
+        acc.devices.each do | d |
+          d.trips.each do | t |
+            t.legs.each do | l | 
+              l.points.each do | p |
+                p.events.each { | e | e.destroy }
+                p.destroy
+              end
+              l.destroy
+            end
+            t.destroy
+          end
+          d.destroy
+        end
+
+        # Now destroy the account, which deletes devices as well
+        acc.destroy
       end
+
+      rescue => ex
+        puts ex.to_s
     end
 
-    def setup 
+    def setup(num_devices = DEVICE_COUNT)
       clean
-      create_test_devices
+      create_test_devices(num_devices)
     end
 
-    def create_test_devices
+    def create_test_devices(num_devices)
       account = Account.create( :number => TEST_ACCOUNT, :name => 'Load Testing' )
+      puts "created account #{account.name}"
       
       trackers = []
-      DEVICE_COUNT.times do | i |
+      num_devices.times do | i |
         tid = IMEI_BASE.to_i + i
-        trackers << Tracker.create(:imei_number => tid.to_s, :msisdn_number => tid.to_s, :sim_number => tid.to_s + "0000", :account => account)
+        trackers << Tracker.create!(:imei_number => tid.to_s, :msisdn_number => '', :sim_number => tid.to_s + "0000", :account => account)
 
-        Device.create(:tracker => trackers.last, :imei_number => tid.to_s, :account => account, :name => "Load " + tid.to_s)
+        puts "created tracker #{trackers.last.imei_number}"
+        Device.create!(:tracker => trackers.last, :imei_number => tid.to_s, :account => account, :name => "Load " + tid.to_s)
+        puts "created device #{Device.last.name}"
       end
 
       rescue => ex
         puts "failed: " + ex.to_s
+        clean
     end
 
   end
