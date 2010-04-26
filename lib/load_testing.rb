@@ -11,47 +11,46 @@ module LoadTesting
     def initialize
     end
 
-    def clean 
+    def cleanup
       acc = Account.find_by_name('Load Testing')
       if acc
-#        acc.trackers.delete_all
-#
-#        acc.devices.each { | d | 
-#          d.points.delete_all
-#          d.trips.each { | t | 
-#            t.legs.delete_all 
-#            t.delete 
-#          }
-#          d.delete
-#        }
-#        acc.delete
 
 # TODO change all of the "delete" calls below to "destroy"
 
         # delete the trackers
-        acc.trackers.each { | t | t.destroy }
+        acc.trackers.each { | t | t.delete }
 
         # Now delete the points, legs, and trips
         acc.devices.each do | d |
           d.trips.each do | t |
             t.legs.each do | l | 
               l.points.each do | p |
-                p.events.each { | e | e.destroy }
-                p.destroy
+                p.events.delete_all
+                p.delete
               end
-              l.destroy
+              l.delete
             end
-            t.destroy
+            t.delete
           end
-          d.destroy
+          d.delete
         end
 
         # Now destroy the account, which deletes devices as well
-        acc.destroy
+        acc.delete
       end
 
       rescue => ex
         puts ex.to_s
+    end
+
+    def stats
+      acc = Account.find_by_name('Load Testing')
+      if acc
+        sum = 0
+        acc.devices.each { | d | sum += d.points.size }
+
+        puts "Total points: #{sum}"
+      end
     end
 
     def setup(num_devices = DEVICE_COUNT)
