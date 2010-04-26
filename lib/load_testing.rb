@@ -54,7 +54,7 @@ module LoadTesting
     end
 
     def setup(num_devices = DEVICE_COUNT)
-      clean
+      cleanup
       create_test_devices(num_devices)
     end
 
@@ -74,7 +74,7 @@ module LoadTesting
 
       rescue => ex
         puts "failed: " + ex.to_s
-        clean
+        cleanup
     end
 
   end
