@@ -31,7 +31,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
     });
     
 
-    UserPane.init().open();
+    UserPane.init().open().editEnabled(true);
     UserEditPane.init().open();
 
     UserController.refresh();
@@ -125,6 +125,51 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
         }
       }
     });
+
+    return false;
+  };
+
+  /**
+    * edit()
+    */
+  UserController.edit = function() {
+    var id, user;
+
+    id = $(this).closest('div.user').attr('id');
+    id = id.substring(id.lastIndexOf('_') + 1);
+
+    //focus should be called?
+    //UserController.focus(user);
+
+    //get the edit html and send it into the UserEditPane
+    loading(true);
+    //get and set the html on the UserEditPane
+    $.get('/users/' + id + '/edit', function(html) {
+      //set the html and open if necessary?
+      UserEditPane.initPane(html).open();
+
+      //change the Header
+      Header.edit('New User',
+        UserController.save,
+        UserController.cancel
+      );
+
+      loading(false);
+    });
+  };
+
+  /**
+    * remove()
+    * 
+    * Display a confirmation dialog asking if the user wants to remove the
+    * clicked user.
+    */
+  UserController.remove = function() {
+    //TODO
+    var id = $(this).closest('div.user').attr('id');
+    id = substring(id.lastIndexOf('_') + 1);
+
+    alert(id);
 
     return false;
   };

@@ -44,11 +44,20 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
       return true;
     });
       
-    
-    // click to edit user
-    $('#user_pane li').live('click', function(event) {
-      Fleet.Controller.focus.call(this);
+    // User can edit a user
+    $('#user_pane a.edit').live('click', function() {
+      Fleet.Controller.edit.call(this);
     });
+
+    // User can remove a user
+    $('#userpane a.delete').live('click', function() {
+      Fleet.Controller.remove.call(this);
+    });
+    
+    // click to edit user as default focus action?
+    //$('#user_pane li').live('click', function(event) {
+    //  Fleet.Controller.focus.call(this);
+    //});
 
     init = true;
     return UserPane;
@@ -113,6 +122,21 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
    */
   UserPane.width = function() {
     return pane.width();
+  };
+
+  /**
+   * editEnabled(bool)
+   *
+   * Set edit-enabled to true or false (false by default). 
+   */
+  UserPane.editEnabled = function(bool) {
+    if (bool) {
+      pane.addClass('edit-enabled');
+    } else {
+      pane.removeClass('edit-enabled');
+    }
+  
+    return UserPane;
   };
 
   return UserPane;
