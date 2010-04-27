@@ -8,9 +8,8 @@ module DeviceServer
 
   class Dispatcher
     def initialize
-      # Redis-rb doesn't know about spop
-      Redis::ALIASES["set_pop"] = "spop"
-      @redis = Redis.build
+      Redis::Client::ALIASES['set_pop'] = 'spop'
+      @redis = Redis::Client.build
     end
 
     def logger
@@ -71,7 +70,7 @@ module DeviceServer
 
 
     def initialize
-      @redis = Redis.build
+      @redis = Redis::Client.build
     end
 
     def process(imei)
