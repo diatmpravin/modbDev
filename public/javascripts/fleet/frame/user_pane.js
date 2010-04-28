@@ -41,7 +41,7 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
         self.removeClass('closed');
       }
     
-      return true;
+      return false;
     });
       
     // User can edit a user
@@ -50,7 +50,7 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
     });
 
     // User can remove a user
-    $('#userpane a.delete').live('click', function() {
+    $('#user_pane a.delete').live('click', function() {
       Fleet.Controller.remove.call(this);
     });
     

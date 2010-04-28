@@ -61,18 +61,15 @@ class UsersController < ApplicationController
         :html => render_to_string(:partial => 'form', :locals => {:user => @user})
       }
     end
-    #if @user.update_attributes(params[:user])
-    #  redirect_to :action => 'index'
-    #else
-    #  render :action => 'edit'
-    #end
   end
   
   def destroy
     @user.destroy
     
-    flash[:notice] = "User '#{@user.login}' has been deleted."
-    redirect_to :action => 'index'
+    render :json => {
+      :status => 'success',
+      :html => 'This space intentionally left blank.'
+    }
   end
   
   def forgot_password

@@ -5,7 +5,8 @@
  */
 var Fleet = Fleet || {};
 Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header, Frame, $) {
-  var usersHtml = null;
+  var confirmRemoveDialog,
+      usersHtml = null;
 
   /* User Tab */
   UserController.tab = 'users';
@@ -14,6 +15,23 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
    * init()
    */
   UserController.init = function () {
+    //if (init) {
+    //  return UserController;
+    //}
+
+    // Our confirm remove dialog box
+    confirmRemoveDialog = $('<div class="dialog" title="Remove User?">Are you sure you want to remove this user?</div>').appendTo('body');
+    confirmRemoveDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Remove': UserController.confirmedRemove,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+
     Header.init().define('users',
       '<span class="buttons"><button type="button" class="newUser">Add New</button></span><span class="title">Users</span>'
     );
@@ -167,9 +185,40 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   UserController.remove = function() {
     //TODO
     var id = $(this).closest('div.user').attr('id');
-    id = substring(id.lastIndexOf('_') + 1);
+    id = id.substring(id.lastIndexOf('_') + 1);
 
-    alert(id);
+    confirmRemoveDialog.data('id', id).errors().dialog('open');
+
+    return false;
+  };
+
+  /**
+    * confirmedRemove()
+    *
+    * Called after the user confirms the removal of a user.
+    */
+  UserController.confirmedRemove = function() {
+    var id = confirmRemoveDialog.data('id');
+
+    confirmRemoveDialog.dialog('close');
+    loading(true);
+
+    $.ajax({
+      url: '/users/' + id,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function(json) {
+        loading(false);
+        if (json.status == 'success') {
+          //TODO: Remove user from hierarchy
+          $('#user_' + id).slideUp(400, function() {
+            $(this).closest('li').remove();
+          });
+        } else {
+          confirmRemoveDialog.errors(json.error).dialog('open');
+        }
+      }
+    });
 
     return false;
   };
