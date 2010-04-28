@@ -99,8 +99,7 @@ describe "Devices Controller", ActionController::TestCase do
         :format => 'json'
       }
       
-      json.length.should.be 1
-      json[0]['id'].should.equal @device.id
+      json['id'].should.equal @device.id
     end
   end
   
