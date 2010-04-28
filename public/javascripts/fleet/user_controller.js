@@ -6,6 +6,7 @@
 var Fleet = Fleet || {};
 Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header, Frame, $) {
   var confirmRemoveDialog,
+      confirmMoveUserDialog,
       usersHtml = null;
 
   /* User Tab */
@@ -28,6 +29,19 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
       width: 300,
       buttons: {
         'Remove': UserController.confirmedRemove,
+        'Cancel': function() { $(this).dialog('close'); }
+      }
+    });
+
+    // confirm Move User dialog box
+    confirmMoveUserDialog = $('<div class="dialog" title="Move User?">Are you sure you want to move this user into the <span class="dropGroup"></span> group?</div>').appendTo('body');
+    confirmMoveUserDialog.dialog({
+      modal: true,
+      autoOpen: false,
+      resizable: false,
+      width: 300,
+      buttons: {
+        'Move': UserController.confirmedMove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
@@ -219,6 +233,65 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
           });
         } else {
           confirmRemoveDialog.errors(json.error).dialog('open');
+        }
+      }
+    });
+
+    return false;
+  };
+
+  /**
+    * move(from, to)
+    *
+    * Show the move confirmation dialog box for the move.
+    */
+  UserController.move = function(from, to) {
+    var dragId = from.attr('id'); dragId = dragId.substring(dragId.lastIndexOf('_') + 1);
+    var dropId = to.attr('id'); dropId = dropId.substring(dropId.lastIndexOf('_') + 1);
+    //var dialog = from.hasClass('group') ? confirmMoveGroupDialog : confirmMoveVehicleDialog;
+    var dialog = confirmMoveUserDialog;
+    
+    // Store references to the dragged item and where it is moving
+    dialog.data('from', from)
+          .data('to', to)
+          .find('span.dropGroup').text(to.find('span.name').text() + ' ');
+    
+    dialog.errors().dialog('open');
+    
+    return false;
+  };
+
+  /**
+    * confirmedMove()
+    *
+    * called after the user confirms the movement of a user.
+    */
+  UserController.confirmedMove = function() {
+    var self = $(this),
+        from = self.data('from'),
+        fromId = from.attr('id'),
+        to = self.data('to'),
+        toId = to.attr('id'),
+        controller = from.hasClass('group') ? '/groups/' : '/users/';
+
+    fromId = fromId.substring(fromId.lastIndexOf('_') + 1);
+    toId = toId.substring(toId.lastIndexOf('_') + 1);
+
+    self.dialog('close');
+    loading(true);
+    
+    $.ajax({
+      url: controller + fromId,
+      data: {'user[device_group_id]' : toId},
+      type: 'PUT',
+      dataType: 'json',
+      success: function(json) {
+        loading(false);
+        
+        if (json.status == 'success') {
+          UserController.refresh();
+        } else {
+          self.errors(json.error).dialog('open');
         }
       }
     });

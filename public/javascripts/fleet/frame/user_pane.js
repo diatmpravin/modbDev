@@ -64,6 +64,13 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
   };
 
   /**
+    * initPane()
+    *
+    */
+  UserPane.initPane = function() {
+  };
+
+  /**
    * showUsers(html)
    *
    * populate the pane
@@ -73,6 +80,24 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
     
     // Hide collapsible arrows for empty groups
     list.find('li:not(:has(li)) span.collapsible').removeClass('collapsible').addClass('empty');
+
+
+    // Allow user to drag users around
+    list.find('div.user').draggable({
+      helper: 'clone',
+      handle: 'div.listing',
+      opacity: 0.8,
+      distance: 8
+    });
+
+    // Allow user to drop stuff onto groups
+    list.find('div.group').droppable({
+      hoverClass: 'drop-hover',
+      greedy: true,
+      drop: function(event, ui) {
+        Fleet.UserController.move(ui.draggable, $(this));
+      }
+    });
 
     return UserPane;
   };
