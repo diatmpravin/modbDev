@@ -150,13 +150,22 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    * bool argument will be true if the mouse is over the point, false otherwise.
    */
   MapController.hoverPoint = function(bool) {
-    var v = this.reference;
+    var v = this.reference, html;
     
     if (bool) {
+      html = '<h4>' + v.name + '</h4><p>' + v.position.time_of_day + '</p><p>' + v.position.occurred_at.substring(0, 10) + '</p>';
+      
+      MapPane.popup(this, html);
+    } else {
+      MapPane.popup(false);
+    }
+    
+    
+    /*if (bool) {
       $('#frame_header span.title').text('Hovering over vehicle id '+v.id);
     } else {
       $('#frame_header span.title').text('No more hover');
-    }
+    }*/
     
     return false;
   };

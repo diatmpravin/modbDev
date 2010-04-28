@@ -17,7 +17,7 @@ module Import
       @file_name = filename
       @data = data
 
-      redis = Redis.build
+      redis = Redis::Client.build
 
       # Save data and set to expire this data after an hour
       redis.set(key(@file_name), data.to_json, (60 * 60))
@@ -26,7 +26,7 @@ module Import
     # Assuming data exists in redis for the given filename
     # take that data and build vehicles
     def process(filename)
-      redis = Redis.build
+      redis = Redis::Client.build
       @data = ActiveSupport::JSON.decode(redis.get(key(filename)))
       @results = []
       @errors = []

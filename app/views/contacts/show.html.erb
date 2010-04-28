@@ -17,9 +17,9 @@
           <%= text_field_tag(:subject, @subject, :id => 'contacts_subject') %>
         </div>
 
+        <%= label_tag(:body, 'Enter your question or concern here') %>
         <div class="field">      
-          <%= label_tag(:body, 'Body') %>
-          <%= text_area_tag(:body, @body, :id => 'contacts_body', :cols => 65, :rows => 12)%>
+          <%= text_area_tag(:body, @body, :id => 'contacts_body', :cols => 80, :rows => 12)%>
         </div>
 
       <% end -%>

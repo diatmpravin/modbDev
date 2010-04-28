@@ -14,7 +14,7 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
     redis_mock = mock()
     redis_mock.expects(:set).with(key, %w(data is kind of cool).to_json, 3600)
 
-    Redis.expects(:build).returns(redis_mock)
+    Redis::Client.expects(:build).returns(redis_mock)
 
     @importer.store("filename.txt", %w(data is kind of cool))
     @importer.data.should.equal %w(data is kind of cool)
@@ -33,7 +33,7 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
     redis_mock = mock()
     redis_mock.expects(:get).with(key).returns(data.to_json)
 
-    Redis.expects(:build).returns(redis_mock)
+    Redis::Client.expects(:build).returns(redis_mock)
 
     @quentin.devices.should.differ(:count).by(5) do
       @importer.process("vehicles.csv")
@@ -64,7 +64,7 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
     redis_mock = mock()
     redis_mock.expects(:get).with(key).returns(data.to_json)
 
-    Redis.expects(:build).returns(redis_mock)
+    Redis::Client.expects(:build).returns(redis_mock)
 
     @quentin.devices.should.differ(:count).by(3) do
       @importer.process("vehicles.csv")
@@ -92,7 +92,7 @@ describe "Import::VehicleImporter", ActiveSupport::TestCase do
     redis_mock = mock()
     redis_mock.expects(:get).with(key).returns(data.to_json)
 
-    Redis.expects(:build).returns(redis_mock)
+    Redis::Client.expects(:build).returns(redis_mock)
 
     @quentin.devices.should.differ(:count).by(1) do
       @importer.process("vehicles.csv")

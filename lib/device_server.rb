@@ -8,9 +8,7 @@ module DeviceServer
 
   class Dispatcher
     def initialize
-      # Redis-rb doesn't know about spop
-      Redis::ALIASES["set_pop"] = "spop"
-      @redis = Redis.build
+      @redis = Redis::Client.build
     end
 
     def logger
@@ -37,7 +35,7 @@ module DeviceServer
     # creating new Resque jobs for each IMEI found
     # before sleeping again.
     def process
-      while imei = @redis.set_pop("mobd:imei:waiting")
+      while imei = @redis.spop("mobd:imei:waiting")
         logger.debug("Dispatching processing for IMEI: #{imei}")
         Resque.enqueue(Worker, imei)
       end
@@ -71,7 +69,7 @@ module DeviceServer
 
 
     def initialize
-      @redis = Redis.build
+      @redis = Redis::Client.build
     end
 
     def process(imei)

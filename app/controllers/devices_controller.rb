@@ -41,7 +41,7 @@ class DevicesController < ApplicationController
         render :action => 'edit'
       }
       format.json {
-        render :json => [@device].to_json(
+        render :json => @device.to_json(
           :methods => [:color, :connected],
           :include => {
             :position => {

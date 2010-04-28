@@ -11,7 +11,7 @@ describe "Reports Controller", ActionController::TestCase do
   context "Running a Vehicle Report" do
     setup do
       # Each create call stores two copies of the report (HTML + CSV)
-      Redis.expects(:build).returns(stub('Redis') {|r|
+      Redis::Client.expects(:build).returns(stub('Redis') {|r|
         r.expects(:[]=).times(3)
       })
     end
@@ -75,7 +75,7 @@ describe "Reports Controller", ActionController::TestCase do
   context "Running a Group Report" do
     setup do
       # Each create call stores two copies of the report (HTML + CSV)
-      Redis.expects(:build).returns(stub('Redis') {|r|
+      Redis::Client.expects(:build).returns(stub('Redis') {|r|
         r.expects(:[]=).times(3)
       })
       
@@ -132,7 +132,7 @@ describe "Reports Controller", ActionController::TestCase do
   
   context "Retrieving a report for display" do
     specify "Retrieving a stored HTML report" do
-      Redis.expects(:build).returns(stub('Redis') {|r|
+      Redis::Client.expects(:build).returns(stub('Redis') {|r|
         r.expects(:[]).with('7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b.html').returns('bananas')
       })
       get :show, {:id => '7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b'}
@@ -142,7 +142,7 @@ describe "Reports Controller", ActionController::TestCase do
     end
     
     specify "Retrieving a stored CSV report" do
-      Redis.expects(:build).returns(stub('Redis') {|r|
+      Redis::Client.expects(:build).returns(stub('Redis') {|r|
         r.expects(:[]).with('7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b.title').returns('The Banana Show')
         r.expects(:[]).with('7a7a7a7a7a7a7a7a9b9b9b9b9b9b9b9b.csv').returns('bananas')
       })
