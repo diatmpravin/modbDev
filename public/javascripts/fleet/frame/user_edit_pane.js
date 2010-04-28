@@ -58,6 +58,21 @@ Fleet.Frame.UserEditPane = (function(UserEditPane, Fleet, $) {
   };
 
   /**
+    * parentGroup(id)
+    *
+    * Set the parent group id in the user form.
+    */
+  UserEditPane.parentGroup = function(id) {
+    if (id == '0') {
+      pane.find('input[name=user[device_group_id]]').val('');
+    } else {
+      pane.find('input[name=user[device_group_id]]').val(id);
+    }
+
+    return UserEditPane;
+  };
+
+  /**
     * open()
     *
     * Open the user edit pane.

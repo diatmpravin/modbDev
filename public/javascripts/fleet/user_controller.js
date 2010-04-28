@@ -46,9 +46,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
       }
     });
 
-    Header.init().define('users',
-      '<span class="buttons"><button type="button" class="newUser">Add New</button></span><span class="title">Users</span>'
-    );
+    Header.init().define('users', '<span class="title">Users</span>');
     
   };
 
@@ -58,9 +56,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
    * Prepare panes
    */
   UserController.setup = function() {
-    Header.init().open('users', {
-      newUser: UserController.newUser
-    });
+    Header.init().open('users');
     
 
     UserPane.init().open().editEnabled(true);
@@ -100,17 +96,23 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   };
 
   /**
-    * newUser()
+    * new()
     *
     * index -> user creation
     */
-  UserController.newUser = function() {
+  UserController.new = function() {
+    var self = $(this),
+        row = self.closest('div.row'),
+        id = row.attr('id');
+
+    id = id.substring(id.lastIndexOf('_') + 1);
+
     loading(true);
     //get and set the html on the UserEditPane
     $.get('/users/new', function(html) {
       
       //set the html
-      UserEditPane.initPane(html).open();
+      UserEditPane.initPane(html).parentGroup(id).open();
       UserPane.close();
 
       //change the Header
@@ -121,6 +123,8 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
 
       loading(false);
     });
+
+    return false;
   };
 
   /**
@@ -131,9 +135,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   UserController.cancel = function() {
     UserEditPane.close().initPane('');
     UserPane.open();
-    Header.open('users', {
-      newUser: UserController.newUser
-    });
+    Header.open('users');
   };
 
   /**
@@ -149,9 +151,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
         loading(false);
 
         if (json.status == 'success') {
-          Header.open('users', {
-            newUser: UserController.newUser
-          });
+          Header.open('users');
           UserEditPane.close().initPane('');
           UserPane.open();
           UserController.refresh();

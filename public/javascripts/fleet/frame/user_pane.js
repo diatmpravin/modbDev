@@ -46,12 +46,17 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
       
     // User can edit a user
     $('#user_pane a.edit').live('click', function() {
-      Fleet.Controller.edit.call(this);
+      return Fleet.Controller.edit.call(this);
     });
 
     // User can remove a user
     $('#user_pane a.delete').live('click', function() {
-      Fleet.Controller.remove.call(this);
+      return Fleet.Controller.remove.call(this);
+    });
+
+    // User can add a user in a group
+    $('#user_pane a.new').live('click', function() {
+      return Fleet.Controller.new.call(this);
     });
     
     // click to edit user as default focus action?
