@@ -30,6 +30,7 @@ class UsersController < ApplicationController
   def create
     if @user.update_attributes(params[:user])
       #flash?
+      #flash[:notice] = "User '#{@user.login}' has been created. A welcome email was sent to '#{@user.email}'."
       render :json => {
         :status => 'success'
       }
@@ -39,12 +40,6 @@ class UsersController < ApplicationController
         :html => render_to_string(:partial => 'form', :locals => {:user => @user})
       }
     end
-    #if @user.update_attributes(params[:user])
-    #  flash[:notice] = "User '#{@user.login}' has been created. A welcome email was sent to '#{@user.email}'."
-    #  redirect_to :action => 'index'
-    #else
-    #  render :action => 'new'
-    #end
   end
   
   def edit

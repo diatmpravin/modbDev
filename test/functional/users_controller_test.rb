@@ -12,7 +12,15 @@ describe "UsersController", ActionController::TestCase do
     specify "list works" do
       get :index
       
-      template.should.equal 'index'
+      should.redirect_to dashboard_path(:anchor => 'users')
+      #template.should.equal 'index'
+    end
+
+    specify "list xhr works" do
+      xhr :get, :index
+
+      template.should.be '_tree'
+      assigns(:users).length.should.not.be.nil
     end
     
     specify "requires USER role" do
@@ -57,7 +65,8 @@ describe "UsersController", ActionController::TestCase do
       wumpus = User.find_by_login 'wumpus'
       wumpus.account.should.not.be.nil
       
-      should.redirect_to :action => 'index'
+      json.length.should.be 1
+      json['status'].should.equal 'success'
     end
     
     specify "handles errors gracefully" do
@@ -68,7 +77,8 @@ describe "UsersController", ActionController::TestCase do
         }
       }
       
-      template.should.equal 'new'
+      json['status'].should.equal 'failure'
+      template.should.equal '_form'
       assigns(:user).errors.on(:login).should.equal "can't be blank"
     end
 
@@ -114,7 +124,8 @@ describe "UsersController", ActionController::TestCase do
         }
       }
       
-      should.redirect_to :action => 'index'
+      json.length.should.be 1
+      json['status'].should.equal 'success'
       @user.reload.name.should.equal 'Much Better Name'
     end
     
@@ -126,7 +137,8 @@ describe "UsersController", ActionController::TestCase do
         }
       }
       
-      template.should.equal 'edit'
+      json['status'].should.equal 'failure'
+      template.should.equal '_form'
       assigns(:user).errors.on(:login).should.equal "can't be blank"
     end
     
@@ -175,7 +187,7 @@ describe "UsersController", ActionController::TestCase do
         }
       end
       
-      should.redirect_to :action => 'index'
+      json['status'].should.equal 'success'
     end
     
     specify "prevents access to other accounts" do
