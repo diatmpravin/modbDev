@@ -62,6 +62,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
    */
   UserController.teardown = function() {
     UserPane.close().showUsers('');
+    UserEditPane.close().initPane('');
     Header.standard('');
     usersHtml = null;
   };
@@ -96,7 +97,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
       
       //set the html
       UserEditPane.initPane(html).open();
-      //open if necessary?
+      UserPane.close();
 
       //change the Header
       Header.edit('New User',
@@ -114,7 +115,8 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
     * Close the edit form for the current user
     */
   UserController.cancel = function() {
-    UserEditPane.close();
+    UserEditPane.close().initPane('');
+    UserPane.open();
     Header.open('users', {
       newUser: UserController.newUser
     });
@@ -136,7 +138,8 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
           Header.open('users', {
             newUser: UserController.newUser
           });
-          UserEditPane.close();
+          UserEditPane.close().initPane('');
+          UserPane.open();
           UserController.refresh();
         } else {
           UserEditPane.initPane(json.html);
@@ -165,9 +168,10 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
     $.get('/users/' + id + '/edit', function(html) {
       //set the html and open if necessary?
       UserEditPane.initPane(html).open();
+      UserPane.close();
 
       //change the Header
-      Header.edit('New User',
+      Header.edit('Edit User',
         UserController.save,
         UserController.cancel
       );
@@ -183,7 +187,6 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
     * clicked user.
     */
   UserController.remove = function() {
-    //TODO
     var id = $(this).closest('div.user').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
 
