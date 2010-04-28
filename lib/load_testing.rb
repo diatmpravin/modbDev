@@ -2,14 +2,10 @@ require 'eventmachine'
 
 module LoadTesting
 
-  class LoadTestSetup
     TEST_ACCOUNT = 9999
     DEVICE_COUNT = 10
 
     IMEI_BASE = "999999999900000"
-
-    def initialize
-    end
 
     def cleanup
       acc = Account.find_by_name('Load Testing')
@@ -77,5 +73,8 @@ module LoadTesting
         cleanup
     end
 
-  end
+    module_function :setup
+    module_function :cleanup
+    module_function :stats
+    module_function :create_test_devices
 end
