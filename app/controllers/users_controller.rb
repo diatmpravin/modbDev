@@ -10,6 +10,18 @@ class UsersController < ApplicationController
   layout except_ajax('users')
   
   def index
+    respond_to do |format|
+      format.html {
+        if request.xhr?
+          render :partial => "tree", :locals => {:node => current_user.device_group_or_root}
+        else
+          redirect_to dashboard_path(:anchor => 'users')
+        end
+      }
+      format.json {
+        render :json => @users.to_json(index_json_options)
+      }
+    end
   end
   
   def new
@@ -17,10 +29,16 @@ class UsersController < ApplicationController
   
   def create
     if @user.update_attributes(params[:user])
-      flash[:notice] = "User '#{@user.login}' has been created. A welcome email was sent to '#{@user.email}'."
-      redirect_to :action => 'index'
+      #flash?
+      #flash[:notice] = "User '#{@user.login}' has been created. A welcome email was sent to '#{@user.email}'."
+      render :json => {
+        :status => 'success'
+      }
     else
-      render :action => 'new'
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:user => @user})
+      }
     end
   end
   
@@ -29,17 +47,24 @@ class UsersController < ApplicationController
   
   def update
     if @user.update_attributes(params[:user])
-      redirect_to :action => 'index'
+      render :json => {
+        :status => 'success'
+      }
     else
-      render :action => 'edit'
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:partial => 'form', :locals => {:user => @user})
+      }
     end
   end
   
   def destroy
     @user.destroy
     
-    flash[:notice] = "User '#{@user.login}' has been deleted."
-    redirect_to :action => 'index'
+    render :json => {
+      :status => 'success',
+      :html => 'This space intentionally left blank.'
+    }
   end
   
   def forgot_password
@@ -128,9 +153,12 @@ class UsersController < ApplicationController
   end
   
   def set_users
-    @users = search_on User do
-      current_account.users.paginate :page => params[:page], :per_page => 30
-    end
+    #@users = search_on User do
+    #  current_account.users.paginate :page => params[:page], :per_page => 30
+    #end
+
+    #@users should be all the users @user can access (all users in current_user.device_group.users)
+    @users = current_account.users
   end
   
   # Prevent the current user from assigning roles they aren't allowed to
@@ -138,5 +166,9 @@ class UsersController < ApplicationController
     if params[:user] && params[:user][:roles]
       params[:user][:roles] = params[:user][:roles].map(&:to_i) & current_user.assignable_roles
     end
+  end
+
+  def index_json_options
+    {:only => [:id, :name, :device_group]}
   end
 end

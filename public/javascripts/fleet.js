@@ -43,6 +43,8 @@ var Fleet = (function(Fleet, $) {
       c = Fleet.ReportController;
     } else if (hash == Fleet.MapController.tab) {
       c = Fleet.MapController;
+    } else if (hash == Fleet.UserController.tab) {
+      c = Fleet.UserController;
     } else {
       c = Fleet.DashboardController;
     }
@@ -57,7 +59,9 @@ var Fleet = (function(Fleet, $) {
     $('#navbar a.landmarks').attr('href', '#' + Fleet.LandmarkController.tab)
                             .click(function() { Fleet.controller(Fleet.LandmarkController); return true; });
     $('#navbar a.geofences').attr('href', '#' + Fleet.GeofenceController.tab)
-                            .click(function() { Fleet.controller(Fleet.GeofenceController); return true; });                            
+                            .click(function() { Fleet.controller(Fleet.GeofenceController); return true; });
+    $('#navbar a.users').attr('href', '#' + Fleet.UserController.tab)
+                        .click(function() { Fleet.controller(Fleet.UserController); return true; });
     
     Fleet.controller(c);
     Fleet.loading(false);

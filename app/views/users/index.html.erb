@@ -1,6 +1,11 @@
 <% content_for 'javascript' do -%>
   <%= javascript_include_tag 'users/index' %>
   <%= javascript_include_tag 'jquery/jquery.blockUI' %>
+  <%= javascript_include_tag 'fleet/frame' %>
+  <%= javascript_include_tag 'fleet/frame/header' %>
+  <%= javascript_include_tag 'fleet/frame/user_pane' %>
+  <%= javascript_include_tag 'fleet/frame/user_edit_pane' %>
+  <%= javascript_include_tag 'fleet/user_controller' %>
 <% end -%>
 
 <% filter %>

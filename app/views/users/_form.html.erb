@@ -23,6 +23,7 @@
     </div>
   </fieldset>
   
+  <% if false -%>
   <h3>Vehicle Group</h3>
   <fieldset>
     <p>Choose a vehicle group below to restrict this user's access to that group and its subgroups.</p>
@@ -32,6 +33,9 @@
       <%= error_message_on user, :device_group_id, :prepend_text => '* Vehicle group ' %>
     </div>
   </fieldset>
+  <% end -%>
+
+  <%= f.hidden_field :device_group_id %>
     
   <h3>User Roles</h3>
   <fieldset>
@@ -46,11 +50,12 @@
       <% end -%>
     </ul>
   </fieldset>
-  
+  <!--
   <div class="clear"></div>
   
   <div class="buttons">
     <%= link_to 'Cancel', users_path %>
     <%= submit_tag 'Save', :class => 'button' %>
   </div>
+  -->
 <% end -%>

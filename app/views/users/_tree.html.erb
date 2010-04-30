@@ -1,0 +1,27 @@
+<% new_tree(node, :root_ol=> false, :vehicles => false, :users => true) do |node, level| -%>
+  <% if node.is_a?(User) -%>
+    <div class="row user clear" id="<%= dom_id(node) %>">
+      <div class="listing">
+        <span class="tab"></span>
+        <span class="indent"></span>
+        <span class="user"></span>
+        <span class="name"><%= node.name %></span>
+        <span class="checkbox"></span>
+        <a href="#remove" class="delete hover-only" title="Remove User">Remove</a>
+        <a href="#edit" class="edit hover-only" title="Edit User">Edit</a>
+      </div>
+    </div>
+  <% else -%>
+    <div class="row group clear" id="<%= dom_id(node) %>">
+      <div class="listing">
+        <span class="tab"></span>
+        <span class="indent"></span>
+        <span class="collapsible open"></span>
+        <span class="name"><%= node.name %></span>
+        <span class="checkbox"></span>
+        <!-- <a href="#new" class="new hover-only" title="New User">New</a> -->
+        <%= link_to 'New', new_user_path, :class => 'new hover-only', :title => 'New Vehicle' %>
+      </div>
+    </div>
+  <% end -%>
+<% end -%>

@@ -45,6 +45,9 @@ class User < ActiveRecord::Base
   before_save                 :encrypt_password
   after_create                :send_set_password
   
+  # Devices that aren't currently in any group
+  named_scope :ungrouped, {:conditions => {:device_group_id => nil}}
+  
   # Allow device_group_id=, but enforce account ownership and group type
   def device_group_id=(value)
     self.device_group = value.blank? ? nil : account.device_groups.find(value)
@@ -54,7 +57,8 @@ class User < ActiveRecord::Base
   def device_group_or_root
     device_group || DeviceGroup::Root.new(
       :children => account.device_groups.roots,
-      :devices => account.devices.ungrouped
+      :devices => account.devices.ungrouped,
+      :users => account.users.ungrouped
     )
   end
   
