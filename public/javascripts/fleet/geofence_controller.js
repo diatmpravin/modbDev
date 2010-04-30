@@ -1,61 +1,61 @@
 /**
- * Fleet.LandmarkController
+ * Fleet.GeofenceController
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
+Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceEditPane, MapPane, GroupPane, Header, Frame, $) {
   var confirmRemoveDialog,
-      landmarks = null,
+      geofences = null,
       lookup = null,
       activePoint = null,
       init = false;
   
   /* Landmark Tab */
-  LandmarkController.tab = 'landmarks';
+  GeofenceController.tab = 'geofences';
   
   /**
    * init()
    */
-  LandmarkController.init = function() {
+  GeofenceController.init = function() {
     if (init) {
-      return LandmarkController;
+      return GeofenceController;
     }
     
     // Our confirm remove dialog box
-    confirmRemoveDialog = $('<div class="dialog" title="Remove Landmark?">Are you sure you want to remove this landmark?</div>').appendTo('body');
+    confirmRemoveDialog = $('<div class="dialog" title="Remove Geofence?">Are you sure you want to remove this geofence?</div>').appendTo('body');
     confirmRemoveDialog.dialog({
       modal: true,
       autoOpen: false,
       resizable: false,
       width: 300,
       buttons: {
-        'Remove': LandmarkController.confirmedRemove,
+        'Remove': GeofenceController.confirmedRemove,
         'Cancel': function() { $(this).dialog('close'); }
       }
     });
     
-    Header.init().define('landmarks',
-      '<span class="buttons"><button type="button" class="newLandmark">Add New</button></span><span class="title">Landmarks</span>'
+    Header.init().define('geofences',
+      '<span class="buttons"><button type="button" class="newGeofence">Add New</button></span><span class="title">Geofences</span>'
     );
     
     init = true;
-    return LandmarkController;
+    return GeofenceController;
   };
   
   /**
    * setup()
    *
-   * Prepare all of our panes and setup the landmark list view.
+   * Prepare all of our panes and setup the geofence list view.
    */
-  LandmarkController.setup = function() {
-    MapPane.init().open().showCollection('landmarks');
-    LandmarkPane.init().open().editEnabled(true);
-    LandmarkEditPane.init().close();
+  GeofenceController.setup = function() {
+    MapPane.init().open().showCollection('geofences');
+    GeofencePane.init().open().editEnabled(true);
+    GeofenceEditPane.init().close();
     GroupPane.init().close();
-    Header.init().open('landmarks', {
-      newLandmark: LandmarkController.newLandmark
+    Header.init().open('geofences', {
+      newGeofence: GeofenceController.newGeofence
     });
     
-    LandmarkController.refresh();
+    GeofenceController.refresh();
   };
   
   /**
@@ -63,55 +63,55 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    *
    * Hide all of our panes and throw away any unnecessary resources.
    */
-  LandmarkController.teardown = function() {
+  GeofenceController.teardown = function() {
     MapPane.close();
-    LandmarkPane.close().editEnabled(false);
-    LandmarkEditPane.close();
+    GeofencePane.close().editEnabled(false);
+    GeofenceEditPane.close();
     GroupPane.close().showGroups('');
     Header.standard('');
     
-    landmarks = null;
+    geofences = null;
     lookup = null;
     activePoint = null;
-    MapPane.collection('landmarks').removeAll();
+    MapPane.collection('geofences').removeAll();
   };
   
   /**
    * refresh()
    *
-   * Load all landmarks from the server and populate them.
+   * Load all geofences from the server and populate them.
    */
-  LandmarkController.refresh = function() {
-    landmarks = lookup = null;
+  GeofenceController.refresh = function() {
+    geofences = lookup = null;
     
-    $.getJSON('/landmarks.json', function(json) {
+    $.getJSON('/geofences.json', function(json) {
       var idx, num, html;
       
-      landmarks = json;
+      geofences = json;
       
-      for(idx = 0, num = landmarks.length, lookup = {}; idx < num; idx++) {
-        lookup[landmarks[idx].id] = landmarks[idx];
+      for(idx = 0, num = geofences.length, lookup = {}; idx < num; idx++) {
+        lookup[geofences[idx].id] = geofences[idx];
       }
       
-      LandmarkPane.showLandmarks(landmarks);
-      showLandmarksOnMap(landmarks);
+      GeofencePane.showGeofences(geofences);
+      showGeofencesOnMap(geofences);
     });
   };
   
   /**
-   * focus(landmark)
+   * focus(geofence)
    *
-   * Pan the map to the given landmark.
+   * Pan the map to the given geofence.
    *
    * focus()
    *
-   * Pan the map to the clicked landmark. Called as an event handler.
+   * Pan the map to the clicked geofence. Called as an event handler.
    */
-  LandmarkController.focus = function(o) {
+  GeofenceController.focus = function(o) {
     var id;
     
     if (!o || (o && o.originalEvent)) {
-      // If no arg, or arg is a jQuery event object, find the landmark
+      // If no arg, or arg is a jQuery event object, find the geofence
       // associated with the clicked dom element.
       
       id = $(this).attr('id');
@@ -121,7 +121,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     }
     
     if (o) {
-      showLandmarkOnMap(o);
+      showGeofenceOnMap(o);
       MapPane.pan(o.poi);
     }
     
@@ -134,7 +134,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Called when a user clicks a point in the map pane. When called, this
    * function will have the MapQuest POI as its context.
    */
-  LandmarkController.focusPoint = function() {
+  GeofenceController.focusPoint = function() {
     //var v = this.reference;
   
     return false;
@@ -147,19 +147,19 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * called, this function will have the MapQuest POI as its context. The
    * bool argument will be true if the mouse is over the point, false otherwise.
    */
-  LandmarkController.hoverPoint = function(bool) {
+  GeofenceController.hoverPoint = function(bool) {
     //var v = this.reference;
     
     return false;
   };
   
   /**
-   * newLandmark()
+   * newGeofence()
    *
-   * Transition from index into creating a landmark.
+   * Transition from index into creating a geofence.
    */
-  LandmarkController.newLandmark = function() {
-    var landmarkHtml, groupHtml;
+  GeofenceController.newGeofence = function() {
+    var geofenceHtml, groupHtml;
     
     loading(true);
     
@@ -167,7 +167,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     // when both are done.
     var requests = 2;
     
-    $.get('/landmarks/new', function(html) {
+    $.get('/geofences/new', function(html) {
       landmarkHtml = html;
       
       ready();
@@ -188,16 +188,16 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         return;
       }
       
-      LandmarkPane.close();
-      LandmarkEditPane.initPane(landmarkHtml).open();
+      GeofencePane.close();
+      GeofenceEditPane.initPane(geofenceHtml).open();
       GroupPane.showGroups(groupHtml).open();
-      Header.edit('New Landmark',
-        LandmarkController.save,
-        LandmarkController.cancel
+      Header.edit('New Geofence',
+        GeofenceController.save,
+        GeofenceController.cancel
       );
       
-      editLandmarkOnMap(null);
-      LandmarkEditPane.location(MapPane.center());
+      editGeofenceOnMap(null);
+      GeofenceEditPane.location(MapPane.center());
       
       loading(false);
     }
@@ -208,16 +208,16 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   /**
    * edit()
    *
-   * Transition from index into editing a landmark.
+   * Transition from index into editing a geofence.
    */
-  LandmarkController.edit = function(e) {
-    var id, landmark, landmarkHtml, groupHtml;
+  GeofenceController.edit = function(e) {
+    var id, geofence, geofenceHtml, groupHtml;
 
     id = $(this).closest('li').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
     
-    if (landmark = lookup[id]) {
-      LandmarkController.focus(landmark);
+    if (geofence = lookup[id]) {
+      GeofenceController.focus(geofence);
     }
     
     loading(true);
@@ -226,8 +226,8 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     // when both are done.
     var requests = 2;
     
-    $.get('/landmarks/' + id + '/edit', function(html) {
-      landmarkHtml = html;
+    $.get('/geofences/' + id + '/edit', function(html) {
+      geofenceHtml = html;
       
       ready();
     });
@@ -247,20 +247,20 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         return;
       }
       
-      LandmarkPane.close();
-      LandmarkEditPane.initPane(landmarkHtml).open();
+      GeofencePane.close();
+      GeofenceEditPane.initPane(geofenceHtml).open();
       GroupPane.showGroups(groupHtml).open();
-      GroupPane.select(LandmarkEditPane.groups());
-      Header.edit('Edit Landmark',
-        LandmarkController.save,
-        LandmarkController.cancel
+      GroupPane.select(GeofenceEditPane.groups());
+      Header.edit('Edit Geofence',
+        GeofenceController.save,
+        GeofenceController.cancel
       );
       
       // Make sure our landmark object is up to date, then show it on map
-      var l = LandmarkEditPane.location();
-      landmark.latitude = l.latitude;
-      landmark.longitude = l.longitude;
-      editLandmarkOnMap(landmark);
+      var l = GeofenceEditPane.location();
+      geofence.latitude = l.latitude;
+      geofence.longitude = l.longitude;
+      editGeofenceOnMap(geofence);
       
       loading(false);
     }
@@ -275,36 +275,36 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Save the landmark currently being edited. This handler is used by both New
    * and Edit Landmark.
    */
-  LandmarkController.save = function() {
+  GeofenceController.save = function() {
     var l;
     
     loading(true);
     
     // Get the selected groups from the group pane into the form
-    LandmarkEditPane.groups(GroupPane.selected());
+    GeofenceEditPane.groups(GroupPane.selected());
     
-    LandmarkEditPane.submit({
+    GeofenceEditPane.submit({
       dataType: 'json',
       success: function(json) {
         loading(false);
         
         if (json.status == 'success') {
-          // If it's an update, get rid of the old landmark
-          if (l = lookup[json.landmark.id]) {
+          // If it's an update, get rid of the old geofence
+          if (l = lookup[json.geofence.id]) {
             if (l.poi) {
-              MapPane.removePoint(l.poi, 'landmarks');
+              MapPane.removePoint(l.poi, 'geofences');
             }
             l.poi = null;
           }
           
-          // Now create a new landmark
-          lookup[json.landmark.id] = json.landmark;
-          showLandmarkOnMap(json.landmark);
-          LandmarkPane.showLandmark(json.landmark);
+          // Now create a new geofence
+          lookup[json.geofence.id] = json.geofence;
+          showGeofenceOnMap(json.geofence);
+          GeofencePane.showGeofence(json.geofence);
           
           closeEditPanes();
         } else {
-          LandmarkEditPane.initPane(json.html);
+          GeofenceEditPane.initPane(json.html);
         }
       }
     });
@@ -315,10 +315,10 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   /**
    * cancel()
    *
-   * Cancel an in-progress Edit Landmark or Create Landmark state by going
+   * Cancel an in-progress Edit Geofence or Create Geofence state by going
    * back to the list view.
    */
-  LandmarkController.cancel = function() {
+  GeofenceController.cancel = function() {
     closeEditPanes();
     
     return false;
@@ -328,9 +328,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * remove()
    *
    * Display a confirmation dialog, asking if the user wants to remove the
-   * clicked landmark.
+   * clicked geofence.
    */
-  LandmarkController.remove = function() {
+  GeofenceController.remove = function() {
     var id = $(this).closest('li').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
   
@@ -342,29 +342,29 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   /**
    * confirmedRemove()
    *
-   * Called after the user confirms the removal of a landmark.
+   * Called after the user confirms the removal of a geofence.
    */
-  LandmarkController.confirmedRemove = function() {
+  GeofenceController.confirmedRemove = function() {
     var id = confirmRemoveDialog.data('id');
     
     confirmRemoveDialog.dialog('close');
     loading(true);
     
     $.ajax({
-      url: '/landmarks/' + id,
+      url: '/geofences/' + id,
       type: 'DELETE',
       dataType: 'json',
       success: function(json) {
         loading(false);
         if (json.status == 'success') {
-          // Remove landmark from list
-          $('#landmark_' + id).slideUp(400, function() {
+          // Remove geofence from list
+          $('#geofence_' + id).slideUp(400, function() {
             $(this).remove();
           });
           
-          // Remove landmark from map
+          // Remove geofence from map
           if (lookup[id].poi) {
-            MapPane.removePoint(lookup[id].poi, 'landmarks');
+            MapPane.removePoint(lookup[id].poi, 'geofences');
             lookup[id].poi = null;
           }
         } else {
@@ -382,9 +382,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Called from MapQuest's Event Manager whenever a user drags a point on the
    * map. We will update the edit form with the new lat/long.
    */
-  LandmarkController.dragPoint = function(mqEvent) {
+  GeofenceController.dragPoint = function(mqEvent) {
     if (activePoint) {
-      LandmarkEditPane.location(activePoint.latLng);
+      GeofenceEditPane.location(activePoint.latLng);
     }
     
     return false;
@@ -392,32 +392,29 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   
   /* Private Functions */
   
-  function showLandmarksOnMap(landmarks) {
+  function showGeofencesOnMap(geofences) {
     var idx, num,
-        collection = MapPane.collection('landmarks');
+        collection = MapPane.collection('geofences');
     
-    for(idx = 0, num = landmarks.length; idx < num; idx++) {
-      if (!landmarks[idx].poi) {
-        landmarks[idx].poi = MapPane.addPoint(landmarks[idx].latitude, landmarks[idx].longitude, {
-          icon: '/images/landmark.png',
-          size: [16, 16],
-          offset: [-10, -15],
-          collection: collection,
-          reference: landmarks[idx]
-        });
-      }
+    for(idx = 0, num = geofences.length; idx < num; idx++) {
+      showGeofenceOnMap(geofences[idx]);
     }
   }
   
-  function showLandmarkOnMap(landmark) {
-    if (!landmark.poi) {
-      landmark.poi = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+  function showGeofenceOnMap(geofence) {
+    if (!geofence.shape) {
+      geofence.shape = MapPane.addShape(geofence.coordinates, {
+        collection: 'geofences',
+        reference: geofence,
+      });
+      
+      /*landmark.poi = MapPane.addPoint(landmark.latitude, landmark.longitude, {
         icon: '/images/landmark.png',
         size: [16, 16],
         offset: [-10, -15],
         collection: 'landmarks',
         reference: landmark
-      });
+      });*/
     }
   }
   
@@ -436,7 +433,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       });
     }
     
-    MQA.EventManager.addListener(activePoint, 'mouseup', LandmarkController.dragPoint);
+    MQA.EventManager.addListener(activePoint, 'mouseup', GeofenceController.dragPoint);
     activePoint.setValue('draggable', true);
     
     MapPane.showCollection('temp');
@@ -462,10 +459,10 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     Header.loading(bool);
   }
   
-  return LandmarkController;
-}(Fleet.LandmarkController || {},
-  Fleet.Frame.LandmarkPane,
-  Fleet.Frame.LandmarkEditPane,
+  return GeofenceController;
+}(Fleet.GeofenceController || {},
+  Fleet.Frame.GeofencePane,
+  Fleet.Frame.GeofenceEditPane,
   Fleet.Frame.MapPane,
   Fleet.Frame.GroupPane,
   Fleet.Frame.Header,

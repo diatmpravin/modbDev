@@ -1,25 +1,5 @@
 /**
- *              .<@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@>. 
- *           .<@@@@@@   $$$$$$$$$$$$$$$$$$$$$\^^^^^^/$$$$@@@>. 
- *        .<@@@@@<   .$$$$$'~       '~'$$$$$$$\  /$$$$$$>@@@@@>. 
- *     .<@@@@@<'   o$$$$$$                `'$$$$$$$$$$$$  '>@@@@@>. 
- *  .<@@@@@<'    o$$$$$$oo.    CRAYON FLEET  )$$$$$$$$$$     '>@@@@@>.
- *  '<@@@@@<    o$$$$$$$$$$$.                                 >@@@@@>' 
- *    '<@@@@<  o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$oooooo...    >@@@@>' 
- *      '@@@@< $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$)>@@@@>' 
- *        '<@@@@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@@@@>' 
- *          '<@@@@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@@@@>' 
- *            '<@@@@<    .oooo.                    .$$@@@@>' 
- *              '<@@@@oo$$$$$$$o..             ..o$$@@@@>' 
- *                '<@@@@$$$$$$$$$$$$$oooooooo$$$$$@@@@>' 
- *                  '<@@@@'$$$$$$$$$$$$$$$$$$$$$@@@@>' 
- *                    '<@@@@<   ~"SSSSSS"~   >@@@@>' 
- *                      '<@@@@<            >@@@@>' 
- *                        '<@@@@<        >@@@@>' 
- *                          '<@@@@<    >@@@@>' 
- *                            '<@@@@<>@@@@>' 
- *                              '<@@@@@@>' 
- *                                '<@@>' 
+ * Fleet
  */
 var Fleet = (function(Fleet, $) {
   /**
@@ -55,7 +35,9 @@ var Fleet = (function(Fleet, $) {
     // Start up an initial controller
     hash = location.href.split('#')[1] || '';
     
-    if (hash == Fleet.LandmarkController.tab) {
+    if (hash == Fleet.GeofenceController.tab) {
+      c = Fleet.GeofenceController;
+    } else if (hash == Fleet.LandmarkController.tab) {
       c = Fleet.LandmarkController;
     } else if (hash == Fleet.ReportController.tab) {
       c = Fleet.ReportController;
@@ -74,6 +56,8 @@ var Fleet = (function(Fleet, $) {
                           .click(function() { Fleet.controller(Fleet.ReportController); return true; });
     $('#navbar a.landmarks').attr('href', '#' + Fleet.LandmarkController.tab)
                             .click(function() { Fleet.controller(Fleet.LandmarkController); return true; });
+    $('#navbar a.geofences').attr('href', '#' + Fleet.GeofenceController.tab)
+                            .click(function() { Fleet.controller(Fleet.GeofenceController); return true; });                            
     
     Fleet.controller(c);
     Fleet.loading(false);
