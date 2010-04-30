@@ -280,6 +280,20 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   };
   
   /**
+   * addShape(coordinates, options)
+   */
+  MapPane.addShape = function(coordinates, options) {
+    // ELLIPSE = 0   # coordinates = [upper-left point, lower-right point]
+    // RECTANGLE = 1 # coordinates = [upper-left point, lower-right point]
+    // POLYGON = 2   # coordinates = [p0, p1, p2, ... pN]
+    
+    var shape = null;
+    
+  
+    return shape;
+  };
+  
+  /**
    * pan(poi)
    *
    * Pan the map to the location of the given MapQuest point object.

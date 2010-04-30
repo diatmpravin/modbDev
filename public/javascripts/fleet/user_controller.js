@@ -107,7 +107,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
     *
     * index -> user creation
     */
-  UserController.new = function() {
+  UserController.newUser = function() {
     var self = $(this),
         row = self.closest('div.row'),
         id = row.attr('id');
