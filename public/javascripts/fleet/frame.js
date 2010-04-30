@@ -40,8 +40,10 @@ Fleet.Frame = (function(Frame, $) {
     // Handle browser resize events
     $(window).resize(Frame.resize).resize();
     
-    // Do something
-    frame.disableSelection();
+    // "disableSelection" makes it so the user won't accidentally select things with
+    // the mouse. It should be applied somewhere on the list panes so drag/drop looks
+    // OK. Commented out here so it doesn't affect text fields on Edit Panes.
+    // frame.disableSelection();
     
     // Adjust the padding of certain elements to reflect the scrollbar size
     /*var scrollbarSize = q('#data_pane').width() - q('#data_pane > ol').width();

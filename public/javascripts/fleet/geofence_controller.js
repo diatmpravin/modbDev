@@ -9,7 +9,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       activePoint = null,
       init = false;
   
-  /* Landmark Tab */
+  /* Geofence Tab */
   GeofenceController.tab = 'geofences';
   
   /**
@@ -403,10 +403,14 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   
   function showGeofenceOnMap(geofence) {
     if (!geofence.shape) {
+      geofence.shape = null;
+    }
+    
+    /*if (!geofence.shape) {
       geofence.shape = MapPane.addShape(geofence.coordinates, {
         collection: 'geofences',
         reference: geofence,
-      });
+      });*/
       
       /*landmark.poi = MapPane.addPoint(landmark.latitude, landmark.longitude, {
         icon: '/images/landmark.png',
@@ -415,7 +419,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
         collection: 'landmarks',
         reference: landmark
       });*/
-    }
+    //}
   }
   
   function editLandmarkOnMap(landmark) {
