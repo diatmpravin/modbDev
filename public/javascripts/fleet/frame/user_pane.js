@@ -7,7 +7,7 @@
 var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
-  var width = 280,
+  var width = '100%',
       pane,
       list,
       init = false;

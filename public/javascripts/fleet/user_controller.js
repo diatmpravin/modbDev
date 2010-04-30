@@ -46,7 +46,14 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
       }
     });
 
-    Header.init().define('users', '<span class="title">Users</span>');
+    // define the user header
+    Header.init().define('users', 
+      '<span class="title">Users</span>' +
+      '<div class="user_data">' +
+      '<span class="login"><span>Login</span></span>' +
+      '<span class="email"><span>E-mail Address</span></span>' +
+      '<span class="filler"><span></span></span>' +
+      '</div>');
     
   };
 

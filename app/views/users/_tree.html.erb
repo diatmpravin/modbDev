@@ -10,6 +10,11 @@
         <a href="#remove" class="delete hover-only" title="Remove User">Remove</a>
         <a href="#edit" class="edit hover-only" title="Edit User">Edit</a>
       </div>
+      <div class="user_data">
+        <span class="login"><%= h(node.login) %></span>
+        <span class="email"><%= h(node.email) %></span>
+        <span class="filler"></span>
+      </div>
     </div>
   <% else -%>
     <div class="row group clear" id="<%= dom_id(node) %>">
@@ -21,6 +26,11 @@
         <span class="checkbox"></span>
         <!-- <a href="#new" class="new hover-only" title="New User">New</a> -->
         <%= link_to 'New', new_user_path, :class => 'new hover-only', :title => 'New Vehicle' %>
+      </div>
+      <div class="user_data">
+        <span class="login"></span>
+        <span class="email"></span>
+        <span class="filler"></span>
       </div>
     </div>
   <% end -%>
