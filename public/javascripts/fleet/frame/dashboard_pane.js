@@ -52,7 +52,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     // Hovering over the New icon makes the widget pop up after a brief delay
     $('#dashboard_pane span.new').live('mouseenter', function() {
       new_chooser.appendTo(this);
-      showNewChooser(250);
+      showNewChooser(400);
     }).live('mouseleave', function() {
       if (new_chooser_timer) {
         clearTimeout(new_chooser_timer);
@@ -90,6 +90,10 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
    */
   DashboardPane.initPane = function(html, id) {
     var root = $('#' + id);
+    
+    // Make sure our chooser object isn't caught inside the list when we blow
+    // it away.
+    new_chooser.appendTo('body');
     
     // Needs some work. Basically, we're trying to replace only the portion of
     // the tree that was sent us, or the entire tree if it's the first time.
