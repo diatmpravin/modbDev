@@ -7,7 +7,8 @@ var Fleet = Fleet || {};
 Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header, Frame, $) {
   var confirmRemoveDialog,
       confirmMoveUserDialog,
-      usersHtml = null;
+      usersHtml = null,
+      init = false;
 
   /* User Tab */
   UserController.tab = 'users';
@@ -16,9 +17,9 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
    * init()
    */
   UserController.init = function () {
-    //if (init) {
-    //  return UserController;
-    //}
+    if (init) {
+      return UserController;
+    }
 
     // Our confirm remove dialog box
     confirmRemoveDialog = $('<div class="dialog" title="Remove User?">Are you sure you want to remove this user?</div>').appendTo('body');
@@ -55,6 +56,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
       '<span class="filler"><span></span></span>' +
       '</div>');
     
+    init=true;
   };
 
   /**
