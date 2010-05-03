@@ -23,18 +23,6 @@
     </div>
   </fieldset>
   
-  <% if false -%>
-  <h3>Vehicle Group</h3>
-  <fieldset>
-    <p>Choose a vehicle group below to restrict this user's access to that group and its subgroups.</p>
-    <div class="field">
-      <%= f.label :device_group_id, 'Group' %>
-      <%= f.collection_select :device_group_id, current_account.device_groups, :id, :name, :include_blank => 'None' %>
-      <%= error_message_on user, :device_group_id, :prepend_text => '* Vehicle group ' %>
-    </div>
-  </fieldset>
-  <% end -%>
-
   <%= f.hidden_field :device_group_id %>
     
   <h3>User Roles</h3>
