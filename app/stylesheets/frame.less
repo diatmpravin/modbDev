@@ -54,6 +54,10 @@
     div.dashboard_data {
       display:none;
     }
+
+    div.user_data {
+      display:none;
+    }
     
     a.hover-only, span.hover-only {
       display:none;
@@ -116,6 +120,11 @@ div.hierarchy {
         background:transparent url(/images/vehicle.png) no-repeat center center;
         width:18px;
       }
+
+      span.user {
+        background:transparent url(/images/user.png) no-repeat center center;
+        width:18px;
+      }
       
       span.name {
         padding-left:4px;
@@ -162,6 +171,34 @@ div.hierarchy {
   li li li li li       span.indent { width:4px + 14px * 4; }
   li li li li li li    span.indent { width:4px + 14px * 5; }
   li li li li li li li span.indent { width:4px + 14px * 6; }
+}
+
+
+/**
+ * User data - used by user pane and user header
+ */
+div.user_data {
+  float:left;
+  margin-right:0px - @listing_width;
+  width:100%;
+
+  > span {
+    border-left:solid 1px #c0c0c0;
+    display:block;
+    float:left;
+    width:10%;
+    text-align:right;
+  }
+
+  span.login {
+    width:19%;
+    padding-right:1%;
+  }
+
+  span.email {
+    width:39%;
+    padding-right:1%;
+  }
 }
 
 /**
@@ -309,6 +346,34 @@ div.dashboard_data {
 
     button {
       margin-left:8px;
+    }
+  }
+}
+
+/* Special Rules for the User Header's columns */
+#frame_header {
+  div.users {
+    padding-right:280px;
+
+    span.title {
+      float:left;
+      width:@listing_width - 16px;
+    }
+
+    .user_data {
+      > span {
+        line-height:1em;
+        height:38px;
+        position:relative;
+        
+        > span {
+          left:0px;
+          bottom:6px;
+          position:absolute;
+          text-align:center;
+          width:100%;
+        }
+      }
     }
   }
 }
@@ -469,8 +534,26 @@ div.dashboard_data {
   overflow-y:scroll;
   position:absolute;
   top:0;
-  width:280px;
+  width:100%;
   z-index:7;
+  
+  > ol {
+    margin-top:-1px;
+  }
+
+  div.row {
+    padding-right:280px;
+  }
+  
+  /* Don't want all that extra padding when dragging things around */
+  div.ui-draggable-dragging {
+    padding-right:0px;
+  }
+
+  div.listing {
+    float:left;
+    width:@listing_width;
+  }
 }
 
 /**
@@ -685,6 +768,87 @@ div.dashboard_data {
  * Landmark Edit Pane
  */
 #landmark_edit_pane {
+  background:#f8f8f8;
+  border:solid 1px #999;
+  height:200px;
+  position:absolute;
+  right:8px;
+  top:8px;
+  width:270px;
+  z-index:7;
+  
+  .content {
+    padding:8px;
+  }
+}
+
+/**
+ * Geofence Pane
+ */
+#geofence_pane {
+  background:#303030 url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:280px;
+  z-index:7;
+  
+  > ol {
+    margin-top:-1px;
+  }
+
+  li {
+    background-color:#f8f8f8;
+    border-top:solid 1px #c0c0c0;
+    cursor:default;
+    height:25px;
+    line-height:25px;
+    padding:0 0 0 8px;
+    
+    a {
+      float:right;
+      height:25px;
+      width:22px;
+    }
+
+    span.checkbox {
+      background:transparent url(/images/unchecked.png) no-repeat center center;
+      float:right;
+      height:25px;
+      width:23px;
+    }
+  }
+  
+  li:hover {
+    background-color:#e3ecf5;
+  }
+
+  li.active {
+    background-color:#e7f5e3;
+
+    span.checkbox {
+      background-image:url(/images/checked.png);
+    }
+  }
+}
+
+#geofence_pane.edit-enabled {
+  span.checkbox {
+    display:none;
+  }
+  
+  li:hover a.hover-only {
+    display:block;
+  }
+}
+
+/**
+ * Geofence Edit Pane
+ */
+#geofence_edit_pane {
   background:#f8f8f8;
   border:solid 1px #999;
   height:200px;

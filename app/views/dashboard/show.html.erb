@@ -1,21 +1,25 @@
 <% content_for :javascript do -%>
   <%= mapquest_include_tags %>
   <%= javascript_include_tag 'mapquest/moshi.viewcontrol', 'mapquest/moshi.zoomcontrol', 'moshimap' %>
+  <%= javascript_include_tag 'fleet/frame/dashboard_pane' %>
   <%= javascript_include_tag 'fleet/frame/map_pane' %>
+  <%= javascript_include_tag 'fleet/frame/report_pane' %>
+  <%= javascript_include_tag 'fleet/frame/group_pane' %>
+  <%= javascript_include_tag 'fleet/frame/group_edit_pane' %>
+  <%= javascript_include_tag 'fleet/frame/vehicle_pane' %>
+  <%= javascript_include_tag 'fleet/frame/vehicle_edit_pane' %>
   <%= javascript_include_tag 'fleet/frame/landmark_pane' %>
   <%= javascript_include_tag 'fleet/frame/landmark_edit_pane' %>
-  <%= javascript_include_tag 'fleet/frame/group_pane' %>
-  <%= javascript_include_tag 'fleet/frame/vehicle_pane' %>
-  <%= javascript_include_tag 'fleet/frame/report_pane' %>
-  <%= javascript_include_tag 'fleet/frame/dashboard_pane' %>
+  <%= javascript_include_tag 'fleet/frame/geofence_pane' %>
+  <%= javascript_include_tag 'fleet/frame/geofence_edit_pane' %>
   <%= javascript_include_tag 'fleet/frame/user_pane' %>
-  <%= javascript_include_tag 'fleet/frame/group_edit_pane' %>
-  <%= javascript_include_tag 'fleet/frame/vehicle_edit_pane' %>
   <%= javascript_include_tag 'fleet/frame/user_edit_pane' %>
+  
   <%= javascript_include_tag 'fleet/dashboard_controller' %>
   <%= javascript_include_tag 'fleet/map_controller' %>
   <%= javascript_include_tag 'fleet/report_controller' %>
   <%= javascript_include_tag 'fleet/landmark_controller' %>
+  <%= javascript_include_tag 'fleet/geofence_controller' %>
   <%= javascript_include_tag 'fleet/user_controller' %>
   
   <%= javascript_include_tag 'alert_recipients.js' %>
