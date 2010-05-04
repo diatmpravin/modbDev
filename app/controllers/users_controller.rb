@@ -52,6 +52,8 @@ class UsersController < ApplicationController
       params[:user][:device_group_id] = nil
     end
     
+    params[:user][:roles] ||= []
+
     if @user.update_attributes(params[:user])
       render :json => {
         :status => 'success'
