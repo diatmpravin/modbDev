@@ -78,4 +78,7 @@ module ReportCardHelper
     disabled
   end
 
+  def can_drag(user)
+    return 'undraggable' unless user.has_role? User::Role::FLEET
+  end
 end
