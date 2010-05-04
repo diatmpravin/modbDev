@@ -69,9 +69,11 @@ class User < ActiveRecord::Base
     BILLING  = 2
     USERS    = 3
     FLEET    = 4
+    LANDMARK = 5
+    GEOFENCE = 6
     
     ROLES = [
-      ADMIN, RESELLER, BILLING, USERS, FLEET
+      ADMIN, RESELLER, BILLING, USERS, FLEET, LANDMARK, GEOFENCE
     ].freeze
   end
   

@@ -25,7 +25,7 @@ describe "Mailer", ActiveSupport::TestCase do
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['quentin@example.com']
-    Mailer.deliveries.first.subject.should.equal 'Smart Fleet Services: Welcome'
+    Mailer.deliveries.first.subject.should.equal 'Teleweave: Welcome'
     Mailer.deliveries.first.body.should =~ 'http://localhost:3000/users/set_password/quarter_pounder'
   end
   

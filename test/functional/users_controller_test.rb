@@ -29,7 +29,7 @@ describe "UsersController", ActionController::TestCase do
       
       get :index
       
-      should.redirect_to root_path
+      response.status.should.equal 403
     end
   end
   
@@ -88,8 +88,8 @@ describe "UsersController", ActionController::TestCase do
       
       get :new
       
-      should.redirect_to root_path
-      
+      response.status.should.be 403
+ 
       post :create, {
         :user => {
           :name => 'Hunt The Wumpus',
@@ -97,7 +97,7 @@ describe "UsersController", ActionController::TestCase do
         }
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
   end
   
@@ -161,7 +161,7 @@ describe "UsersController", ActionController::TestCase do
         :id => @user.id
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
       
       put :update, {
         :id => @user.id,
@@ -170,7 +170,7 @@ describe "UsersController", ActionController::TestCase do
         }
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
   end
   
@@ -206,7 +206,7 @@ describe "UsersController", ActionController::TestCase do
         :id => @user.id
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
   end
   

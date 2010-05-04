@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :require_role, :except => [:forgot_password, :reset_password, :set_password]
+
+  require_role User::Role::USERS, :except => [:forgot_password, :reset_password, :set_password]
   before_filter :new_user,     :only => [:new, :create]
   before_filter :set_user,     :only => [:edit, :update, :destroy]
   before_filter :set_users,    :only => :index
@@ -8,7 +9,7 @@ class UsersController < ApplicationController
   skip_before_filter :login_required, :only => [:forgot_password, :reset_password, :set_password]
   
   layout except_ajax('users')
-  
+
   def index
     respond_to do |format|
       format.html {
@@ -140,10 +141,7 @@ class UsersController < ApplicationController
   end
   
   protected
-  def require_role
-    redirect_to root_path unless current_user.has_role?(User::Role::USERS)
-  end
-  
+ 
   def new_user
     @user = current_account.users.new
   end
@@ -158,6 +156,7 @@ class UsersController < ApplicationController
     #end
 
     #@users should be all the users @user can access (all users in current_user.device_group.users)
+    #@users = current_account.users.find(:all, :conditions => [ "id <> ?", current_user.id ])
     @users = current_account.users
   end
   

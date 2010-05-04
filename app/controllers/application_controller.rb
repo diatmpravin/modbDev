@@ -95,4 +95,35 @@ class ApplicationController < ActionController::Base
       'http://dlqa.gomoshi.com/mobd'
     end
   end
+
+  # complicated role checking
+  class << self
+    def require_role(roles, options = {})
+
+      self.instance_variable_set '@required_roles', roles.is_a?(Array) ? roles : [roles]
+
+      before_filter :require_role, options
+    end
+
+    alias require_roles require_role
+  end  
+
+  def require_role
+    roles = self.class.instance_variable_get '@required_roles'
+
+    roles.each do |role|
+      unless current_user.has_role?(role)
+        respond_to do |format|
+          format.html {
+            render :nothing => true, :status => 403
+          }
+          format.json {
+            render :json => {:status => 'failure'}, :status => 403
+          }
+        end
+        return
+      end
+    end
+  end
+ 
 end

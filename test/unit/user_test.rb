@@ -205,8 +205,7 @@ describe "User", ActiveSupport::TestCase do
       @user.time_zone = 'Not a real time zone'
       @user.should.not.save
       @user.errors.on(:time_zone).should.equal 'is not included in the list'
-    end
-    
+    end 
     specify "has a shortcut for its zone object" do
       @user.time_zone = 'Eastern Time (US & Canada)'
       @user.zone.name.should.equal 'Eastern Time (US & Canada)'
@@ -240,12 +239,16 @@ describe "User", ActiveSupport::TestCase do
       assert @user.roles.include?(User::Role::BILLING)
       assert @user.roles.include?(User::Role::USERS)
       assert @user.roles.include?(User::Role::FLEET)
+      assert @user.roles.include?(User::Role::LANDMARK)
+      assert @user.roles.include?(User::Role::GEOFENCE)
       
       assert @user.has_role?(User::Role::ADMIN)
       assert @user.has_role?(User::Role::RESELLER)
       assert @user.has_role?(User::Role::BILLING)
       assert @user.has_role?(User::Role::USERS)
       assert @user.has_role?(User::Role::FLEET)
+      assert @user.has_role?(User::Role::LANDMARK)
+      assert @user.has_role?(User::Role::GEOFENCE)
     end
     
     specify "a user's assignble roles should never include admin" do
@@ -253,6 +256,12 @@ describe "User", ActiveSupport::TestCase do
       
       assert !@user.assignable_roles.include?(User::Role::ADMIN)
       assert @user.assignable_roles.include?(User::Role::FLEET)
+    end
+
+    specify "a user's assignable roles should include only the roles they have" do
+      @user.roles = [User::Role::USERS, User::Role::FLEET, User::Role::GEOFENCE]
+
+      assert !@user.assignable_roles.include?(User::Role::LANDMARK)
     end
     
     specify "a user's assignable roles should include reseller ONLY if account is a reseller" do
