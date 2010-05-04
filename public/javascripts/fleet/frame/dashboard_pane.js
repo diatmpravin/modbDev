@@ -91,8 +91,8 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   DashboardPane.initPane = function(html, id) {
     var root = $('#' + id);
     
-    // Make sure our chooser object isn't caught inside the list when we blow
-    // it away.
+    // Our New Chooser object might be inside the list, so move it before
+    // we blow anything away.
     new_chooser.appendTo('body');
     
     // Needs some work. Basically, we're trying to replace only the portion of
