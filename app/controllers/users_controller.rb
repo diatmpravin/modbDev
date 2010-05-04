@@ -47,6 +47,11 @@ class UsersController < ApplicationController
   end
   
   def update
+    if params[:user][:device_group_id] == '0'
+      # Root
+      params[:user][:device_group_id] = nil
+    end
+    
     if @user.update_attributes(params[:user])
       render :json => {
         :status => 'success'
