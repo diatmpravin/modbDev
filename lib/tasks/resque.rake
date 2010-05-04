@@ -8,8 +8,32 @@ rescue LoadError
   $stderr.puts "*" * 40
 end
 
-namespace :workers do
+# Custom PID File Handling
+namespace :resque do
+  task :setup do
+    # This code runs before we enter the worker loop
 
+    if ENV['PIDFILE']
+      File.open(ENV['PIDFILE'], 'w') do |f|
+        f << Process.pid.to_s
+      end
+    end
+  end
+
+  task :work do
+    # This code runs after the worker loop ends (i.e., we were killed)
+
+    if ENV['PIDFILE']
+      begin
+        File.delete ENV['PIDFILE']
+      rescue => ex
+        $stderr.puts "Unable to delete pidfile, ignoring."
+      end
+    end
+  end
+end
+
+namespace :workers do
   desc "
     Start up COUNT (default 1) resque worker(s) that listen on the QUEUE (default '*') queue.
     If you're looking to add to an already existing list of workers, use START to start the
