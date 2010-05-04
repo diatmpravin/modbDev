@@ -357,3 +357,37 @@ jQuery.fn.optionEnable = function() {
   }
   return ths;
 };
+
+
+/* Avoid known jQuery 1.4.2 bug in drag/drop for IE7 & 8 */
+if ('getBoundingClientRect' in document.documentElement) {
+  jQuery.fn.offset = function(options) {
+    var elem = this[0];
+    
+    if (options) {
+      return this.each(function(i) {
+        jQuery.offset.setOffset(this, options, i);
+      });
+    }
+    
+    if (!elem || !elem.ownerDocument) {
+      return null;
+    }
+    
+    if (elem === elem.ownerDocument.body) {
+      return jQuery.offset.bodyOffset(elem);
+    }
+
+    try {
+		  var box = elem.getBoundingClientRect(), doc = elem.ownerDocument, body = doc.body, docElem = doc.documentElement,
+			  clientTop = docElem.clientTop || body.clientTop || 0, clientLeft = docElem.clientLeft || body.clientLeft || 0,
+			  top  = box.top  + (self.pageYOffset || jQuery.support.boxModel && docElem.scrollTop  || body.scrollTop ) - clientTop,
+			  left = box.left + (self.pageXOffset || jQuery.support.boxModel && docElem.scrollLeft || body.scrollLeft) - clientLeft;
+    } catch (ex) {
+      var box = {top : 0, left: 0, right: 0, bottom: 0};
+    }
+
+		return { top: top, left: left };
+	};
+}
+
