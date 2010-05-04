@@ -1,6 +1,5 @@
 class DevicesController < ApplicationController
-  before_filter :require_role,   :only => [:create, :update, :destroy,
-                                           :apply_profile, :apply_group, :remove_group]
+  require_role User::Role::FLEET, :except => [:index, :show, :position]
   before_filter :new_device,     :only => [:new, :create]
   before_filter :set_device,     :only => [:edit, :update, :destroy, :show, :position]
   before_filter :set_devices,    :only => [:index]
@@ -160,13 +159,16 @@ class DevicesController < ApplicationController
   end
   
   protected
-  def require_role
-    redirect_to root_path unless current_user.has_role?(User::Role::FLEET)
-  end
-  
   def require_access
     if @device && !current_user.can_edit?(@device)
-      redirect_to root_path
+      respond_to do |format|
+        format.html {
+          render :nothing => true, :status => 403
+        }
+        format.json {
+          render :json => {:status => 'failure'}, :status => 403
+        }
+      end
     end
   end
 

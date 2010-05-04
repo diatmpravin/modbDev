@@ -168,7 +168,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       end
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
   end
   
@@ -230,7 +230,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
     
     specify "requires access to the device" do
@@ -247,7 +247,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       }
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end
   end
   
@@ -277,7 +277,7 @@ describe "Devices Controller", ActionController::TestCase do
         }
       end
       
-      should.redirect_to root_path
+      response.status.should.be 403
     end    
   end
   
