@@ -1,4 +1,5 @@
 class GeofencesController < ApplicationController
+  require_role User::Role::GEOFENCE
   before_filter :new_geofence, :only => [:new, :create]
   before_filter :set_geofence, :only => [:edit, :update]
   before_filter :set_group, :only => [:index, :destroy, :update, :create]
