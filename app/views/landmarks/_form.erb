@@ -18,12 +18,12 @@
   </div>
   
   <div class="field">
-    <%= f.check_box :alert_on_entry %>
     <%= f.label :alert_on_entry, 'Send alert on entry?' %>
+    <%= f.check_box :alert_on_entry %>
   </div>
   <div class="field">
-    <%= f.check_box :alert_on_exit %>
     <%= f.label :alert_on_exit, 'Send alert on exit?' %>
+    <%= f.check_box :alert_on_exit %>
   </div>
   
   <%= f.collection_select :device_group_ids, current_user.groups, :id, :name, {}, {:class => 'groups', :multiple => true, :style => 'display:none'} %>
