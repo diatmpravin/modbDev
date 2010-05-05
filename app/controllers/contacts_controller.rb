@@ -12,8 +12,7 @@ class ContactsController < ApplicationController
     @body = params[:body]
 
     if(@subject.blank? || @body.blank?)
-      flash[:error] = 'One or more of the fields have been left blank'
-      flash.now
+      flash.now[:error] = 'One or more of the fields have been left blank'
 
       render :action => :show
     else
