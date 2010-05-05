@@ -13,7 +13,7 @@ describe "Mailer", ActiveSupport::TestCase do
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['quentin@example.com']
-    Mailer.deliveries.first.subject.should.equal 'Fleet: Forgotten Password'
+    Mailer.deliveries.first.subject.should.equal 'Teleweave: Forgotten Password'
     Mailer.deliveries.first.body.should =~ 'http://localhost:3000/users/reset_password/filet-o-fish'
   end
   
@@ -34,7 +34,7 @@ describe "Mailer", ActiveSupport::TestCase do
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['filet@fish.com']
-    Mailer.deliveries.first.subject.should.equal 'Fleet Alert'
+    Mailer.deliveries.first.subject.should.equal 'Teleweave Alert'
     Mailer.deliveries.first.body.should =~ /test alert/
   end
 
@@ -47,7 +47,7 @@ describe "Mailer", ActiveSupport::TestCase do
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['dev@crayoninterface.com']
-    Mailer.deliveries.first.subject.should.match(/\[Fleet Test\]/)
+    Mailer.deliveries.first.subject.should.match(/\[Teleweave Test\]/)
     Mailer.deliveries.first.body.should.match(/Danger Will Robinson!/)
   end
   
@@ -60,7 +60,7 @@ describe "Mailer", ActiveSupport::TestCase do
     
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['dev@crayoninterface.com']
-    Mailer.deliveries.first.subject.should.match(/\[Fleet Test\]/)
+    Mailer.deliveries.first.subject.should.match(/\[Teleweave Test\]/)
     Mailer.deliveries.first.body.should.match(/Danger Will Robinson!/)
     Mailer.deliveries.first.body.should.match(/Running tests/)
   end
