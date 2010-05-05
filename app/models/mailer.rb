@@ -31,7 +31,7 @@ class Mailer < ActionMailer::Base
   end
 
   def exception_thrown(exception, message = "")
-    from "error@gomoshi.com"
+    from "error@teleweave.com"
     recipients %w(dev@crayoninterface.com)
     subject "[Teleweave #{Rails.env.capitalize}] Exception Thrown"
     body :exception => exception, :message => message
@@ -53,10 +53,10 @@ class Mailer < ActionMailer::Base
   
   private
   def support_address
-    'support@fleet.gomoshi.com'
+    'support@teleweave.com'
   end
   
   def alerts_address
-    'alerts@fleet.gomoshi.com'
+    'alerts@teleweave.com'
   end
 end
