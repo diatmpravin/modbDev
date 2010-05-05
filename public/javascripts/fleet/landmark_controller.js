@@ -426,12 +426,18 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     
     if (landmark) {
       activePoint = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+        icon: '/images/landmark.png',
+        size: [16, 16],
+        offset: [-10, -15],
         collection: 'temp',
         reference: landmark
       });
     } else {
       var c = MapPane.center();
       activePoint = MapPane.addPoint(c.lat, c.lng, {
+        icon: '/images/landmark.png',
+        size: [16, 16],
+        offset: [-10, -15],
         collection: 'temp'
       });
     }
