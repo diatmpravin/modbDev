@@ -82,31 +82,40 @@ Fleet.Frame.GeofenceEditPane = (function(GeofenceEditPane, Fleet, $) {
   };
   
   /**
-   * location()
+   * coordinates()
    *
-   * Return the current lat & long of the landmark being edited.
+   * Return the coordinates of the geofence being edited, converting them
+   * into an array of points formatted as {latitude:x, longitude:y}.
    *
-   * location(lat, lng)
-   * location(LatLng)
+   * coordinates(list)
+   * coordinates(shape)
    *
-   * Set the lat/long of the landmark being edited to the given latitude &
-   * longitude or MQA LatLng object.
+   * Set the coordinates of the geofence being edited to the given list
+   * of points.
    */
-  GeofenceEditPane.location = function(a, b) {
+  GeofenceEditPane.coordinates = function(a) {
+    var text = '', idx, num, list;
+    
     if (a) {
-      if (typeof(a) == 'object') {
-        pane.find('form:first .latitude').val(a.lat);
-        pane.find('form:first .longitude').val(a.lng);
-      } else {
-        pane.find('form:first .latitude').val(a);
-        pane.find('form:first .longitude').val(b);
+      for(idx = 0, num = a.length; idx < num; idx++) {
+        text += a[idx].latitude + ',' + a[idx].longitude + ',';
       }
+      
+      pane.find('form:first .coordinates').val(text.substring(0, text.length - 1));
     }
     
-    return {
-      latitude: pane.find('form:first .latitude').val(),
-      longitude: pane.find('form:first .longitude').val()
-    };
+    text = pane.find('form:first .coordinates').val();
+    text = text.split(',');
+    list = [];
+    
+    for(idx = 0, num = text.length; idx < num;) {
+      list.push({
+        latitude: text[idx++],
+        longitude: text[idx++]
+      });
+    }
+    
+    return list;
   };
   
   /**

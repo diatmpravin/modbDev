@@ -292,6 +292,10 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
    *   collection
    */
   MapPane.addShape = function(type, coordinates, options) {
+    if (coordinates.length == 0) {
+      return null;
+    }
+  
     options = options || {};
     
     var mqShape = MapPane.Geofence.buildShape(type, coordinates);
@@ -353,7 +357,7 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       list = list.getM_Items();
     }
     
-    MapPane.bestFitLL(list, false); // , minZoomLevel, maxZoomLevel
+    map.moshiMap().map.bestFitLL(list, false); // , minZoomLevel, maxZoomLevel
     
     return MapPane;
   };

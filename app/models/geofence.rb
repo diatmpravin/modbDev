@@ -10,9 +10,12 @@ class Geofence < ActiveRecord::Base
   serialize :coordinates, Array
   default_value_for :coordinates, Array.new
   
+  # Allow access to coordinates as a comma-separated list of lats & lngs
+  attr_accessor :coordinates_text
+  
   attr_accessible :geofence_type, :radius, :coordinates,
     :account, :name, :alert_on_exit, :alert_on_entry,
-    :device_groups, :device_group_ids
+    :device_groups, :device_group_ids, :coordinates_text
   
   before_save :consolidate_device_groups
   before_save :prepare_coordinates
@@ -57,7 +60,7 @@ class Geofence < ActiveRecord::Base
   end
   
   def coordinates_text
-    coordinates ? '' : coordinates.map {|h| [h.latitude, h.longitude]}.flatten.join(',')
+    coordinates ? coordinates.map {|h| [h[:latitude], h[:longitude]]}.flatten.join(',') : ''
   end
   
   def coordinates_text=(value)
