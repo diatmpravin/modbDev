@@ -18,6 +18,13 @@ describe "Device Server", ActiveSupport::TestCase do
       point = @device.points.last
       point.occurred_at.should.equal Time.parse('2013/03/13 13:13:13 UTC')
     end
+
+    specify "sends mail on exception" do
+      Mailer.deliveries.clear
+      Redis::Client.any_instance.expects(:pop_head).raises "exception" 
+      DeviceServer::Worker.new().process('123456789012345')
+      Mailer.deliveries.length.should.be 1
+    end
   end
   
   context "Starting device server" do
