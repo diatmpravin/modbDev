@@ -80,6 +80,9 @@ module DeviceServer
         self.process_point(point)
       end
 
+    rescue => ex
+      Mailer.deliver_exception_thrown ex, "In the DeviceServer Worker, imei #{imei}"
+    ensure
       # Unlock this IMEI
       @redis.delete("mobd:lock:#{imei}")
     end
