@@ -1,4 +1,5 @@
 class LandmarksController < ApplicationController
+  require_role User::Role::LANDMARK
   before_filter :new_landmark, :only => [:new, :create]
   before_filter :set_landmark, :only => [:edit, :update, :destroy]
   

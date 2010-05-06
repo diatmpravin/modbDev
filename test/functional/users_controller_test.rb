@@ -103,7 +103,7 @@ describe "UsersController", ActionController::TestCase do
   
   context "Viewing and editing a user" do
     setup do
-      @user = users(:quentin)
+      @user = users(:child)
       login_as :quentin
     end
     
@@ -154,8 +154,7 @@ describe "UsersController", ActionController::TestCase do
     end
     
     specify "requires USER role" do
-      @user.update_attributes(:roles => [User::Role::FLEET])
-      login_as :quentin
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
       
       get :edit, {
         :id => @user.id
@@ -172,11 +171,28 @@ describe "UsersController", ActionController::TestCase do
       
       response.status.should.be 403
     end
+
+    specify "prevents editing self" do
+      get :edit, {
+        :id => users(:quentin).id
+      }
+    
+      response.status.should.be 403
+
+      put :update, {
+        :id => users(:quentin).id,
+        :user => {
+          :name => 'Much Better Name'
+        }
+      }
+
+      response.status.should.be 403
+    end
   end
   
   context "Removing a user" do
     setup do
-      @user = users(:quentin)
+      @user = users(:child)
       login_as :quentin
     end
     
@@ -199,13 +215,24 @@ describe "UsersController", ActionController::TestCase do
     end
     
     specify "requires USER role" do
-      @user.update_attributes(:roles => [User::Role::FLEET])
+      users(:quentin).update_attributes(:roles => [User::Role::FLEET])
       login_as :quentin
       
       delete :destroy, {
-        :id => @user.id
+        :id => users(:child).id
       }
       
+      response.status.should.be 403
+    end
+
+    specify "prevents removal of self" do
+      users(:quentin).update_attributes(:roles => [User::Role::USERS])
+      login_as :quentin
+    
+      delete :destroy, {
+        :id => users(:quentin).id
+      }
+
       response.status.should.be 403
     end
   end

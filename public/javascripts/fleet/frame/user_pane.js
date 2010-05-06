@@ -88,7 +88,7 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
 
 
     // Allow user to drag users around
-    list.find('div.user').draggable({
+    list.find('div.user:not(.undraggable)').draggable({
       helper: 'clone',
       handle: 'div.listing',
       opacity: 0.8,

@@ -14,4 +14,13 @@ module UsersHelper
       User::Role::GEOFENCE => 'Geofence Management'
     }
   end
+
+  def can_drag(user)
+    can_edit(user) ? '' : 'undraggable'
+  end
+
+  def can_edit(user)
+    user.id != current_user.id
+  end
+  
 end

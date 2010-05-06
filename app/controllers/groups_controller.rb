@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  require_role User::Role::FLEET, :except => [:index, :show]
   before_filter :new_group, :only => [:new, :create]
   before_filter :set_group, :only => [:show, :edit, :update, :live_look]
 

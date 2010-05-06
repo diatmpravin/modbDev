@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_filter :set_user,     :only => [:edit, :update, :destroy]
   before_filter :set_users,    :only => :index
   before_filter :filter_roles, :only => [:create, :update]
+  before_filter :filter_self,  :only => [:edit, :update, :destroy]
   
   skip_before_filter :login_required, :only => [:forgot_password, :reset_password, :set_password]
   
@@ -47,6 +48,13 @@ class UsersController < ApplicationController
   end
   
   def update
+    if params[:user][:device_group_id] == '0'
+      # Root
+      params[:user][:device_group_id] = nil
+    end
+    
+    params[:user][:roles] ||= []
+
     if @user.update_attributes(params[:user])
       render :json => {
         :status => 'success'
@@ -164,6 +172,20 @@ class UsersController < ApplicationController
   def filter_roles
     if params[:user] && params[:user][:roles]
       params[:user][:roles] = params[:user][:roles].map(&:to_i) & current_user.assignable_roles
+    end
+  end
+
+  # Prevent the current user from editing his/herself
+  def filter_self
+    if @user && !current_user.can_edit?(@user)
+      respond_to do |format|
+        format.html {
+          render :nothing => true, :status => 403
+        }
+        format.json {
+          render :json => {:status => 'failure'}, :status => 403
+        }
+      end
     end
   end
 

@@ -188,6 +188,7 @@ div.user_data {
     float:left;
     width:10%;
     text-align:right;
+    overflow:hidden;
   }
 
   span.login {
@@ -527,6 +528,31 @@ div.dashboard_data {
 /**
  * User Pane (a .hierarchy view)
  **/
+
+/* This is for making sure user and group names don't overflow into a second row */
+#user_pane {
+  span.name {
+    overflow:hidden;
+  }
+
+  li                   div.row span.name { width:240px; }
+  li li                div.row span.name { width:226px; }
+  li li li             div.row span.name { width:212px; }
+  li li li li          div.row span.name { width:198px; }
+  li li li li li       div.row span.name { width:184px; }
+  li li li li li li    div.row span.name { width:170px; }
+  li li li li li li li div.row span.name { width:156px; }
+
+  li                   div.row:hover span.name { width:200px; }
+  li li                div.row:hover span.name { width:186px; }
+  li li li             div.row:hover span.name { width:172px; }
+  li li li li          div.row:hover span.name { width:158px; }
+  li li li li li       div.row:hover span.name { width:144px; }
+  li li li li li li    div.row:hover span.name { width:130px; }
+  li li li li li li li div.row:hover span.name { width:116px; }
+}
+
+
 #user_pane {
   background:#f8f8f8 url(/images/frame_bg.png) repeat 0 0;
   height:100%;

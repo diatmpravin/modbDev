@@ -109,7 +109,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     root.find('li:not(:has(li)) span.collapsible').removeClass('collapsible').addClass('empty');
 
     // Allow user to drag groups and vehicles around
-    root.find('div.row').draggable({
+    root.find('div.row:not(.undraggable)').draggable({
       helper: 'clone',
       handle: 'div.listing',
       opacity: 0.8,
@@ -117,7 +117,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     });
     
     // Allow user to drop groups onto other groups
-    root.find('div.group').droppable({
+    root.find('div.group:not(.undraggable)').droppable({
       hoverClass: 'drop-hover',
       greedy: true,
       drop: function(event, ui) {
