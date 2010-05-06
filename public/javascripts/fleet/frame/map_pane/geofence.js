@@ -8,10 +8,13 @@
 var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.MapPane = Fleet.Frame.MapPane || {};
-Fleet.Frame.MapPane.Geofence = (function(Geofence, $) {
+Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, $) {
   Geofence.ELLIPSE = 0;
   Geofence.RECTANGLE = 1;
   Geofence.POLYGON = 2;
+  
+  var draggingShape = null,
+      dragOffset = null;
   
   /**
    * buildShape(type, coordinates)
@@ -95,44 +98,91 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, $) {
     
     return shape;
   };
-
-  return Geofence;
-}(Fleet.Frame.MapPane.Geofence || {}, jQuery));
-/*
-Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
-  var pane,
-  _getShape: function(type) {
-    var shape;
-   
-  }
   
   /**
-   * Build up the geofence in question according to what's in
-   * the model.
+   * dragShapeStart(shape, mqEvent)
    *
-  build: function() {
-    this.shape = this._getShape(this.model.getType());
-    this.points = this._buildPoints(this.model.getCoordinates());
-
-    this.shape.setShapePoints(this.points);
-
-    this.setShapeColor("#FF0000");
-
-    // TODO pull more into moshimap?
-    MoshiMap.moshiMap.geofenceCollection.add(this.shape);
-
-    // Hook up event handling
-    var self = this;
-    MQA.EventManager.addListener(this.shape, "mousedown", function(e) { self.dragStart(e); });
-
-    this.buildHandles();
-  }
-  ,
-  buildHandles: function() {
-    // Show handles
-    if(this.form) {
-      this.handleManager.createHandlesOn(this.shape, this.model.getType());
+   * Prepare for the geofence shape to be dragged by the user. Passed the shape
+   * that will be dragged and the mqEvent representing the mouse-down event.
+   */
+  Geofence.dragShapeStart = function(shape, mqEvent) {
+    var idx, num, xy;
+    
+    draggingShape = shape;
+    
+    // Prevent the map from moving while geofence is moving
+    MapPane.disableDragging();
+    
+    // Setup jQuery events for mouse move and mouse up
+    MapPane.map.bind('mousemove.geofence', Geofence.dragShape)
+               .bind('mouseup.geofence', Geofence.dragShapeEnd);
+    
+    // Now do some magic -- before mouse moves, save the difference in pixels
+    // between each point and the mouse cursor. This allows us to recreate the
+    // same shape in a different location.
+    var clientX = mqEvent.domEvent.clientX - MapPane.map.position().left - $('#mqtiledmap').position().left,
+        clientY = mqEvent.domEvent.clientY - MapPane.map.position().top - $('#mqtiledmap').position().top;
+    
+    dragOffset = [];
+    for(idx = 0, num = draggingShape.getShapePoints().getSize(); idx < num; idx++) {
+      xy = MapPane.mq.llToPix(draggingShape.getShapePoints().getAt(idx));
+      dragOffset.push([
+        xy.x - clientX, xy.y - clientY
+      ]);
     }
-  }
-  ,
-  */
+    //for(var i = 0; i < Geofences.fence.pois.length; i++) {
+      //Geofences.fence.pois[i].setValue('visible', false);
+    //}
+    
+    return false;
+  };
+  
+  /**
+   * dragShape(event)
+   *
+   * Handle a shape being dragged. Passed a jQuery event.
+   */
+  Geofence.dragShape = function(event) {
+    var idx, num;
+    var clientX = event.clientX - MapPane.map.position().left - $('#mqtiledmap').position().left,
+        clientY = event.clientY - MapPane.map.position().top - $('#mqtiledmap').position().top;
+    
+    var coll = new MQA.LatLngCollection();
+    
+    for(var idx = 0, num = dragOffset.length; idx < num; idx++) {
+      coll.add(MapPane.mq.pixToLL(new MQA.Point(
+        dragOffset[idx][0] + clientX,
+        dragOffset[idx][1] + clientY
+      )));
+    }
+    
+    draggingShape.setShapePoints(coll);
+    
+    return false;
+  };
+  
+  /**
+   * dragShapeEnd(event)
+   *
+   * Handle the user letting go of a dragged shape. Passed a jQuery event.
+   */
+  Geofence.dragShapeEnd = function(event) {
+    // "Simulate" one last drag event to get the current position
+    Geofence.dragShape(event);
+    
+    // Re-enable map panning
+    MapPane.enableDragging();
+    MoshiMap.map.unbind('mousemove.geofence')
+                .unbind('mouseup.geofence');
+    
+    alert(1);
+    
+    
+    //this.updateModel();
+    //this.buildHandles();
+    
+    return false;
+  };
+  
+  return Geofence;
+}(Fleet.Frame.MapPane.Geofence || {}, Fleet.Frame.MapPane, jQuery));

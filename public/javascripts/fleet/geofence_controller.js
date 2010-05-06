@@ -377,17 +377,17 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   };
   
   /**
-   * dragShape(mqEvent)
+   * dragShape()
    *
-   * Called from MapQuest's Event Manager whenever a user drags a shape on the
-   * map. We will update the edit form with the new coordinates.
+   * Called by the MapPane.Geofence module whenever a user has finished
+   * dragging a geofence around. We will update the edit form with the
+   * new coordinates.
    */
-  GeofenceController.dragShape = function(mqEvent) {
+  GeofenceController.dragShape = function() {
     if (activeShape) {
-      GeofenceEditPane.coordinates([{latitude: 1}, {longitude: 2}]);
-      //activeShape.getShapePoints().getM_Items()
+      GeofenceEditPane.coordinates(activeShape.getShapePoints());
     }
-    
+  
     return false;
   };
   
@@ -427,8 +427,9 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       });
     }
     
-    MQA.EventManager.addListener(activeShape, 'mouseup', GeofenceController.dragShape);
-    activeShape.setValue('draggable', true);
+    MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
+      MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
+    });
     
     MapPane.showCollection('temp');
     MapPane.hideCollection('geofences');
@@ -438,6 +439,8 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     MapPane.showCollection('geofences');
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
+    
+    MQA.EventManager.clearListeners(activeShape);
     activeShape = null;
     
     Header.open('geofences');

@@ -88,17 +88,25 @@ Fleet.Frame.GeofenceEditPane = (function(GeofenceEditPane, Fleet, $) {
    * into an array of points formatted as {latitude:x, longitude:y}.
    *
    * coordinates(list)
-   * coordinates(shape)
+   * coordinates(LatLngCollection)
    *
    * Set the coordinates of the geofence being edited to the given list
-   * of points.
+   * of points. Can be passed as an array (like our Geofence JSON) or
+   * an MQA.LatLngCollection.
    */
   GeofenceEditPane.coordinates = function(a) {
     var text = '', idx, num, list;
     
     if (a) {
-      for(idx = 0, num = a.length; idx < num; idx++) {
-        text += a[idx].latitude + ',' + a[idx].longitude + ',';
+      if (a.getM_Items) {
+        a = a.getM_Items();
+        for(idx = 0, num = a.length; idx < num; idx++) {
+          text += a[idx].lat + ',' + a[idx].lng + ',';
+        }
+      } else {
+        for(idx = 0, num = a.length; idx < num; idx++) {
+          text += a[idx].latitude + ',' + a[idx].longitude + ',';
+        }
       }
       
       pane.find('form:first .coordinates').val(text.substring(0, text.length - 1));

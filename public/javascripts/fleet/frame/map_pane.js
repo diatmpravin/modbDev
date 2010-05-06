@@ -15,6 +15,9 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       originalEventManagerTrigger,
       init = false;
   
+  MapPane.map = null;
+  MapPane.mq = null;
+  
   /**
    * init()
    *
@@ -43,6 +46,9 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     
     // Create our MoshiMap (initialize MapQuest)
     map.moshiMap().init();
+    
+    MapPane.map = map;
+    MapPane.mq = map.moshiMap().map;
     
     // Intercept MapQuest events for our own (nefarious?) purposes
     originalEventManagerTrigger = MQA.EventManager.trigger;
@@ -388,6 +394,25 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     return point;
   };
   
+  /**
+   * enableDragging()
+   *
+   * Turn on map dragging. Allows the user to pan the map by dragging it.
+   */
+  MapPane.enableDragging = function() {
+    MapPane.mq.enableDragging(true);
+  };
+  
+  /**
+   * disableDragging()
+   *
+   * Turn off map dragging. Used to prevent the map from panning while
+   * dragging a geofence shape.
+   */
+  MapPane.disableDragging = function() {
+    MapPane.mq.enableDragging(false);
+  };
+  
   /* Private Functions */
 
   function mapPaneEventManagerTrigger(object, eventType, mqEvent) {
@@ -403,7 +428,8 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     } else if (mqEvent.eventName == 'MQA.Poi.click') {
       Fleet.Controller.focusPoint.call(object);
     }
-    
+    MapPane.k = MapPane.k || [];
+    MapPane.k.push(mqEvent.eventName);
     // Call the normal Event Manager trigger, passing in the original
     // context and parameters.
     return originalEventManagerTrigger.call(this, object, eventType, mqEvent);
