@@ -104,7 +104,7 @@ describe "Geofence", ActiveSupport::TestCase do
     end
     
     specify "can set coordinates with a comma-separated list" do
-      @geofence.update_attributes(
+      @geofence.should.update_attributes(
         :coordinates_text => '45.3,46.7,20.7,20.4'
       )
       

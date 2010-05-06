@@ -8,70 +8,11 @@ describe "Geofences Controller", ActionController::TestCase do
     @account = accounts(:quentin)
   end
 
-  context "Index - HTML" do
-
-    specify "shows list of geofences" do
+  context "Listing geofences" do
+    specify "redirects to dashboard" do
       get :index
-      template.should.be 'index'
-
-      assigns(:geofences).should.equal [geofences(:quentin_geofence)]
-    end
-
-    specify "handles pagination" do
-      g = geofences(:quentin_geofence)
-      50.times { g.clone.save}
-
-      get :index
-      template.should.be 'index'
-
-      assigns(:geofences).length.should.equal 30
-
-      get :index, :page => 2
-      template.should.be 'index'
-
-      assigns(:geofences).length.should.equal 21
-    end
-
-    specify "works with Geofence filter criteria" do
-      set_filter Device, "get_vehicle"
-      set_filter Geofence, "geo_find"
-
-      Geofence.expects(:search).with(
-        "geo_find", :conditions => {}, 
-        :page => nil, :per_page => 30,
-        :with => {:account_id => accounts(:quentin).id}, 
-        :mode => :extended
-      ).returns(accounts(:quentin).geofences)
-
-      get :index
-      template.should.be 'index'
-
-      assigns(:geofences).length.should.be 1
-    end
-
-    specify "works nested for a group" do
-      DeviceGroup.rebuild!
-
-      parent_group = device_groups(:north)
-      child_group = DeviceGroup.generate! :name => "child"
-      child_group.move_to_child_of parent_group
-
-      parent_fence = Geofence.generate! :name => "parent_geo"
-      parent_fence.device_groups << parent_group #unless parent_fence.device_groups.include? parent_group
-      parent_fence.should.save
-
-      child_fence = Geofence.generate! :name => "child_geo"
-      child_fence.device_groups << child_group
-      child_fence.should.save
-
-
-      get :index, :group_id => child_group.id
-      template.should.be 'index'
-
-      assigns(:group).should.equal child_group
-      assigns(:geofences).length.should.equal 2
-      assigns(:geofences).should.include? parent_fence
-      assigns(:geofences).should.include? child_fence
+      
+      should.redirect_to dashboard_path(:anchor => 'geofences')
     end
   end
   
