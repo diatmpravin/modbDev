@@ -6,25 +6,19 @@ class GeofencesController < ApplicationController
   layout :set_layout
 
   def index
-    unless @group.nil?
-      list = @group.self_and_ancestors.map(&:id)
-      
-      group_geofences = current_account.geofences.all(:conditions => {:device_group_links => {:device_group_id => list} }, :joins => :device_groups)
-      @geofences = group_geofences.paginate(:page=>params[:page], :per_page => 30)
-    else
-      @geofences = search_on Geofence do
-        current_account.geofences.paginate(:page => params[:page], :per_page => 30)
-      end
-    end
-
+    @geofences = current_account.geofences
+    
     respond_to do |format|
-      format.html
+      format.html {
+        redirect_to dashboard_path(:anchor => 'geofences')
+      }
+      
       format.json {
-        render :json => @geofences
+        render :json => @geofences.to_json(index_json_options)
       }
     end
   end
-
+  
   def new
   end
 
@@ -89,5 +83,9 @@ class GeofencesController < ApplicationController
     else
       render :action => @geofence.new_record? ? 'new' : 'edit'
     end
+  end
+  
+  def index_json_options
+    {:only => [:id, :name, :geofence_type, :coordinates]}
   end
 end
