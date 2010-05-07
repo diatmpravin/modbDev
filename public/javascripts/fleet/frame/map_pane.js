@@ -51,8 +51,8 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     MapPane.mq = map.moshiMap().map;
     
     // Intercept MapQuest events for our own (nefarious?) purposes
-    originalEventManagerTrigger = MQA.EventManager.trigger;
-    MQA.EventManager.trigger = mapPaneEventManagerTrigger;
+    //originalEventManagerTrigger = MQA.EventManager.trigger;
+    //MQA.EventManager.trigger = mapPaneEventManagerTrigger;
     
     // Our custom pop-up
     popup = $('<div id="map_popup"><div class="top"></div><div class="content"></div><div class="bottom"></div></div>').appendTo($('#mqtiledmap'));
@@ -314,6 +314,23 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     collection.add(mqShape);
     
     return mqShape;
+  };
+  
+  /**
+   * removeShape(shape)
+   * removeShape(shape, collection)
+   *
+   * Remove a shape object from the given collection. If the collection is not
+   * provided, will attempt to remove the shape from the default collection.
+   */
+  MapPane.removeShape = function(shape, collection) {
+    collection = MapPane.collection(collection);
+  
+    if (collection.contains(shape)) {
+      collection.removeItem(shape);
+    }
+    
+    return shape;
   };
   
   /**

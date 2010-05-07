@@ -366,6 +366,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
           if (lookup[id].poi) {
             MapPane.removePoint(lookup[id].poi, 'landmarks');
             lookup[id].poi = null;
+            lookup[id] = null;
           }
         } else {
           confirmRemoveDialog.errors(json.error).dialog('open');
