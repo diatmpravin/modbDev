@@ -122,7 +122,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     
     if (o) {
       showGeofenceOnMap(o);
-      MapPane.pan(o.poi);
+      MapPane.bestFit(o.shape);
     }
     
     return false;
@@ -403,23 +403,11 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   
   function showGeofenceOnMap(geofence) {
     if (!geofence.shape) {
-      geofence.shape = null;
-    }
-    
-    /*if (!geofence.shape) {
-      geofence.shape = MapPane.addShape(geofence.coordinates, {
+      geofence.shape = MapPane.addShape(geofence.geofence_type, geofence.coordinates, {
         collection: 'geofences',
-        reference: geofence,
-      });*/
-      
-      /*landmark.poi = MapPane.addPoint(landmark.latitude, landmark.longitude, {
-        icon: '/images/landmark.png',
-        size: [16, 16],
-        offset: [-10, -15],
-        collection: 'landmarks',
-        reference: landmark
-      });*/
-    //}
+        reference: geofence
+      });
+    }
   }
   
   function editLandmarkOnMap(landmark) {

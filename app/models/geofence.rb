@@ -56,6 +56,18 @@ class Geofence < ActiveRecord::Base
     end
   end
   
+  def coordinates_text
+    coordinates ? '' : coordinates.map {|h| [h.latitude, h.longitude]}.flatten.join(',')
+  end
+  
+  def coordinates_text=(value)
+    if value
+      coordinates = value.split(',').in_groups_of(2).map {|h|
+        {:latitude => h[0], :longitude => h[1]}
+      }
+    end
+  end
+  
   protected
   def prepare_coordinates
     if self[:coordinates]

@@ -1,26 +1,7 @@
-<% content_for :javascript do -%>
-  <%= mapquest_include_tags %>
-  <%= javascript_include_tag 'mapquest/moshi.viewcontrol' %>
-  <%= javascript_include_tag 'mapquest/moshi.zoomcontrol' %>
-  <%= javascript_include_tag 'moshimap' %>
-  <%= javascript_include_tag 'maps/view' %>
-  
-  <%= javascript_include_tag 'geofences/model' %>
-  <%= javascript_include_tag 'geofences/view' %>
-  <%= javascript_include_tag "geofences/form" -%>
-<% end -%>
-
 <% form_for geofence, :html => {:autocomplete => 'off'} do |f| -%>
-  <% if geofence.new_record? -%>
-    <div class="field">
-      To create a geofence, scroll and zoom the map to where you want the geofence,
-      then click on the shape of the geofence you want.
-    </div> 
-  <% end -%>
-
   <div class="field">
     <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :size => 20, :maxlength => 30 %>
     <%= error_message_on geofence, :name, :prepend_text => '* Name ' %>
   </div>
   
@@ -38,46 +19,17 @@
     <%= f.hidden_field :geofence_type %>
   </div>
   
-  <h3>Boundary settings</h3>
+  <%= f.hidden_field :coordinates_text, :class => 'coordinates' %>
+  
   <div class="field">
-    <ul>
-      <li>
-        <%= f.check_box :alert_on_entry %>
-        <%= f.label :alert_on_entry, 'Send alert on entry?' %>
-      </li>
-      <li>
-        <%= f.check_box :alert_on_exit %>
-        <%= f.label :alert_on_exit, 'Send alert on exit?' %>
-      </li>
-    </ul>
+    <%= f.check_box :alert_on_entry %>
+    <%= f.label :alert_on_entry, 'Send alert on entry?' %>
   </div>
   
-  <h3>Vehicle Groups</h3>
-  <fieldset>
-    <div class="groupSelect">
-      <% group_tree(current_user.device_group, :close_level => 0) do |group, level| -%>
-        <% if level > 0 -%>
-          <%= check_box_tag 'geofence[device_group_ids][]', group.id, geofence.device_groups.include?(group) %>
-          <span class="checkbox"></span>
-        <% end -%>
-        <span class="collapsible closed"></span>
-        <span class="name"><%= group.name %></span>
-      <% end -%>
-    </div>
-  </fieldset>
-  
-  <div id="coordinates">
-    <% geofence.coordinates.each do |coord| -%>
-      <%= hidden_field_tag 'geofence[coordinates][][latitude]', coord[:latitude], :class => "latitude" %>
-      <%= hidden_field_tag 'geofence[coordinates][][longitude]', coord[:longitude], :class => "longitude" %>
-    <% end -%>
+  <div class="field">
+    <%= f.check_box :alert_on_exit %>
+    <%= f.label :alert_on_exit, 'Send alert on exit?' %>
   </div>
   
-  <div class="buttons">
-    <div class="loading"></div>
-    <%= link_to 'Cancel', geofences_path %>
-    <%= submit_tag 'Save' %>
-  </div>
-
-  <div class="clear spacer"></div>
+  <%= f.collection_select :device_group_ids, current_user.groups, :id, :name, {}, {:class => 'groups', :multiple => true, :style => 'display:none'} %>
 <% end -%>

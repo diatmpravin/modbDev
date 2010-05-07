@@ -280,17 +280,30 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   };
   
   /**
-   * addShape(coordinates, options)
+   * addShape(type, coordinates)
+   * addShape(type, coordinates, options)
+   *
+   * Add a shape to the map given the type and coordinates. The type should be
+   * one of Geofence.ELLIPSE, Geofence.RECTANGLE, Geofence.ELLIPSE. The length
+   * of the coordinates array depends on the type of shape being created.
+   *
+   * Optionally, pass a hash of options containing one or more of:
+   *   reference
+   *   collection
    */
-  MapPane.addShape = function(coordinates, options) {
-    // ELLIPSE = 0   # coordinates = [upper-left point, lower-right point]
-    // RECTANGLE = 1 # coordinates = [upper-left point, lower-right point]
-    // POLYGON = 2   # coordinates = [p0, p1, p2, ... pN]
+  MapPane.addShape = function(type, coordinates, options) {
+    options = options || {};
     
-    var shape = null;
+    var mqShape = MapPane.Geofence.buildShape(type, coordinates);
+    var collection = MapPane.collection(options.collection);
     
-  
-    return shape;
+    if (options.reference) {
+      mqShape.reference = options.reference;
+    }
+    
+    collection.add(mqShape);
+    
+    return mqShape;
   };
   
   /**
@@ -319,6 +332,30 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
    */
   MapPane.center = function() {
     return map.moshiMap().map.getCenter();
+  };
+  
+  /**
+   * bestFit(shape)
+   * bestFit(list)
+   *
+   * Given a list of MQA.LatLng objects, center and zoom the map to show them.
+   * Can be passed as an array of objects or as an MQLatLngCollection.
+   *
+   * Alternately, pass an MQA.Shape object, and the shape's points will be
+   * used as 
+   */
+  MapPane.bestFit = function(list) {
+    if (list.getShapePoints) {
+      list = list.getShapePoints();
+    }
+    
+    if (list.getM_Items) {
+      list = list.getM_Items();
+    }
+    
+    MapPane.bestFitLL(list, false); // , minZoomLevel, maxZoomLevel
+    
+    return MapPane;
   };
   
   /**
