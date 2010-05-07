@@ -317,6 +317,54 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   };
   
   /**
+   * newShape(options)
+   *
+   * Add a new shape to the map in the center of the viewable area. Optionally,
+   * pass a hash of options containing one or more of:
+   *   reference
+   *   collection
+   */
+  MapPane.newShape = function(options) {
+    options = options || {};
+    
+    var coordinates = [],
+        centerX = MapPane.map.width() / 2,
+        centerY = MapPane.map.height() / 2,
+        tl = MapPane.mq.pixToLL(new MQA.Point(centerX * 0.75, centerY * 0.75)),
+        br = MapPane.mq.pixToLL(new MQA.Point(centerX * 1.25, centerY * 1.25))
+    
+    coordinates = [
+      {latitude: tl.lat, longitude: tl.lng},
+      {latitude: br.lat, longitude: br.lng}
+    ];
+    
+    /*
+      Do we let the user pick the geofence type BEFORE we show it? If so, we'll
+      need this code as well. Commented out for now.
+    
+    if(this.model.getType() == Geofence.POLYGON) {
+      var tr = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX+100, centerY-100)),
+          bl = MoshiMap.moshiMap.map.pixToLL(new MQA.Point(centerX-100, centerY+100));
+
+      coords.splice(1, 0, [tr.lat, tr.lng]);
+      coords.push([bl.lat, bl.lng]);
+    }
+    
+    */
+    
+    var mqShape = MapPane.Geofence.buildShape(MapPane.Geofence.ELLIPSE, coordinates);
+    var collection = MapPane.collection(options.collection);
+    
+    if (options.reference) {
+      mqShape.reference = options.reference;
+    }
+    
+    collection.add(mqShape);
+    
+    return mqShape;
+  };
+  
+  /**
    * removeShape(shape)
    * removeShape(shape, collection)
    *

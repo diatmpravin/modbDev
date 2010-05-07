@@ -171,7 +171,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     var requests = 2;
     
     $.get('/geofences/new', function(html) {
-      landmarkHtml = html;
+      geofenceHtml = html;
       
       ready();
     });
@@ -200,7 +200,6 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       );
       
       editGeofenceOnMap(null);
-      GeofenceEditPane.location(MapPane.center());
       
       loading(false);
     }
@@ -420,9 +419,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
         collection: 'temp'
       });
     } else {
-      //TODO: New geofence case
-      //var c = MapPane.center();
-      activeShape = MapPane.addShape(0, {}, {
+      activeShape = MapPane.newShape({
         collection: 'temp'
       });
     }
