@@ -34,6 +34,19 @@ describe "Landmark", ActiveSupport::TestCase do
       @landmark.name = '1'
       @landmark.should.be.valid
     end
+
+    specify "lat and long must be within valid range" do
+      @landmark.latitude = 91
+      @landmark.longitude = 181
+
+      @landmark.should.not.be.valid
+      @landmark.errors.on(:latitude).should.match 'must be between'
+      @landmark.errors.on(:longitude).should.match 'must be between'
+
+      @landmark.latitude = 90
+      @landmark.longitude = 180
+      @landmark.should.be.valid
+    end
     
     specify "name must be less than 30 characters" do
       @landmark.name = '1234567890123456789012345678901'
