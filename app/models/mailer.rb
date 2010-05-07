@@ -49,6 +49,7 @@ class Mailer < ActionMailer::Base
     from support_address
     body(:message => message)
     subject("Contact Confirmation: #{sub}")
+    @orig_subject = sub
   end
   
   private
