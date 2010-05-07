@@ -37,34 +37,14 @@ class LandmarksController < ApplicationController
   end
   
   def create
-    if @landmark.update_attributes(params[:landmark])
-      render :json => {
-        :status => 'success',
-        :landmark => @landmark
-      }
-    else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:action => 'new')
-      }
-    end
+    save_record
   end
   
   def edit
   end
   
   def update
-    if @landmark.update_attributes(params[:landmark])
-      render :json => {
-        :status => 'success',
-        :landmark => @landmark
-      }
-    else
-      render :json => {
-        :status => 'failure',
-        :html => render_to_string(:action => 'edit')
-      }
-    end
+    save_record
   end
   
   def destroy
@@ -81,6 +61,20 @@ class LandmarksController < ApplicationController
   
   def set_landmark
     @landmark = current_account.landmarks.find(params[:id])
+  end
+  
+  def save_record
+    if @landmark.update_attributes(params[:landmark])
+      render :json => {
+        :status => 'success',
+        :landmark => @landmark
+      }
+    else
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:action => @landmark.new_record? ? 'new' : 'edit')
+      }
+    end
   end
   
   def index_json_options

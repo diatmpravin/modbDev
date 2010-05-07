@@ -64,7 +64,7 @@ describe "Geofences Controller", ActionController::TestCase do
       has :geofence
     end
     
-    specify "works" do
+    specify "works (json)" do
       Geofence.should.differ(:count).by(1) do
         post :create, {
           :geofence => {
@@ -79,8 +79,8 @@ describe "Geofences Controller", ActionController::TestCase do
           }
         }
       end
-
-      should.redirect_to geofences_path
+      
+      json['status'].should.equal 'success'
       
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
@@ -90,7 +90,7 @@ describe "Geofences Controller", ActionController::TestCase do
       ]
     end
     
-    specify "handles errors gracefully" do
+    specify "handles errors gracefully (json)" do
       Geofence.should.differ(:count).by(0) do
         post :create, {
           :geofence => {
@@ -105,7 +105,9 @@ describe "Geofences Controller", ActionController::TestCase do
         }
       end
 
-      template.should.equal "new"
+      json['status'].should.equal 'failure'
+      json['html'].should =~ /<form/
+      
       @account.reload.geofences.length.should.be 1
     end
   end
@@ -123,7 +125,7 @@ describe "Geofences Controller", ActionController::TestCase do
       assigns(:geofence).should.equal @geofence
     end
     
-    specify "works" do
+    specify "works (json)" do
       @geofence.update_attribute(:name, 'test 1')
       put :update, {
         :id => @geofence.id,
@@ -132,7 +134,8 @@ describe "Geofences Controller", ActionController::TestCase do
         }
       }
 
-      should.redirect_to geofences_path
+      json['status'].should.equal 'success'
+      
       @geofence.reload.name.should.equal 'test 2'
     end
     
@@ -144,7 +147,9 @@ describe "Geofences Controller", ActionController::TestCase do
         }
       }
 
-      template.should.be "edit"
+      json['status'].should.equal 'failure'
+      json['html'].should =~ /<form/
+      
       @geofence.reload.name.should.not.equal ''
     end
   end
@@ -154,9 +159,10 @@ describe "Geofences Controller", ActionController::TestCase do
       @geofence = geofences(:quentin_geofence)
     end
     
-    specify "works" do
+    specify "works (json)" do
       delete :destroy, :id => @geofence.id
-      should.redirect_to geofences_path
+      
+      json['status'].should.equal 'success'
     end
   end
 end
