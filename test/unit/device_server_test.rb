@@ -21,7 +21,8 @@ describe "Device Server", ActiveSupport::TestCase do
 
     specify "sends mail on exception" do
       Mailer.deliveries.clear
-      Redis::Client.any_instance.expects(:pop_head).raises "exception" 
+      Redis::Client.any_instance.expects(:set).raises "exception" 
+      Redis::Client.any_instance.expects(:delete).returns true 
       DeviceServer::Worker.new().process('123456789012345')
       Mailer.deliveries.length.should.be 1
     end

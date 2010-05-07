@@ -93,6 +93,28 @@ describe "Geofence", ActiveSupport::TestCase do
     end
   end
   
+  context "Coordinates as text" do
+    specify "can return coordinates as a comma-separated list" do
+      @geofence.coordinates.should.equal [
+        {:latitude => 40.222222, :longitude => -86.333333},
+        {:latitude => 40.333333, :longitude => -85.333333}
+      ]
+      
+      @geofence.coordinates_text.should.equal '40.222222,-86.333333,40.333333,-85.333333'
+    end
+    
+    specify "can set coordinates with a comma-separated list" do
+      @geofence.should.update_attributes(
+        :coordinates_text => '45.3,46.7,20.7,20.4'
+      )
+      
+      @geofence.reload.coordinates.should.equal [
+        {:latitude => 45.3, :longitude => 46.7},
+        {:latitude => 20.7, :longitude => 20.4}
+      ]
+    end
+  end
+  
   specify "protects appropriate attributes" do
     geofence = Geofence.new(:account_id => 7)
     geofence.account_id.should.be.nil
