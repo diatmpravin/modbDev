@@ -35,17 +35,17 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
 
     // User can click to pan
     $('#landmark_pane li').live('click', function() {
-      Fleet.Controller.focus.call(this);
+      return Fleet.Controller.focus.call(this);
     });
   
     // User can edit a landmark
     $('#landmark_pane a.edit').live('click', function() {
-      Fleet.Controller.edit.call(this);
+      return Fleet.Controller.edit.call(this);
     });
     
     // User can remove a landmark
     $('#landmark_pane a.delete').live('click', function() {
-      Fleet.Controller.remove.call(this);
+      return Fleet.Controller.remove.call(this);
     });
     
     init = true;

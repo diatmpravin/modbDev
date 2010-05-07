@@ -6,7 +6,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   var confirmRemoveDialog,
       geofences = null,
       lookup = null,
-      activePoint = null,
+      activeShape = null,
       init = false;
   
   /* Geofence Tab */
@@ -72,7 +72,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     
     geofences = null;
     lookup = null;
-    activePoint = null;
+    activeShape = null;
     MapPane.collection('geofences').removeAll();
   };
   
@@ -122,7 +122,10 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     
     if (o) {
       showGeofenceOnMap(o);
-      MapPane.bestFit(o.shape);
+      
+      if (o.shape) {
+        MapPane.bestFit(o.shape);
+      }
     }
     
     return false;
@@ -256,16 +259,13 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
         GeofenceController.cancel
       );
       
-      // Make sure our landmark object is up to date, then show it on map
-      var l = GeofenceEditPane.location();
-      geofence.latitude = l.latitude;
-      geofence.longitude = l.longitude;
+      // Make sure our geofence object is up to date, then show it on map
+      geofence.coordinates = GeofenceEditPane.coordinates();
       editGeofenceOnMap(geofence);
       
       loading(false);
     }
     
-    //e.stopImmediatePropagation();
     return false;
   };
   
@@ -377,16 +377,17 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   };
   
   /**
-   * dragPoint(mqEvent)
+   * dragShape()
    *
-   * Called from MapQuest's Event Manager whenever a user drags a point on the
-   * map. We will update the edit form with the new lat/long.
+   * Called by the MapPane.Geofence module whenever a user has finished
+   * dragging a geofence around. We will update the edit form with the
+   * new coordinates.
    */
-  GeofenceController.dragPoint = function(mqEvent) {
-    if (activePoint) {
-      GeofenceEditPane.location(activePoint.latLng);
+  GeofenceController.dragShape = function() {
+    if (activeShape) {
+      GeofenceEditPane.coordinates(activeShape.getShapePoints());
     }
-    
+  
     return false;
   };
   
@@ -410,39 +411,43 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     }
   }
   
-  function editLandmarkOnMap(landmark) {
+  function editGeofenceOnMap(geofence) {
     MapPane.collection('temp').removeAll();
     
-    if (landmark) {
-      activePoint = MapPane.addPoint(landmark.latitude, landmark.longitude, {
+    if (geofence) {
+      activeShape = MapPane.addShape(geofence.geofence_type, geofence.coordinates, {
         collection: 'temp',
-        reference: landmark
+        
       });
     } else {
-      var c = MapPane.center();
-      activePoint = MapPane.addPoint(c.lat, c.lng, {
+      //TODO: New geofence case
+      //var c = MapPane.center();
+      activeShape = MapPane.addShape(0, {}, {
         collection: 'temp'
       });
     }
     
-    MQA.EventManager.addListener(activePoint, 'mouseup', GeofenceController.dragPoint);
-    activePoint.setValue('draggable', true);
+    MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
+      MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
+    });
     
     MapPane.showCollection('temp');
-    MapPane.hideCollection('landmarks');
+    MapPane.hideCollection('geofences');
   }
   
   function closeEditPanes() {
-    MapPane.showCollection('landmarks');
+    MapPane.showCollection('geofences');
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
-    activePoint = null;
     
-    Header.open('landmarks');
+    MQA.EventManager.clearListeners(activeShape);
+    activeShape = null;
+    
+    Header.open('geofences');
     GroupPane.close();
-    LandmarkEditPane.close();
-    LandmarkPane.open(function() {
-      MapPane.slide(LandmarkPane.width());
+    GeofenceEditPane.close();
+    GeofencePane.open(function() {
+      MapPane.slide(GeofencePane.width());
     });
   }
   

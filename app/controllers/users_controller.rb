@@ -117,7 +117,7 @@ class UsersController < ApplicationController
     if @user.save
       self.current_user = @user.reload
       
-      flash[:notice] = "Welcome, #{@user.name}!"
+      flash.now[:notice] = "Welcome, #{@user.name}!"
       redirect_to root_path
     else
       render :action => 'set_password', :layout => 'external'
@@ -141,7 +141,7 @@ class UsersController < ApplicationController
     if @user.save
       self.current_user = @user.reload
       
-      flash[:notice] = 'Your password has been updated.'
+      flash.now[:notice] = 'Your password has been updated.'
       redirect_to root_path
     else
       render :action => 'reset_password', :layout => 'external'
