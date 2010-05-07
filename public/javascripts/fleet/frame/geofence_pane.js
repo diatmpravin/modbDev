@@ -82,22 +82,22 @@ Fleet.Frame.GeofencePane = (function(GeofencePane, Fleet, $) {
   /**
    * showGeofence(geofence)
    *
-   * Take the given landmark and either update its existing row or add
+   * Take the given geofence and either update its existing row or add
    * it to the list.
    */
   GeofencePane.showGeofence = function(geofence) {
-    var li = $('#geofence_' + landmark.id);
+    var li = $('#geofence_' + geofence.id);
     
     if (li.length > 0) {
-      li.html('<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
-        '<a href="#edit" class="edit hover-only" title="Edit Landmark">Edit</a>' +
-        landmark.name + '</li>');
+      li.html('<a href="#remove" class="delete hover-only" title="Remove Geofence">Remove</a>' +
+        '<a href="#edit" class="edit hover-only" title="Edit Geofence">Edit</a>' +
+        geofence.name + '</li>');
     } else {
-      // There are PROBABLY better places to put this brand new landmark than at the bottom of the list -- but where?!?   \(o_o)/
-      list.append('<li id="landmark_' + landmark.id + '">' +
-        '<a href="#remove" class="delete hover-only" title="Remove Landmark">Remove</a>' +
-        '<a href="#edit" class="edit hover-only" title="Edit Landmark">Edit</a>' +
-        landmark.name + '</li>');
+      // There are PROBABLY better places to put this brand new geofence than at the bottom of the list -- but where?!?   \(o_o)/
+      list.append('<li id="geofence_' + geofence.id + '">' +
+        '<a href="#remove" class="delete hover-only" title="Remove Geofence">Remove</a>' +
+        '<a href="#edit" class="edit hover-only" title="Edit Geofence">Edit</a>' +
+        geofence.name + '</li>');
     }
   
     return GeofencePane;
