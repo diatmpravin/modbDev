@@ -51,8 +51,8 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     MapPane.mq = map.moshiMap().map;
     
     // Intercept MapQuest events for our own (nefarious?) purposes
-    //originalEventManagerTrigger = MQA.EventManager.trigger;
-    //MQA.EventManager.trigger = mapPaneEventManagerTrigger;
+    originalEventManagerTrigger = MQA.EventManager.trigger;
+    MQA.EventManager.trigger = mapPaneEventManagerTrigger;
     
     // Our custom pop-up
     popup = $('<div id="map_popup"><div class="top"></div><div class="content"></div><div class="bottom"></div></div>').appendTo($('#mqtiledmap'));
