@@ -69,7 +69,7 @@ describe "Geofences Controller", ActionController::TestCase do
         post :create, {
           :geofence => {
             :name => 'Test',
-            :type => 0,
+            :geofence_type => 0,
             :radius => 15,
             :coordinates => [
               {:latitude => 50, :longitude => 50},
@@ -94,7 +94,7 @@ describe "Geofences Controller", ActionController::TestCase do
       Geofence.should.differ(:count).by(0) do
         post :create, {
           :geofence => {
-            :type => 0,
+            :geofence_type => 0,
             :radius => 15,
             :coordinates => [
               {:latitude => 50, :longitude => 50},
