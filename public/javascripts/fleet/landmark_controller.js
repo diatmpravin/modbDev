@@ -168,21 +168,19 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     });
     
     function ready() {
-      
-      MapPane.slide(0, function() {
-        LandmarkPane.close();
-        LandmarkEditPane.initPane(landmarkHtml).open();
+      MapPane.slide(0);      
+      LandmarkPane.close();
+      LandmarkEditPane.initPane(landmarkHtml).open();
 
-        Header.edit('New Landmark',
-          LandmarkController.save,
-          LandmarkController.cancel
-        );
-        
-        editLandmarkOnMap(null);
-        LandmarkEditPane.location(MapPane.center());
-        
-        loading(false);
-      });
+      Header.edit('New Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      editLandmarkOnMap(null);
+      LandmarkEditPane.location(MapPane.center());
+      
+      loading(false);
     }
     
     return false;
@@ -212,22 +210,21 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     });
     
     function ready() {
-      MapPane.slide(0, function() {
-        LandmarkPane.close();
-        LandmarkEditPane.initPane(landmarkHtml).open();
-        Header.edit('Edit Landmark',
-          LandmarkController.save,
-          LandmarkController.cancel
-        );
-        
-        // Make sure our landmark object is up to date, then show it on map
-        var l = LandmarkEditPane.location();
-        landmark.latitude = l.latitude;
-        landmark.longitude = l.longitude;
-        editLandmarkOnMap(landmark);
-        
-        loading(false);
-      });
+      MapPane.slide(0);
+      LandmarkPane.close();
+      LandmarkEditPane.initPane(landmarkHtml).open();
+      Header.edit('Edit Landmark',
+        LandmarkController.save,
+        LandmarkController.cancel
+      );
+      
+      // Make sure our landmark object is up to date, then show it on map
+      var l = LandmarkEditPane.location();
+      landmark.latitude = l.latitude;
+      landmark.longitude = l.longitude;
+      editLandmarkOnMap(landmark);
+      
+      loading(false);
     }
     
     return false;
