@@ -15,7 +15,7 @@ module UsersHelper
     }
   end
 
-  def can_drag(user)
+  def can_drag_user(user)
     can_edit(user) ? '' : 'undraggable'
   end
 

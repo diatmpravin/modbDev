@@ -24,6 +24,7 @@ class Geofence < ActiveRecord::Base
   validates_presence_of :name
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
+  validates_presence_of :geofence_type
   
   ##
   # Concerns
