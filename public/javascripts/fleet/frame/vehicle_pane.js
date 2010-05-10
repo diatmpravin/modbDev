@@ -58,9 +58,14 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    *
    *
    */
-  VehiclePane.toggleActive = function() {
-      var row = $(this).closest('div.row');
+  VehiclePane.toggleActive = function(v) {
+      var row;
 
+      if (!v || (v && v.originalEvent)) {
+        row = $(this).closest('div.row');
+      } else {
+        row = $('#device_' + v.id);
+      }
       // flip the initial row's value
       row.toggleClass('active');
 
