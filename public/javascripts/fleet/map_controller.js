@@ -5,6 +5,7 @@ var Fleet = Fleet || {};
 Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Frame, $) {
   var vehicles = null,
       lookup = null,
+      selected_id = null;
       init = false;
   
   /* Map Tab */
@@ -117,12 +118,23 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
       
       o = lookup[id];
     }
-    
+
+    if (selected_id != null) {
+      VehiclePane.toggleActive(lookup[selected_id]);
+    }
+
     if (o) {
-      showVehicleOnMap(o);
-      if (o.poi) {
+      if (selected_id == o.id || o.poi == null) {
+        selected_id = null;
+        MapPane.popup(false);
+      } else {
+        selected_id = o.id;
+        showVehicleOnMap(o);
+        showVehiclePopup(o);
+        VehiclePane.toggleActive(o)
         MapPane.pan(o.poi);
       }
+      
     }
     
     return false;
@@ -137,7 +149,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   MapController.focusPoint = function() {
     var v = this.reference;
     
-    alert('User clicked on vehicle id '+v.id);
+    //alert('User clicked on vehicle id '+v.id);
+    MapController.focus(v);
   
     return false;
   };
@@ -152,12 +165,12 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   MapController.hoverPoint = function(bool) {
     var v = this.reference, html;
     
-    if (bool) {
-      html = '<h4>' + v.name + '</h4><p>' + v.position.time_of_day + '</p><p>' + v.position.occurred_at.substring(0, 10) + '</p>';
-      
-      MapPane.popup(this, html);
-    } else {
-      MapPane.popup(false);
+    if (selected_id == null) {  
+      if (bool) {
+        showVehiclePopup(v);
+      } else {
+        MapPane.popup(false);
+      }
     }
     
     
@@ -208,6 +221,19 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     Header.loading(bool);
   }
   
+  /**
+   * showVehiclePopup()
+   *
+   * Called to make a vehicle's popup visible
+   */
+  function showVehiclePopup(v) {
+    if (v.poi) {
+      html = '<h4>' + v.name + '</h4><p>' + v.position.time_of_day + '</p><p>' + v.position.occurred_at.substring(0, 10) + '</p>';
+          
+      MapPane.popup(v.poi, html);
+    }
+  }
+
   return MapController;
 }(Fleet.MapController || {},
   Fleet.Frame.MapPane,
