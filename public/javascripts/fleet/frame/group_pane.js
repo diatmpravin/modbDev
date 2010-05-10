@@ -147,7 +147,8 @@ Fleet.Frame.GroupPane = (function(GroupPane, Fleet, $) {
       active.removeClass('active');
       
       for(idx = 0, num = arr.length; idx < num; idx++) {
-        $('#device_group_' + arr[idx]).addClass('active');
+        $('#device_group_' + arr[idx]).addClass('active')
+          .siblings('ol').find('div.row').addClass('active');
       }
     } else {
       arr = [];
