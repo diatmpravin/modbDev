@@ -2,7 +2,7 @@
  * Fleet.LandmarkController
  */
 var Fleet = Fleet || {};
-Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, GroupPane, Header, Frame, $) {
+Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkEditPane, MapPane, Header, Frame, $) {
   var confirmRemoveDialog,
       landmarks = null,
       lookup = null,
@@ -50,7 +50,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     MapPane.init().open().showCollection('landmarks');
     LandmarkPane.init().open().editEnabled(true);
     LandmarkEditPane.init().close();
-    GroupPane.init().close();
     Header.init().open('landmarks', {
       newLandmark: LandmarkController.newLandmark
     });
@@ -67,7 +66,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     MapPane.close();
     LandmarkPane.close().editEnabled(false);
     LandmarkEditPane.close();
-    GroupPane.close().showGroups('');
     Header.standard('');
     
     landmarks = null;
@@ -159,13 +157,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Transition from index into creating a landmark.
    */
   LandmarkController.newLandmark = function() {
-    var landmarkHtml, groupHtml;
+    var landmarkHtml;
     
     loading(true);
-    
-    // We need to load two ajax requests, then move forward
-    // when both are done.
-    var requests = 2;
     
     $.get('/landmarks/new', function(html) {
       landmarkHtml = html;
@@ -173,25 +167,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       ready();
     });
     
-    // Strange "get json.html" because of Legacy Group page (for now)
-    $.getJSON('/groups.json', function(json) {
-      groupHtml = json.html;
-      
-      ready();
-    });
-    
     function ready() {
-      requests -= 1;
-      
-      if (requests > 0) {
-        // Don't move forward until both requests are complete
-        return;
-      }
       
       MapPane.slide(0, function() {
         LandmarkPane.close();
         LandmarkEditPane.initPane(landmarkHtml).open();
-        /*GroupPane.showGroups(groupHtml).open();*/
 
         Header.edit('New Landmark',
           LandmarkController.save,
@@ -214,7 +194,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Transition from index into editing a landmark.
    */
   LandmarkController.edit = function(e) {
-    var id, landmark, landmarkHtml, groupHtml;
+    var id, landmark, landmarkHtml;
 
     id = $(this).closest('li').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
@@ -225,36 +205,16 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     
     loading(true);
     
-    // We need to load two ajax requests, then move forward
-    // when both are done.
-    var requests = 2;
-    
     $.get('/landmarks/' + id + '/edit', function(html) {
       landmarkHtml = html;
       
       ready();
     });
     
-    // Strange "get json.html" because of Legacy Group page (for now)
-    $.getJSON('/groups.json', function(json) {
-      groupHtml = json.html;
-      
-      ready();
-    });
-    
     function ready() {
-      requests -= 1;
-      
-      if (requests > 0) {
-        // Don't move forward until both requests are complete
-        return;
-      }
-      
       MapPane.slide(0, function() {
         LandmarkPane.close();
         LandmarkEditPane.initPane(landmarkHtml).open();
-        /*GroupPane.showGroups(groupHtml).open();
-        GroupPane.select(LandmarkEditPane.groups());*/
         Header.edit('Edit Landmark',
           LandmarkController.save,
           LandmarkController.cancel
@@ -270,7 +230,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       });
     }
     
-    //e.stopImmediatePropagation();
     return false;
   };
   
@@ -284,9 +243,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     var l;
     
     loading(true);
-    
-    // Get the selected groups from the group pane into the form
-    //LandmarkEditPane.groups(GroupPane.selected());
     
     LandmarkEditPane.submit({
       dataType: 'json',
@@ -462,7 +418,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     activePoint = null;
     
     Header.open('landmarks');
-    /*GroupPane.close();*/
     LandmarkEditPane.close();
     LandmarkPane.open(function() {
       MapPane.slide(LandmarkPane.width());
@@ -479,7 +434,6 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   Fleet.Frame.LandmarkPane,
   Fleet.Frame.LandmarkEditPane,
   Fleet.Frame.MapPane,
-  Fleet.Frame.GroupPane,
   Fleet.Frame.Header,
   Fleet.Frame,
   jQuery));
