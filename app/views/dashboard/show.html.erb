@@ -30,6 +30,10 @@
   <script type="text/javascript">
     jQuery(function() {
       Fleet.init();
+      
+      jQuery(window).unload(function() {
+        Fleet = null;
+      });
     });
   </script>
 <% end -%>

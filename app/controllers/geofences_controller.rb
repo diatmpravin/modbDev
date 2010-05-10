@@ -1,11 +1,10 @@
 class GeofencesController < ApplicationController
   require_role User::Role::GEOFENCE
   before_filter :new_geofence, :only => [:new, :create]
-  before_filter :set_geofence, :only => [:edit, :update]
-  before_filter :set_group, :only => [:index, :destroy, :update, :create]
+  before_filter :set_geofence, :only => [:edit, :update, :destroy]
   
-  layout :set_layout
-
+  layout except_ajax('geofences')
+  
   def index
     @geofences = current_account.geofences
     
@@ -37,16 +36,10 @@ class GeofencesController < ApplicationController
     save_record
   end
 
-  # DELETE /geofences/:id
-  # Remove a geofence from the system
   def destroy
-    current_account.geofences.destroy(params[:id])
-
-    unless @group.nil?  
-      redirect_to  device_group_geofences_path(@group)
-    else
-      redirect_to geofences_path
-    end
+    @geofence.destroy
+    
+    render :json => {:status => 'success'}
   end
 
   protected
@@ -58,31 +51,21 @@ class GeofencesController < ApplicationController
   def set_geofence
     @geofence = current_account.geofences.find(params[:id])
   end
-
-  def set_group
-    if (params[:group_id])
-      @group = current_account.device_groups.find(params[:group_id])
-    end
-  end
-  
-  def set_layout
-    return nil if request.xhr?
-    #return "geofences_map" if [:edit, :new, :update, :create].include?(action_name.to_sym)
-    "geofences"
-  end
   
   def save_record
     # If group ids are missing, blank them out
     params[:geofence]['device_group_ids'] ||= []
     
     if @geofence.update_attributes(params[:geofence])
-      unless @group.nil?
-        redirect_to  device_group_geofences_path(@group)
-      else
-        redirect_to geofences_path
-      end
+      render :json => {
+        :status => 'success',
+        :geofence => @geofence
+      }
     else
-      render :action => @geofence.new_record? ? 'new' : 'edit'
+      render :json => {
+        :status => 'failure',
+        :html => render_to_string(:action => @geofence.new_record? ? 'new' : 'edit')
+      }
     end
   end
   

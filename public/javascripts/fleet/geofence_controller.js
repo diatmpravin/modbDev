@@ -171,7 +171,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     var requests = 2;
     
     $.get('/geofences/new', function(html) {
-      landmarkHtml = html;
+      geofenceHtml = html;
       
       ready();
     });
@@ -200,7 +200,6 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       );
       
       editGeofenceOnMap(null);
-      GeofenceEditPane.location(MapPane.center());
       
       loading(false);
     }
@@ -276,7 +275,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
    * and Edit Landmark.
    */
   GeofenceController.save = function() {
-    var l;
+    var g;
     
     loading(true);
     
@@ -290,11 +289,11 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
         
         if (json.status == 'success') {
           // If it's an update, get rid of the old geofence
-          if (l = lookup[json.geofence.id]) {
-            if (l.poi) {
-              MapPane.removePoint(l.poi, 'geofences');
+          if (g = lookup[json.geofence.id]) {
+            if (g.shape) {
+              MapPane.removeShape(g.shape, 'geofences');
             }
-            l.poi = null;
+            g.shape = null;
           }
           
           // Now create a new geofence
@@ -363,9 +362,10 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
           });
           
           // Remove geofence from map
-          if (lookup[id].poi) {
-            MapPane.removePoint(lookup[id].poi, 'geofences');
-            lookup[id].poi = null;
+          if (lookup[id].shape) {
+            MapPane.removeShape(lookup[id].shape, 'geofences');
+            lookup[id].shape = null;
+            lookup[id] = null;
           }
         } else {
           confirmRemoveDialog.errors(json.error).dialog('open');
@@ -416,23 +416,20 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     
     if (geofence) {
       activeShape = MapPane.addShape(geofence.geofence_type, geofence.coordinates, {
-        collection: 'temp',
-        
+        collection: 'temp'
       });
     } else {
-      //TODO: New geofence case
-      //var c = MapPane.center();
-      activeShape = MapPane.addShape(0, {}, {
+      activeShape = MapPane.newShape({
         collection: 'temp'
       });
     }
     
+    MapPane.showCollection('temp');
+    MapPane.hideCollection('geofences');
+    
     MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
       MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
     });
-    
-    MapPane.showCollection('temp');
-    MapPane.hideCollection('geofences');
   }
   
   function closeEditPanes() {
@@ -440,7 +437,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
     
-    MQA.EventManager.clearListeners(activeShape);
+    MQA.EventManager.clearListeners(activeShape, 'mousedown');
     activeShape = null;
     
     Header.open('geofences');

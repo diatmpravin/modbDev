@@ -8,7 +8,7 @@
 var Fleet = Fleet || {};
 Fleet.Frame = Fleet.Frame || {};
 Fleet.Frame.MapPane = Fleet.Frame.MapPane || {};
-Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, $) {
+Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
   Geofence.ELLIPSE = 0;
   Geofence.RECTANGLE = 1;
   Geofence.POLYGON = 2;
@@ -172,17 +172,14 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, $) {
     
     // Re-enable map panning
     MapPane.enableDragging();
-    MoshiMap.map.unbind('mousemove.geofence')
-                .unbind('mouseup.geofence');
+    MapPane.map.unbind('mousemove.geofence')
+               .unbind('mouseup.geofence');
     
-    alert(1);
-    
-    
-    //this.updateModel();
+    Fleet.Controller.dragShape();
     //this.buildHandles();
     
     return false;
   };
   
   return Geofence;
-}(Fleet.Frame.MapPane.Geofence || {}, Fleet.Frame.MapPane, jQuery));
+}(Fleet.Frame.MapPane.Geofence || {}, Fleet.Frame.MapPane, Fleet, jQuery));
