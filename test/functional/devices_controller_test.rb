@@ -453,21 +453,6 @@ describe "Devices Controller", ActionController::TestCase do
       @d3 = Device.generate!
     end
 
-    specify "can take a list of devices and show them on a live look map" do
-      get :live_look, :device_ids => [@d1.id, @d2.id, @d3.id].join(",")
-      template.should.be "live_look"
-
-      assigns(:devices).should.equal [@d1, @d2, @d3]
-    end
-
-    specify "json request returns device information for the given devices" do
-      get :live_look, :device_ids => [@d1.id, @d2.id, @d3.id].join(","),
-        :format => 'json'
-
-      json.length.should.equal 3
-      json[0]['id'].should.equal @d1.id
-    end
-
     specify "return to list of no devices selected to view" do
       get :live_look, :device_ids => ""
       should.redirect_to devices_path
