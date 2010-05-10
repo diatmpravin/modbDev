@@ -74,7 +74,7 @@ describe "Geofence", ActiveSupport::TestCase do
     end
     
     specify "can use the coordinates array immediately on a new geofence" do
-      geofence = @account.geofences.new(:name => 'Test')
+      geofence = @account.geofences.new(:name => 'Test', :geofence_type => 0)
       geofence.coordinates << {:latitude => 10.05, :longitude => 10.05}
       geofence.should.save
       geofence.coordinates.should.equal [
