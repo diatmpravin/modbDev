@@ -114,6 +114,9 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
    *
    * If provided, the callback function will be called after the resize.
    *
+   * Change 5/10/2010 - This function no longer "animates" at all, it just
+   * immediately resizes the map to the desired size.
+   *
    * TODO: Can this function "pause" while MapQuest loads new tiles, so bg
    * color doesn't show through during the resize?
    */
@@ -121,31 +124,19 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     var oldPadding = parseInt(container.css('padding-left'));
     
     if (newPadding > oldPadding) {
-      // Shrinking map - just do the animation and then resize
-      container.animate({paddingLeft: newPadding}, {
-        duration: 400,
-        complete: function() {
-          MapPane.resize();
-          if ($.isFunction(callback)) {
-            callback();
-          }
-        }
-      });
-    } else if (newPadding < oldPadding) {
-      // Expanding map - first generate "extra" map, then animate
-      var predictedWidth = container.width() + oldPadding - newPadding;
-      map.width(predictedWidth)
-         .moshiMap().resizeTo(predictedWidth, container.height());
+      container.css('paddingLeft', newPadding);
+      MapPane.resize();
       
-      container.animate({paddingLeft: newPadding}, {
-        duration: 400,
-        complete: function() {
-          MapPane.resize();
-          if ($.isFunction(callback)) {
-            callback();
-          }
-        }
-      });
+      if ($.isFunction(callback)) {
+        callback();
+      }
+    } else if (newPadding < oldPadding) {
+      container.css('paddingLeft', newPadding);
+      MapPane.resize();
+      
+      if ($.isFunction(callback)) {
+        callback();
+      }
     }
     
     return MapPane;
