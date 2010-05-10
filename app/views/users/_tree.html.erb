@@ -1,6 +1,6 @@
 <% new_tree(node, :root_ol=> false, :vehicles => false, :users => true) do |node, level| -%>
   <% if node.is_a?(User) -%>
-    <div class="row user clear <%= can_drag(node) %>" id="<%= dom_id(node) %>">
+    <div class="row user clear <%= can_drag_user(node) %>" id="<%= dom_id(node) %>">
       <div class="listing">
         <span class="tab"></span>
         <span class="indent"></span>

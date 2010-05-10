@@ -188,18 +188,21 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         return;
       }
       
-      LandmarkPane.close();
-      LandmarkEditPane.initPane(landmarkHtml).open();
-      GroupPane.showGroups(groupHtml).open();
-      Header.edit('New Landmark',
-        LandmarkController.save,
-        LandmarkController.cancel
-      );
-      
-      editLandmarkOnMap(null);
-      LandmarkEditPane.location(MapPane.center());
-      
-      loading(false);
+      MapPane.slide(0, function() {
+        LandmarkPane.close();
+        LandmarkEditPane.initPane(landmarkHtml).open();
+        /*GroupPane.showGroups(groupHtml).open();*/
+
+        Header.edit('New Landmark',
+          LandmarkController.save,
+          LandmarkController.cancel
+        );
+        
+        editLandmarkOnMap(null);
+        LandmarkEditPane.location(MapPane.center());
+        
+        loading(false);
+      });
     }
     
     return false;
@@ -247,22 +250,24 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
         return;
       }
       
-      LandmarkPane.close();
-      LandmarkEditPane.initPane(landmarkHtml).open();
-      GroupPane.showGroups(groupHtml).open();
-      GroupPane.select(LandmarkEditPane.groups());
-      Header.edit('Edit Landmark',
-        LandmarkController.save,
-        LandmarkController.cancel
-      );
-      
-      // Make sure our landmark object is up to date, then show it on map
-      var l = LandmarkEditPane.location();
-      landmark.latitude = l.latitude;
-      landmark.longitude = l.longitude;
-      editLandmarkOnMap(landmark);
-      
-      loading(false);
+      MapPane.slide(0, function() {
+        LandmarkPane.close();
+        LandmarkEditPane.initPane(landmarkHtml).open();
+        /*GroupPane.showGroups(groupHtml).open();
+        GroupPane.select(LandmarkEditPane.groups());*/
+        Header.edit('Edit Landmark',
+          LandmarkController.save,
+          LandmarkController.cancel
+        );
+        
+        // Make sure our landmark object is up to date, then show it on map
+        var l = LandmarkEditPane.location();
+        landmark.latitude = l.latitude;
+        landmark.longitude = l.longitude;
+        editLandmarkOnMap(landmark);
+        
+        loading(false);
+      });
     }
     
     //e.stopImmediatePropagation();
@@ -457,7 +462,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     activePoint = null;
     
     Header.open('landmarks');
-    GroupPane.close();
+    /*GroupPane.close();*/
     LandmarkEditPane.close();
     LandmarkPane.open(function() {
       MapPane.slide(LandmarkPane.width());
