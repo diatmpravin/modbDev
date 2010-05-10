@@ -286,7 +286,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     loading(true);
     
     // Get the selected groups from the group pane into the form
-    LandmarkEditPane.groups(GroupPane.selected());
+    //LandmarkEditPane.groups(GroupPane.selected());
     
     LandmarkEditPane.submit({
       dataType: 'json',
