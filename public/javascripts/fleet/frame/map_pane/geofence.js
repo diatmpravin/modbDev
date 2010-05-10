@@ -180,6 +180,71 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
     
     return false;
   };
+
+  /**
+   * convertShapeCoordinates(mqShape, newType)
+   *
+   * Return new shape coordinates for the given type, based on the coordinates
+   * of the current shape.
+   */
+  Geofence.convertShapeCoordinates = function(mqShape, newType) {
+    var idx, num,
+        corners = [360, 360, -360, -360],
+        newCoords = [],
+        points = mqShape.getShapePoints();
+    
+    for(idx = 0, num = points.getSize(); idx < num; idx++) {
+      var p = points.getAt(idx);
+      if (p.lat < corners[0]) { corners[0] = p.lat; }
+      if (p.lng < corners[1]) { corners[1] = p.lng; }
+      if (p.lat > corners[2]) { corners[2] = p.lat; }
+      if (p.lng > corners[3]) { corners[3] = p.lng; }
+    }
+    
+    if (newType == Geofence.ELLIPSE || newType == Geofence.RECTANGLE) {
+      newCoords = [
+        {latitude: corners[0], longitude: corners[1]},
+        {latitude: corners[2], longitude: corners[3]}
+      ];
+    } else {
+      newCoords = [
+        {latitude: corners[0], longitude: corners[1]},
+        {latitude: corners[2], longitude: corners[1]},
+        {latitude: corners[2], longitude: corners[3]},
+        {latitude: corners[0], longitude: corners[3]}
+      ];
+    }
+    
+    return newCoords;
+  };
+  
+  /**
+   * 
+    /**
+   * Called when a handle has been dragged from the HandleManager.
+   * Given a point index, and a new LL, reconstruct the shape
+   * as necessary
+   *
+  updateCurrentShape: function(handles, index, ll, poi) {
+    var newPoints;
+
+    switch(this.model.getType()) {
+      case Geofence.ELLIPSE:
+        newPoints = this._updateEllipse(handles, index, ll);
+        break;
+      case Geofence.RECTANGLE:
+        newPoints = this._updateRectangle(handles, index, ll);
+        break;
+      case Geofence.POLYGON:
+        newPoints = this._updatePolygon(handles, index, ll, poi);
+        break;
+    }
+
+    this.shape.setShapePoints(newPoints);
+    this.buildHandles();
+
+    this.updateModel();
+  }*/
   
   return Geofence;
 }(Fleet.Frame.MapPane.Geofence || {}, Fleet.Frame.MapPane, Fleet, jQuery));

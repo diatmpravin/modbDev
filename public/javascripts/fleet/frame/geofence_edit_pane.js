@@ -30,6 +30,20 @@ Fleet.Frame.GeofenceEditPane = (function(GeofenceEditPane, Fleet, $) {
     // A reference to our content
     content = pane.children('.content');
     
+    // Shape Chooser
+    $('#shapeChooser a').live('click', function() {
+      if ($(this).hasClass('selected')) {
+        return false;
+      }
+      
+      var newType = parseInt(this.href.substring(this.href.indexOf('#') + 1));
+      $(this).addClass('selected')
+             .siblings('a').removeClass('selected')
+             .siblings('input').val(newType);
+             
+      return Fleet.Controller.convertShape(newType);
+    });
+    
     init = true;
     return GeofenceEditPane;
   };

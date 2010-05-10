@@ -391,6 +391,27 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     return false;
   };
   
+  /**
+   * convertShape(newType)
+   *
+   * Called when the user switches the geofence type in the edit pane.
+   */
+  GeofenceController.convertShape = function(newType) {
+    if (activeShape) {
+      MQA.EventManager.clearListeners(activeShape, 'mousedown');
+      MapPane.removeShape(activeShape, 'temp');
+      
+      activeShape = MapPane.addShape(newType, MapPane.Geofence.convertShapeCoordinates(activeShape, newType), {
+        collection: 'temp'
+      });
+      MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
+        MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
+      });
+    }
+    
+    return false;
+  };
+  
   /* Private Functions */
   
   function showGeofencesOnMap(geofences) {
