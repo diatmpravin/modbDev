@@ -140,7 +140,7 @@ class DevicesController < ApplicationController
       return
     end
 
-    @devices = current_account.devices.find(ids)
+    @devices = current_user.devices
     @device_ids = params[:device_ids]
 
     respond_to do |format|
@@ -182,7 +182,7 @@ class DevicesController < ApplicationController
   
   def set_devices
     @devices = search_on Device do
-      current_account.devices.paginate :page => params[:page], :per_page => 30
+      current_user.devices.paginate :page => params[:page], :per_page => 30
     end
   end
   
