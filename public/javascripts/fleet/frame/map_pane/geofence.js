@@ -33,17 +33,6 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
   
     Geofence.setColor(shape, '#FF0000');
     
-/*
-   
-    // TODO pull more into moshimap?
-    MoshiMap.moshiMap.geofenceCollection.add(this.shape);
-
-    // Hook up event handling
-    var self = this;
-    MQA.EventManager.addListener(this.shape, "mousedown", function(e) { self.dragStart(e); });
-
-    this.buildHandles();*/
-    
     return shape;
   };
   
@@ -131,9 +120,6 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
         xy.x - clientX, xy.y - clientY
       ]);
     }
-    //for(var i = 0; i < Geofences.fence.pois.length; i++) {
-      //Geofences.fence.pois[i].setValue('visible', false);
-    //}
     
     return false;
   };
@@ -177,7 +163,6 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
                .unbind('mouseup.geofence');
     
     Fleet.Controller.dragShape();
-    //this.buildHandles();
     
     return false;
   };
@@ -248,8 +233,8 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
       ];
     } else if (mqShape.className == 'MQA.RectangleOverlay') {
       c = [
-        shape.getShapePoints().getAt(0),
-        shape.getShapePoints().getAt(1)
+        mqShape.getShapePoints().getAt(0),
+        mqShape.getShapePoints().getAt(1)
       ];
       
       return [
@@ -300,13 +285,13 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
   };
   
   /**
-   * dragHandleStart(mqPoi)
+   * dragHandleStart(mqEvent)
    *
-   * Called when the user begins dragging a geofence handle. Passed the point
-   * being dragged.
+   * Called when the user begins dragging a geofence handle. The point being
+   * dragged will be set as the current context (this).
    */
-  Geofence.dragHandleStart = function(mqPoi) {
-    draggingHandle = mqPoi;
+  Geofence.dragHandleStart = function(mqEvent) {
+    draggingHandle = this;
     MapPane.map.bind('mousemove.handle', Geofence.dragHandle);
   };
   
@@ -320,8 +305,6 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
     var clientX = event.clientX - MapPane.map.position().left - $('#mqtiledmap').position().left;
     var clientY = event.clientY - MapPane.map.position().top - $('#mqtiledmap').position().top;
     var mqPoi = draggingHandle, idx, num;
-    
-    //for(idx = 0, num = r
   };
   
   /**
@@ -337,34 +320,6 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
     
     Fleet.Controller.dragHandle(mqPoi);
   };
-  
-  /**
-   * 
-    /**
-   * Called when a handle has been dragged from the HandleManager.
-   * Given a point index, and a new LL, reconstruct the shape
-   * as necessary
-   *
-  updateCurrentShape: function(handles, index, ll, poi) {
-    var newPoints;
-
-    switch(this.model.getType()) {
-      case Geofence.ELLIPSE:
-        newPoints = this._updateEllipse(handles, index, ll);
-        break;
-      case Geofence.RECTANGLE:
-        newPoints = this._updateRectangle(handles, index, ll);
-        break;
-      case Geofence.POLYGON:
-        newPoints = this._updatePolygon(handles, index, ll, poi);
-        break;
-    }
-
-    this.shape.setShapePoints(newPoints);
-    this.buildHandles();
-
-    this.updateModel();
-  }*/
   
   return Geofence;
 }(Fleet.Frame.MapPane.Geofence || {}, Fleet.Frame.MapPane, Fleet, jQuery));
