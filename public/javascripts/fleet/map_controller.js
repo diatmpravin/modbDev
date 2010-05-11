@@ -114,11 +114,14 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     if (!o || (o && o.originalEvent)) {
       // If no arg, or arg is a jQuery event object, find the vehicle
       // associated with the clicked dom element.
-      
       id = $(this).attr('id');
-      id = id.substring(id.lastIndexOf('_') + 1);
-      
-      o = lookup[id];
+
+      // but not the group!
+      if (id.indexOf('group') < 0)
+      {
+        id = id.substring(id.lastIndexOf('_') + 1);
+        o = lookup[id];
+      }
     }
 
     if (selected_id != null) {
