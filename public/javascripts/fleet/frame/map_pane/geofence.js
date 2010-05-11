@@ -317,8 +317,8 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
    * function is passed a jQuery event object.
    */
   Geofence.dragHandle = function(event) {
-    var clientX = event.clientX - this.map.position().left - $('#mqtiledmap').position().left;
-    var clientY = event.clientY - this.map.position().top - $('#mqtiledmap').position().top;
+    var clientX = event.clientX - MapPane.map.position().left - $('#mqtiledmap').position().left;
+    var clientY = event.clientY - MapPane.map.position().top - $('#mqtiledmap').position().top;
     var mqPoi = draggingHandle, idx, num;
     
     //for(idx = 0, num = r
