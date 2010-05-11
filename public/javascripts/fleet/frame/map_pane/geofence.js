@@ -14,6 +14,7 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
   Geofence.POLYGON = 2;
   
   var draggingShape = null,
+      draggingHandle = null,
       dragOffset = null;
   
   /**
@@ -184,8 +185,8 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
   /**
    * convertShapeCoordinates(mqShape, newType)
    *
-   * Return new shape coordinates for the given type, based on the coordinates
-   * of the current shape.
+   * Takes an existing shape and a new type to convert it to, and returns a
+   * new set of coordinates with roughly the same area.
    */
   Geofence.convertShapeCoordinates = function(mqShape, newType) {
     var idx, num,
@@ -216,6 +217,125 @@ Fleet.Frame.MapPane.Geofence = (function(Geofence, MapPane, Fleet, $) {
     }
     
     return newCoords;
+  };
+  
+  /**
+   * handles(mqShape)
+   *
+   * Return an array of handles for the given shape.
+   */
+  Geofence.handles = function(mqShape) {
+    var c, xy, idx, j, num, p;
+    
+    if (mqShape.className == 'MQA.EllipseOverlay') {
+      c = [
+        MapPane.mq.llToPix(mqShape.getShapePoints().getAt(0)),
+        MapPane.mq.llToPix(mqShape.getShapePoints().getAt(1))
+      ];
+      
+      xy = [
+        new MQA.Point((6 * c[0].x + 1 * c[1].x)/7, (6 * c[0].y + 1 * c[1].y)/7),
+        new MQA.Point((6 * c[1].x + 1 * c[0].x)/7, (6 * c[0].y + 1 * c[1].y)/7),
+        new MQA.Point((6 * c[1].x + 1 * c[0].x)/7, (6 * c[1].y + 1 * c[0].y)/7),
+        new MQA.Point((6 * c[0].x + 1 * c[1].x)/7, (6 * c[1].y + 1 * c[0].y)/7)
+      ];
+      
+      return [
+        handle(MapPane.mq.pixToLL(xy[0]), true, 0),
+        handle(MapPane.mq.pixToLL(xy[1]), true, 1),
+        handle(MapPane.mq.pixToLL(xy[2]), true, 2),
+        handle(MapPane.mq.pixToLL(xy[3]), true, 3)
+      ];
+    } else if (mqShape.className == 'MQA.RectangleOverlay') {
+      c = [
+        shape.getShapePoints().getAt(0),
+        shape.getShapePoints().getAt(1)
+      ];
+      
+      return [
+        handle(c[0], true, 0),
+        handle(new MQA.LatLng(c[0].lat, c[1].lng), true, 1),
+        handle(c[1], true, 2),
+        handle(new MQA.LatLng(c[1].lat, c[0].lng), true, 3)
+      ];
+    } else if (mqShape.className == 'MQA.PolygonOverlay') {
+      var h = [];
+      
+      for(idx = 0, num = mqShape.getShapePoints().getSize(); idx < num; idx++) {
+        p = mqShape.getShapePoints().getAt(idx);
+        
+        h.push(handle(p, true, idx));
+        
+        j = (idx + 1) % num;
+        var xy1 = MapPane.mq.llToPix(p);
+        var xy2 = MapPane.mq.llToPix(mqShape.getShapePoints().getAt(j));
+        var xy3 = new MQA.Point((xy1.x + xy2.x)/2, (xy1.y + xy2.y)/2);
+        
+        h.push(handle(MapPane.mq.pixToLL(xy3), false, idx));
+      }
+      
+      return h;
+    }
+    
+    function handle(latLng, corner, index) {
+      var mqPoi = new MQA.Poi(latLng);
+      
+      if (corner) {
+        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_corner.png', 9, 9));
+      } else {
+        mqPoi.setValue('icon', new MQA.Icon('/images/shape_handle_edge.png', 9, 9));
+      }
+      
+      mqPoi.setValue('iconOffset', new MQA.Point(-4, -4));
+      mqPoi.setValue('draggable', true);
+      mqPoi.setValue('shadow', null);
+      
+      mqPoi.coordIndex = index;
+      mqPoi.coordNew = !corner;
+      
+      return mqPoi;
+    }
+    
+    return [];
+  };
+  
+  /**
+   * dragHandleStart(mqPoi)
+   *
+   * Called when the user begins dragging a geofence handle. Passed the point
+   * being dragged.
+   */
+  Geofence.dragHandleStart = function(mqPoi) {
+    draggingHandle = mqPoi;
+    MapPane.map.bind('mousemove.handle', Geofence.dragHandle);
+  };
+  
+  /**
+   * dragHandle(event)
+   *
+   * Called as the user drags a geofence handle around the map. This
+   * function is passed a jQuery event object.
+   */
+  Geofence.dragHandle = function(event) {
+    var clientX = event.clientX - this.map.position().left - $('#mqtiledmap').position().left;
+    var clientY = event.clientY - this.map.position().top - $('#mqtiledmap').position().top;
+    var mqPoi = draggingHandle, idx, num;
+    
+    //for(idx = 0, num = r
+  };
+  
+  /**
+   * dragHandleEnd()
+   *
+   * Called when the user finishes dragging a geofence handle.
+   */
+  Geofence.dragHandleEnd = function(event) {
+    var mqPoi = draggingHandle;
+    draggingHandle = null;
+    
+    MapPane.map.unbind('mousemove.handle');
+    
+    Fleet.Controller.dragHandle(mqPoi);
   };
   
   /**

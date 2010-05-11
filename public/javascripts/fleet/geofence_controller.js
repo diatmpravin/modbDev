@@ -392,6 +392,17 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   };
   
   /**
+   * dragHandle(handle)
+   *
+   * Called by the MapPane.Geofence module whenever a user has finished
+   * dragging a geofence handle around. We will update the shape and
+   * then update the edit form with the new coordinates.
+   */
+  GeofenceController.dragHandle = function(handle) {
+    alert(1);
+  };
+  
+  /**
    * convertShape(newType)
    *
    * Called when the user switches the geofence type in the edit pane.
@@ -433,8 +444,12 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   }
   
   function editGeofenceOnMap(geofence) {
+    var idx, num;
+    
+    // Clear any existing stuff in the temp collection
     MapPane.collection('temp').removeAll();
     
+    // Create the shape on the map
     if (geofence) {
       activeShape = MapPane.addShape(geofence.geofence_type, geofence.coordinates, {
         collection: 'temp'
@@ -445,20 +460,40 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       });
     }
     
+    // Display the shape to be edited and hide any other geofences
     MapPane.showCollection('temp');
     MapPane.hideCollection('geofences');
     
+    // Hook up the drag event for the shape itself
     MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
       MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
     });
+    
+    // Create the resize handles for this shape
+    activeShape.handles = MapPane.Geofence.handles(activeShape);
+    for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+      MapPane.collection('temp').add(activeShape.handles[idx]);
+      
+      MQA.EventManager.addListener(activeShape.handles[idx], 'mousedown', MapPane.Geofence.dragHandleStart);
+      MQA.EventManager.addListener(activeShape.handles[idx], 'mouseup', MapPane.Geofence.dragHandleEnd);
+    }
   }
   
   function closeEditPanes() {
+    var idx, num;
+    
     MapPane.showCollection('geofences');
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
     
     MQA.EventManager.clearListeners(activeShape, 'mousedown');
+    if (activeShape.handles) {
+      for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mousedown');
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mouseup');
+      }
+    }
+    activeShape.handles = null;
     activeShape = null;
     
     Header.open('geofences');
