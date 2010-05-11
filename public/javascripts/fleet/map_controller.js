@@ -122,21 +122,26 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     }
 
     if (selected_id != null) {
+      // hide currently shown popup
       VehiclePane.toggleActive(lookup[selected_id]);
+      MapPane.popup(false);
     }
 
     if (o) {
       if (selected_id == o.id || o.poi == null) {
+        // clicked on active item - just hide it.
         selected_id = null;
-        MapPane.popup(false);
       } else {
         selected_id = o.id;
         showVehicleOnMap(o);
         showVehiclePopup(o);
-        VehiclePane.toggleActive(o)
+        VehiclePane.toggleActive(o);
         MapPane.pan(o.poi);
       }
       
+    } else {
+      // can happen if a group gets focus
+      selected_id = null;
     }
     
     return false;
@@ -151,7 +156,6 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   MapController.focusPoint = function() {
     var v = this.reference;
     
-    //alert('User clicked on vehicle id '+v.id);
     MapController.focus(v);
   
     return false;
@@ -166,12 +170,12 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    */
   MapController.hoverPoint = function(bool) {
     var v = this.reference, html;
-    
+
     if (selected_id == null) {  
       if (bool) {
         showVehiclePopup(v);
       } else {
-        MapPane.popup(false);
+        MapPane.popup();
       }
     }
     

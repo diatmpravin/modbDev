@@ -7,6 +7,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       landmarks = null,
       lookup = null,
       activePoint = null,
+      selected_id = null;
       init = false;
   
   /* Landmark Tab */
@@ -63,6 +64,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * Hide all of our panes and throw away any unnecessary resources.
    */
   LandmarkController.teardown = function() {
+    MapPane.popup(); //save the popup from destruction
     MapPane.close();
     LandmarkPane.close().editEnabled(false);
     LandmarkEditPane.close();
@@ -71,6 +73,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     landmarks = null;
     lookup = null;
     activePoint = null;
+    selected_id = null;
     MapPane.collection('landmarks').removeAll();
   };
   
@@ -117,10 +120,22 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       
       o = lookup[id];
     }
+
+    if (selected_id != null) {
+      LandmarkPane.toggleActive(lookup[selected_id]);
+    }
     
     if (o) {
-      showLandmarkOnMap(o);
-      MapPane.pan(o.poi);
+      if (selected_id == o.id || o.poi == null) {
+        selected_id = null;
+        MapPane.popup();
+      } else {
+        selected_id = o.id;
+        showLandmarkOnMap(o);
+        showLandmarkPopup(o);
+        LandmarkPane.toggleActive(o);
+        MapPane.pan(o.poi);
+      }
     }
     
     return false;
@@ -133,7 +148,9 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * function will have the MapQuest POI as its context.
    */
   LandmarkController.focusPoint = function() {
-    //var v = this.reference;
+    var l = this.reference;
+
+    LandmarkController.focus(l);
   
     return false;
   };
@@ -146,7 +163,15 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
    * bool argument will be true if the mouse is over the point, false otherwise.
    */
   LandmarkController.hoverPoint = function(bool) {
-    //var v = this.reference;
+    var v = this.reference;
+
+    if (selected_id == null) {
+      if (bool) {
+        showLandmarkPopup(v);
+      } else {
+        MapPane.popup();
+      }
+    }
     
     return false;
   };
@@ -424,6 +449,13 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
   function loading(bool) {
     Frame.loading(bool);
     Header.loading(bool);
+  }
+
+  function showLandmarkPopup(l) {
+    if (l.poi) {
+      html = '<h4>' + l.name + '</h4><p>' + l.latitude + ', ' + l.longitude + '</p>';
+      MapPane.popup(l.poi, html);
+    }
   }
   
   return LandmarkController;
