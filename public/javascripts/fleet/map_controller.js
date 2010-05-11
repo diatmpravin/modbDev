@@ -122,13 +122,15 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     }
 
     if (selected_id != null) {
+      // hide currently shown popup
       VehiclePane.toggleActive(lookup[selected_id]);
+      MapPane.popup(false);
     }
 
     if (o) {
       if (selected_id == o.id || o.poi == null) {
+        // clicked on active item - just hide it.
         selected_id = null;
-        MapPane.popup(false);
       } else {
         selected_id = o.id;
         showVehicleOnMap(o);
@@ -137,6 +139,9 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
         MapPane.pan(o.poi);
       }
       
+    } else {
+      // can happen if a group gets focus
+      selected_id = null;
     }
     
     return false;
