@@ -166,12 +166,12 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    */
   MapController.hoverPoint = function(bool) {
     var v = this.reference, html;
-    
+
     if (selected_id == null) {  
       if (bool) {
         showVehiclePopup(v);
       } else {
-        MapPane.popup(false);
+        MapPane.popup();
       }
     }
     

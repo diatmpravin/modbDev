@@ -435,6 +435,8 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
    */
   MapPane.popup = function(point, html) {
     if (!point) {
+      // restore any z-index fixes
+      popup.parent('div').css('z-index',90);
       popup.hide();
       popup.appendTo('body');
     } else {
@@ -447,7 +449,7 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       popup.appendTo(point.shape);
 
       // fix z-index issues by making it last
-      $(point.shape).appendTo($(point.shape).parent());
+      $(point.shape).css('z-index',95);
       popup.show();
     }
     
