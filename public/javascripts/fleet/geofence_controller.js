@@ -386,8 +386,83 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   GeofenceController.dragShape = function() {
     if (activeShape) {
       GeofenceEditPane.coordinates(activeShape.getShapePoints());
+      buildHandles();
     }
   
+    return false;
+  };
+  
+  /**
+   * dragHandle(handle)
+   *
+   * Called by the MapPane.Geofence module whenever a user has finished
+   * dragging a geofence handle around. We will update the shape and
+   * then update the edit form with the new coordinates.
+   */
+  GeofenceController.dragHandle = function(handle) {
+    var newPoints = new MQLatLngCollection();
+    
+    if (activeShape.className == 'MQA.EllipseOverlay') {
+      // Convert the points to pixels and "undo" the curve approximation
+      // we made for ellipses. Then set the corners for the new ellipse.
+      
+      var otherPoi = activeShape.handles[(handle.coordIndex + 2) % 4],
+          
+          xy1 = MapPane.mq.llToPix(handle.getLatLng()),
+          xy2 = MapPane.mq.llToPix(otherPoi.getLatLng()),
+          
+          newxy1 = new MQA.Point((42 * xy1.x - 7 * xy2.x)/35, (42 * xy1.y - 7 * xy2.y)/35),
+          newxy2 = new MQA.Point((42 * xy2.x - 7 * xy1.x)/35, (42 * xy2.y - 7 * xy1.y)/35);
+      
+      newPoints.add(MapPane.mq.pixToLL(newxy1));
+      newPoints.add(MapPane.mq.pixToLL(newxy2));
+    } else if (activeShape.className == 'MQA.RectangleOverlay') {
+      // Simplest - use the handle and the point opposite it to create the
+      // new rectangle.
+      
+      var otherPoi = activeShape.handles[(handle.coordIndex + 2) % 4];
+          
+      newPoints.add(handle.getLatLng());
+      newPoints.add(otherPoi.getLatLng());
+    } else if (activeShape.className == 'MQA.PolygonOverlay') {
+      var idx, num;
+      
+      // First, figure out whether the user intended to delete the handle
+      handle.deleting = false;
+      var xy = MapPane.mq.llToPix(handle.getLatLng());
+      for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+        var otherPoi = activeShape.handles[idx];
+        if (handle.coordIndex != otherPoi.coordIndex && !otherPoi.coordNew) {
+          var xy2 = MapPane.mq.llToPix(otherPoi.getLatLng());
+          if (Math.abs(xy.x-xy2.x) < 6 && Math.abs(xy.y-xy2.y) < 6) {
+            handle.deleting = true;
+            break;
+          }
+        }
+      }
+      
+      // Second, run through each existing shape point in order, leaving
+      // out points that have been deleted and adding new points where
+      // they've been added.
+      for(idx = 0, num = activeShape.getShapePoints().getSize(); idx < num; idx++) {
+        if (idx == handle.coordIndex) {
+          if (handle.coordNew) {
+            newPoints.add(activeShape.getShapePoints().getAt(idx));
+          }
+          
+          if (!handle.deleting) {
+            newPoints.add(handle.getLatLng());
+          }
+        } else {
+          newPoints.add(activeShape.getShapePoints().getAt(idx));
+        }
+      }
+    }
+    
+    activeShape.setShapePoints(newPoints);
+    GeofenceEditPane.coordinates(newPoints);
+    buildHandles();
+    
     return false;
   };
   
@@ -398,15 +473,20 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
    */
   GeofenceController.convertShape = function(newType) {
     if (activeShape) {
+      // Remove the old shape and destroy resize handles
       MQA.EventManager.clearListeners(activeShape, 'mousedown');
       MapPane.removeShape(activeShape, 'temp');
+      buildHandles(true);
       
+      // Create a new shape and build new resize handles
       activeShape = MapPane.addShape(newType, MapPane.Geofence.convertShapeCoordinates(activeShape, newType), {
         collection: 'temp'
       });
       MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
+        buildHandles(true);
         MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
       });
+      buildHandles();
     }
     
     return false;
@@ -433,8 +513,12 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   }
   
   function editGeofenceOnMap(geofence) {
+    var idx, num;
+    
+    // Clear any existing stuff in the temp collection
     MapPane.collection('temp').removeAll();
     
+    // Create the shape on the map
     if (geofence) {
       activeShape = MapPane.addShape(geofence.geofence_type, geofence.coordinates, {
         collection: 'temp'
@@ -445,20 +529,34 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
       });
     }
     
+    // Display the shape to be edited and hide any other geofences
     MapPane.showCollection('temp');
     MapPane.hideCollection('geofences');
     
+    // Hook up the drag event for the shape itself
     MQA.EventManager.addListener(activeShape, 'mousedown', function(mqEvent) {
+      buildHandles(true);
       MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
     });
+    
+    buildHandles();
   }
   
   function closeEditPanes() {
+    var idx, num;
+    
     MapPane.showCollection('geofences');
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
     
     MQA.EventManager.clearListeners(activeShape, 'mousedown');
+    if (activeShape.handles) {
+      for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mousedown');
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mouseup');
+      }
+    }
+    activeShape.handles = null;
     activeShape = null;
     
     Header.open('geofences');
@@ -467,6 +565,32 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     GeofencePane.open(function() {
       MapPane.slide(GeofencePane.width());
     });
+  }
+  
+  function buildHandles(destroyOnly) {
+    var idx, num;
+    
+    // Remove any old resize handles
+    if (activeShape.handles) {
+      for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mousedown');
+        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mouseup');
+        MapPane.removePoint(activeShape.handles[idx], 'temp');
+      }
+    }
+    
+    if (destroyOnly) {
+      return;
+    }
+    
+    // Create the resize handles for this shape
+    activeShape.handles = MapPane.Geofence.handles(activeShape);
+    for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
+      MapPane.collection('temp').add(activeShape.handles[idx]);
+      
+      MQA.EventManager.addListener(activeShape.handles[idx], 'mousedown', MapPane.Geofence.dragHandleStart);
+      MQA.EventManager.addListener(activeShape.handles[idx], 'mouseup', MapPane.Geofence.dragHandleEnd);
+    }
   }
   
   function loading(bool) {

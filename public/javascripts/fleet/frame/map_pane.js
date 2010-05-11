@@ -492,8 +492,7 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     } else if (mqEvent.eventName == 'MQA.Poi.click') {
       Fleet.Controller.focusPoint.call(object);
     }
-    MapPane.k = MapPane.k || [];
-    MapPane.k.push(mqEvent.eventName);
+    
     // Call the normal Event Manager trigger, passing in the original
     // context and parameters.
     return originalEventManagerTrigger.call(this, object, eventType, mqEvent);
