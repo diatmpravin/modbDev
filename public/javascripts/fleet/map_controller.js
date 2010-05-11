@@ -133,7 +133,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
         selected_id = o.id;
         showVehicleOnMap(o);
         showVehiclePopup(o);
-        VehiclePane.toggleActive(o)
+        VehiclePane.toggleActive(o);
         MapPane.pan(o.poi);
       }
       
@@ -151,7 +151,6 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   MapController.focusPoint = function() {
     var v = this.reference;
     
-    //alert('User clicked on vehicle id '+v.id);
     MapController.focus(v);
   
     return false;

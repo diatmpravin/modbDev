@@ -449,8 +449,10 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       popup.appendTo(point.shape);
 
       // fix z-index issues by making it last
-      $(point.shape).css('z-index',95);
+      $(point.shape).css('z-index', 95);
+
       popup.show();
+      popup.css('top', -(popup.height() - 2));
     }
     
     return point;

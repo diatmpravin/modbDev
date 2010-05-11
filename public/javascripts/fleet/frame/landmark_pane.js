@@ -144,8 +144,19 @@ Fleet.Frame.LandmarkPane = (function(LandmarkPane, Fleet, $) {
     return LandmarkPane;
   };
   
-  LandmarkPane.toggleActive = function() {
-    var active = $(this).toggleClass('active').hasClass('active');
+  /**
+   * toggleActive
+   */
+  LandmarkPane.toggleActive = function(l) {
+    var row;
+
+    if (!l || (l && l.originalEvent)) {
+      row = $(this);
+    } else {
+      row = $('#landmark_' + l.id);
+    }
+
+    var active = row.toggleClass('active').hasClass('active');
     /* If this item is the "All" item, then make all selections in the list same as this */
     if (this.id == "all") {
       list.find('li').toggleClass('active', active);
