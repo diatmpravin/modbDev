@@ -474,7 +474,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
   GeofenceController.convertShape = function(newType) {
     if (activeShape) {
       // Remove the old shape and destroy resize handles
-      MQA.EventManager.clearListeners(activeShape, 'mousedown');
+      MapPane.clearListeners(activeShape, 'mousedown');
       MapPane.removeShape(activeShape, 'temp');
       buildHandles(true);
       
@@ -549,11 +549,11 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     MapPane.hideCollection('temp');
     MapPane.collection('temp').removeAll();
     
-    MQA.EventManager.clearListeners(activeShape, 'mousedown');
+    MapPane.clearListeners(activeShape, 'mousedown');
     if (activeShape.handles) {
       for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
-        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mousedown');
-        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mouseup');
+        MapPane.clearListeners(activeShape.handles[idx], 'mousedown');
+        MapPane.clearListeners(activeShape.handles[idx], 'mouseup');
       }
     }
     activeShape.handles = null;
@@ -573,8 +573,8 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     // Remove any old resize handles
     if (activeShape.handles) {
       for(idx = 0, num = activeShape.handles.length; idx < num; idx++) {
-        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mousedown');
-        MQA.EventManager.clearListeners(activeShape.handles[idx], 'mouseup');
+        MapPane.clearListeners(activeShape.handles[idx], 'mousedown');
+        MapPane.clearListeners(activeShape.handles[idx], 'mouseup');
         MapPane.removePoint(activeShape.handles[idx], 'temp');
       }
     }

@@ -13,6 +13,8 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       popup,
       collections,
       originalEventManagerTrigger,
+      eventManagerRunning = false,
+      clearListenersQueue = [],
       init = false;
   
   MapPane.map = null;
@@ -477,6 +479,25 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     MapPane.mq.enableDragging(false);
   };
   
+  /**
+   * clearListeners(object, eventType)
+   *
+   * This method takes an object and an event type string, the same arguments
+   * as the method it is wrapping (MQA.EventManager.clearListeners). Unlike
+   * the original, it is safe to call this version from inside a MapQuest
+   * callback.
+   */
+  MapPane.clearListeners = function(object, eventType) {
+    // Yes, this is TOTALLY TURNED OFF RIGHT NOW... That was the easiest
+    // way to fix IE7. Should be revisited when fixing memory leaks.
+  
+    /*if (eventManagerRunning) {
+      clearListenersQueue.push([object, eventType]);
+    } else {
+      MQA.EventManager.clearListeners(object, eventType);
+    }*/
+  };
+  
   /* Private Functions */
 
   function mapPaneEventManagerTrigger(object, eventType, mqEvent) {
@@ -493,9 +514,18 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
       Fleet.Controller.focusPoint.call(object);
     }
     
-    // Call the normal Event Manager trigger, passing in the original
-    // context and parameters.
-    return originalEventManagerTrigger.call(this, object, eventType, mqEvent);
+    // Call the normal Event Manager trigger, passing in the original context and parameters.
+    eventManagerRunning = true;
+    var retValue = originalEventManagerTrigger.call(this, object, eventType, mqEvent);
+    eventManagerRunning = false;
+    
+    // Handle any queued clearListeners calls
+    while(clearListenersQueue.length > 0) {
+      var c = clearListenersQueue.pop();
+      MQA.EventManager.clearListeners(c[0], c[1]);
+    }
+    
+    return retValue;
   }
   
   return MapPane;  
