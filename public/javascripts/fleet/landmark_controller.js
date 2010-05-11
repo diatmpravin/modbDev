@@ -223,7 +223,12 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     id = id.substring(id.lastIndexOf('_') + 1);
     
     if (landmark = lookup[id]) {
-      LandmarkController.focus(landmark);
+      showLandmarkOnMap(landmark);
+      MapPane.pan(landmark.poi);
+    }
+    
+    if (selected_id != null) {
+      LandmarkController.focus(lookup[selected_id]);
     }
     
     loading(true);
