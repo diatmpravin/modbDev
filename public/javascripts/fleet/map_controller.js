@@ -47,12 +47,14 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
    * Hide all of our panes and throw away any unnecessary resources.
    */
   MapController.teardown = function() {
+    MapPane.popup(); // hide and 'save' popup because points are destroyed
     MapPane.close().hideCollection('vehicles');
     VehiclePane.close().showVehicles('');
     Header.standard('');
     
     vehicles = null;
     lookup = null;
+    selected_id = null;
     MapPane.collection('vehicles').removeAll();
   };
   

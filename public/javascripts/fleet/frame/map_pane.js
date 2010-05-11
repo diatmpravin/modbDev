@@ -436,6 +436,7 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   MapPane.popup = function(point, html) {
     if (!point) {
       popup.hide();
+      popup.appendTo('body');
     } else {
       if (html) {
         popup.children('.content').html(html);
