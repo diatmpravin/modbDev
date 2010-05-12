@@ -487,6 +487,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
         MapPane.Geofence.dragShapeStart(activeShape, mqEvent);
       });
       buildHandles();
+      GeofenceEditPane.coordinates(activeShape.getShapePoints());
     }
     
     return false;
@@ -540,6 +541,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     });
     
     buildHandles();
+    GeofenceEditPane.coordinates(activeShape.getShapePoints());
   }
   
   function closeEditPanes() {

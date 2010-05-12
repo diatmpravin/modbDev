@@ -76,19 +76,23 @@ describe "Geofence", ActiveSupport::TestCase do
     specify "can use the coordinates array immediately on a new geofence" do
       geofence = @account.geofences.new(:name => 'Test', :geofence_type => 0)
       geofence.coordinates << {:latitude => 10.05, :longitude => 10.05}
+      geofence.coordinates << {:latitude => 12.05, :longitude => 12.05}
       geofence.should.save
       geofence.coordinates.should.equal [
-        {:latitude => 10.05, :longitude => 10.05}
+        {:latitude => 10.05, :longitude => 10.05},
+        {:latitude => 12.05, :longitude => 12.05}
       ]
     end
     
     specify "coordinates are always floats" do
       @geofence.coordinates.clear
-      @geofence.coordinates << {:latitude => "50.001", :longitude => "-86.001"}
+      @geofence.coordinates << {:latitude => '50.001', :longitude => '-86.001'}
+      @geofence.coordinates << {:latitude => '60.001', :longitude => '-86.100'}
       @geofence.save
       
       @geofence.reload.coordinates.should.equal [
-        {:latitude => 50.001, :longitude => -86.001}
+        {:latitude => 50.001, :longitude => -86.001},
+        {:latitude => 60.001, :longitude => -86.100}
       ]
     end
   end

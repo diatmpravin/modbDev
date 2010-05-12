@@ -73,8 +73,7 @@ describe "Geofences Controller", ActionController::TestCase do
             :radius => 15,
             :coordinates => [
               {:latitude => 50, :longitude => 50},
-              {:latitude => 100, :longitude => 100},
-              {:latitude => 0, :longitude => 0}
+              {:latitude => 100, :longitude => 100}
             ]
           }
         }
@@ -85,8 +84,7 @@ describe "Geofences Controller", ActionController::TestCase do
       @account.reload.geofences.length.should.be 2
       @account.geofences.last.coordinates.should.equal [
         {:latitude => 50, :longitude => 50},
-        {:latitude => 100, :longitude => 100},
-        {:latitude => 0, :longitude => 0}
+        {:latitude => 100, :longitude => 100}
       ]
     end
     
@@ -98,8 +96,7 @@ describe "Geofences Controller", ActionController::TestCase do
             :radius => 15,
             :coordinates => [
               {:latitude => 50, :longitude => 50},
-              {:latitude => 100, :longitude => 100},
-              {:latitude => 0, :longitude => 0}
+              {:latitude => 100, :longitude => 100}
             ]
           }
         }

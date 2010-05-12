@@ -25,6 +25,7 @@ class Geofence < ActiveRecord::Base
   validates_length_of :name, :maximum => 30,
     :allow_nil => true, :allow_blank => true
   validates_presence_of :geofence_type
+  validate :must_have_coordinates
   
   ##
   # Concerns
@@ -73,6 +74,7 @@ class Geofence < ActiveRecord::Base
   end
   
   protected
+  
   def prepare_coordinates
     if self[:coordinates]
       self[:coordinates] = self[:coordinates].map { |h|
@@ -154,6 +156,17 @@ class Geofence < ActiveRecord::Base
   def consolidate_device_groups
     if self.device_groups.length > 1
       self.device_groups -= self.device_groups.map(&:descendants).flatten
+    end
+  end
+  
+  def must_have_coordinates
+    # Ellipses and rectangles are invalid unless they have 2 coordinates.
+    # Polygons need a minimum of 3 coordinates.
+    
+    if (geofence_type == Type::ELLIPSE && coordinates.length != 2) ||
+       (geofence_type == Type::RECTANGLE && coordinates.length != 2) ||
+       (geofence_type == Type::POLYGON && coordinates.length < 3)
+      errors.add :coordinates, 'Inappropriate coordinates for geofence type'
     end
   end
 end
