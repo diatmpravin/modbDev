@@ -323,8 +323,9 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     var coordinates = [],
         centerX = MapPane.map.width() / 2,
         centerY = MapPane.map.height() / 2,
-        tl = MapPane.mq.pixToLL(new MQA.Point(centerX * 0.75, centerY * 0.75)),
-        br = MapPane.mq.pixToLL(new MQA.Point(centerX * 1.25, centerY * 1.25))
+        height = centerY * 0.25,
+        tl = MapPane.mq.pixToLL(new MQA.Point(centerX - height, centerY - height)),
+        br = MapPane.mq.pixToLL(new MQA.Point(centerX + height, centerY + height));
     
     coordinates = [
       {latitude: tl.lat, longitude: tl.lng},
