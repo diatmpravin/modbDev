@@ -56,6 +56,12 @@ Fleet.Frame.GeofenceEditPane = (function(GeofenceEditPane, Fleet, $) {
   GeofenceEditPane.initPane = function(html) {
     if (html) {
       content.html(html);
+      
+      // Hack - select the ellipse if it's a new geofence
+      if ($('#shapeChooser input').val() == '') {
+        $('#shapeChooser a:first').addClass('selected');
+        $('#shapeChooser input').val(0);
+      }
     }
     
     return GeofenceEditPane;
