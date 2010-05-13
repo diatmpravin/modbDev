@@ -21,14 +21,16 @@
   
   <%= f.hidden_field :coordinates_text, :class => 'coordinates' %>
   
+  <h3>Alert Settings</h3>
+  
   <div class="field">
     <%= f.check_box :alert_on_entry %>
-    <%= f.label :alert_on_entry, 'Send alert on entry?' %>
+    <%= f.label :alert_on_entry, 'Send alert on entry', :class => 'checkbox' %>
   </div>
   
   <div class="field">
     <%= f.check_box :alert_on_exit %>
-    <%= f.label :alert_on_exit, 'Send alert on exit?' %>
+    <%= f.label :alert_on_exit, 'Send alert on exit', :class => 'checkbox' %>
   </div>
   
   <%= f.collection_select :device_group_ids, current_user.groups, :id, :name, {}, {:class => 'groups', :multiple => true, :style => 'display:none'} %>
