@@ -119,27 +119,6 @@ class Trip < ActiveRecord::Base
     trip
   end
   
-  # Extend default to_json
-  def to_json(options = {})
-    super(options.merge(
-      :include => {
-        :legs => {
-          :include => {
-            :displayable_points => {
-              :methods => [:time_of_day],
-              :include => {
-                :events => {
-                  :methods => [:type_text]
-                }
-              }
-            }
-          }
-        }
-      },
-      :methods => [:color]
-    ))
-  end
-  
   # Update any precalc fields on this trip
   def update_precalc_fields(do_save = true)
     self.start = legs.first.start

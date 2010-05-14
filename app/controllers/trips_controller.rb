@@ -48,10 +48,7 @@ class TripsController < ApplicationController
   end
   
   def show
-    respond_to do |format|
-      format.html
-      format.json { render :json => @trip.to_json }
-    end
+    render :json => @trip.to_json(show_json_options)
   end
   
   def edit
@@ -116,5 +113,33 @@ class TripsController < ApplicationController
   
   def set_device
     @device = current_account.devices.find(params[:device_id]) if params[:device_id]
+  end
+  
+  def show_json_options
+    {
+      :include => {
+        :legs => {
+          :only => [:id],
+          :include => {
+            :displayable_points => {
+              :only => [
+                :id,
+                :event,
+                :occurred_at,
+                :latitude,
+                :longitude
+              ],
+              :methods => [:time_of_day],
+              :include => {
+                :events => {
+                  :methods => [:type_text]
+                }
+              }
+            }
+          }
+        }
+      },
+      :methods => [:duration]
+    }
   end
 end

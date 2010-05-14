@@ -59,15 +59,6 @@ describe "Trips Controller", ActionController::TestCase do
       @trip = trips(:quentin_trip)
     end
     
-    specify "works" do
-      get :show, {
-        :id => @trip.id
-      }
-      
-      template.should.equal 'show'
-      assigns(:trip).should.equal @trip
-    end
-    
     specify "works (json)" do
       get :show, {
         :id => @trip.id,
@@ -77,10 +68,10 @@ describe "Trips Controller", ActionController::TestCase do
       json['id'].should.equal trips(:quentin_trip).id
     end
     
-    specify "errors if trip is invalid" do
+    specify "errors if trip is invalid (json)" do
       get :show, {
-        :format => 'json',
-        :id => trips(:aaron_trip)
+        :id => trips(:aaron_trip),
+        :format => 'json'
       }
 
       json['status'].should.equal 'failure'
