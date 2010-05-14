@@ -194,6 +194,68 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
     return false;
   };
  
+  /**
+   * enterTripHistory()
+   *
+   * Enter trip history mode for the given vehicle. This function is called as
+   * an event handler, so "this" will be the clicked Calendar link in the
+   * vehicle pane. In trip history mode, the vehicle pane is hidden and the
+   * user can scroll through the trips for the given vehicle.
+   */
+  MapController.enterTripHistory = function() {
+    var id = $(this).closest('div.row').attr('id');
+    id = id.substring(id.lastIndexOf('_') + 1);
+    
+    loading(true);
+    
+    if (lookup[id]) {
+      $.getJSON('/trips/587.json', function(json) {
+        showTripOnMap(json);
+        TripPlayerPane.trip(json).open();
+        
+        MapPane.slide(0);
+        MapPane.hideCollection('vehicles');
+        MapPane.showCollection('trip');
+        VehiclePane.close();
+        Header.standard('Trip History - ' + lookup[id].name);
+        
+        loading(false);
+      });
+      
+    }
+    
+    return false;
+  };
+
+  /**
+   * tripProgress(index)
+   *
+   * Call when in Trip History mode to pan the map to the appropriate
+   * point in the current trip, using the given index (0-N).
+   */
+  MapController.tripProgress = function(index) {
+    // TODO: A few lines of minimal error checking wouldn't hurt
+    MapPane.pan(MapPane.collection('trip').getAt(index));
+  };
+  
+  /**
+   * exitTripHistory()
+   *
+   * Hide any trips being displayed and all history-related panes, return
+   * the user to the vehicle pane + map view.
+   */
+  MapController.exitTripHistory = function() {
+    TripPlayerPane.close().trip();
+    VehiclePane.open(function() {
+      MapPane.slide(VehiclePane.width());
+      MapPane.showCollection('vehicles');
+      MapPane.collection('trip').removeAll();
+    });
+    Header.open('map');
+    
+    return false;
+  };
+  
   /* Private Functions */
   
   function showVehiclesOnMap(vehicles) {
@@ -225,6 +287,33 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
         reference: vehicle
       });
     }
+  }
+  
+  function showTripOnMap(trip) {
+    var idx, num, leg, j, p,
+        collection = MapPane.collection('trip');
+    
+    collection.removeAll();
+    
+    for(idx = 0, num = trip.legs.length; idx < num; idx++) {
+      leg = trip.legs[idx];
+      
+      for(j = 0; j < leg.displayable_points.length; j++) {
+        p = leg.displayable_points[j];
+        
+        if (!p.poi) {
+          p.poi = MapPane.addPoint(p.latitude, p.longitude, {
+            icon: '/images/points/red.png',
+            size: [11, 11],
+            offset: [-6, -6],
+            collection: collection,
+            reference: p
+          });
+        }
+      }
+    }
+    
+    MapPane.bestFit(collection);
   }
   
   function loading(bool) {

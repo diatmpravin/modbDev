@@ -406,18 +406,32 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
   /**
    * bestFit(shape)
    * bestFit(list)
+   * bestFit(collection)
    *
    * Given a list of MQA.LatLng objects, center and zoom the map to show them.
    * Can be passed as an array of objects or as an MQLatLngCollection.
    *
    * Alternately, pass an MQA.Shape object, and the shape's points will be
-   * used as 
+   * used, or pass an entire MQA collection to use its points as a set.
    */
   MapPane.bestFit = function(list) {
+    // Handle a passed collection
+    if (list.collectionName) {
+      var idx, num, t;
+      
+      for(idx = 0, num = list.getSize(), t = []; idx < num; idx++) {
+        t.push(list.getAt(idx).getLatLng());
+      }
+      
+      list = t;
+    }
+    
+    // Handle a passed shape
     if (list.getShapePoints) {
       list = list.getShapePoints();
     }
     
+    // Handle a passed "shape array" (not yet a real array)
     if (list.getM_Items) {
       list = list.getM_Items();
     }

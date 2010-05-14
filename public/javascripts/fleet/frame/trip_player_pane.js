@@ -10,6 +10,7 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
       pane,
       content,
       progress,
+      trip = null,
       init = false;
   
   /**
@@ -23,7 +24,7 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     }
     
     // Create the geofence edit pane
-    $('#frame').append('<div id="trip_player_pane"><div class="content"></div></div>');
+    $('#frame').append('<div id="trip_player_pane"><h4></h4><div class="subheader"></div><div class="content"></div></div>');
     
     // Store a permanent reference to the pane
     pane = $('#trip_player_pane');
@@ -32,25 +33,12 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     content = pane.children('.content');
     
     // The player progress bar
-    progress = $('<div class="progress"></div>').appendTo(pane)
-    
-	/*<script type="text/javascript">
-	$(function() {
-		var select = $("#minbeds");
-		var slider = $('<div id="slider"></div>').insertAfter(select).slider({
-			min: 1,
-			max: 6,
-			range: "min",
-			value: select[0].selectedIndex + 1,
-			slide: function(event, ui) {
-				select[0].selectedIndex = ui.value - 1;
-			}
-		});
-		$("#minbeds").click(function() {
-			slider.slider("value", this.selectedIndex + 1);
-		});
-	});
-	</script>*/
+    progress = $('<div class="progress"></div>').appendTo(content).slider({
+      min: 0,
+      max: 10,
+      range: 'min',
+      slide: TripPlayerPane.slide
+    });
     
     init = true;
     return TripPlayerPane;
@@ -96,6 +84,62 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     
     return TripPlayerPane;
   };
+  
+  /**
+   * trip()
+   * trip(trip)
+   *
+   * Initializes the trip player to display the passed JSON trip object. Call
+   * without any arguments to reset the player.
+   */
+  TripPlayerPane.trip = function(o) {
+    var idx, num, points;
+    
+    if (o) {
+      trip = o;
+      
+      pane.find('h4').text(trip.legs[0].displayable_points[0].time_of_day);
+      pane.find('.subheader').text(trip.miles + ' miles over ' + prettyTripDuration(trip.duration));
+      
+      for(idx = 0, points = 0, num = trip.legs.length; idx < num; idx++) {
+        points += trip.legs[idx].displayable_points.length;
+      }
+      
+      progress.slider('option', 'max', points - 1).slider('value', 0);
+    } else {
+      trip = null;
+      
+      pane.find('h4').text('');
+      pane.find('.subheader').text('');
+      progress.slider('option', 'max', 10);
+    }
+    
+    return TripPlayerPane;
+  };
+  
+  /**
+   * slide()
+   *
+   * Move to the appropriate trip point, based on the new position of the trip
+   * progress slider.
+   */
+  TripPlayerPane.slide = function(event, ui) {
+    Fleet.Controller.tripProgress(ui.value);
+    
+    return true;
+  };
+  
+  /* Private Functions */
+  
+  function prettyTripDuration(seconds) {
+    if (seconds < 60) {
+      return seconds + ' seconds';
+    } else if (seconds < 120) {
+      return '1 minute';
+    } else {
+      return Math.floor(seconds / 60) + ' minutes';
+    }
+  }
   
   return TripPlayerPane;
 }(Fleet.Frame.TripPlayerPane || {}, Fleet, jQuery));
