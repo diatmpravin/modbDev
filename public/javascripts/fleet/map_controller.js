@@ -2,7 +2,7 @@
  * Fleet.MapController
  */
 var Fleet = Fleet || {};
-Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Frame, $) {
+Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerPane, Header, Frame, $) {
   var vehicles = null,
       lookup = null,
       selected_id = null;
@@ -34,6 +34,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
   MapController.setup = function() {
     MapPane.init().open().showCollection('vehicles');
     VehiclePane.init().open().selectEnabled(false);
+    TripPlayerPane.init().close();
     
     Header.init().open('map');
     
@@ -50,6 +51,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
     MapPane.popup(); // hide and 'save' popup because points are destroyed
     MapPane.close().hideCollection('vehicles');
     VehiclePane.close().showVehicles('');
+    TripPlayerPane.close();
     Header.standard('');
     
     vehicles = null;
@@ -247,6 +249,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, Header, Fra
 }(Fleet.MapController || {},
   Fleet.Frame.MapPane,
   Fleet.Frame.VehiclePane,
+  Fleet.Frame.TripPlayerPane,
   Fleet.Frame.Header,
   Fleet.Frame,
   jQuery));
