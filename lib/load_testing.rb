@@ -88,5 +88,6 @@ module LoadTesting
     module_function :setup
     module_function :cleanup
     module_function :stats
+    module_function :delete_points
     module_function :create_test_devices
 end
