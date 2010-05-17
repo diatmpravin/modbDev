@@ -19,8 +19,13 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
       return MapController;
     }
     
+    // Define the Map View header
     Header.init().define('map',
       '<span class="title">Map View</span>');
+    
+    // Define the Trip History header
+    Header.define('history',
+      '<span class="title">Trip History</span><span class="buttons"><button type="button" class="back">Return</button></span>');
     
     init = true;
     return MapController;
@@ -33,7 +38,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
    */
   MapController.setup = function() {
     MapPane.init().open().showCollection('vehicles');
-    VehiclePane.init().open().selectEnabled(false);
+    VehiclePane.init().open().selectEnabled(false).historyEnabled(true);
     TripPlayerPane.init().close();
     
     Header.init().open('map');
@@ -50,7 +55,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
   MapController.teardown = function() {
     MapPane.popup(); // hide and 'save' popup because points are destroyed
     MapPane.close().hideCollection('vehicles');
-    VehiclePane.close().showVehicles('');
+    VehiclePane.close().showVehicles('').historyEnabled(false);
     TripPlayerPane.close();
     Header.standard('');
     
@@ -217,11 +222,13 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
         MapPane.hideCollection('vehicles');
         MapPane.showCollection('trip');
         VehiclePane.close();
-        Header.standard('Trip History - ' + lookup[id].name);
+        Header.open('history', {
+          title: 'Trip History - ' + lookup[id].name,
+          back: MapController.exitTripHistory
+        });
         
         loading(false);
       });
-      
     }
     
     return false;
@@ -250,6 +257,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
       MapPane.slide(VehiclePane.width());
       MapPane.showCollection('vehicles');
       MapPane.collection('trip').removeAll();
+      
+      MapPane.bestFit(MapPane.collection('vehicles'));
     });
     Header.open('map');
     

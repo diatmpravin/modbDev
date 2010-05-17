@@ -46,17 +46,24 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     
     // User can click to pan
     $('#vehicle_pane li div.row').live('click', function(event) {
-      Fleet.Controller.focus.call(this);
+      return Fleet.Controller.focus.call(this);
     });
 
+    // User can enter trip history by clicking the trip history icon
+    $('#vehicle_pane a.history').live('click', function(event) {
+      return Fleet.Controller.enterTripHistory.call(this);
+    });
+    
     init = true;
     return VehiclePane;
   };
   
   /**
-   * toggleActive
+   * toggleActive()
+   * toggleActive(vehicle)
    *
-   *
+   * Called as an event handler when user clicks on a vehicle row. Can also be
+   * passed a JSON vehicle object to simulate clicking on the associated row.
    */
   VehiclePane.toggleActive = function(v) {
       var row;
@@ -71,6 +78,8 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
 
       // if it is a group, set all children similarly.
       row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
+      
+      return false;
   };
 
   /**
@@ -96,12 +105,19 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    * Set select-enabled to true or false (false by default). 
    */
   VehiclePane.selectEnabled = function(bool) {
-    if (bool) {
-      pane.addClass('select-enabled');
-    } else {
-      pane.removeClass('select-enabled');
-    }
+    pane.toggleClass('select-enabled', bool);
   
+    return VehiclePane;
+  };
+  
+  /**
+   * historyEnabled(bool)
+   *
+   * Set history-enabled to true or false (false by default).
+   */
+  VehiclePane.historyEnabled = function(bool) {
+    pane.toggleClass('history-enabled', bool);
+    
     return VehiclePane;
   };
   
