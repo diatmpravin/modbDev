@@ -70,6 +70,11 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     LandmarkEditPane.close();
     Header.standard('');
     
+    // clean up references to mapquest POIs (helps with memory leaks for unknown reasons)
+    for (i = 0; i < landmarks.length; i++) {
+      landmarks[i].poi = null;
+    }
+
     landmarks = null;
     lookup = null;
     activePoint = null;

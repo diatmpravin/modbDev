@@ -1,6 +1,6 @@
 module ApplicationHelper
   def jquery_include_tag
-    javascript_include_tag 'jquery/jquery-1.4.2.min'
+    javascript_include_tag 'jquery/jquery-1.4.2'
   end
 
   def mapquest_include_tags
