@@ -8,13 +8,29 @@ module LoadTesting
     IMEI_BASE = "999999999900000"
 
     def cleanup
+      # first delete the points
+      delete_points
+     
+      # now delete the trackers and devices
       acc = Account.find_by_name('Load Testing')
       if acc
-
 # TODO change all of the "delete" calls below to "destroy"
 
-        # delete the trackers
         acc.trackers.each { | t | t.delete }
+        acc.devices.each { | d | d.delete }
+
+        # Now delete the account
+        acc.delete
+      end
+
+      rescue => ex
+        puts ex.to_s
+    end
+
+    def delete_points
+      acc = Account.find_by_name('Load Testing')
+      if acc
+# TODO change all of the "delete" calls below to "destroy"
 
         # Now delete the points, legs, and trips
         acc.devices.each do | d |
@@ -28,11 +44,7 @@ module LoadTesting
             end
             t.delete
           end
-          d.delete
         end
-
-        # Now destroy the account, which deletes devices as well
-        acc.delete
       end
 
       rescue => ex
