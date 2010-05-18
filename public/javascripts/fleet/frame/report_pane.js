@@ -61,12 +61,12 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
 
     $('#report_type').bind('change', Fleet.ReportController.reportType);
 
-    // custom date entry pickers
-    $('#report_range_start,#report_range_end').datepicker({
-      duration: 'fast',
-      maxDate: new Date(MoshiTime.serverTime),
-      constrainInput: true
-    });
+    //// custom date entry pickers
+    //$('#report_range_start,#report_range_end').datepicker({
+    //  duration: 'fast',
+    //  maxDate: new Date(MoshiTime.serverTime),
+    //  constrainInput: true
+    //});
 
     return $('#report_pane .report_selection');
   };
