@@ -53,6 +53,10 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    * Hide all of our panes and throw away any unnecessary resources.
    */
   ReportController.teardown = function() {
+    report_form = null;
+    vehicles_html = null;
+    landmarkJson = null;
+
     VehiclePane.close().showVehicles('');
     LandmarkPane.close();
     ReportPane.close();
