@@ -209,6 +209,22 @@ Fleet.Frame.MapPane = (function(MapPane, Frame, Fleet, $) {
     
     return o;
   };
+
+  /**
+   * removeCollection(name)
+   * removeCollection(collection)
+   *
+   * Hide the collection on the map (remove from DOM) then remove all the objects in
+   * the collection (MQ javascript objs)
+   */
+  MapPane.removeCollection = function(o) {
+    if (typeof(o) != 'string') {
+      o = o.getName();
+    }
+
+    map.moshiMap().map.removeShapeCollection(o);
+    MapPane.collection(o).removeAll();
+  };
   
   /**
    * addPoint(latitude, longitude, options)

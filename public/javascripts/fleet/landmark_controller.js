@@ -79,8 +79,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     lookup = null;
     activePoint = null;
     selected_id = null;
-    MapPane.hideCollection('landmarks');
-    MapPane.collection('landmarks').removeAll();
+    MapPane.removeCollection('landmarks');
   };
   
   /**
