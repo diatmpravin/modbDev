@@ -79,7 +79,7 @@ module DeviceServer
       while point = @redis.pop_head("mobd:imei:#{imei}")
         p = self.process_point(point)
         # see if we should schedule a leg update
-        if p && p.leg
+        if imei.match("9999999999") && p && p.leg
           # if not in the queue yet, put it in there
           if !@redis.get("legupdate:#{p.leg_id}")
             @redis.push_tail("legstoupdate", p.leg_id)

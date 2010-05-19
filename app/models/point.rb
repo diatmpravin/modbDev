@@ -127,5 +127,11 @@ class Point < ActiveRecord::Base
     if post
       Point.update_all({:duration => post.occurred_at - occurred_at}, {:id => id})
     end
+
+    if device.name.match("Load 9")
+      return
+    end
+
+    leg.update_precalc_fields if leg
   end
 end
