@@ -77,9 +77,44 @@ module DeviceServer
       @redis.set("mobd:lock:#{imei}", Time.now.to_i + 10)
 
       while point = @redis.pop_head("mobd:imei:#{imei}")
-        self.process_point(point)
+        p = self.process_point(point)
+        # see if we should schedule a leg update
+        if p && p.leg
+          # if not in the queue yet, put it in there
+          if !@redis.get("legupdate:#{p.leg_id}")
+            @redis.push_tail("legstoupdate", p.leg_id)
+          end
+
+          # now push out the update to 5 minutes from now
+          @redis.set("legupdate:#{p.leg_id}", Time.now.to_i + 300)
+        end
       end
 
+
+      # TODO this is probably not the place that this code belongs.  Updating of legs
+      # shouldn't be triggered by processing of some unrelated random point like it is here
+
+      # now check the schedule time of the next leg to be updated, and if its time is due
+      # then update it
+      # first get a lock on reading it
+      lock = @redis.get("locklegs")
+      if !lock || lock.to_i < Time.now.to_i
+        @redis.set("locklegs", Time.now.to_i + 5)
+        lid = @redis.lindex("legstoupdate", 0)
+        if lid
+          update_time = @redis.get("legupdate:#{lid}")
+          if !update_time || update_time.to_i < Time.now.to_i
+            lid = @redis.pop_head("legstoupdate")
+            @redis.delete("legupdate:#{lid}")
+            leg = Leg.find_by_id(lid)
+            if leg
+              logger.info("updating leg #{lid}")
+              leg.update_precalc_fields
+            end
+          end
+        end
+        @redis.delete("locklegs")
+      end
     rescue => ex
       Mailer.deliver_exception_thrown ex, "In the DeviceServer Worker, imei #{imei}"
     ensure
@@ -98,7 +133,7 @@ module DeviceServer
         if tracker
           logger.info("  - tracker #{tracker.id}")
           if tracker.device
-            tracker.device.process(report)
+            return tracker.device.process(report)
           end
         end
       end
