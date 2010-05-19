@@ -7,7 +7,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
       landmarks = null,
       lookup = null,
       activePoint = null,
-      selected_id = null;
+      selected_id = null,
       init = false;
   
   /* Landmark Tab */
@@ -71,7 +71,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     Header.standard('');
     
     // clean up references to mapquest POIs (helps with memory leaks for unknown reasons)
-    for (i = 0; i < landmarks.length; i++) {
+    for (var i = 0; i < landmarks.length; i++) {
       landmarks[i].poi = null;
     }
 
@@ -91,7 +91,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
     landmarks = lookup = null;
     
     $.getJSON('/landmarks.json', function(json) {
-      var idx, num, html;
+      var idx, num;
       
       landmarks = json;
       
@@ -463,7 +463,7 @@ Fleet.LandmarkController = (function(LandmarkController, LandmarkPane, LandmarkE
 
   function showLandmarkPopup(l) {
     if (l.poi) {
-      html = '<h4>' + l.name + '</h4><p>' + l.latitude + ', ' + l.longitude + '</p>';
+      var html = '<h4>' + l.name + '</h4><p>' + l.latitude + ', ' + l.longitude + '</p>';
       MapPane.popup(l.poi, html);
     }
   }

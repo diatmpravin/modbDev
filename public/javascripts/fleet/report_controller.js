@@ -54,7 +54,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    */
   ReportController.teardown = function() {
     report_form = null;
-    vehicles_html = null;
+    vehiclesHtml = null;
     landmarkJson = null;
 
     VehiclePane.close().showVehicles('');
@@ -99,7 +99,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
 
     //right now, Landmark Summary (5) is the only report that doesn't use devices
     if ($(this).val() == '5') {
-      if (landmarkJson == null) { 
+      if (landmarkJson === null) { 
         loading(true);
 
         // get the landmarks
@@ -115,7 +115,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
         ReportController.landmarks();
       }
     } else {
-      if (vehiclesHtml == null) {
+      if (vehiclesHtml === null) {
         loading(true);
 
         // get the vehicles - prob. not necessary at this point

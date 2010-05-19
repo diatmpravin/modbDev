@@ -28,7 +28,7 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
     // Store a permanent reference to the pane
     pane = $('#report_pane');
     
-    container = $('#runReportForm')
+    container = $('#runReportForm');
    
     // switch report description when type is switched
     // moved to init pane because jQuery doesn't currently support live change for IE

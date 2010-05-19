@@ -36,7 +36,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
     // Allow user to toggle collapsible groups open and closed
     $('#dashboard_pane div.group span.indent, #dashboard div.group span.collapsible').live('click', function() {
       var self = $(this).parent().children('span.collapsible');
-      var _li = self.closest('li')
+      var _li = self.closest('li');
       if (_li.children('ol').toggle().css('display') == 'none') {
         self.addClass('closed');
       } else {
