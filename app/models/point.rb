@@ -127,7 +127,5 @@ class Point < ActiveRecord::Base
     if post
       Point.update_all({:duration => post.occurred_at - occurred_at}, {:id => id})
     end
-    
-    leg.update_precalc_fields if leg
   end
 end

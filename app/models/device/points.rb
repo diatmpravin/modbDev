@@ -198,7 +198,7 @@ class Device < ActiveRecord::Base
           send_alert("#{self.name} is running after hours", point.occurred_at)
         end
       end
-
+      return point
     end
   end
 
