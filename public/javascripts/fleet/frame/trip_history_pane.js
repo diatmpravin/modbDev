@@ -88,13 +88,16 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
    * the list of trips.
    */
   TripHistoryPane.trips = function(o) {
-    var idx, num;
+    var idx, num, t;
     
     pane.find('.trips').empty();
     
     if (o) {
       for(idx = 0, num = o.length; idx < num; idx++) {
-        pane.find('.trips').append('<span id="trip_' + o[idx].id + '">' + '</span>');
+        t = $('<span id="trip_' + o[idx].id + '"></span>').appendTo(pane.find('.trips'));
+        
+        t.css('width', (Math.round(o[idx].duration * 100 / 864) / 100) + '%');
+        t.css('left', (Math.round(minutesIntoDay(o[idx].start) * 100 / 14.4) / 100) + '%');
       }
     }
     
@@ -134,6 +137,12 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     return (month < 10 ? '0' : '') + month + '/' +
            (day < 10 ? '0' : '') + day + '/' +
            year;
+  }
+  
+  function minutesIntoDay(rubyTime) {
+    var fields = rubyTime.substring(11, 19).split(':');
+    
+    return parseInt(fields[0]) * 60 + parseInt(fields[1]);
   }
   
   return TripHistoryPane;

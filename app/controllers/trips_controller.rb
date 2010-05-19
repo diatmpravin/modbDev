@@ -120,7 +120,9 @@ class TripsController < ApplicationController
   end
   
   def index_json_options
-    {}
+    {
+      :methods => [:duration]
+    }
   end
   
   def show_json_options
