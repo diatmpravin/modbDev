@@ -2,7 +2,7 @@
  * Fleet.MapController
  */
 var Fleet = Fleet || {};
-Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerPane, Header, Frame, $) {
+Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistoryPane, TripPlayerPane, Header, Frame, $) {
   var vehicles = null,
       lookup = null,
       selected_id = null;
@@ -39,6 +39,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
   MapController.setup = function() {
     MapPane.init().open().showCollection('vehicles');
     VehiclePane.init().open().selectEnabled(false).historyEnabled(true);
+    TripHistoryPane.init().close();
     TripPlayerPane.init().close();
     
     Header.init().open('map');
@@ -265,6 +266,15 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
     return false;
   };
   
+  /**
+   * getTrips()
+   */
+  MapController.getTrips = function() {
+    
+  
+    return false;
+  };
+  
   /* Private Functions */
   
   function showVehiclesOnMap(vehicles) {
@@ -347,6 +357,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripPlayerP
 }(Fleet.MapController || {},
   Fleet.Frame.MapPane,
   Fleet.Frame.VehiclePane,
+  Fleet.Frame.TripHistoryPane,
   Fleet.Frame.TripPlayerPane,
   Fleet.Frame.Header,
   Fleet.Frame,

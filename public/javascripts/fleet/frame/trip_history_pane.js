@@ -25,21 +25,24 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     }
     
     // Create the geofence edit pane
-    $('#frame').append('<div id="trip_player_pane"><h4></h4><div class="subheader"></div><div class="content"></div></div>');
+    $('#frame').before('<div id="trip_history_pane"><div class="date"><input type="text" id="trip_history_date" size="10" maxlength="10"/></div></div>');
     
     // Store a permanent reference to the pane
-    pane = $('#trip_player_pane');
+    pane = $('#trip_history_pane');
+    
+    // Add a Date Picker for the trip history date
+    $('#trip_history_date').datepicker();
     
     // A reference to our content
-    content = pane.children('.content');
+    //content = pane.children('.content');
     
     // The player progress bar
-    progress = $('<div class="progress"></div>').appendTo(content).slider({
+    /*progress = $('<div class="progress"></div>').appendTo(content).slider({
       min: 0,
       max: 10,
       range: 'min',
       slide: TripHistoryPane.slide
-    });
+    });*/
     
     init = true;
     return TripHistoryPane;
@@ -67,10 +70,12 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   /**
    * open()
    *
-   * Open the geofence edit pane.
+   * Open the trip history pane.
    */
   TripHistoryPane.open = function() {
-    pane.animate({opacity: 0.9, right: 8}, {duration: 400});
+    pane.slideDown(400, function() {
+      Fleet.Frame.resize();
+    });
     
     return TripHistoryPane;
   };
@@ -78,10 +83,12 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   /**
    * close()
    *
-   * Close the landmark edit pane.
+   * Close the trip history pane.
    */
   TripHistoryPane.close = function() {
-    pane.animate({opacity: 0, right: 0 - (width + 8)}, {duration: 400});
+    pane.slideUp(400, function() {
+      Fleet.Frame.resize();
+    });
     
     return TripHistoryPane;
   };
