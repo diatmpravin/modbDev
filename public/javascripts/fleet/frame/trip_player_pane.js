@@ -10,7 +10,6 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
       pane,
       content,
       progress,
-      trip = null,
       init = false;
   
   /**
@@ -96,19 +95,15 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     var idx, num, points;
     
     if (o) {
-      trip = o;
+      pane.find('h4').text(o.legs[0].displayable_points[0].time_of_day);
+      pane.find('.subheader').text(o.miles + ' miles over ' + prettyTripDuration(o.duration));
       
-      pane.find('h4').text(trip.legs[0].displayable_points[0].time_of_day);
-      pane.find('.subheader').text(trip.miles + ' miles over ' + prettyTripDuration(trip.duration));
-      
-      for(idx = 0, points = 0, num = trip.legs.length; idx < num; idx++) {
-        points += trip.legs[idx].displayable_points.length;
+      for(idx = 0, points = 0, num = o.legs.length; idx < num; idx++) {
+        points += o.legs[idx].displayable_points.length;
       }
       
       progress.slider('option', 'max', points - 1).slider('value', 0);
     } else {
-      trip = null;
-      
       pane.find('h4').text('');
       pane.find('.subheader').text('');
       progress.slider('option', 'max', 10);

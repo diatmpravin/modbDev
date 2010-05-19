@@ -3,18 +3,22 @@ class TripsController < ApplicationController
   before_filter :set_trip, :only => [:show, :edit, :update, :collapse, :expand]
   
   def index
-    start_date = Date.parse(params[:start_date])
-    end_date = Date.parse(params[:end_date])
+    @date = Date.parse(params[:date])
     
-    @date = start_date
+    render :json => @device.trips.in_range(@date, @date, @device.zone).all.to_json(index_json_options)
     
-    if @device
-      @trips = @device.trips.in_range(start_date, end_date, current_user.zone).
-        all(:include => [:device, :tags])
-    else
-      @trips = Trip.in_range(start_date, end_date, current_user.zone).
-        all(:conditions => {:device_id => current_account.device_ids}, :include => [:device, :tags])
-    end
+    #start_date = Date.parse(params[:start_date])
+    #end_date = Date.parse(params[:end_date])
+    
+    #@date = start_date
+    
+    #if @device
+    #  @trips = @device.trips.in_range(start_date, end_date, current_user.zone).
+    #    all(:include => [:device, :tags])
+    #else
+    #  @trips = Trip.in_range(start_date, end_date, current_user.zone).
+    #    all(:conditions => {:device_id => current_account.device_ids}, :include => [:device, :tags])
+    #end
   end
   
   # Return trip summary information for the given date range, without
@@ -113,6 +117,10 @@ class TripsController < ApplicationController
   
   def set_device
     @device = current_account.devices.find(params[:device_id]) if params[:device_id]
+  end
+  
+  def index_json_options
+    {}
   end
   
   def show_json_options

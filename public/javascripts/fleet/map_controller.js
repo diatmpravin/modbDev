@@ -5,7 +5,9 @@ var Fleet = Fleet || {};
 Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistoryPane, TripPlayerPane, Header, Frame, $) {
   var vehicles = null,
       lookup = null,
-      selected_id = null;
+      selected_id = null,
+      tripVehicle = null,
+      trips = [],
       init = false;
   
   /* Map Tab */
@@ -212,24 +214,20 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     var id = $(this).closest('div.row').attr('id');
     id = id.substring(id.lastIndexOf('_') + 1);
     
-    loading(true);
-    
-    if (lookup[id]) {
-      $.getJSON('/trips/587.json', function(json) {
-        showTripOnMap(json);
-        TripPlayerPane.trip(json).open();
-        
-        MapPane.slide(0);
-        MapPane.hideCollection('vehicles');
-        MapPane.showCollection('trip');
-        VehiclePane.close();
-        Header.open('history', {
-          title: 'Trip History - ' + lookup[id].name,
-          back: MapController.exitTripHistory
-        });
-        
-        loading(false);
+    if (tripVehicle = lookup[id]) {
+      TripHistoryPane.open();
+      MapController.updateTripList();
+      
+      MapPane.slide(0);
+      MapPane.hideCollection('vehicles');
+      MapPane.showCollection('trip');
+      VehiclePane.close();
+      Header.open('history', {
+        title: 'Trip History - ' + tripVehicle.name,
+        back: MapController.exitTripHistory
       });
+      
+      loading(false);
     }
     
     return false;
@@ -254,6 +252,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    */
   MapController.exitTripHistory = function() {
     TripPlayerPane.close().trip();
+    TripHistoryPane.close().trips();
+    
     VehiclePane.open(function() {
       MapPane.slide(VehiclePane.width());
       MapPane.showCollection('vehicles');
@@ -261,16 +261,36 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       
       MapPane.bestFit(MapPane.collection('vehicles'));
     });
+    
     Header.open('map');
+    tripVehicle = null;
+    trips = [];
     
     return false;
   };
   
   /**
-   * getTrips()
+   * updateTripList(date)
+   *
+   * Called as an event handler. Uses the just-picked date from the date
+   * selector and the saved id of the vehicle that we are viewing trip history
+   * for.
+   *
+   * If no date is passed, it uses whatever date is already in the date text
+   * field.
    */
-  MapController.getTrips = function() {
+  MapController.updateTripList = function(date) {
+    var id = tripVehicle.id;
     
+    if (!date) {
+      date = $('#trip_history_date').val();
+    }
+    
+    $.getJSON('/devices/' + id + '/trips.json', {date: date}, function(json) {
+      trips = json;
+      
+      TripHistoryPane.trips(trips);
+    });
   
     return false;
   };

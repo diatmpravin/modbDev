@@ -11,7 +11,6 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
       pane,
       content,
       progress,
-      trip = null,
       init = false;
   
   /**
@@ -25,14 +24,20 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     }
     
     // Create the geofence edit pane
-    $('#frame').before('<div id="trip_history_pane"><div class="date"><input type="text" id="trip_history_date" size="10" maxlength="10"/></div></div>');
+    $('#frame').before('<div id="trip_history_pane"></div>');
     
     // Store a permanent reference to the pane
     pane = $('#trip_history_pane');
+    pane.append('<div class="date"><input type="text" id="trip_history_date" size="10" maxlength="10"/></div><div class="trips"></div>');
     
     // Add a Date Picker for the trip history date
-    $('#trip_history_date').datepicker();
+    $('#trip_history_date').datepicker().change(function() {
+      Fleet.Controller.updateTripList.call(this);
+    });
     
+    // When created, default to today's date.
+    $('#trip_history_date').val(browserDate());
+
     // A reference to our content
     //content = pane.children('.content');
     
@@ -45,25 +50,6 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     });*/
     
     init = true;
-    return TripHistoryPane;
-  };
-  
-  /**
-   * initPane(html)
-   *
-   * Replace the pane's content with the given HTML.
-   */
-  TripHistoryPane.initPane = function(html) {
-    if (html) {
-      content.html(html);
-      
-      // Hack - select the ellipse if it's a new geofence
-      if ($('#shapeChooser input').val() == '') {
-        $('#shapeChooser a:first').addClass('selected');
-        $('#shapeChooser input').val(0);
-      }
-    }
-    
     return TripHistoryPane;
   };
   
@@ -94,32 +80,22 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   };
   
   /**
-   * trip()
-   * trip(trip)
+   * trips()
+   * trips(trips)
    *
-   * Initializes the trip player to display the passed JSON trip object. Call
-   * without any arguments to reset the player.
+   * Initializes the trip history pane to display the given list of trips
+   * (pass it an array of JSON objects). Call without any arguments to clear
+   * the list of trips.
    */
-  TripHistoryPane.trip = function(o) {
-    var idx, num, points;
+  TripHistoryPane.trips = function(o) {
+    var idx, num;
+    
+    pane.find('.trips').empty();
     
     if (o) {
-      trip = o;
-      
-      pane.find('h4').text(trip.legs[0].displayable_points[0].time_of_day);
-      pane.find('.subheader').text(trip.miles + ' miles over ' + prettyTripDuration(trip.duration));
-      
-      for(idx = 0, points = 0, num = trip.legs.length; idx < num; idx++) {
-        points += trip.legs[idx].displayable_points.length;
+      for(idx = 0, num = o.length; idx < num; idx++) {
+        pane.find('.trips').append('<span id="trip_' + o[idx].id + '">' + '</span>');
       }
-      
-      progress.slider('option', 'max', points - 1).slider('value', 0);
-    } else {
-      trip = null;
-      
-      pane.find('h4').text('');
-      pane.find('.subheader').text('');
-      progress.slider('option', 'max', 10);
     }
     
     return TripHistoryPane;
@@ -147,6 +123,17 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     } else {
       return Math.floor(seconds / 60) + ' minutes';
     }
+  }
+  
+  function browserDate() {
+    var date = new Date(),
+        day = date.getDate(),
+        month = date.getMonth(),
+        year = date.getFullYear();
+    
+    return (month < 10 ? '0' : '') + month + '/' +
+           (day < 10 ? '0' : '') + day + '/' +
+           year;
   }
   
   return TripHistoryPane;
