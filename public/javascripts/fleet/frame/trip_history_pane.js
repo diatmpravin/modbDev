@@ -38,16 +38,10 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     // When created, default to today's date.
     $('#trip_history_date').val(browserDate());
 
-    // A reference to our content
-    //content = pane.children('.content');
-    
-    // The player progress bar
-    /*progress = $('<div class="progress"></div>').appendTo(content).slider({
-      min: 0,
-      max: 10,
-      range: 'min',
-      slide: TripHistoryPane.slide
-    });*/
+    // Clicking trips in the history bar will display them on the map
+    $('#trip_history_pane .trips span').live('click', function() {
+      Fleet.Controller.viewTrip.call(this);
+    });
     
     init = true;
     return TripHistoryPane;

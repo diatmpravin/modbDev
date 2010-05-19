@@ -232,7 +232,28 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     
     return false;
   };
-
+  
+  /**
+   * viewTrip()
+   *
+   * An event handler
+   */
+  MapController.viewTrip = function() {
+    var id = $(this).attr('id');
+    id = id.substring(id.indexOf('_') + 1);
+    
+    loading(true);
+    
+    $.getJSON('/trips/' + id + '.json', function(json) {
+      showTripOnMap(json);
+      TripPlayerPane.trip(json).open();
+      
+      loading(false);
+    });
+    
+    return false;
+  };
+  
   /**
    * tripProgress(index)
    *
@@ -286,10 +307,13 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       date = $('#trip_history_date').val();
     }
     
+    loading(true);
+    
     $.getJSON('/devices/' + id + '/trips.json', {date: date}, function(json) {
       trips = json;
-      
       TripHistoryPane.trips(trips);
+      
+      loading(false);
     });
   
     return false;
