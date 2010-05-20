@@ -1,5 +1,5 @@
 # Production
-set :hostname, 'fleet.gomoshi.com'
+set :hostname, 'teleweave.com'
 set :deploy_to, "/home/sites/#{hostname}"
 
 # Roles

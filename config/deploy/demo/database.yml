@@ -1,9 +1,0 @@
-demo:
-  adapter: mysql
-  database: fleet
-  username: fleet
-  password: Pa4eeSh$ai
-  host: localhost
-  encoding: utf8
-  pool: 25
-  timeout: 5000

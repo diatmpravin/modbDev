@@ -2,7 +2,7 @@ production:
   adapter: mysql
   database: fleet
   username: fleet
-  password: AKa8Fai[
+  password: Pa4eeSh$ai
   host: localhost
   encoding: utf8
   pool: 25
