@@ -58,13 +58,17 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
   MapController.teardown = function() {
     MapPane.popup(); // hide and 'save' popup because points are destroyed
     MapPane.close().hideCollection('vehicles');
+    MapPane.hideCollection('trip');
     VehiclePane.close().showVehicles('').historyEnabled(false);
+    TripHistoryPane.close();
     TripPlayerPane.close();
     Header.standard('');
     
     vehicles = null;
     lookup = null;
     selected_id = null;
+    tripVehicle = null;
+    trips = [];
     MapPane.collection('vehicles').removeAll();
   };
   
@@ -119,6 +123,11 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * Pan the map to the clicked vehicle. Called as an event handler.
    */
   MapController.focus = function(o) {
+    if (tripVehicle) {
+      // Hovering is currently undefined while viewing trips
+      return false;
+    }
+  
     var id;
     
     if (!o || (o && o.originalEvent)) {
@@ -167,6 +176,11 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * function will have the MapQuest POI as its context.
    */
   MapController.focusPoint = function() {
+    if (tripVehicle) {
+      // Hovering is currently undefined while viewing trips
+      return false;
+    }
+    
     var v = this.reference;
     
     MapController.focus(v);
@@ -182,9 +196,14 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * bool argument will be true if the mouse is over the point, false otherwise.
    */
   MapController.hoverPoint = function(bool) {
+    if (tripVehicle) {
+      // Hovering is currently undefined while viewing trips
+      return false;
+    }
+  
     var v = this.reference, html;
-
-    if (selected_id == null) {  
+    
+    if (selected_id == null) {
       if (bool) {
         showVehiclePopup(v);
       } else {
@@ -192,16 +211,9 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       }
     }
     
-    
-    /*if (bool) {
-      $('#frame_header span.title').text('Hovering over vehicle id '+v.id);
-    } else {
-      $('#frame_header span.title').text('No more hover');
-    }*/
-    
     return false;
   };
- 
+  
   /**
    * enterTripHistory()
    *
