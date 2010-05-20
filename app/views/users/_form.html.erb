@@ -24,14 +24,15 @@
   </fieldset>
   
   <%= f.hidden_field :device_group_id %>
-    
+  
   <h3>User Roles</h3>
   <fieldset>
     <p>Check the boxes below to assign additional roles to this user.</p>
+    <%= hidden_field_tag 'user[roles][]', User::Role::NONE %>
     <ul>
       <% role_options.each do |role| -%>
         <li>
-          <%= check_box_tag "user[roles][]", role, user.has_role?(role),
+          <%= check_box_tag 'user[roles][]', role, user.has_role?(role),
             {:id => dom_id(user, role)} %>
           <%= label_tag dom_id(user, role), role_descriptions[role] %>
         </li>

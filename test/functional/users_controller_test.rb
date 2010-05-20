@@ -129,6 +129,20 @@ describe "UsersController", ActionController::TestCase do
       @user.reload.name.should.equal 'Much Better Name'
     end
     
+    specify "does not reset permissions if they aren't included" do
+      @user.update_attributes(:roles => [1,2,3])
+      @user.reload.roles.should.equal [1,2,3]
+      
+      put :update, {
+        :id => @user.id,
+        :user => {
+          :name => 'Much Better Name'
+        }
+      }
+      
+      @user.reload.roles.should.equal [1,2,3]
+    end
+    
     specify "handles errors gracefully" do
       put :update, {
         :id => @user.id,

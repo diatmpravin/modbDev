@@ -58,11 +58,6 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
     $('#user_pane a.new').live('click', function() {
       return Fleet.Controller.newUser.call(this);
     });
-    
-    // click to edit user as default focus action?
-    //$('#user_pane li').live('click', function(event) {
-    //  Fleet.Controller.focus.call(this);
-    //});
 
     init = true;
     return UserPane;

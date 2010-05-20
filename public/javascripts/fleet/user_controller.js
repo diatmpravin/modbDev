@@ -67,7 +67,6 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   UserController.setup = function() {
     Header.init().open('users');
     
-
     UserPane.init().open().editEnabled(true);
     UserEditPane.init().open();
 
@@ -87,13 +86,6 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   };
 
   /**
-   * focus()
-   *
-   */
-  UserController.focus = function() {
-  };
-
-  /**
    * refresh()
    */
   UserController.refresh = function() {
@@ -105,9 +97,9 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   };
 
   /**
-    * new()
+    * newUser()
     *
-    * index -> user creation
+    * Open the user edit pane with a blank form.
     */
   UserController.newUser = function() {
     var self = $(this),
@@ -137,14 +129,37 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   };
 
   /**
-    * cancel()
+    * edit()
     *
-    * Close the edit form for the current user
+    * Opens the user edit pane for the clicked user.
     */
-  UserController.cancel = function() {
-    UserEditPane.close().initPane('');
-    UserPane.open();
-    Header.open('users');
+  UserController.edit = function() {
+    var id, user;
+
+    id = $(this).closest('div.user').attr('id');
+    id = id.substring(id.lastIndexOf('_') + 1);
+
+    //focus should be called?
+    //UserController.focus(user);
+
+    //get the edit html and send it into the UserEditPane
+    loading(true);
+    //get and set the html on the UserEditPane
+    $.get('/users/' + id + '/edit', function(html) {
+      //set the html and open if necessary?
+      UserEditPane.initPane(html).open();
+      UserPane.close();
+
+      //change the Header
+      Header.edit('Edit User',
+        UserController.save,
+        UserController.cancel
+      );
+
+      loading(false);
+    });
+    
+    return false;
   };
 
   /**
@@ -174,33 +189,14 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
   };
 
   /**
-    * edit()
+    * cancel()
+    *
+    * Close the edit form for the current user
     */
-  UserController.edit = function() {
-    var id, user;
-
-    id = $(this).closest('div.user').attr('id');
-    id = id.substring(id.lastIndexOf('_') + 1);
-
-    //focus should be called?
-    //UserController.focus(user);
-
-    //get the edit html and send it into the UserEditPane
-    loading(true);
-    //get and set the html on the UserEditPane
-    $.get('/users/' + id + '/edit', function(html) {
-      //set the html and open if necessary?
-      UserEditPane.initPane(html).open();
-      UserPane.close();
-
-      //change the Header
-      Header.edit('Edit User',
-        UserController.save,
-        UserController.cancel
-      );
-
-      loading(false);
-    });
+  UserController.cancel = function() {
+    UserEditPane.close().initPane('');
+    UserPane.open();
+    Header.open('users');
   };
 
   /**

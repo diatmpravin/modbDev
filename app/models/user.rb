@@ -72,6 +72,9 @@ class User < ActiveRecord::Base
     LANDMARK = 5
     GEOFENCE = 6
     
+    # A shortcut for the user form
+    NONE     = 15
+    
     ROLES = [
       ADMIN, RESELLER, BILLING, USERS, FLEET, LANDMARK, GEOFENCE
     ].freeze
