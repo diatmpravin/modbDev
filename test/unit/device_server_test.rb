@@ -10,7 +10,7 @@ describe "Device Server", ActiveSupport::TestCase do
     
     specify "works" do
       Point.should.differ(:count).by(1) do
-        DeviceServer::Worker.new().process_point(
+        DeviceServer::PointProcessor.new().process_point(
           '123456789012345,4001,2013/03/13,13:13:13,42.78894,-86.10680,172.8,0,0,0,0,0.0,10,1.6,17'
         )
       end
@@ -23,7 +23,7 @@ describe "Device Server", ActiveSupport::TestCase do
       Mailer.deliveries.clear
       Redis::Client.any_instance.expects(:set).raises "exception" 
       Redis::Client.any_instance.expects(:delete).returns true 
-      DeviceServer::Worker.new().process('123456789012345')
+      DeviceServer::PointProcessor.new().process('123456789012345')
       Mailer.deliveries.length.should.be 1
     end
   end
@@ -32,6 +32,9 @@ describe "Device Server", ActiveSupport::TestCase do
     specify "works" do
       EventMachine.expects(:run)
       DeviceServer.run
+    end
+
+    xspecify "NEED TO ADD TESTS FOR NEW DEVICE SERVER BEHAVIOR AND FIX OLD TESTS THAT DEPEND ON KLUDGE IN POINT UPDATE_PRECALC" do
     end
   end
 end
