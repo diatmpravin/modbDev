@@ -4,21 +4,9 @@ class TripsController < ApplicationController
   
   def index
     @date = Date.parse(params[:date])
+    @trips = @device.trips.in_range(@date, @date, @device.zone).all
     
-    render :json => @device.trips.in_range(@date, @date, @device.zone).all.to_json(index_json_options)
-    
-    #start_date = Date.parse(params[:start_date])
-    #end_date = Date.parse(params[:end_date])
-    
-    #@date = start_date
-    
-    #if @device
-    #  @trips = @device.trips.in_range(start_date, end_date, current_user.zone).
-    #    all(:include => [:device, :tags])
-    #else
-    #  @trips = Trip.in_range(start_date, end_date, current_user.zone).
-    #    all(:conditions => {:device_id => current_account.device_ids}, :include => [:device, :tags])
-    #end
+    render :json => @trips.to_json(index_json_options)
   end
   
   # Return trip summary information for the given date range, without

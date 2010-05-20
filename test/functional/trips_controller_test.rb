@@ -10,32 +10,22 @@ describe "Trips Controller", ActionController::TestCase do
   end
   
   context "Getting a list of trips" do
-    specify "works" do
+    specify "works (json)" do
       get :index, {
         :device_id => @device.id,
-        :start_date => '02/05/2009',
-        :end_date => '02/05/2009'
+        :date => '02/05/2009',
+        :format => 'json'
       }
       
       assigns(:device).should.equal @device
       assigns(:trips).should.include trips(:quentin_trip)
-      template.should.equal 'index'
-    end
-    
-    specify "works without a device" do
-      get :index, {
-        :start_date => '02/05/2009',
-        :end_date => '02/05/2009'
-      }
-      
-      assigns(:trips).should.include trips(:quentin_trip)
-      template.should.equal 'index'
+      json.length.should.equal 1
     end
     
     specify "errors if device is not owned by account (json)" do
       get :index, {
-        :format => 'json',
-        :device_id => devices(:aaron_device).id
+        :device_id => devices(:aaron_device).id,
+        :format => 'json'
       }
 
       json['status'].should.equal 'failure'
