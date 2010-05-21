@@ -107,6 +107,11 @@ Fleet.Frame.UserPane = (function(UserPane, Fleet, $) {
     return UserPane;
   };
 
+  UserPane.clearBindings = function() {
+    list.find('div.group').droppable('destroy');
+    return UserPane;
+  };
+
   /**
    * open()
    * open(callback)

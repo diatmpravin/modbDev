@@ -80,7 +80,7 @@ Fleet.UserController = (function(UserController, UserPane, UserEditPane, Header,
    * Hide panes and throw out stuff
    */
   UserController.teardown = function() {
-    UserPane.close().showUsers('');
+    UserPane.clearBindings().close().showUsers('');
     UserEditPane.close().initPane('');
     Header.standard('');
     usersHtml = null;
