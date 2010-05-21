@@ -73,7 +73,7 @@ Fleet.GeofenceController = (function(GeofenceController, GeofencePane, GeofenceE
     geofences = null;
     lookup = null;
     activeShape = null;
-    MapPane.collection('geofences').removeAll();
+    MapPane.removeCollection('geofences')
   };
   
   /**

@@ -7,7 +7,11 @@ class Leg < ActiveRecord::Base
   attr_accessible :trip, :points
   
   def duration
-    finish - start
+    if finish && start
+      finish - start
+    else
+      0
+    end
   end
   
   def max_speed

@@ -34,7 +34,7 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     // Allow user to toggle collapsible groups open and closed
     $('#vehicle_pane div.group span.indent, #vehicle_pane div.group span.collapsible').live('click', function() {
       var self = $(this).parent().children('span.collapsible');
-      var _li = self.closest('li')
+      var _li = self.closest('li');
       if (_li.children('ol').toggle().css('display') == 'none') {
         self.addClass('closed');
       } else {
@@ -78,6 +78,11 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
 
       // if it is a group, set all children similarly.
       row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
+
+      // if unselecting, unselect any ancestor that is selected
+      if (!row.hasClass('active')) {
+        row.parents('li').children('div.row').removeClass('active');
+      }
       
       return false;
   };
@@ -184,13 +189,13 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
     //if a div is a row and passed in classType
     //and active, then it is selected.
     list.find('div.row.active.' + classType).each (function () {
-      id = $(this).attr('id');
+      var id = $(this).attr('id');
       id = id.substring(id.lastIndexOf('_') + 1);
       selections.push(id);
     });
 
     return selections;
-  }
+  };
 
   /**
    * getSelections()
@@ -200,7 +205,7 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
    */
   VehiclePane.getSelections = function() {
     return VehiclePane.getSelectionsByClass('device');
-  }
+  };
   
   return VehiclePane;
 }(Fleet.Frame.VehiclePane || {}, Fleet, jQuery));

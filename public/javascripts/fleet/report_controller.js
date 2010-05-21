@@ -53,9 +53,13 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
    * Hide all of our panes and throw away any unnecessary resources.
    */
   ReportController.teardown = function() {
+    report_form = null;
+    vehiclesHtml = null;
+    landmarkJson = null;
+
     VehiclePane.close().showVehicles('');
     LandmarkPane.close();
-    ReportPane.close();
+    ReportPane.close().initPane('');
     Header.standard('');
   };
   
@@ -95,7 +99,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
 
     //right now, Landmark Summary (5) is the only report that doesn't use devices
     if ($(this).val() == '5') {
-      if (landmarkJson == null) { 
+      if (landmarkJson === null) { 
         loading(true);
 
         // get the landmarks
@@ -111,7 +115,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
         ReportController.landmarks();
       }
     } else {
-      if (vehiclesHtml == null) {
+      if (vehiclesHtml === null) {
         loading(true);
 
         // get the vehicles - prob. not necessary at this point
