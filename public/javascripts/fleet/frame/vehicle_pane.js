@@ -78,6 +78,11 @@ Fleet.Frame.VehiclePane = (function(VehiclePane, Fleet, $) {
 
       // if it is a group, set all children similarly.
       row.siblings('ol').find('div.row').toggleClass('active', row.hasClass('active'));
+
+      // if unselecting, unselect any ancestor that is selected
+      if (!row.hasClass('active')) {
+        row.parents('li').children('div.row').removeClass('active');
+      }
       
       return false;
   };
