@@ -57,9 +57,14 @@ Fleet.Frame.ReportPane = (function(ReportPane, Fleet, $) {
   ReportPane.initPane = function(html) {
     if (typeof(html) != 'undefined') {
       $('#report_pane .report_selection').html(html);
+      
+      if (html.length) {
+        $('#report_type').bind('change', Fleet.ReportController.reportType);
+      } else {
+        $('#report_type').unbind();
+      }
     }
-
-    $('#report_type').bind('change', Fleet.ReportController.reportType);
+  
 
     //// custom date entry pickers
     //$('#report_range_start,#report_range_end').datepicker({

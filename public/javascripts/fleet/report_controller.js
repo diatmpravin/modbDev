@@ -59,7 +59,7 @@ Fleet.ReportController = (function(ReportController, ReportPane, VehiclePane, La
 
     VehiclePane.close().showVehicles('');
     LandmarkPane.close();
-    ReportPane.close();
+    ReportPane.close().initPane('');
     Header.standard('');
   };
   
