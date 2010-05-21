@@ -43,6 +43,16 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
       Fleet.Controller.viewTrip.call(this);
     });
     
+    // Hovering over the trips in the history pane shows the trip popup
+    $('#trip_history_pane .trips span').live('mouseenter', function() {
+      Fleet.Controller.hoverTrip.call(this);
+    }).live('mouseleave', function() {
+      TripHistoryPane.hover();
+    });
+    
+    // Our custom pop-up
+    popup = $('<div id="trip_history_popup"><div class="top"></div><div class="content"></div><div class="bottom"></div></div>').appendTo($('body'));
+    
     init = true;
     return TripHistoryPane;
   };
@@ -84,6 +94,9 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   TripHistoryPane.trips = function(o) {
     var idx, num, t;
     
+    // Save the popup, in case it is currently displayed
+    popup.appendTo('body');
+    
     pane.find('.trips').empty();
     
     if (o) {
@@ -108,6 +121,25 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     Fleet.Controller.tripProgress(ui.value);
     
     return true;
+  };
+  
+  /**
+   * hover()
+   * 
+   * Display the hover at the appropriate place, or hide it if given no div.
+   */
+  TripHistoryPane.hover = function(o, trip) {
+    if (o) {
+      o = $(o);
+      
+      popup.appendTo(o).css('left', o.width() / 2 - 72).show();
+      
+      popup.html('<h4>' + trip.start + '</h4><p>' + prettyTripDuration(trip.duration) + '</p>');
+    } else {
+      popup.hide().appendTo('body');
+    }
+    
+    return false;
   };
   
   /* Private Functions */

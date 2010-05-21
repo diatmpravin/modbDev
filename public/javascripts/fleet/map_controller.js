@@ -8,6 +8,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       selected_id = null,
       tripVehicle = null,
       trips = [],
+      tripLookup = null,
       init = false;
   
   /* Map Tab */
@@ -69,6 +70,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     selected_id = null;
     tripVehicle = null;
     trips = [];
+    tripLookup = null;
     MapPane.collection('vehicles').removeAll();
   };
   
@@ -246,9 +248,25 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
   };
   
   /**
+   * hoverTrip()
+   *
+   * Event handler.
+   */
+  MapController.hoverTrip = function() {
+    var id = $(this).attr('id');
+    id = id.substring(id.indexOf('_') + 1);
+    
+    if (tripLookup[id]) {
+      TripHistoryPane.hover(this, tripLookup[id]);
+    }
+    
+    return false;
+  };
+  
+  /**
    * viewTrip()
    *
-   * An event handler
+   * An event handler.
    */
   MapController.viewTrip = function() {
     var id = $(this).attr('id');
@@ -298,6 +316,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     Header.open('map');
     tripVehicle = null;
     trips = [];
+    tripLookup = null;
     
     return false;
   };
@@ -313,7 +332,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * field.
    */
   MapController.updateTripList = function(date) {
-    var id = tripVehicle.id;
+    var idx, num, id = tripVehicle.id;
     
     if (!date) {
       date = $('#trip_history_date').val();
@@ -323,6 +342,11 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     
     $.getJSON('/devices/' + id + '/trips.json', {date: date}, function(json) {
       trips = json;
+      
+      for(idx = 0, num = trips.length, tripLookup = {}; idx < num; idx++) {
+        tripLookup[trips[idx].id] = trips[idx];
+      }
+      
       TripHistoryPane.trips(trips);
       
       loading(false);
