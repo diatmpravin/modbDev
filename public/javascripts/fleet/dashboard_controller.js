@@ -126,12 +126,9 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
    * Hide all of our panes and throw away any unnecessary resources.
    */
   DashboardController.teardown = function() {
-    DashboardPane.close().initPane('');
+    DashboardPane.clearBindings().close().initPane('');
     Header.standard('');
     range_type_container.hide(400);
-    
-    vehicles = null;
-    lookup = null;
   };
   
   /**
@@ -159,7 +156,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
    * a vehicle or group. It all depends which one the user clicked on.
    */
   DashboardController.newSomething = function() {
-    var title, url,
+    var activePane, title, url,
         self = $(this),
         row = self.closest('div.row'),
         id = row.attr('id');
@@ -301,8 +298,7 @@ Fleet.DashboardController = (function(DashboardController, DashboardPane, Vehicl
         from = self.data('from'),
         fromId = from.attr('id'),
         to = self.data('to'),
-        toId = to.attr('id'),
-        controller = from.hasClass('group') ? '/groups/' : '/devices/';
+        toId = to.attr('id');
     
     fromId = fromId.substring(fromId.lastIndexOf('_') + 1);
     toId = toId.substring(toId.lastIndexOf('_') + 1);
