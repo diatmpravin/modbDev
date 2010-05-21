@@ -91,6 +91,7 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
   DashboardPane.initPane = function(html, id) {
     var root = $('#' + id);
     
+
     // Our New Chooser object might be inside the list, so move it before
     // we blow anything away.
     new_chooser.appendTo('body');
@@ -125,6 +126,11 @@ Fleet.Frame.DashboardPane = (function(DashboardPane, Fleet, $) {
       }
     });
     
+    return DashboardPane;
+  };
+
+  DashboardPane.clearBindings = function() {
+    list.find('div.group:not(.undraggable)').droppable('destroy');
     return DashboardPane;
   };
   
