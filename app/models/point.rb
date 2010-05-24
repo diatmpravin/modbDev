@@ -112,21 +112,6 @@ class Point < ActiveRecord::Base
   # Update any precalc fields on the prior point, and then on this point if
   # it isn't the last one, and then on the parent leg if it exists.
   def update_precalc_fields
-    pre = device.points.before(occurred_at).first(
-      :select => 'id, occurred_at', :order => 'occurred_at DESC'
-    )
-    post = device.points.after(occurred_at).first(
-      :select => 'id, occurred_at', :order => 'occurred_at ASC'
-    )
-    
-    # Direct updates to avoid a huge cascade of after_save callbacks
-    if pre
-      Point.update_all({:duration => occurred_at - pre.occurred_at}, {:id => pre.id})
-    end
-    
-    if post
-      Point.update_all({:duration => post.occurred_at - occurred_at}, {:id => id})
-    end
 
     leg.update_precalc_fields if leg && ENV['RAILS_ENV'] == 'test'
   end
