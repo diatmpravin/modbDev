@@ -57,13 +57,11 @@ class Leg < ActiveRecord::Base
   end
   
   def compute_average_mpg
-    return points[0].mpg if duration <= 0
-    
-    sum = 0
-    points[0..-2].each_index do |i|
-      sum += points[i].duration * (points[i+1].mpg + points[i].mpg) / 2
+    # return mpg from the last point that has a non-zero mpg
+    points[0..-1].each_index do |i|
+      idx = points.length - i - 1
+      return points[idx].mpg if points[idx].mpg > 0
     end
-    
-    sum / duration
+    return 0
   end
 end

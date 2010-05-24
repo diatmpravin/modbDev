@@ -85,17 +85,13 @@ describe "Leg", ActiveSupport::TestCase do
         :mpg => 26,
         :device => @device
       )
-      @leg.reload.average_mpg.should.equal 22
+      @leg.reload.average_mpg.should.equal 26
       
       # Single point test (should return the only mpg point we have)
       @leg.points.last.destroy
       @leg.points.last.destroy
       @leg.points[0].update_attributes(:mpg => 7)
       @leg.reload.average_mpg.should.equal 7
-      
-      # Variable interval test: 1 min, 30 sec, 2 min, 2 min
-      estimated_mpg = (3.5*1 + 8*0.5 + 12*2 + 16.5*2) / 5.5
-      estimated_mpg = BigDecimal.new(estimated_mpg.to_s).floor(1)
       
       @leg.points[0].update_attributes(:mpg => 0)
       @leg.points << Point.new(
@@ -123,7 +119,7 @@ describe "Leg", ActiveSupport::TestCase do
         :device => @device
       )
       
-      @leg.reload.average_mpg.should.equal estimated_mpg
+      @leg.reload.average_mpg.should.equal 18
     end
   end
   
