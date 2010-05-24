@@ -5,6 +5,7 @@ class Account < ActiveRecord::Base
   has_many :alert_recipients, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
+  has_many :invoices, :dependent => :destroy
   has_many :device_profiles, :order => 'name', :dependent => :destroy
   has_many :device_groups, :order => 'name ASC', :dependent => :destroy
   has_many :trackers, :dependent => :nullify

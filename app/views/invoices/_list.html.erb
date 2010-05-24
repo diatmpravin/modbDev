@@ -1,0 +1,13 @@
+<% @invoices.each do |invoice| -%>
+  <li>
+    <div class="listing">
+      <span class="number">invoice.id</span>
+    </div>
+    <div class="invoice_data">
+      <span class="amount"><%= h(invoice.amount) %></span>
+      <span class="date_due"><%= h(invoice.due_on) %></span>
+      <span class="trackers"><%= h(invoice.number_of_units) %></span>
+      <span class="paid"><%= h(paid) %></span>
+    </div>
+  </li>
+<% end -%>
