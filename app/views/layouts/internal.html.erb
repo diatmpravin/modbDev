@@ -27,6 +27,11 @@
           <%= link_to 'Users', users_path, :class => 'users' %>
         </li>
       <% end -%>
+      <% if current_user.has_role? User::Role::BILLING -%>
+        <li>
+          <%= link_to 'Billing', invoices_path, :class => 'billing' %>
+        </li>
+      <% end -%>
     </ul>
   </div>
   
