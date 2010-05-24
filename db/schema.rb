@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100324201505) do
+ActiveRecord::Schema.define(:version => 20100524152134) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -184,6 +184,16 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
   end
 
   add_index "geofences", ["account_id"], :name => "index_geofences_on_account_id"
+
+  create_table "invoices", :force => true do |t|
+    t.integer  "account_id"
+    t.decimal  "amount",          :precision => 6, :scale => 2
+    t.date     "due_on"
+    t.integer  "number_of_units"
+    t.boolean  "paid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"
