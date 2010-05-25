@@ -23,7 +23,7 @@ Fleet.Frame.InvoicePane = (function(InvoicePane, Fleet, $) {
     }
 
     // Create the invoice pane
-    $('#frame').append('<div id="invoice_pane" class=""><ol></ol></div>');
+    $('#frame').append('<div id="invoice_pane" class="hierarchy"><ol></ol></div>');
 
     // Store a reference to the pane
     pane = $('#invoice_pane');

@@ -20,13 +20,13 @@ Fleet.BillingController = (function(BillingController, InvoicePane, Header, Fram
     }
 
     // define the billing header
-    Header.init().define('billing',
-      '<span class="title">Billing</span>' +
-      '<div class="billing_data">'+
+    Header.init().define('invoices',
+      '<span class="title">Invoices</span>' +
+      '<div class="invoice_data">'+
       '<span class="amount"><span>Amount</span></span>' +
       '<span class="date_due"><span>Date Due</span></span>' +
       '<span class="trackers"><span>Trackers</span></span>' +
-      '<span class="paid"><span>Paid</span></span>' +
+      '<span class="paid_header"><span>Paid</span></span>' +
       '</div>');
 
     init=true;
@@ -39,7 +39,7 @@ Fleet.BillingController = (function(BillingController, InvoicePane, Header, Fram
    * Prepare panes
    */
   BillingController.setup = function() {
-    Header.init().open('billing');
+    Header.init().open('invoices');
 
     InvoicePane.init().open();
     

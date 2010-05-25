@@ -58,6 +58,10 @@
     div.user_data {
       display:none;
     }
+
+    div.invoice_data {
+      display:none;
+    }
     
     a.hover-only, span.hover-only {
       display:none;
@@ -201,6 +205,57 @@ div.user_data {
     padding-right:1%;
   }
 }
+
+/**
+ * Invoice data - used by invoice pane and invoice header
+ */
+div.invoice_data {
+  float:left;
+  margin-right:0px - @listing_width;
+  width:100%;
+
+  > span {
+    border-left:solid 1px #c0c0c0;
+    display:block;
+    float:left;
+    width:10%;
+    text-align:right;
+    overflow:hidden;
+  }
+
+  span.amount {
+    width:14%;
+    padding-right:1%;
+  }
+
+  span.date_due {
+    width:14%;
+    padding-right:1%;
+  }
+
+  span.trackers {
+    width:14%;
+    padding-right:1%;
+  }
+
+  span.paid_header {
+    width:14%;
+    padding-right:1%;
+  }
+
+  span.paid {
+    width:14%;
+    padding-right:1%;
+    background:transparent url(/images/grade/green.png) no-repeat 50% 50%;
+  }
+
+  span.unpaid {
+    width:14%;
+    padding-right:1%;
+    background:transparent url(/images/grade/red.png) no-repeat 50% 50%;
+  }
+}
+
 
 /**
  * Dashboard Data - for those panes that use it, defines the look and width
@@ -363,6 +418,34 @@ div.dashboard_data {
     }
 
     .user_data {
+      > span {
+        line-height:1em;
+        height:38px;
+        position:relative;
+        
+        > span {
+          left:0px;
+          bottom:6px;
+          position:absolute;
+          text-align:center;
+          width:100%;
+        }
+      }
+    }
+  }
+}
+
+/* Special Rules for the Invoice Header's columns */
+#frame_header {
+  div.invoices {
+    padding-right:280px;
+
+    span.title {
+      float:left;
+      width:@listing_width - 16px;
+    }
+
+    .invoice_data {
       > span {
         line-height:1em;
         height:38px;
@@ -551,6 +634,35 @@ div.dashboard_data {
   li li li li li li li div.row:hover span.name { width:116px; }
 }
 
+#invoice_pane {
+  span.number {
+    overflow:hidden;
+    padding-left:14px;
+  }
+
+  background:#f8f8f8 url(/images/frame_bg.png) repeat 0 0;
+  height:100%;
+  left:0;
+  overflow-x:hidden;
+  overflow-y:scroll;
+  position:absolute;
+  top:0;
+  width:100%;
+  z-index:7;
+  
+  > ol {
+    margin-top:-1px;
+  }
+
+  div.row {
+    padding-right:280px;
+  }
+  
+  div.listing {
+    float:left;
+    width:@listing_width;
+  }
+}
 
 #user_pane {
   background:#f8f8f8 url(/images/frame_bg.png) repeat 0 0;
