@@ -40,6 +40,8 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
 
     // Clicking trips in the history bar will display them on the map
     $('#trip_history_pane .trips span').live('click', function() {
+      $(this).addClass('active').siblings('span').removeClass('active');
+      
       Fleet.Controller.viewTrip.call(this);
     });
     
