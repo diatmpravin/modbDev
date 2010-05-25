@@ -31,12 +31,48 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     // A reference to our content
     content = pane.children('.content');
     
+    // The player controls
+    $('<div class="controls clearfix"><a href="#" class="start" title="Jump to Beginning of Trip"></a><a href="#" class="previous" title="Previous Point"></a>' +
+      '<a href="#" class="next" title="Next Point"></a><a href="#" class="end" title="Jump to End of Trip"></a></div>').appendTo(content);
+    
     // The player progress bar
     progress = $('<div class="progress"></div>').appendTo(content).slider({
       min: 0,
       max: 10,
       range: 'min',
       slide: TripPlayerPane.slide
+    });
+    
+    // Begin button
+    $('#trip_player_pane a.start').live('click', function() {
+      progress.slider('value', 0);
+      TripPlayerPane.slide({}, {value: 0});
+      
+    });
+    
+    // Previous button
+    $('#trip_player_pane a.previous').live('click', function() {
+      var v = progress.slider('value');
+      v = v > 0 ? v - 1 : 0;
+      
+      progress.slider('value', v);
+      TripPlayerPane.slide({}, {value: v});
+    });
+    
+    // Next button
+    $('#trip_player_pane a.next').live('click', function() {
+      var v = progress.slider('value');
+      v = progress.slider('value', v + 1);
+      
+      TripPlayerPane.slide({}, {value: v});
+    });
+    
+    // End button
+    $('#trip_player_pane a.end').live('click', function() {
+      var max = progress.slider('option', 'max');
+      
+      progress.slider('value', max);
+      TripPlayerPane.slide({}, {value: max});
     });
     
     init = true;

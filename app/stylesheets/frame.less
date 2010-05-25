@@ -1042,7 +1042,7 @@ div.dashboard_data {
  * Trip Player Pane
  */
 #trip_player_pane {
-  background:transparent url(/images/trip_player_bg.png) no-repeat 0 0;
+  background:transparent url(/images/trip_player/bg.png) no-repeat 0 0;
   bottom:8px;
   cursor:default;
   height:140px;
@@ -1065,5 +1065,35 @@ div.dashboard_data {
   
   div.content {
     padding:16px;
+  }
+  
+  div.controls {
+    margin:0 auto 12px auto;
+    width:96px;
+    
+    a {
+      display:block;
+      float:left;
+      height:16px;
+      padding:0 4px 0 4px;
+      text-indent:-999em;
+      width:16px;
+    }
+    
+    a.start {
+      background:transparent url(/images/trip_player/back.png) no-repeat center 0;
+    }
+    
+    a.previous {
+      background:transparent url(/images/trip_player/previous.png) no-repeat center 0;
+    }
+    
+    a.next {
+      background:transparent url(/images/trip_player/next.png) no-repeat center 0;
+    }
+    
+    a.end {
+      background:transparent url(/images/trip_player/forward.png) no-repeat center 0;
+    }
   }
 }
