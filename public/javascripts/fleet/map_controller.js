@@ -23,12 +23,10 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     }
     
     // Define the Map View header
-    Header.init().define('map',
-      '<span class="title">Map View</span>');
+    Header.init().define('map', '<span class="title">Map View</span>');
     
     // Define the Trip History header
-    Header.define('history',
-      '<span class="title">Trip History</span><span class="buttons"><button type="button" class="back">Return</button></span>');
+    Header.define('history', '<span class="buttons"><button type="button" class="back">Return</button></span><span class="title">Trip History</span>');
     
     init = true;
     return MapController;
