@@ -159,7 +159,7 @@ describe "Trip", ActiveSupport::TestCase do
         :mpg => 26,
         :device => @device
       )
-      @trip.reload.average_mpg.should.equal 22
+      @trip.reload.average_mpg.should.equal 26
       
       # Single point test (should return the only mpg point we have)
       @trip.legs[0].points.last.destroy
@@ -167,9 +167,6 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.legs[0].points[0].update_attributes(:mpg => 7)
       @trip.reload.average_mpg.should.equal 7
       
-      # Variable interval test: 1 min, 30 sec, 2 min, 2 min
-      estimated_mpg = (3.5*1 + 8*0.5 + 12*2 + 16.5*2) / 5.5
-      estimated_mpg = BigDecimal.new(estimated_mpg.to_s).floor(1)
       
       @trip.legs[0].points[0].update_attributes(:mpg => 0)
       @trip.legs[0].points << Point.new(
@@ -196,7 +193,9 @@ describe "Trip", ActiveSupport::TestCase do
         :mpg => 18,
         :device => @device
       )
-      @trip.reload.average_mpg.should.equal estimated_mpg
+
+      # trips mpg should be the last point's mpg
+      @trip.reload.average_mpg.should.equal @trip.legs[0].points.last.mpg
     end
   end
   
@@ -324,7 +323,7 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.miles.should.equal 11
       @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       @trip.idle_time.should.equal 0
-      @trip.average_mpg.should.equal BigDecimal.new('20.4')
+      @trip.average_mpg.should.equal BigDecimal.new('20.8')
     end
     
     specify "collapsed trip inherits all tags (but no duplicate rows)" do
@@ -399,7 +398,7 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.miles.should.equal 11
       @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       @trip.idle_time.should.equal 0
-      @trip.average_mpg.should.equal BigDecimal.new('20.4')
+      @trip.average_mpg.should.equal BigDecimal.new('20.8')
       
       new_trip = @trip.expand
       
@@ -414,7 +413,7 @@ describe "Trip", ActiveSupport::TestCase do
       new_trip.start.should.equal Time.parse('02/05/2009 08:17:00 UTC')
       new_trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       new_trip.idle_time.should.equal 0
-      new_trip.average_mpg.should.equal BigDecimal.new('21')
+      new_trip.average_mpg.should.equal BigDecimal.new('22')
     end
     
     specify "new trip inherits all tags" do

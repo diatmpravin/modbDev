@@ -239,15 +239,6 @@ describe "Point", ActiveSupport::TestCase do
       @point.leg = nil
       @point.should.save
     end
-    
-    specify "saves duration" do
-      p1 = points(:quentin_point)
-      p2 = points(:quentin_point2)
-      
-      p2.occurred_at = Time.parse('02/05/2009 08:17:00 UTC')
-      p2.save
-      p1.reload.duration.should.equal 1020
-    end
   end
   
   specify "knows the time of day as a string" do

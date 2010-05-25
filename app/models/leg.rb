@@ -53,17 +53,22 @@ class Leg < ActiveRecord::Base
   
   protected
   def compute_idle_time
-    points.before(finish).sum(:duration, :conditions => {:speed => 0})
+    # sum up the durations of points where speed is 0
+    sum = 0
+    points[0..-2].each_index do |i|
+      if points[i].mpg == 0
+        sum += points[i+1].occurred_at - points[i].occurred_at
+      end
+    end
+    sum
   end
   
   def compute_average_mpg
-    return points[0].mpg if duration <= 0
-    
-    sum = 0
-    points[0..-2].each_index do |i|
-      sum += points[i].duration * (points[i+1].mpg + points[i].mpg) / 2
+    # return mpg from the last point that has a non-zero mpg
+    points[0..-1].each_index do |i|
+      idx = points.length - i - 1
+      return points[idx].mpg if points[idx].mpg > 0
     end
-    
-    sum / duration
+    return 0
   end
 end
