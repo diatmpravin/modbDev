@@ -73,5 +73,40 @@ describe "Account", ActiveSupport::TestCase do
     @account.setup_status = 0
     @account.should.be.setup
   end
-  
+   
+  context 'invoice generation' do
+    setup do
+      @invoice = @account.generate_invoice(Date.today)
+    end
+
+    specify 'works' do
+      Invoice.should.differ(:count).by(1) do
+        @invoice = @account.generate_invoice(Date.today)
+      end
+      
+      @invoice.account.should.equal @account
+      @invoice.paid.should.be false
+    end
+
+    specify 'generated on date' do
+      @invoice.generated_on.should.equal Date.today
+    end
+
+    specify 'due at end of month for generated date' do
+      @invoice.due_on.should.equal Date.today.end_of_month
+    end
+
+    specify 'number of units' do
+      @invoice.number_of_units.should.equal @account.trackers.count
+    end
+
+    specify 'period start beginning of month' do
+      @invoice.period_start.should.equal Date.today.beginning_of_month
+    end
+
+    specify 'amount' do
+      @invoice.amount.should.equal @account.trackers.count * (@account.monthly_unit_price || 0)
+    end
+  end 
+ 
 end
