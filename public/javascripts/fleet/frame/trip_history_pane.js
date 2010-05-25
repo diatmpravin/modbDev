@@ -160,7 +160,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
         month = date.getMonth(),
         year = date.getFullYear();
     
-    return (month < 10 ? '0' : '') + month + '/' +
+    return (month < 10 ? '0' : '') + (month + 1) + '/' +
            (day < 10 ? '0' : '') + day + '/' +
            year;
   }
