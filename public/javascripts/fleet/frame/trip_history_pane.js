@@ -53,7 +53,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     });
     
     // Our custom pop-up
-    popup = $('<div id="trip_history_popup"><div class="top"></div><div class="content"></div><div class="bottom"></div></div>').appendTo($('body'));
+    popup = $('<div id="trip_history_popup"><div class="content"></div></div>').appendTo($('body'));
     
     init = true;
     return TripHistoryPane;
@@ -136,7 +136,8 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
       
       popup.appendTo(o).css('left', o.width() / 2 - 72).show();
       
-      popup.html('<h4>' + trip.start + '</h4><p>' + prettyTripDuration(trip.duration) + '</p>');
+      popup.children('.content').html('<h4>' + trip.time_of_day + '</h4><p>' + trip.miles + ' miles over ' + prettyTripDuration(trip.duration) + '</p>' +
+        '<p>Average MPG: ' + trip.average_mpg + '</p>');
     } else {
       popup.hide().appendTo('body');
     }

@@ -129,6 +129,11 @@ class Trip < ActiveRecord::Base
     self.save if do_save
   end
   
+  # Used when converted to JSON
+  def time_of_day
+    start.to_time.in_time_zone(device.zone).to_s(:local)
+  end
+  
   protected
   def compute_average_mpg
     return legs.first.average_mpg if legs.length < 2
