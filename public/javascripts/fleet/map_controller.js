@@ -348,6 +348,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       TripHistoryPane.trips(trips);
       
       loading(false);
+      
+      TripHistoryPane.selectDefaultTrip();
     });
   
     return false;

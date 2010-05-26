@@ -145,6 +145,19 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
     return false;
   };
   
+  /**
+   * selectDefaultTrip()
+   *
+   * This function is kind of a kludge. It's here so that a controller can
+   * ask this pane to "click" on whatever trip should be default (in this
+   * case, the last trip for the day).
+   */
+  TripHistoryPane.selectDefaultTrip = function() {
+    pane.find('.trips span:last').click();
+    
+    return false;
+  };
+  
   /* Private Functions */
   
   function prettyTripDuration(seconds) {
@@ -171,7 +184,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   function minutesIntoDay(timeOfDay) {
     var fields = timeOfDay.split(':');
     
-    return parseInt(fields[0]) * 60 + parseInt(fields[1]);
+    return (parseInt(fields[0]) % 12) * 60 + parseInt(fields[1]) + (timeOfDay.indexOf('PM') >= 0 ? 720 : 0);
   }
   
   return TripHistoryPane;
