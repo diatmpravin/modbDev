@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+Account.each do |account|
+  account.generate_invoice(Date.today)
+end
