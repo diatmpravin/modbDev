@@ -18,6 +18,7 @@ describe "DataAggregator", ActiveSupport::TestCase do
       leg.points.create(:occurred_at => Time.parse("02/01/2009 03:50:15 PM EST"),
                   :speed => 60, :miles => 12020, :mpg => 20,
                   :device => @device)
+      leg.update_precalc_fields
       @trip.reload
     end
 
@@ -65,6 +66,7 @@ describe "DataAggregator", ActiveSupport::TestCase do
       leg.points.create(:occurred_at => Time.parse("02/01/2009 03:50:15 PM EST").utc,
                   :speed => 60, :miles => 12020, :mpg => 20,
                   :device => @device)
+      leg.update_precalc_fields
 
       # 10 minutes
       @trips << (trip = Trip.create)
@@ -78,6 +80,7 @@ describe "DataAggregator", ActiveSupport::TestCase do
       leg.points.create(:occurred_at => Time.parse("02/01/2009 05:20:00 PM EST").utc,
                   :speed => 60, :miles => 12050, :mpg => 20,
                   :device => @device)
+      leg.update_precalc_fields
 
       # 60 minutes
       @trips << (trip = Trip.create)
@@ -94,6 +97,7 @@ describe "DataAggregator", ActiveSupport::TestCase do
       leg.points.create(:occurred_at => Time.parse("02/01/2009 08:00:00 PM EST").utc,
                   :speed => 60, :miles => 12090, :mpg => 20,
                   :device => @device)
+      leg.update_precalc_fields
 
       @trips.each {|t| t.reload }
     end

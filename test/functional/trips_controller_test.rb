@@ -134,6 +134,7 @@ describe "Trips Controller", ActionController::TestCase do
         :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
         :device => @device
       )
+      leg.update_precalc_fields
     end
     
     specify "works" do
@@ -183,6 +184,7 @@ describe "Trips Controller", ActionController::TestCase do
         :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
         :device => @device
       )
+      leg.update_precalc_fields
     end
     
     specify "works" do
