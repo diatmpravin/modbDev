@@ -106,7 +106,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
         t = $('<span id="trip_' + o[idx].id + '"></span>').appendTo(pane.find('.trips'));
         
         t.css('width', (Math.round(o[idx].duration * 100 / 864) / 100) + '%');
-        t.css('left', (Math.round(minutesIntoDay(o[idx].start) * 100 / 14.4) / 100) + '%');
+        t.css('left', (Math.round(minutesIntoDay(o[idx].time_of_day) * 100 / 14.4) / 100) + '%');
       }
     }
     
@@ -168,8 +168,8 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
            year;
   }
   
-  function minutesIntoDay(rubyTime) {
-    var fields = rubyTime.substring(11, 19).split(':');
+  function minutesIntoDay(timeOfDay) {
+    var fields = timeOfDay.split(':');
     
     return parseInt(fields[0]) * 60 + parseInt(fields[1]);
   }
