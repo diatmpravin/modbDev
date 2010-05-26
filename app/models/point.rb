@@ -57,8 +57,6 @@ class Point < ActiveRecord::Base
     :speed, :accelerating, :decelerating, :rpm, :heading, :satellites,
     :hdop, :miles, :leg, :device, :mpg
   
-  after_save :update_precalc_fields
-  
   # Fill in any appropriate attributes in the given hash
   def parse(report)
     self.event = report[:event]
@@ -109,10 +107,4 @@ class Point < ActiveRecord::Base
     occurred_at.to_time.in_time_zone(device.zone).to_s(:local)
   end
   
-  # Update any precalc fields on the prior point, and then on this point if
-  # it isn't the last one, and then on the parent leg if it exists.
-  def update_precalc_fields
-
-    leg.update_precalc_fields if leg && ENV['RAILS_ENV'] == 'test'
-  end
 end

@@ -37,6 +37,7 @@ describe "Group Report Card Test", ActiveSupport::TestCase do
       :event => DeviceReport::Event::PERIODIC_IGNITION_OFF, :latitude => 33.64512, :longitude => -84.44697,
       :occurred_at => Time.parse("01/01/2009 11:29:59 PM EST"), :miles => 300,
       :device => @quentin_device)
+    l.update_precalc_fields
       
     @quentin_device.calculate_data_for(Date.parse("01/01/2009"))
 
@@ -50,7 +51,8 @@ describe "Group Report Card Test", ActiveSupport::TestCase do
       :event => DeviceReport::Event::PERIODIC_IGNITION_OFF, :latitude => 33.64512, :longitude => -84.44697,
       :occurred_at => Time.parse("01/02/2009 11:30:00 AM EST"), :miles => 400,
       :device => @second_device)
-   
+    l.update_precalc_fields
+
     @second_device.calculate_data_for(Date.parse("01/02/2009")) 
   end
 

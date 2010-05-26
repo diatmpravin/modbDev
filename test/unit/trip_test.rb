@@ -113,6 +113,7 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.legs[0].points << Point.new(:occurred_at => time,
         :miles => 30,
         :device => @device)
+      @trip.legs[0].update_precalc_fields
       @trip.reload.start.should.equal time
     end
     
@@ -121,16 +122,19 @@ describe "Trip", ActiveSupport::TestCase do
       @trip.legs[0].points << Point.new(:occurred_at => time,
         :miles => 30,
         :device => @device)
+      @trip.legs[0].update_precalc_fields
       @trip.reload.finish.should.equal time
     end
     
     specify "updates miles" do
       @point2.update_attribute(:miles, 80)
+      @trip.legs[0].update_precalc_fields
       @trip.reload.miles.should.equal 63
     end
     
     specify "updates miles, handling mile rollover" do
       @point2.update_attribute(:miles, 7)
+      @trip.legs[0].update_precalc_fields
       @trip.reload.miles.should.equal 9990
     end
     
@@ -148,6 +152,7 @@ describe "Trip", ActiveSupport::TestCase do
         :device => @device
       )
       
+      @trip.legs[0].update_precalc_fields
       @trip.reload.idle_time.should.equal 300
     end
     
@@ -159,12 +164,14 @@ describe "Trip", ActiveSupport::TestCase do
         :mpg => 26,
         :device => @device
       )
+      @trip.legs[0].update_precalc_fields
       @trip.reload.average_mpg.should.equal 26
       
       # Single point test (should return the only mpg point we have)
       @trip.legs[0].points.last.destroy
       @trip.legs[0].points.last.destroy
       @trip.legs[0].points[0].update_attributes(:mpg => 7)
+      @trip.legs[0].update_precalc_fields
       @trip.reload.average_mpg.should.equal 7
       
       
@@ -195,6 +202,7 @@ describe "Trip", ActiveSupport::TestCase do
       )
 
       # trips mpg should be the last point's mpg
+      @trip.legs[0].update_precalc_fields
       @trip.reload.average_mpg.should.equal @trip.legs[0].points.last.mpg
     end
   end
@@ -263,6 +271,7 @@ describe "Trip", ActiveSupport::TestCase do
         :occurred_at => Time.now + 1,
         :device => @device
       )
+      leg.update_precalc_fields
 
       @t.is_in_progress?.should.equal false
       t2.is_in_progress?.should.equal true
@@ -299,6 +308,7 @@ describe "Trip", ActiveSupport::TestCase do
         :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
         :device => @device
       )
+      leg.update_precalc_fields
     end
     
     specify "legs on the trip are moved to the collapsed trip" do
@@ -318,8 +328,9 @@ describe "Trip", ActiveSupport::TestCase do
       
       # Test
       @t.collapse.should.equal @trip
+
       @trip.reload
-      
+
       @trip.miles.should.equal 11
       @trip.finish.should.equal Time.parse('02/05/2009 08:27:00 UTC')
       @trip.idle_time.should.equal 0
@@ -374,7 +385,9 @@ describe "Trip", ActiveSupport::TestCase do
         :occurred_at => Time.parse('02/05/2009 08:27:00 UTC'),
         :device => @device
       )
-      
+
+      leg.update_precalc_fields
+
       t.collapse
       @trip.reload
     end
@@ -389,6 +402,8 @@ describe "Trip", ActiveSupport::TestCase do
       new_trip.device.should.equal @device
       new_trip.legs.should.equal [leg]
       
+      @trip.legs.each { |l| l.update_precalc_fields }
+
       @device.trips.reload.length.should.equal 2
       @trip.legs.reload.length.should.equal 1
     end

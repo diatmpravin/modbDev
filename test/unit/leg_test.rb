@@ -39,22 +39,26 @@ describe "Leg", ActiveSupport::TestCase do
     specify "updates start time" do
       time = Time.parse('01/01/1980 04:30:00 UTC')
       @point1.update_attribute(:occurred_at, time)
+      @leg.update_precalc_fields
       @leg.reload.start.should.equal time
     end
     
     specify "updates finish time" do
       time = Time.parse('01/01/2010 04:30:00 UTC')
       @point2.update_attribute(:occurred_at, time)
+      @leg.update_precalc_fields
       @leg.reload.finish.should.equal time
     end
     
     specify "updates miles" do
       @point2.update_attribute(:miles, 80)
+      @leg.update_precalc_fields
       @leg.reload.miles.should.equal 63
     end
     
     specify "updates miles, handling mile rollover" do
       @point2.update_attribute(:miles, 7)
+      @leg.update_precalc_fields
       @leg.reload.miles.should.equal 9990
     end
     
@@ -74,6 +78,7 @@ describe "Leg", ActiveSupport::TestCase do
         :device => @device
       )
       
+      @leg.update_precalc_fields
       @leg.reload.idle_time.should.equal 300
     end
     
@@ -85,12 +90,15 @@ describe "Leg", ActiveSupport::TestCase do
         :mpg => 26,
         :device => @device
       )
+
+      @leg.update_precalc_fields
       @leg.reload.average_mpg.should.equal 26
       
       # Single point test (should return the only mpg point we have)
       @leg.points.last.destroy
       @leg.points.last.destroy
       @leg.points[0].update_attributes(:mpg => 7)
+      @leg.update_precalc_fields
       @leg.reload.average_mpg.should.equal 7
       
       @leg.points[0].update_attributes(:mpg => 0)
@@ -119,6 +127,7 @@ describe "Leg", ActiveSupport::TestCase do
         :device => @device
       )
       
+      @leg.update_precalc_fields
       @leg.reload.average_mpg.should.equal 18
     end
   end

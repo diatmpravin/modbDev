@@ -225,22 +225,6 @@ describe "Point", ActiveSupport::TestCase do
     end
   end
   
-  context "Updating precalc fields" do
-    specify "calls precalc on save" do
-      Point.any_instance.expects(:update_precalc_fields)
-      @point.should.save
-    end
-    
-    specify "calls leg precalc, if it exists" do
-      Leg.any_instance.expects(:update_precalc_fields)
-      @point.should.save
-      
-      Leg.any_instance.expects(:update_precalc_fields).never
-      @point.leg = nil
-      @point.should.save
-    end
-  end
-  
   specify "knows the time of day as a string" do
     @point.occurred_at = Time.parse('2009/01/01 17:15:30 UTC')
     @point.time_of_day.should.equal '12:15 PM EST'

@@ -930,6 +930,7 @@ describe "Device", ActiveSupport::TestCase do
         :event => 4002, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 12:30:00 PM EST"), :miles => 300,
         :device => @device)
+      l.update_precalc_fields
 
       data = @device.data_for(Date.parse("01/01/2009"), user.zone)
       data.should.not.be.nil
@@ -1064,6 +1065,7 @@ describe "Device", ActiveSupport::TestCase do
         :event => DeviceReport::Event::PERIODIC_IGNITION_OFF, :latitude => 33.64512, :longitude => -84.44697,
         :occurred_at => Time.parse("01/01/2009 11:29:59 PM EST"), :miles => 300,
         :device => @device)
+      l.update_precalc_fields
     end
 
     specify "aggregates various data" do
