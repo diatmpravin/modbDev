@@ -70,7 +70,6 @@ class Account < ActiveRecord::Base
       :number_of_units => number_of_units,
       :number => number,
       :amount => amount,
-      :paid => false
     });
 
     if (invoice.save)

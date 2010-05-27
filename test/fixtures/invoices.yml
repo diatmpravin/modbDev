@@ -5,11 +5,9 @@ one:
   amount: 
   due_on: 
   number_of_units: 
-  paid: 
 
 two:
   account_id: 1
   amount: 
   due_on: 
   number_of_units: 
-  paid: 

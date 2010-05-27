@@ -86,7 +86,6 @@ describe "Account", ActiveSupport::TestCase do
       end
       
       @invoice.account.should.equal @account
-      @invoice.paid.should.be false
     end
 
     specify 'sent to billing users' do

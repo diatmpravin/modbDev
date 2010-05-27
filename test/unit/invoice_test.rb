@@ -12,4 +12,14 @@ describe "Invoice", ActiveSupport::TestCase do
     i.account = accounts(:quentin)
     i.should.be.valid
   end
+
+  specify 'paid' do
+    i = Invoice.new
+    i.amount = 12.00
+
+    i.paid?.should.be false
+    
+    i.amount_paid = 12.00
+    i.paid?.should.be true
+  end
 end

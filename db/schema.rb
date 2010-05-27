@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100525161113) do
+ActiveRecord::Schema.define(:version => 20100527163437) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -190,12 +190,13 @@ ActiveRecord::Schema.define(:version => 20100525161113) do
     t.decimal  "amount",          :precision => 6, :scale => 2
     t.date     "due_on"
     t.integer  "number_of_units"
-    t.boolean  "paid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
     t.integer  "number"
     t.date     "generated_on"
     t.date     "period_start"
+    t.decimal  "amount_paid",     :precision => 6, :scale => 2, :default => 0.0
   end
 
   create_table "landmarks", :force => true do |t|
