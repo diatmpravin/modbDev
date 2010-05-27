@@ -76,6 +76,7 @@ describe "Account", ActiveSupport::TestCase do
    
   context 'invoice generation' do
     setup do
+      Mailer.deliveries.clear
       @invoice = @account.generate_invoice(Date.today)
     end
 
@@ -86,6 +87,19 @@ describe "Account", ActiveSupport::TestCase do
       
       @invoice.account.should.equal @account
       @invoice.paid.should.be false
+    end
+
+    specify 'sent to billing users' do
+      Mailer.deliveries.length.should.equal 1
+
+      @account.users.each do |user|
+        user.update_attributes(:roles => [User::Role::NONE])
+        user.reload.roles.should.equal []
+      end
+
+      Mailer.deliveries.clear
+      @invoice = @account.generate_invoice(Date.today)
+      Mailer.deliveries.length.should.equal 0
     end
 
     specify 'generated on date' do
@@ -101,7 +115,7 @@ describe "Account", ActiveSupport::TestCase do
     end
 
     specify 'period start beginning of month' do
-      @invoice.period_start.should.equal Date.today.beginning_of_month
+      @invoice.period_start.should.equal((Date.today - 1.month).beginning_of_month)
     end
 
     specify 'amount' do

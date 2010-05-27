@@ -30,10 +30,11 @@ describe "Mailer", ActiveSupport::TestCase do
   end
   
   specify "new invoice" do
+    @account = accounts(:quentin)
     @user = users(:quentin)
     @users = [@user]
 
-    Mailer.deliver_new_invoice(@users)
+    Mailer.deliver_new_invoice(@account, @users)
 
     Mailer.deliveries.length.should.be 1
     Mailer.deliveries.first.to.should.equal ['quentin@example.com']

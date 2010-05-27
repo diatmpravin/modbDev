@@ -53,7 +53,7 @@ class Account < ActiveRecord::Base
     due_on = generate_on.end_of_month
 
     # start of period should be the first of the month
-    period_start = generate_on.beginning_of_month
+    period_start = (generate_on - 1.month).beginning_of_month
     number_of_units = self.trackers.count
     number = (self.invoices.maximum(:number) || 1000) + 1
 
@@ -62,9 +62,6 @@ class Account < ActiveRecord::Base
 
     #TODO - generate an exception and send an email for no monthly unit price?
     # new exception method to send to reseller instead of devs.
-
-    #TODO - generate an email when a new invoice is successfully created
-    # send it to anyone on the account with billing
 
     invoice = self.invoices.build( {
       :generated_on => generate_on,
@@ -76,7 +73,13 @@ class Account < ActiveRecord::Base
       :paid => false
     });
 
-    invoice.save
+    if (invoice.save)
+      # generate an email when a new invoice is successfully created
+      # send it to anyone on the account with billing
+      billing_users = self.users.select { |u| u.has_role? User::Role::BILLING }
+
+      Mailer.deliver_new_invoice(self, billing_users) unless billing_users.empty?
+    end
 
     invoice
   end

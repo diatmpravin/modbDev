@@ -20,10 +20,10 @@ class Mailer < ActionMailer::Base
     content_type 'text/html'
   end
 
-  def new_invoice(users)
+  def new_invoice(account, users)
     recipients users.map(&:email)
     from support_address
-    body(:url => invoices_url, :account_number => users.first.account.number)
+    body(:url => invoices_url, :account_number => account.number)
     subject 'Teleweave: Billing - New Invoice'
     content_type 'text/html'
   end
