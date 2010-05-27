@@ -23,9 +23,9 @@ Fleet.BillingController = (function(BillingController, InvoicePane, Header, Fram
     Header.init().define('invoices',
       '<span class="title">Invoices</span>' +
       '<div class="invoice_data">'+
-      '<span class="amount"><span>Amount</span></span>' +
+      '<span class="date_generated"><span>Date Created</span></span>' +
       '<span class="date_due"><span>Date Due</span></span>' +
-      '<span class="trackers"><span>Trackers</span></span>' +
+      '<span class="amount"><span>Amount</span></span>' +
       '<span class="paid_header"><span>Paid</span></span>' +
       '</div>');
 
