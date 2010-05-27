@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100527163437) do
+ActiveRecord::Schema.define(:version => 20100527200506) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(:version => 20100527163437) do
     t.string   "msisdn_number", :limit => 32
     t.integer  "account_id"
     t.boolean  "delta",                       :default => true, :null => false
+    t.date     "shipped_on"
   end
 
   add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"

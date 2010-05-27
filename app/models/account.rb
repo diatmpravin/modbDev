@@ -54,11 +54,19 @@ class Account < ActiveRecord::Base
 
     # start of period should be the first of the month
     period_start = (generate_on - 1.month).beginning_of_month
+    period_end = period_start >> 1
     number_of_units = self.trackers.count
     number = (self.invoices.maximum(:number) || 1000) + 1
 
     # multiply number of trackers by price_per_unit
-    amount = number_of_units * (self.monthly_unit_price || 0)
+    # amount = number_of_units * (self.monthly_unit_price || 0)
+    amount = 0.0
+    self.trackers.each do |tracker|
+      if tracker.shipped_on
+        tracker_start_period = [[tracker.shipped_on + 7.days, period_start].max, period_end].min
+        amount += ((period_end - tracker_start_period).to_f * (self.monthly_unit_price || 0) / period_start.end_of_month.mday).to_f
+      end
+    end
 
     #TODO - generate an exception and send an email for no monthly unit price?
     # new exception method to send to reseller instead of devs.

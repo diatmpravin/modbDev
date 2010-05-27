@@ -118,7 +118,9 @@ describe "Account", ActiveSupport::TestCase do
     end
 
     specify 'amount' do
-      @invoice.amount.should.equal @account.trackers.count * (@account.monthly_unit_price || 0)
+      @invoice = @account.generate_invoice(Date.parse('06/01/2010'))
+      @invoice.amount.to_f.should.be.close(6.45,0.01)
+      # @invoice.amount.should.equal @account.trackers.count * (@account.monthly_unit_price || 0)
     end
 
     specify 'name' do

@@ -3,6 +3,7 @@ quentin_tracker:
   imei_number: "123456789012345"
   sim_number: "10002000300040005000"
   status: 2
+  shipped_on: <%= Date.parse("05/05/2010").to_s(:db) %>
 aaron_tracker:
   account: quentin
   imei_number: "098765432109876"
