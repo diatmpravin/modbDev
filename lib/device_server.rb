@@ -112,8 +112,8 @@ module DeviceServer
             @redis.push_tail("legstoupdate", p.leg_id)
           end
 
-          # now push out the leg update to 5 minutes from now          
-          @redis.set("legupdate:#{p.leg_id}", Time.now.to_i + 300)
+          # now push out the leg update to 10 minutes from now          
+          @redis.set("legupdate:#{p.leg_id}", Time.now.to_i + 600)
         end
       end
     rescue => ex
