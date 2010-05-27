@@ -120,6 +120,10 @@ describe "Account", ActiveSupport::TestCase do
     specify 'amount' do
       @invoice.amount.should.equal @account.trackers.count * (@account.monthly_unit_price || 0)
     end
+
+    specify 'name' do
+      @invoice.name.should.equal('1001-' + Date::MONTHNAMES[(Date.today - 1.month).month])
+    end
   end 
  
 end

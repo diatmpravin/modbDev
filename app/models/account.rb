@@ -70,6 +70,7 @@ class Account < ActiveRecord::Base
       :number_of_units => number_of_units,
       :number => number,
       :amount => amount,
+      :name => number.to_s + '-' + Date::MONTHNAMES[period_start.month]
     });
 
     if (invoice.save)
