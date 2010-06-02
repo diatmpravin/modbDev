@@ -28,7 +28,7 @@ class Account < ActiveRecord::Base
   attr_accessible :devices, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
     :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number,
-    :device_groups
+    :device_groups, :tax_exempt, :taxpayer_id
 
   # This line must appear later than the above attr_accessible line
   acts_as_nested_set :order => 'name', :dependent => nil

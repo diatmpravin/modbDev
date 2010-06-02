@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100527200506) do
+ActiveRecord::Schema.define(:version => 20100602192145) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(:version => 20100527200506) do
     t.boolean  "delta",                                                           :default => true,  :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "taxpayer_id"
+    t.boolean  "tax_exempt"
   end
 
   add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"
