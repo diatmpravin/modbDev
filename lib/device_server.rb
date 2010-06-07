@@ -73,11 +73,15 @@ module DeviceServer
     # creating new Resque jobs for each IMEI found
     # before sleeping again.
     def process
-      while imei = @redis.spop("mobd:imei:waiting")
-        logger.debug("Dispatching processing for IMEI: #{imei}")
-        PointProcessor.new.process(imei)
+      while @running
+        while imei = @redis.spop("mobd:imei:waiting")
+          logger.debug("Dispatching processing for IMEI: #{imei}")
+          PointProcessor.new.process(imei)
+        end
+        sleep(1)
       end
 
+    rescue
       EM::add_timer(5) { process } if @running
     end
 
