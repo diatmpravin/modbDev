@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100324201505) do
+ActiveRecord::Schema.define(:version => 20100602192145) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
     t.boolean  "delta",                                                           :default => true,  :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "taxpayer_id"
+    t.boolean  "tax_exempt"
   end
 
   add_index "accounts", ["parent_id"], :name => "index_accounts_on_parent_id"
@@ -185,6 +187,20 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
 
   add_index "geofences", ["account_id"], :name => "index_geofences_on_account_id"
 
+  create_table "invoices", :force => true do |t|
+    t.integer  "account_id"
+    t.decimal  "amount",          :precision => 6, :scale => 2
+    t.date     "due_on"
+    t.integer  "number_of_units"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.integer  "number"
+    t.date     "generated_on"
+    t.date     "period_start"
+    t.decimal  "amount_paid",     :precision => 6, :scale => 2, :default => 0.0
+  end
+
   create_table "landmarks", :force => true do |t|
     t.integer  "account_id"
     t.decimal  "latitude",                     :precision => 8, :scale => 5
@@ -259,6 +275,7 @@ ActiveRecord::Schema.define(:version => 20100324201505) do
     t.string   "msisdn_number", :limit => 32
     t.integer  "account_id"
     t.boolean  "delta",                       :default => true, :null => false
+    t.date     "shipped_on"
   end
 
   add_index "trackers", ["imei_number"], :name => "index_trackers_on_imei_number"

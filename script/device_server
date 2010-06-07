@@ -7,19 +7,30 @@ ENV["RAILS_ENV"] = ARGV[1] || ENV["RAILS_ENV"] || "production"
 rails = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
 device_server = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'device_server'))
 
-options = {
-  :app_name   => "device_server",
-  :ARGV       => ARGV,
-  :dir_mode   => :normal,
-  :dir        => File.join(File.dirname(__FILE__), '..', 'log'),
-  :log_output => true,
-  :multiple   => false,
-  :backtrace  => true,
-  :monitor    => false
-}
+# start/stop all instances, unless the 3rd arg is the instance number in 
+# which case start/stop only that instance
+instances = [1, 2, 3]
+if ARGV[2] 
+  instances = [ ARGV[2] ]
+  ARGV.pop
+end
 
-Daemons.run_proc(options[:app_name], options) do
-  require rails
-  require device_server
-  DeviceServer.run
+# start/stop all instances
+instances.each do |i|
+  options = {
+    :app_name   => "device_server#{i}",
+    :ARGV       => ARGV,
+    :dir_mode   => :normal,
+    :dir        => File.join(File.dirname(__FILE__), '..', 'log'),
+    :log_output => true,
+    :multiple   => false,
+    :backtrace  => true,
+    :monitor    => false
+  }
+
+  Daemons.run_proc(options[:app_name], options) do
+    require rails
+    require device_server
+    DeviceServer.run
+  end
 end

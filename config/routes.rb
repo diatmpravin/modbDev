@@ -67,6 +67,9 @@ ActionController::Routing::Routes.draw do |map|
   # Filter
   map.resource :filter
 
+  # Invoices
+  map.resources :invoices
+
   # Groups
   map.resources :device_groups, :as => 'groups', :controller => 'groups', :member => {
       :live_look => :get

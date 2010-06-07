@@ -72,6 +72,21 @@
         <%= f.text_field :monthly_unit_price %>
         <%= f.error_message_on :monthly_unit_price, :prepend_text => '* Monthly Unit Price ' %>
       </div>
+
+      <div class="field">
+        <%= f.label :tax_exempt, 'Tax Exempt' %>
+        <%= f.check_box :tax_exempt %>
+        <%= f.error_message_on :tax_exempt, :prepend_text => '* Tax Exempt ' %>
+      </div>
+
+      <div class="field">
+        <%= f.label :taxpayer_id, 'Taxpayer Id' %>
+        <%= f.text_field :taxpayer_id, :maxlength => 11 %>
+        <%= f.error_message_on :taxpayer_id, :prepend_text => '* Taxpayer Id ' %>
+      </div>
+
+      <div class="field">
+      </div>
     </fieldset>
 
     <% if account.new_record? -%>

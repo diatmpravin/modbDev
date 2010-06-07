@@ -5,6 +5,7 @@ class Account < ActiveRecord::Base
   has_many :alert_recipients, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :users, :dependent => :destroy
+  has_many :invoices, :dependent => :destroy
   has_many :device_profiles, :order => 'name', :dependent => :destroy
   has_many :device_groups, :order => 'name ASC', :dependent => :destroy
   has_many :trackers, :dependent => :nullify
@@ -27,7 +28,7 @@ class Account < ActiveRecord::Base
   attr_accessible :devices, :geofences, :alert_recipients, :tags, :today,
     :name, :reseller, :can_assign_reseller, :landmarks, :device_profiles, :users_attributes,
     :address1, :address2, :city, :state, :zip, :monthly_unit_price, :phone_number,
-    :device_groups
+    :device_groups, :tax_exempt, :taxpayer_id
 
   # This line must appear later than the above attr_accessible line
   acts_as_nested_set :order => 'name', :dependent => nil
@@ -46,6 +47,51 @@ class Account < ActiveRecord::Base
     self[:today] || Time.now.to_date
   end
   
+  def generate_invoice(generate_on)
+
+    # due on is end of month for current running date
+    due_on = generate_on.end_of_month
+
+    # start of period should be the first of the month
+    period_start = (generate_on - 1.month).beginning_of_month
+    period_end = period_start >> 1
+    number_of_units = self.trackers.count
+    number = (self.invoices.maximum(:number) || 1000) + 1
+
+    # multiply number of trackers by price_per_unit
+    # amount = number_of_units * (self.monthly_unit_price || 0)
+    amount = 0.0
+    self.trackers.each do |tracker|
+      if tracker.shipped_on
+        tracker_start_period = [[tracker.shipped_on + 7.days, period_start].max, period_end].min
+        amount += ((period_end - tracker_start_period).to_f * (self.monthly_unit_price || 0) / period_start.end_of_month.mday).to_f
+      end
+    end
+
+    #TODO - generate an exception and send an email for no monthly unit price?
+    # new exception method to send to reseller instead of devs.
+
+    invoice = self.invoices.build( {
+      :generated_on => generate_on,
+      :due_on => due_on,
+      :period_start => period_start,
+      :number_of_units => number_of_units,
+      :number => number,
+      :amount => amount,
+      :name => number.to_s + '-' + Date::MONTHNAMES[period_start.month]
+    });
+
+    if (invoice.save)
+      # generate an email when a new invoice is successfully created
+      # send it to anyone on the account with billing
+      billing_users = self.users.select { |u| u.has_role? User::Role::BILLING }
+
+      Mailer.deliver_new_invoice(self, billing_users) unless billing_users.empty?
+    end
+
+    invoice
+  end
+
   protected
   
   def generate_number

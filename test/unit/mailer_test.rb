@@ -29,6 +29,19 @@ describe "Mailer", ActiveSupport::TestCase do
     Mailer.deliveries.first.body.should =~ 'http://localhost:3000/users/set_password/quarter_pounder'
   end
   
+  specify "new invoice" do
+    @account = accounts(:quentin)
+    @user = users(:quentin)
+    @users = [@user]
+
+    Mailer.deliver_new_invoice(@account, @users)
+
+    Mailer.deliveries.length.should.be 1
+    Mailer.deliveries.first.to.should.equal ['quentin@example.com']
+    Mailer.deliveries.first.subject.should.equal 'Teleweave: Billing - New Invoice'
+    Mailer.deliveries.first.body.should =~ 'http://localhost:3000/invoices'
+  end
+
   specify "email alert" do
     Mailer.deliver_email_alert('filet@fish.com', 'test alert')
     

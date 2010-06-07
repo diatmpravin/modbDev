@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  account_id: 1
+  amount: 
+  due_on: 
+  number_of_units: 
+
+two:
+  account_id: 1
+  amount: 
+  due_on: 
+  number_of_units: 
