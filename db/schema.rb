@@ -251,7 +251,6 @@ ActiveRecord::Schema.define(:version => 20100602192145) do
     t.decimal  "battery",      :precision => 3, :scale => 1
     t.integer  "signal"
     t.boolean  "locked"
-    t.integer  "duration"
   end
 
   add_index "points", ["device_id"], :name => "index_points_on_device_id"
