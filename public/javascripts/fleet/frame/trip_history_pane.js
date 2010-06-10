@@ -11,6 +11,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
       pane,
       content,
       progress,
+      popup,
       init = false;
   
   /**
