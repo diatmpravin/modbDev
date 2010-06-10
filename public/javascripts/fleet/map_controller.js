@@ -230,6 +230,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       TripHistoryPane.open();
       MapController.updateTripList();
       
+      MapPane.popup(false);
       MapPane.slide(0);
       MapPane.hideCollection('vehicles');
       MapPane.showCollection('trip');
@@ -309,6 +310,10 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       MapPane.collection('trip').removeAll();
       
       MapPane.bestFit(MapPane.collection('vehicles'));
+
+      if (selected_id != null) {
+        showVehiclePopup(lookup[selected_id]);
+      }
     });
     
     Header.open('map');
