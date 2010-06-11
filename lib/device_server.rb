@@ -19,7 +19,10 @@ module DeviceServer
     def run
       @running = true
       install_signals
-      Thread.new { process_trips() }
+
+      # Trip updates occasionally are failing using this strategy, so comment out for now     
+#      Thread.new { process_trips() }
+
       process
     end
 
@@ -73,11 +76,15 @@ module DeviceServer
     # creating new Resque jobs for each IMEI found
     # before sleeping again.
     def process
-      while imei = @redis.spop("mobd:imei:waiting")
-        logger.debug("Dispatching processing for IMEI: #{imei}")
-        PointProcessor.new.process(imei)
+      while @running
+        while imei = @redis.spop("mobd:imei:waiting")
+          logger.debug("Dispatching processing for IMEI: #{imei}")
+          PointProcessor.new.process(imei)
+        end
+        sleep(1)
       end
 
+    rescue
       EM::add_timer(5) { process } if @running
     end
 
@@ -107,13 +114,17 @@ module DeviceServer
         p = self.process_point(point)
         # see if we should schedule a leg update
         if p && p.leg
-          # if not in the queue yet, put it in there
-          if !@redis.get("legupdate:#{p.leg_id}")
-            @redis.push_tail("legstoupdate", p.leg_id)
-          end
 
-          # now push out the leg update to 10 minutes from now          
-          @redis.set("legupdate:#{p.leg_id}", Time.now.to_i + 600)
+# Update the leg on every point for now since periodic updates are sometimes not working
+          Resque.enqueue(Worker, p.leg_id)
+
+# This isn't always working, so comment out for now
+#          # if not in the queue yet, put it in there
+#          if !@redis.get("legupdate:#{p.leg_id}")
+#            @redis.push_tail("legstoupdate", p.leg_id)
+#          end
+#          # now push out the leg update to 10 minutes from now          
+#          @redis.set("legupdate:#{p.leg_id}", Time.now.to_i + 600)
         end
       end
     rescue => ex
