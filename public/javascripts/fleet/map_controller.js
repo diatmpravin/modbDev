@@ -6,6 +6,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
   var vehicles = null,
       lookup = null,
       selected_id = null,
+      selected_point_id = null,
       tripVehicle = null,
       trips = [],
       tripLookup = null,
@@ -66,6 +67,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     vehicles = null;
     lookup = null;
     selected_id = null;
+    selected_point_id = null;
     tripVehicle = null;
     trips = [];
     tripLookup = null;
@@ -123,12 +125,36 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * Pan the map to the clicked vehicle. Called as an event handler.
    */
   MapController.focus = function(o) {
+    var id, index=0;
+
     if (tripVehicle) {
-      // Hovering is currently undefined while viewing trips
+      if (selected_point_id != null) {
+        // hide currently shown popup
+        MapPane.popup(false);
+      }
+
+      if(o) {
+        if (selected_point_id == o.id || o.poi == null) {
+          selected_point_id = null;
+        } else {
+          selected_point_id = o.id;
+          for (var i=0;i<MapPane.collection('trip').getSize();i++) {
+            index++;
+            if (o.poi == MapPane.collection('trip').getAt(index))
+              break;
+          }
+
+          TripPlayerPane.slideTo(index);
+          //MapController.tripProgress(index);
+          //showPointHistoryPopup(o);
+        }
+      } else {
+        selected_point_id = null;
+      }
+
       return false;
     }
   
-    var id;
     
     if (!o || (o && o.originalEvent)) {
       // If no arg, or arg is a jQuery event object, find the vehicle
@@ -177,7 +203,8 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    */
   MapController.focusPoint = function() {
     if (tripVehicle) {
-      // Hovering is currently undefined while viewing trips
+      var p = this.reference;
+      MapController.focus(p);
       return false;
     }
     
@@ -196,12 +223,23 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    * bool argument will be true if the mouse is over the point, false otherwise.
    */
   MapController.hoverPoint = function(bool) {
+    var html;
+
     if (tripVehicle) {
       // Hovering is currently undefined while viewing trips
+      var p = this.reference;
+
+      if (selected_point_id == null) {
+        if (bool) {
+          showPointHistoryPopup(p);
+        } else {
+          MapPane.popup();
+        }
+      }
       return false;
     }
   
-    var v = this.reference, html;
+    var v = this.reference;
     
     if (selected_id == null) {
       if (bool) {
@@ -291,7 +329,10 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
    */
   MapController.tripProgress = function(index) {
     // TODO: A few lines of minimal error checking wouldn't hurt
-    MapPane.pan(MapPane.collection('trip').getAt(index));
+    var o = MapPane.collection('trip').getAt(index);
+    MapPane.pan(o);
+    selected_point_id = o.reference.id
+    showPointHistoryPopup(o.reference);
   };
   
   /**
@@ -316,10 +357,12 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       }
     });
     
+    MapPane.popup(false);
     Header.open('map');
     tripVehicle = null;
     trips = [];
     tripLookup = null;
+    selected_point_id = null;
     
     return false;
   };
@@ -461,6 +504,22 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       html = '<h4>' + v.name + '</h4><p>' + v.position.time_of_day + '</p><p>' + v.position.occurred_at.substring(0, 10) + '</p>';
           
       MapPane.popup(v.poi, html);
+    }
+  }
+
+  /**
+   * showPointHistoryPopup()
+   *
+   * Called to make a point's popup visible
+   */
+  function showPointHistoryPopup(p) {
+    if (p.poi) {
+      var events='';
+      for (var i=0; i<p.events.length; i++)
+        events += p.events[i].type_text + '<br/>';
+
+      var html = '<h4>' + p.time_of_day + '</h4><p>' + p.speed_text + '</p><p>' + events + '</p>';
+      MapPane.popup(p.poi, html);
     }
   }
 

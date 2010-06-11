@@ -127,7 +127,7 @@ class TripsController < ApplicationController
                 :latitude,
                 :longitude
               ],
-              :methods => [:time_of_day],
+              :methods => [:time_of_day, :speed_text],
               :include => {
                 :events => {
                   :methods => [:type_text]

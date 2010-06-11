@@ -159,6 +159,16 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     
     return true;
   };
+
+  /**
+   * slideTo(index)
+   *
+   * Move to the appropriate trip point and adjust the trip progress slider to the new index.
+   */
+  TripPlayerPane.slideTo = function(index) {
+    progress.slider('value', index);
+    TripPlayerPane.slide({}, {value: index});
+  };
   
   /* Private Functions */
   

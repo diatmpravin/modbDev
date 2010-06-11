@@ -106,5 +106,14 @@ class Point < ActiveRecord::Base
   def time_of_day
     occurred_at.to_time.in_time_zone(device.zone).to_s(:local)
   end
+
+  # Used when converted to JSON
+  def speed_text
+    if speed == 0
+      'Stationary'
+    else
+      "#{speed} mph"
+    end
+  end
   
 end
