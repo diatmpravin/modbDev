@@ -11,19 +11,19 @@ test:
   vhost: 'mobd'
 
 staging:
-  host: 'smokey.gomoshi.com'
+  host: 'mq.crayoninterface.net'
   user: 'mobd'
   pass: 'il_i3Yai'
   vhost: '/jasper_gateway'
 
 demo:
-  host: 'smokey.gomoshi.com'
+  host: 'mq.crayoninterface.net'
   user: 'mobd'
   pass: 'il_i3Yai'
   vhost: '/jasper_gateway'
 
 production:
-  host: 'smokey.gomoshi.com'
+  host: 'mq.crayoninterface.net'
   user: 'mobd'
   pass: 'il_i3Yai'
   vhost: '/jasper_gateway'

@@ -73,5 +73,59 @@ describe "Account", ActiveSupport::TestCase do
     @account.setup_status = 0
     @account.should.be.setup
   end
-  
+   
+  context 'invoice generation' do
+    setup do
+      Mailer.deliveries.clear
+      @invoice = @account.generate_invoice(Date.today)
+    end
+
+    specify 'works' do
+      Invoice.should.differ(:count).by(1) do
+        @invoice = @account.generate_invoice(Date.today)
+      end
+      
+      @invoice.account.should.equal @account
+    end
+
+    specify 'sent to billing users' do
+      Mailer.deliveries.length.should.equal 1
+
+      @account.users.each do |user|
+        user.update_attributes(:roles => [User::Role::NONE])
+        user.reload.roles.should.equal []
+      end
+
+      Mailer.deliveries.clear
+      @invoice = @account.generate_invoice(Date.today)
+      Mailer.deliveries.length.should.equal 0
+    end
+
+    specify 'generated on date' do
+      @invoice.generated_on.should.equal Date.today
+    end
+
+    specify 'due at end of month for generated date' do
+      @invoice.due_on.should.equal Date.today.end_of_month
+    end
+
+    specify 'number of units' do
+      @invoice.number_of_units.should.equal @account.trackers.count
+    end
+
+    specify 'period start beginning of month' do
+      @invoice.period_start.should.equal((Date.today - 1.month).beginning_of_month)
+    end
+
+    specify 'amount' do
+      @invoice = @account.generate_invoice(Date.parse('06/01/2010'))
+      @invoice.amount.to_f.should.be.close(6.45,0.01)
+      # @invoice.amount.should.equal @account.trackers.count * (@account.monthly_unit_price || 0)
+    end
+
+    specify 'name' do
+      @invoice.name.should.equal('1001-' + Date::MONTHNAMES[(Date.today - 1.month).month])
+    end
+  end 
+ 
 end

@@ -230,6 +230,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       TripHistoryPane.open();
       MapController.updateTripList();
       
+      MapPane.popup(false);
       MapPane.slide(0);
       MapPane.hideCollection('vehicles');
       MapPane.showCollection('trip');
@@ -309,6 +310,10 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
       MapPane.collection('trip').removeAll();
       
       MapPane.bestFit(MapPane.collection('vehicles'));
+
+      if (selected_id != null) {
+        showVehiclePopup(lookup[selected_id]);
+      }
     });
     
     Header.open('map');
@@ -401,13 +406,39 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
         p = leg.displayable_points[j];
         
         if (!p.poi) {
-          p.poi = MapPane.addPoint(p.latitude, p.longitude, {
-            icon: '/images/points/red.png',
-            size: [11, 11],
-            offset: [-6, -6],
-            collection: collection,
-            reference: p
-          });
+          if (j==0) {
+            p.poi = MapPane.addPoint(p.latitude, p.longitude, {
+              icon: '/images/points/red_start.png',
+              size: [21, 21],
+              offset: [-10, -10],
+              collection: collection,
+              reference: p
+            });
+          } else if (j==leg.displayable_points.length-1) {
+            p.poi = MapPane.addPoint(p.latitude, p.longitude, {
+              icon: '/images/points/red_stop.png',
+              size: [21, 21],
+              offset: [-10, -10],
+              collection: collection,
+              reference: p
+            });
+          } else if (p.events.length > 0) {
+            p.poi = MapPane.addPoint(p.latitude, p.longitude, {
+              icon: '/images/points/red_event.png',
+              size: [21, 21],
+              offset: [-10, -10],
+              collection: collection,
+              reference: p
+            });
+          } else {
+            p.poi = MapPane.addPoint(p.latitude, p.longitude, {
+              icon: '/images/points/red.png',
+              size: [11, 11],
+              offset: [-6, -6],
+              collection: collection,
+              reference: p
+            });
+          }
         }
       }
     }

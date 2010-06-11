@@ -45,6 +45,8 @@ var Fleet = (function(Fleet, $) {
       c = Fleet.MapController;
     } else if (hash == Fleet.UserController.tab) {
       c = Fleet.UserController;
+    } else if (hash == Fleet.BillingController.tab) {
+      c = Fleet.BillingController;
     } else {
       c = Fleet.DashboardController;
     }
@@ -62,6 +64,8 @@ var Fleet = (function(Fleet, $) {
                             .click(function() { Fleet.controller(Fleet.GeofenceController); return true; });
     $('#navbar a.users').attr('href', '#' + Fleet.UserController.tab)
                         .click(function() { Fleet.controller(Fleet.UserController); return true; });
+    $('#navbar a.billing').attr('href', '#' + Fleet.BillingController.tab)
+                          .click(function() { Fleet.controller(Fleet.BillingController); return true; });
     
     Fleet.controller(c);
     Fleet.loading(false);

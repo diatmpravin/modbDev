@@ -5,6 +5,7 @@ quentin:
   reseller: true
   can_assign_reseller: true
   name: 'quentin_account'
+  monthly_unit_price: 10
 aaron:
   parent: quentin
   reseller: true
