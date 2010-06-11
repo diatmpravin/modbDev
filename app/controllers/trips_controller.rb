@@ -115,6 +115,7 @@ class TripsController < ApplicationController
   
   def show_json_options
     {
+      :only => [:average_mpg],
       :include => {
         :legs => {
           :only => [:id],
@@ -125,7 +126,8 @@ class TripsController < ApplicationController
                 :event,
                 :occurred_at,
                 :latitude,
-                :longitude
+                :longitude,
+                :average_mpg
               ],
               :methods => [:time_of_day, :speed_text],
               :include => {
@@ -137,7 +139,7 @@ class TripsController < ApplicationController
           }
         }
       },
-      :methods => [:duration]
+      :methods => [:duration, :max_speed]
     }
   end
 end

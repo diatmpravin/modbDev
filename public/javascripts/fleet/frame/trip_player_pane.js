@@ -31,6 +31,9 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     // A reference to our content
     content = pane.children('.content');
     
+    // The trip summary info
+    $('<div class="summary_info"></div>').appendTo(content);
+
     // The player controls
     $('<div class="controls clearfix"><a href="#" class="start" title="Jump to Beginning of Trip"></a><a href="#" class="previous" title="Previous Point"></a>' +
       '<a href="#" class="next" title="Next Point"></a><a href="#" class="end" title="Jump to End of Trip"></a></div>').appendTo(content);
@@ -133,6 +136,7 @@ Fleet.Frame.TripPlayerPane = (function(TripPlayerPane, Fleet, $) {
     if (o) {
       pane.find('h4').text(o.legs[0].displayable_points[0].time_of_day);
       pane.find('.subheader').text(o.miles + ' miles over ' + prettyTripDuration(o.duration));
+      pane.find('.summary_info').html('Max Speed: ' + o.max_speed + ' mph<br/>Average MPG: ' + o.average_mpg);
       
       for(idx = 0, points = 0, num = o.legs.length; idx < num; idx++) {
         points += o.legs[idx].displayable_points.length;
