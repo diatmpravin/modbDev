@@ -185,7 +185,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
   function minutesIntoDay(timeOfDay) {
     var fields = timeOfDay.split(':');
     
-    return (parseInt(fields[0]) % 12) * 60 + parseInt(fields[1]) + (timeOfDay.indexOf('PM') >= 0 ? 720 : 0);
+    return (parseInt(fields[0], 10) % 12) * 60 + parseInt(fields[1], 10) + (timeOfDay.indexOf('PM') >= 0 ? 720 : 0);
   }
   
   return TripHistoryPane;
