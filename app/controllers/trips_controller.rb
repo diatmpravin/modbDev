@@ -115,7 +115,6 @@ class TripsController < ApplicationController
   
   def show_json_options
     {
-      :only => [:average_mpg],
       :include => {
         :legs => {
           :only => [:id],

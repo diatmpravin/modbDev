@@ -440,6 +440,7 @@ Fleet.MapController = (function(MapController, MapPane, VehiclePane, TripHistory
     var idx, num, leg, j, p,
         collection = MapPane.collection('trip');
     
+    MapPane.popup(false); //save the popup from destruction
     collection.removeAll();
     
     for(idx = 0, num = trip.legs.length; idx < num; idx++) {
