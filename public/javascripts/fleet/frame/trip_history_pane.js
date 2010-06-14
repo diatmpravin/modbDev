@@ -95,7 +95,7 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
    * the list of trips.
    */
   TripHistoryPane.trips = function(o) {
-    var idx, num, t;
+    var idx, num, t, width, left;
     
     // Save the popup, in case it is currently displayed
     popup.appendTo('body');
@@ -106,8 +106,15 @@ Fleet.Frame.TripHistoryPane = (function(TripHistoryPane, Fleet, $) {
       for(idx = 0, num = o.length; idx < num; idx++) {
         t = $('<span id="trip_' + o[idx].id + '"></span>').appendTo(pane.find('.trips'));
         
-        t.css('width', (Math.round(o[idx].duration * 100 / 864) / 100) + '%');
-        t.css('left', (Math.round(minutesIntoDay(o[idx].time_of_day) * 100 / 14.4) / 100) + '%');
+        width = Math.round(o[idx].duration * 100 / 864);
+        left = Math.round(minutesIntoDay(o[idx].time_of_day) * 100 / 14.4);
+        
+        if (width + left > 9999) {
+          width = 9999 - left;
+        }
+        
+        t.css('width', (width / 100) + '%');
+        t.css('left', (left / 100) + '%');
       }
     }
     
