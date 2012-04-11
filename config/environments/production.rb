@@ -32,6 +32,9 @@ config.action_mailer.smtp_settings = {
 config.action_mailer.default_url_options = {
   :host => 'my.teleweave.com'
 }
+config.action_mailer.delivery_method = :sendmail
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.raise_delivery_errors = true
 
 # Setup cookies to work with base domain
 config.action_controller.session[:domain] = ".teleweave.com"

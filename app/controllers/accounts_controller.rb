@@ -6,7 +6,7 @@ class AccountsController < ApplicationController
   before_filter :require_password, :only => [:destroy]
   
   layout 'accounts'
-  
+
   def index
     @account = current_account
   end
@@ -66,4 +66,5 @@ class AccountsController < ApplicationController
       'accounts'
     end
   end
-end
+ 
+  end

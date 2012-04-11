@@ -72,7 +72,7 @@ describe "Mailer", ActiveSupport::TestCase do
     Mailer.deliver_exception_thrown(ex, "Running tests!")
     
     Mailer.deliveries.length.should.be 1
-    Mailer.deliveries.first.to.should.equal ['dev@crayoninterface.com']
+    Mailer.deliveries.first.to.should.equal ['dredge999@gmail.com']
     Mailer.deliveries.first.subject.should.match(/\[Teleweave Test\]/)
     Mailer.deliveries.first.body.should.match(/Danger Will Robinson!/)
     Mailer.deliveries.first.body.should.match(/Running tests/)

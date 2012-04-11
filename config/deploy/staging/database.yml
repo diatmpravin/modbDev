@@ -1,8 +1,8 @@
 staging:
   adapter: mysql
-  database: fleet
-  username: fleet
-  password: Eefi@a2z
+  database: teleweave_m
+  username: root
+  password: preston1
   host: localhost
   encoding: utf8
   pool: 25

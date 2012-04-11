@@ -1,3 +1,6 @@
+# Server 
+set :app_server, :passenger
+
 # Stages
 set :stages, %w(staging production)
 set :default_stage, :staging

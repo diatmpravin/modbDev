@@ -1,0 +1,27 @@
+defaults: &defaults
+  adapter: mysql
+  username: 
+  password: root
+  host: localhost
+  encoding: utf8
+  pool: 5
+  timeout: 5000
+
+development:
+  database: fleet_devel
+  <<: *defaults
+
+test:
+  database: fleet_test
+  <<: *defaults
+
+production:
+    adapter: mysql
+    database: teleweave_m
+    username: teleweave
+    password: t33nsaf3
+    host: localhost
+    encoding: utf8
+    pool: 25
+    timeout: 5000
+

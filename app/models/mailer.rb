@@ -8,7 +8,7 @@ class Mailer < ActionMailer::Base
     recipients user.email
     from support_address
     body :url => reset_password_url(:id => user.password_reset_code)
-    subject 'Teleweave: Forgotten Password'
+    subject 'TeenSafeLane: Forgotten Password'
     content_type 'text/html'
   end
   
@@ -16,7 +16,7 @@ class Mailer < ActionMailer::Base
     recipients user.email
     from support_address
     body(:url => set_password_url(:id => user.password_reset_code), :account_number => user.account.number, :user_login => user.login)
-    subject 'Teleweave: Welcome'
+    subject 'TeenSafeLane: Welcome'
     content_type 'text/html'
   end
 
@@ -24,7 +24,7 @@ class Mailer < ActionMailer::Base
     recipients users.map(&:email)
     from support_address
     body(:url => invoices_url, :account_number => account.number)
-    subject 'Teleweave: Billing - New Invoice'
+    subject 'TeenSafeLane: Billing - New Invoice'
     content_type 'text/html'
   end
   
@@ -35,13 +35,13 @@ class Mailer < ActionMailer::Base
     recipients address
     from alerts_address
     body :message => message
-    subject 'Teleweave Alert'
+    subject 'TeenSafeLane Alert'
   end
 
   def exception_thrown(exception, message = "")
     from "error@teleweave.com"
-    recipients %w(dev@crayoninterface.com)
-    subject "[Teleweave #{Rails.env.capitalize}] Exception Thrown"
+    recipients %w(dredge999@gmail.com)
+    subject "[TeenSafeLane #{Rails.env.capitalize}] Exception Thrown"
     body :exception => exception, :message => message
   end
 

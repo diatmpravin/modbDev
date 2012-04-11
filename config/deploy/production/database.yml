@@ -1,9 +1,9 @@
 production:
-  adapter: mysql
-  database: fleet
-  username: fleet
-  password: Pa4eeSh$ai
-  host: localhost
-  encoding: utf8
-  pool: 25
-  timeout: 5000
+    adapter: mysql
+    database: teleweave_m
+    username: root
+    password: t33nsaf3999
+    host: 127.0.0.1
+    encoding: utf8
+    pool: 25
+    timeout: 5000

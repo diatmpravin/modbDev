@@ -1,3 +1,3 @@
-ExceptionNotifier.exception_recipients = %w{dev@crayoninterface.com}
-ExceptionNotifier.sender_address = %("Teleweave Exception" <error@gomoshi.com>)
-ExceptionNotifier.email_prefix = "[Teleweave #{Rails.env.capitalize}] "
+ExceptionNotifier.exception_recipients = %w{dredge999@gmail.com}
+ExceptionNotifier.sender_address = %("TeenSafeLane Exception" <error@gomoshi.com>)
+ExceptionNotifier.email_prefix = "[TeenSafeLane #{Rails.env.capitalize}] "

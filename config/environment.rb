@@ -10,6 +10,17 @@ RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+if Gem::VERSION >= "1.3.6"
+  module Rails
+    class GemDependency
+      def requirement
+        r = super
+        (r == Gem::Requirement.default) ? nil : r
+      end
+    end
+  end
+end
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -23,18 +34,18 @@ Rails::Initializer.run do |config|
   # Gem dependencies
   config.gem 'eventmachine'
   config.gem 'newrelic_rpm'
-  config.gem 'ruport', :version => '>= 1.6.0'
+  config.gem 'ruport', :version => '1.6.3'
   config.gem 'redis'
   config.gem 'resque'
-  config.gem 'less',   :version => '>= 1.2'
+  config.gem 'less',   :version => '1.2.21'
 
   config.gem 'fastercsv'
   config.gem 'spreadsheet'
 
   #config.gem 'mini_magick'
   
-  config.gem 'thinking-sphinx', :lib => 'thinking_sphinx'
-
+  #config.gem 'thinking-sphinx', :lib => 'thinking_sphinx'
+  config.gem 'thinking-sphinx',:version => '1.3.2', :lib => 'thinking_sphinx'
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named

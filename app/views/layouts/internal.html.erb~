@@ -1,0 +1,47 @@
+<% inside_layout 'global' do -%>
+  <%= render :partial => 'common/header' %>
+  
+  <div id="navbar">
+    <ul class="clearfix">
+      <li>
+        <%= link_to 'Dashboard', dashboard_path, :class => 'dashboard' %>
+      </li>
+      <li>
+        <%= link_to 'Map View', map_path, :class => 'mapview' %>
+      </li>
+      <li>
+        <%= link_to 'Reports', reports_path, :class => 'reports' %>
+      </li>
+      <% if current_user.has_role? User::Role::GEOFENCE -%>
+        <li>
+          <%= link_to 'Geofences', geofences_path, :class => 'geofences' %>
+        </li>
+      <% end -%>
+      <% if current_user.has_role? User::Role::LANDMARK -%>
+        <li>
+          <%= link_to 'Landmarks', landmarks_path, :class => 'landmarks' %>
+        </li>
+      <% end -%>
+      <% if current_user.has_role? User::Role::USERS -%>
+        <li>
+          <%= link_to 'Users', users_path, :class => 'users' %>
+        </li>
+      <% end -%>
+      <% if false -%>
+      <% if current_user.has_role? User::Role::BILLING -%>
+        <li>
+          <%= link_to 'Billing', invoices_path, :class => 'billing' %>
+        </li>
+      <% end -%>
+      <% end -%>
+    </ul>
+  </div>
+  
+  <div id="content">
+    <div class="content">
+      <%= yield %>
+    </div>
+  </div>
+  
+  <%= render :partial => 'common/footer' %>
+<% end -%>

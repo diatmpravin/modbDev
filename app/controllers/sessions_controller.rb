@@ -4,32 +4,64 @@ class SessionsController < ApplicationController
   layout 'external'
   
   def new
+  	
   end
   
   def create
-    account = Account.find_by_number(params[:account_number])
-    if account
-      self.current_user = User.authenticate(account, params[:login], params[:password])
-      
-      if logged_in?
-        if params[:remember_me] == "1"
-          current_user.remember_me unless current_user.remember_token?
-          cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
-        end
-        
-        default = root_path
-        
-        flash.discard
-        redirect_back_or_default(default)
-      else
-        flash.now[:error] = 'Your Username or Password is incorrect.'
-        render :action => 'new'
-      end
-    else
-      flash.now[:error] = 'Your Account ID is incorrect.'
-      render :action => 'new'
-    end
+  	#raise "Maisa"
+		#raise params.inspect
+		account = Account.find_by_number(params[:account_number])  	
+  	if account
+  		#raise "account"
+  		user = User.authenticate(account, params[:login], params[:password])
+  		if user
+  			#raise "Maisa"
+				session[:user_id] = user.id
+				self.currentUser(session[:user_id])
+				#raise session[:user_id].inspect
+				redirect_to root_url, :notice => "Logged in!"
+			else
+				flash.now[:error] = 'Your Username or Password is incorrect.'
+				render "new"
+			end
+  	else
+  		flash.now[:error] = 'Your Account ID is incorrect.'
+      render :action => 'new'		
+  	end
   end
+  
+  #def create 
+  	#raise params.inspect 	
+    #account = Account.find_by_number(params[:account_number])
+    #raise account.inspect
+    #if account
+    	#raise current_user.inspect
+      #self.current_user = User.authenticate(account, params[:login], params[:password])
+      #raise "maisa"
+      #if logged_in?
+      #  if params[:remember_me] == "1"
+      #    current_user.remember_me unless current_user.remember_token?
+      #    cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+      #  end
+        #raise params[:login].inspect
+        #@aUser = User.find_by_login(params[:login])
+        #raise @aUser.id.inspect
+        #session[:userId] = @aUser.id 
+        #raise User.find_by_id(session[:userId]).inspect     
+        #raise session[:userId].inspect
+      #  default = root_path
+        #redirect_to root_path
+      #  flash.discard
+      #  redirect_back_or_default(default)
+      #else
+      #  flash.now[:error] = 'Your Username or Password is incorrect.'
+      #  render :action => 'new'
+      #end
+    #else
+    #  flash.now[:error] = 'Your Account ID is incorrect.'
+    #  render :action => 'new'
+    #end
+  #end
 
   def destroy
     self.current_user.forget_me if logged_in?
